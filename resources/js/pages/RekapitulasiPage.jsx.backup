@@ -1,0 +1,830 @@
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import { Calendar, BookOpen, Award, AlertTriangle, Users, TrendingUp, FileDown } from 'lucide-react';
+
+import StyledInput from '../components/StyledInput';
+import StyledSelect from '../components/StyledSelect';
+import StyledButton from '../components/StyledButton';
+import StyledTable from '../components/StyledTable';
+import PieChart from '../components/PieChart';
+import SummaryCard from '../components/SummaryCard';
+import BarChart from '../components/BarChart';
+import EmptyState from '../components/EmptyState';
+import QuickDateFilter from '../components/QuickDateFilter';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { generateAttendanceRecapPDF, generateJurnalRecapPDF, generateNilaiRecapPDF, generateViolationRecapPDF } from '../utils/pdfGenerator';
+import { getAllGrades, getAllAttendance, getAllInfractions } from '../utils/analysis';
+
+const RekapitulasiPage = () => {
+  const [activeTab, setActiveTab] = useState('kehadiran');
+
+  // General State
+  const [classes, setClasses] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
+  const [schoolName, setSchoolName] = useState('');
+  const [teacherName, setTeacherName] = useState('');
+
+  // Loading States
+  const [isLoadingAttendance, setIsLoadingAttendance] = useState(false);
+  const [isLoadingJurnal, setIsLoadingJurnal] = useState(false);
+  const [isLoadingNilai, setIsLoadingNilai] = useState(false);
+  const [isLoadingViolation, setIsLoadingViolation] = useState(false);
+
+  // Kehadiran State
+  const [students, setStudents] = useState([]);
+  const [selectedClass, setSelectedClass] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [chartData, setChartData] = useState({ Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
+  const [numDays, setNumDays] = useState(0);
+
+  // Jurnal State
+  const [jurnalStartDate, setJurnalStartDate] = useState('');
+  const [jurnalEndDate, setJurnalEndDate] = useState('');
+  const [jurnalData, setJurnalData] = useState([]);
+  const [jurnalSearchTerm, setJurnalSearchTerm] = useState('');
+
+  // Nilai State
+  const [nilaiStartDate, setNilaiStartDate] = useState('');
+  const [nilaiEndDate, setNilaiEndDate] = useState('');
+  const [selectedNilaiClass, setSelectedNilaiClass] = useState('');
+  const [selectedNilaiSubject, setSelectedNilaiSubject] = useState('');
+  const [nilaiData, setNilaiData] = useState([]);
+  const [showDetailedGrades, setShowDetailedGrades] = useState(false);
+  const [detailedNilaiColumns, setDetailedNilaiColumns] = useState([]);
+
+  // Pelanggaran State
+  const [violationStartDate, setViolationStartDate] = useState('');
+  const [violationEndDate, setViolationEndDate] = useState('');
+  const [selectedViolationClass, setSelectedViolationClass] = useState('');
+  const [violationData, setViolationData] = useState([]);
+
+
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      if (auth.currentUser) {
+        const userDocRef = doc(db, 'users', auth.currentUser.uid);
+        const docSnap = await getDoc(userDocRef);
+        if (docSnap.exists()) {
+          const profileData = docSnap.data();
+          setUserProfile(profileData);
+          setSchoolName(profileData.school || profileData.schoolName || ''); // Fix: use 'school' field
+          setTeacherName(profileData.name || auth.currentUser.email);
+        }
+
+        const classesQuery = query(collection(db, 'classes'), where('userId', '==', auth.currentUser.uid));
+        const classesSnapshot = await getDocs(classesQuery);
+        const fetchedClasses = classesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => a.rombel.localeCompare(b.rombel));
+        setClasses(fetchedClasses);
+        console.log('Classes State:', fetchedClasses);
+
+        const subjectsQuery = query(collection(db, 'subjects'), where('userId', '==', auth.currentUser.uid));
+        const subjectsSnapshot = await getDocs(subjectsQuery);
+        const fetchedSubjects = subjectsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => a.name.localeCompare(b.name));
+        setSubjects(fetchedSubjects);
+      }
+    };
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const classToFetch = selectedClass || selectedViolationClass;
+      if (classToFetch) {
+        const studentsQuery = query(
+          collection(db, 'students'),
+          where('userId', '==', auth.currentUser.uid),
+          where('rombel', '==', classToFetch)
+        );
+        const studentsSnapshot = await getDocs(studentsQuery);
+        const fetchedStudents = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setStudents(fetchedStudents.sort((a, b) => a.name.localeCompare(b.name)));
+      } else {
+        setStudents([]);
+      }
+    };
+    fetchStudents();
+  }, [selectedClass, selectedViolationClass]);
+
+  const handleApplyFilter = async () => {
+    if (!startDate || !endDate || !selectedClass) {
+      alert('Silakan pilih rentang tanggal dan kelas.');
+      return;
+    }
+    setIsLoadingAttendance(true);
+    try {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const timeDiff = end.getTime() - start.getTime();
+      const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
+      setNumDays(dayDiff);
+      const attendanceQuery = query(
+        collection(db, 'attendance'),
+        where('userId', '==', auth.currentUser.uid),
+        where('rombel', '==', selectedClass),
+        where('date', '>=', startDate),
+        where('date', '<=', endDate)
+      );
+      const querySnapshot = await getDocs(attendanceQuery);
+      const rawDocs = querySnapshot.docs.map(doc => doc.data());
+      let summary = {};
+      students.forEach(student => {
+        summary[student.id] = { absen: student.absen, nis: student.nis, name: student.name, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
+      });
+      rawDocs.forEach(record => {
+        if (summary[record.studentId] && record.status) {
+          summary[record.studentId][record.status]++;
+        }
+      });
+      const tableData = Object.values(summary);
+      setAttendanceData(tableData);
+      const totalSummary = tableData.reduce((acc, curr) => {
+        acc.Hadir += curr.Hadir;
+        acc.Sakit += curr.Sakit;
+        acc.Ijin += curr.Ijin;
+        acc.Alpha += curr.Alpha;
+        return acc;
+      }, { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
+      setChartData(totalSummary);
+    } finally {
+      setIsLoadingAttendance(false);
+    }
+  };
+
+  const handleKehadiranPDFExport = () => {
+    if (attendanceData.length === 0) {
+      alert('Tidak ada data kehadiran untuk diekspor ke PDF.');
+      return;
+    }
+    const pdfData = attendanceData.map(item => ({
+      absen: item.absen ? String(item.absen) : '',
+      nis: item.nis || '',
+      namaSiswa: item.name || '',
+      gender: item.gender || '',
+      hadir: item.Hadir || 0,
+      sakit: item.Sakit || 0,
+      ijin: item.Ijin || 0,
+      alpa: item.Alpha || 0,
+    }));
+    generateAttendanceRecapPDF(pdfData, schoolName, startDate, endDate, teacherName, selectedClass);
+  };
+
+  const handleKehadiranExcelExport = () => {
+    if (attendanceData.length === 0) {
+      alert('Tidak ada data kehadiran untuk diekspor ke Excel.');
+      return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(attendanceData.map(item => ({
+      'No. Absen': item.absen || '',
+      'NIS': item.nis || '',
+      'Nama Siswa': item.name || '',
+      'Hadir': item.Hadir || 0,
+      'Sakit': item.Sakit || 0,
+      'Ijin': item.Ijin || 0,
+      'Alpha': item.Alpha || 0,
+    })));
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Kehadiran');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(data, `Rekapitulasi_Kehadiran_${selectedClass}_${startDate}_${endDate}.xlsx`);
+  };
+
+  const handleShowJurnal = async () => {
+    if (!jurnalStartDate || !jurnalEndDate) {
+      alert('Silakan pilih rentang tanggal.');
+      return;
+    }
+    setIsLoadingJurnal(true);
+    try {
+      const journalsQuery = query(
+        collection(db, 'teachingJournals'),
+        where('userId', '==', auth.currentUser.uid),
+        where('date', '>=', jurnalStartDate),
+        where('date', '<=', jurnalEndDate)
+      );
+      const querySnapshot = await getDocs(journalsQuery);
+      const fetchedJournals = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).sort((a, b) => new Date(b.date) - new Date(a.date));
+      setJurnalData(fetchedJournals);
+    } finally {
+      setIsLoadingJurnal(false);
+    }
+  };
+
+  const handleJurnalExport = () => {
+    if (jurnalData.length === 0) {
+      alert('Tidak ada data jurnal untuk diekspor ke PDF.');
+      return;
+    }
+    generateJurnalRecapPDF(jurnalData, jurnalStartDate, jurnalEndDate, teacherName, userProfile);
+  };
+
+  const handleJurnalExcelExport = () => {
+    if (jurnalData.length === 0) {
+      alert('Tidak ada data jurnal untuk diekspor ke Excel.');
+      return;
+    }
+    const worksheet = XLSX.utils.json_to_sheet(jurnalData.map(item => ({
+      'Tanggal': item.date || '',
+      'Kelas': item.className || '',
+      'Mata Pelajaran': item.subjectName || '',
+      'Materi': item.material || '',
+      'Tujuan Pembelajaran': item.learningObjectives || '',
+      'Kegiatan Pembelajaran': item.learningActivities || '',
+      'Refleksi': item.reflection || '',
+      'Keterlaksanaan': item.isImplemented !== false ? 'Terlaksana' : 'Tidak Terlaksana',
+      'Tindak Lanjut': item.followUp || '',
+    })));
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Jurnal');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(data, `Rekapitulasi_Jurnal_${jurnalStartDate}_${jurnalEndDate}.xlsx`);
+  };
+
+  const handleApplyNilaiFilter = async () => {
+    if (!nilaiStartDate || !nilaiEndDate || !selectedNilaiClass || !selectedNilaiSubject) {
+      alert('Silakan pilih rentang tanggal, kelas, dan mata pelajaran.');
+      return;
+    }
+    if (!auth.currentUser) {
+      alert('Anda harus login untuk melihat rekapitulasi nilai.');
+      return;
+    }
+    setIsLoadingNilai(true);
+    try {
+      const selectedClassObj = classes.find(c => c.rombel === selectedNilaiClass);
+      const selectedSubjectObj = subjects.find(s => s.name === selectedNilaiSubject);
+      if (!selectedClassObj || !selectedSubjectObj) {
+        alert('Kelas atau mata pelajaran tidak ditemukan.');
+        return;
+      }
+      const studentsQuery = query(
+        collection(db, 'students'),
+        where('userId', '==', auth.currentUser.uid),
+        where('rombel', '==', selectedNilaiClass)
+      );
+      const studentsSnapshot = await getDocs(studentsQuery);
+      const fetchedStudents = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const gradesQuery = query(
+        collection(db, 'grades'),
+        where('userId', '==', auth.currentUser.uid),
+        where('classId', '==', selectedClassObj.id),
+        where('subjectId', '==', selectedSubjectObj.id),
+        where('date', '>=', nilaiStartDate),
+        where('date', '<=', nilaiEndDate)
+      );
+      const querySnapshot = await getDocs(gradesQuery);
+      const rawGrades = querySnapshot.docs.map(doc => doc.data());
+
+      // Fetch infractions for attitude score calculation
+      const infractionsQuery = query(
+        collection(db, 'infractions'),
+        where('userId', '==', auth.currentUser.uid),
+        where('classId', '==', selectedNilaiClass),
+        where('date', '>=', new Date(nilaiStartDate).toISOString()),
+        where('date', '<=', new Date(nilaiEndDate + 'T23:59:59.999Z').toISOString())
+      );
+      const infractionsSnapshot = await getDocs(infractionsQuery);
+      const rawInfractions = infractionsSnapshot.docs.map(doc => doc.data());
+
+      const studentInfractions = {};
+      rawInfractions.forEach(inf => {
+        if (!studentInfractions[inf.studentId]) studentInfractions[inf.studentId] = 0;
+        studentInfractions[inf.studentId] += inf.points;
+      });
+
+      if (showDetailedGrades) {
+        const uniqueAssessmentColumns = new Set();
+        const assessmentTypesWithDates = new Map();
+
+        rawGrades.forEach(g => {
+          const colName = `${g.assessmentType} (${g.date})`;
+          uniqueAssessmentColumns.add(colName);
+
+          if (!assessmentTypesWithDates.has(g.assessmentType)) {
+            assessmentTypesWithDates.set(g.assessmentType, new Set());
+          }
+          assessmentTypesWithDates.get(g.assessmentType).add(g.date);
+        });
+
+        const requiredAssessmentTypes = ['Harian', 'Formatif', 'Sumatif'];
+        requiredAssessmentTypes.forEach(type => {
+          if (!assessmentTypesWithDates.has(type)) {
+            uniqueAssessmentColumns.add(`${type} (N/A)`);
+          }
+        });
+
+        const assessmentColumns = Array.from(uniqueAssessmentColumns).sort((a, b) => {
+          const typeA = a.split(' ')[0];
+          const typeB = b.split(' ')[0];
+          const dateA = a.includes('(N/A)') ? '0000-00-00' : a.match(/\((\d{4}-\d{2}-\d{2})\)/)[1];
+          const dateB = b.includes('(N/A)') ? '0000-00-00' : b.match(/\((\d{4}-\d{2}-\d{2})\)/)[1];
+
+          if (typeA === typeB) {
+            return dateA.localeCompare(dateB);
+          }
+          return requiredAssessmentTypes.indexOf(typeA) - requiredAssessmentTypes.indexOf(typeB);
+        });
+
+        const dynamicColumns = assessmentColumns.map(col => ({ header: { label: col }, accessor: col }));
+
+        const newDetailedNilaiColumns = [
+          { header: { label: 'No. Absen' }, accessor: 'absen' },
+          { header: { label: 'NIS' }, accessor: 'nis' },
+          { header: { label: 'Nama Siswa' }, accessor: 'name' },
+          ...dynamicColumns,
+          { header: { label: 'Akademik' }, accessor: 'average' },
+          { header: { label: 'Sikap' }, accessor: 'sikap' },
+          { header: { label: 'Predikat' }, accessor: 'sikap_predikat' },
+          { header: { label: 'Nilai Akhir' }, accessor: 'NA' },
+        ];
+        setDetailedNilaiColumns(newDetailedNilaiColumns);
+
+        const studentData = {};
+        fetchedStudents.forEach(student => {
+          studentData[student.id] = {
+            absen: student.absen,
+            nis: student.nis,
+            name: student.name,
+          };
+          assessmentColumns.forEach(col => studentData[student.id][col] = '-');
+        });
+
+        rawGrades.forEach(grade => {
+          const colName = `${grade.assessmentType} (${grade.date})`;
+          if (studentData[grade.studentId] && assessmentColumns.includes(colName)) {
+            studentData[grade.studentId][colName] = grade.score;
+          }
+        });
+
+        const finalData = Object.values(studentData).map(student => {
+          let total = 0;
+          let count = 0;
+          assessmentColumns.forEach(col => {
+            if (student[col] !== '-') {
+              total += parseFloat(student[col]);
+              count++;
+            }
+          });
+          const academicAvg = count > 0 ? (total / count) : 0;
+          student.average = academicAvg.toFixed(2);
+
+          // Find student ID
+          const studentId = Object.keys(studentData).find(key => studentData[key].nis === student.nis);
+          const points = studentInfractions[studentId] || 0;
+          const sikapScore = 100 - points;
+          student.sikap = sikapScore;
+
+          const getSikapPredicate = (score) => {
+            if (score >= 91) return 'SB'; // Sangat Baik
+            if (score >= 81) return 'B';  // Baik
+            if (score >= 71) return 'C';  // Cukup
+            return 'K';  // Kurang
+          };
+          student.sikap_predikat = getSikapPredicate(sikapScore);
+
+          // Final Weighted Score (50% Academic + 50% Attitude)
+          const NA = (academicAvg * 0.5) + (sikapScore * 0.5);
+          student.NA = NA.toFixed(2);
+
+          return student;
+        }).sort((a, b) => a.absen - b.absen);
+
+        setNilaiData(finalData);
+      } else {
+        const recapitulation = {};
+        fetchedStudents.forEach(student => {
+          recapitulation[student.id] = {
+            absen: student.absen,
+            nis: student.nis,
+            name: student.name,
+            NH: [],
+            Formatif: [],
+            Sumatif: [],
+          };
+        });
+        rawGrades.forEach(grade => {
+          if (recapitulation[grade.studentId]) {
+            const score = parseFloat(grade.score);
+            if (!isNaN(score)) {
+              if (grade.assessmentType === 'Harian') {
+                recapitulation[grade.studentId].NH.push(score);
+              } else if (grade.assessmentType === 'Formatif') {
+                recapitulation[grade.studentId].Formatif.push(score);
+              } else if (grade.assessmentType === 'Sumatif') {
+                recapitulation[grade.studentId].Sumatif.push(score);
+              }
+            }
+          }
+        });
+        const finalNilaiData = Object.values(recapitulation).map(studentData => {
+          const NH_avg = studentData.NH.length > 0 ? studentData.NH.reduce((a, b) => a + b, 0) / studentData.NH.length : 0;
+          const Formatif_avg = studentData.Formatif.length > 0 ? studentData.Formatif.reduce((a, b) => a + b, 0) / studentData.Formatif.length : 0;
+          const Sumatif_avg = studentData.Sumatif.length > 0 ? studentData.Sumatif.reduce((a, b) => a + b, 0) / studentData.Sumatif.length : 0;
+
+          const averages = [NH_avg, Formatif_avg, Sumatif_avg].filter(avg => avg > 0);
+          const academicNA = averages.length > 0 ? averages.reduce((a, b) => a + b, 0) / averages.length : 0;
+
+          // Sikap from infractions
+          const studentId = Object.keys(recapitulation).find(key => recapitulation[key].nis === studentData.nis);
+          const points = studentInfractions[studentId] || 0;
+          const sikapScore = 100 - points;
+
+          // Final Weighted Score (50% Academic + 50% Attitude)
+          const NA = (academicNA * 0.5) + (sikapScore * 0.5);
+
+          return {
+            absen: studentData.absen,
+            nis: studentData.nis,
+            name: studentData.name,
+            NH_avg: NH_avg.toFixed(2),
+            Formatif_avg: Formatif_avg.toFixed(2),
+            Sumatif_avg: Sumatif_avg.toFixed(2),
+            Akademik_avg: academicNA.toFixed(2),
+            sikap: `${sikapScore} (${getSikapPredicate(sikapScore)})`,
+            NA: NA.toFixed(2),
+          };
+        }).sort((a, b) => a.absen - b.absen);
+        setNilaiData(finalNilaiData);
+      }
+    };
+
+    const handleNilaiPDFExport = () => {
+      if (nilaiData.length === 0) {
+        alert('Tidak ada data nilai untuk diekspor ke PDF.');
+        return;
+      }
+      generateNilaiRecapPDF(nilaiData, schoolName, nilaiStartDate, nilaiEndDate, teacherName, selectedNilaiClass, selectedNilaiSubject, userProfile, showDetailedGrades, detailedNilaiColumns);
+    };
+
+    const calculateNilaiSikap = (currentScore) => {
+      if (currentScore > 90) return 'Sangat Baik';
+      else if (currentScore >= 75) return 'Baik';
+      else if (currentScore >= 60) return 'Cukup';
+      else return 'Kurang';
+    };
+
+    const generateDeskripsi = (studentName, studentViolations, currentScore, nilaiSikap) => {
+      if (studentViolations.length === 0) {
+        return `Tidak ada catatan pelanggaran. Nilai Sikap: ${nilaiSikap} (Skor: ${currentScore})`;
+      }
+
+      const groupedViolations = studentViolations.reduce((acc, v) => {
+        if (!acc[v.infractionType]) {
+          acc[v.infractionType] = { count: 0, totalPoints: 0, dates: [] };
+        }
+        acc[v.infractionType].count++;
+        acc[v.infractionType].totalPoints += v.points;
+        // Format date simply as DD/MM
+        const d = new Date(v.date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        acc[v.infractionType].dates.push(`${day}/${month}`);
+        return acc;
+      }, {});
+
+      const violationDetails = Object.entries(groupedViolations).map(([type, data]) => {
+        // Join dates with comma
+        const dateList = data.dates.join(', ');
+        return `- ${type} (${data.count} kali, ${data.totalPoints} poin) [${dateList}]`;
+      }).join('\n');
+
+      return `Memiliki catatan pelanggaran:\n${violationDetails}\nNilai Sikap: ${nilaiSikap} (Skor: ${currentScore})`;
+    };
+
+    const handleApplyViolationFilter = async () => {
+      console.log('Selected Violation Class:', selectedViolationClass);
+      if (!violationStartDate || !violationEndDate || !selectedViolationClass) {
+        alert('Silakan pilih rentang tanggal dan kelas.');
+        return;
+      }
+      if (!auth.currentUser) {
+        alert('Anda harus login untuk melihat rekapitulasi pelanggaran.');
+        return;
+      }
+
+      const studentsQuery = query(
+        collection(db, 'students'),
+        where('userId', '==', auth.currentUser.uid),
+        where('rombel', '==', selectedViolationClass)
+      );
+      const studentsSnapshot = await getDocs(studentsQuery);
+      const fetchedStudents = studentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      console.log('Fetched Students:', fetchedStudents);
+
+      const selectedClassObj = classes.find(c => c.rombel === selectedViolationClass);
+      if (!selectedClassObj) {
+        alert('Kelas tidak ditemukan.');
+        return;
+      }
+      console.log('Selected Class ID:', selectedClassObj.id);
+
+      const endOfDay = new Date(violationEndDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      console.log('violationStartDate:', violationStartDate);
+      console.log('violationEndDate:', violationEndDate);
+      console.log('Query Start Date (ISO):', new Date(violationStartDate).toISOString());
+      console.log('Query End Date (ISO):', endOfDay.toISOString());
+
+      const violationsQuery = query(
+        collection(db, 'infractions'),
+        where('userId', '==', auth.currentUser.uid),
+        where('classId', '==', selectedViolationClass),
+        where('date', '>=', new Date(violationStartDate).toISOString()),
+        where('date', '<=', endOfDay.toISOString())
+      );
+      const violationsSnapshot = await getDocs(violationsQuery);
+      const rawViolations = violationsSnapshot.docs.map(doc => doc.data());
+      console.log('Raw Violations:', rawViolations);
+
+      const studentViolationSummary = {};
+      fetchedStudents.forEach(student => {
+        studentViolationSummary[student.id] = {
+          absen: student.absen,
+          nis: student.nis,
+          name: student.name,
+          gender: student.gender,
+          violationCount: 0,
+          totalPointsDeducted: 0,
+          violationsDetail: [],
+          nilaiSikap: '',
+          deskripsi: '',
+        };
+      });
+      console.log('Initial Student Violation Summary:', studentViolationSummary);
+
+      rawViolations.forEach(violation => {
+        if (studentViolationSummary[violation.studentId]) {
+          studentViolationSummary[violation.studentId].violationCount++;
+          studentViolationSummary[violation.studentId].totalPointsDeducted += violation.points;
+          studentViolationSummary[violation.studentId].violationsDetail.push(violation);
+        }
+      });
+      console.log('Student Violation Summary after processing violations:', studentViolationSummary);
+
+      const finalViolationData = Object.values(studentViolationSummary).map(studentData => {
+        const currentScore = 100 - studentData.totalPointsDeducted;
+        const nilaiSikap = calculateNilaiSikap(currentScore);
+        const deskripsi = generateDeskripsi(studentData.name, studentData.violationsDetail, currentScore, nilaiSikap);
+        return {
+          ...studentData,
+          nilaiSikap,
+          deskripsi,
+        };
+      }).sort((a, b) => a.absen - b.absen);
+      console.log('Final Violation Data:', finalViolationData);
+
+      setViolationData(finalViolationData);
+    };
+
+    const handleViolationPDFExport = () => {
+      if (violationData.length === 0) {
+        alert('Tidak ada data pelanggaran untuk diekspor ke PDF.');
+        return;
+      }
+      generateViolationRecapPDF(violationData, schoolName, violationStartDate, violationEndDate, teacherName, selectedViolationClass, userProfile);
+    };
+
+
+
+    const renderTabButton = (tabName, tabLabel) => {
+      const isActive = activeTab === tabName;
+      return (
+        <button
+          className={`flex-shrink-0 py-2.5 px-4 text-sm font-semibold rounded-lg transition-all duration-300 ease-in-out focus:outline-none ${isActive ? 'bg-white dark:bg-surface-dark text-primary shadow-sm' : 'text-text-muted-light dark:text-text-muted-dark hover:bg-white/60 dark:hover:bg-surface-dark/60'}`}
+          onClick={() => setActiveTab(tabName)}
+        >
+          {tabLabel}
+        </button>
+      );
+    };
+
+    const kehadiranColumns = [
+      { header: { label: 'Nama Siswa' }, accessor: 'name' },
+      { header: { label: 'Hadir' }, accessor: 'Hadir' },
+      { header: { label: 'Sakit' }, accessor: 'Sakit' },
+      { header: { label: 'Ijin' }, accessor: 'Ijin' },
+      { header: { label: 'Alpha' }, accessor: 'Alpha' },
+    ];
+
+    const jurnalColumns = [
+      { header: { label: 'Tanggal' }, accessor: 'date' },
+      { header: { label: 'Kelas' }, accessor: 'className' },
+      { header: { label: 'Mata Pelajaran' }, accessor: 'subjectName' },
+      { header: { label: 'Materi' }, accessor: 'material' },
+      { header: { label: 'Tujuan Pembelajaran' }, accessor: 'learningObjectives' },
+      { header: { label: 'Kegiatan Pembelajaran' }, accessor: 'learningActivities' },
+      { header: { label: 'Refleksi' }, accessor: 'reflection' },
+      { header: { label: 'Keterlaksanaan' }, accessor: 'isImplemented' }, // Changed from challenges
+      { header: { label: 'Tindak Lanjut' }, accessor: 'followUp' },
+    ];
+
+    const nilaiColumns = [
+      { header: { label: 'No. Absen' }, accessor: 'absen' },
+      { header: { label: 'NIS' }, accessor: 'nis' },
+      { header: { label: 'Nama Siswa' }, accessor: 'name' },
+      { header: { label: 'Rata-rata NH' }, accessor: 'NH_avg' },
+      { header: { label: 'Rata-rata Formatif' }, accessor: 'Formatif_avg' },
+      { header: { label: 'Rata-rata Sumatif' }, accessor: 'Sumatif_avg' },
+      { header: { label: 'Rata-rata Akademik' }, accessor: 'Akademik_avg' },
+      { header: { label: 'Nilai Sikap' }, accessor: 'sikap' },
+      { header: { label: 'Nilai Akhir (NA)' }, accessor: 'NA' },
+    ];
+
+
+
+    const pelanggaranColumns = [
+      { header: { label: 'No. Absen' }, accessor: 'absen' },
+      { header: { label: 'NIS' }, accessor: 'nis' },
+      { header: { label: 'Nama Siswa' }, accessor: 'name' },
+      { header: { label: 'Jenis Kelamin' }, accessor: 'gender' },
+      { header: { label: 'Total Poin Pelanggaran' }, accessor: 'totalPointsDeducted' },
+      { header: { label: 'Nilai Sikap' }, accessor: 'nilaiSikap' },
+      { header: { label: 'Deskripsi' }, accessor: 'deskripsi' },
+    ];
+
+    return (
+      <>
+        <div className="p-4 sm:p-6">
+          <h1 className="text-2xl font-bold mb-6 text-text-light dark:text-text-dark">Rekapitulasi</h1>
+          <div className="max-w-xl mx-auto sm:mx-0">
+            <div className="flex space-x-2 p-1.5 bg-gray-100 dark:bg-surface-dark rounded-xl overflow-x-auto">
+              {renderTabButton('kehadiran', 'Kehadiran')}
+              {renderTabButton('jurnal', 'Jurnal')}
+              {renderTabButton('nilai', 'Nilai')}
+              {renderTabButton('pelanggaran', 'Pelanggaran')}
+            </div>
+          </div>
+          <div className="mt-6">
+            {activeTab === 'kehadiran' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                  <StyledInput type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                  <StyledInput type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+                  <StyledSelect value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+                    <option value="">Pilih Kelas</option>
+                    {classes.map(c => <option key={c.id} value={c.rombel}>{c.rombel}</option>)}
+                  </StyledSelect>
+                  <StyledButton onClick={handleApplyFilter}>Terapkan Filter</StyledButton>
+                </div>
+
+                {attendanceData.length > 0 && (
+                  <div className="p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                    <StyledButton onClick={handleKehadiranPDFExport}>Download PDF</StyledButton>
+                    <div className="overflow-x-auto mt-4">
+                      <StyledTable headers={kehadiranColumns.map(c => c.header)}>
+                        {attendanceData.map((row, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-700'}>
+                            {kehadiranColumns.map(col => <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{row[col.accessor]}</td>)}
+                          </tr>
+                        ))}
+                      </StyledTable>
+                    </div>
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold mb-4">Grafik Kehadiran</h3>
+                      <PieChart data={chartData} numDays={numDays} />
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+            {activeTab === 'jurnal' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                  <StyledInput type="date" value={jurnalStartDate} onChange={(e) => setJurnalStartDate(e.target.value)} />
+                  <StyledInput type="date" value={jurnalEndDate} onChange={(e) => setJurnalEndDate(e.target.value)} />
+                  <StyledButton onClick={handleShowJurnal}>Tampilkan Jurnal</StyledButton>
+                </div>
+
+                {jurnalData.length > 0 && (
+                  <div className="p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                    <StyledButton onClick={handleJurnalExport}>Download PDF</StyledButton>
+                    <div className="w-full overflow-auto max-h-[600px] mt-4">
+                      <StyledTable headers={jurnalColumns.map(c => c.header)}>
+                        {jurnalData.map((row, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-700'}>
+                            {jurnalColumns.map(col => (
+                              <td key={col.accessor} className="px-6 py-4 whitespace-normal text-sm text-gray-800 dark:text-gray-200 min-w-[200px]">
+                                {col.accessor === 'isImplemented' ? (
+                                  row.isImplemented !== false ? (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                      Terlaksana
+                                    </span>
+                                  ) : (
+                                    <div className="flex flex-col gap-1">
+                                      <span className="inline-flex self-start items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                        Tidak Terlaksana
+                                      </span>
+                                      <span className="text-xs text-red-600 dark:text-red-400 italic">
+                                        Ket: {row.challenges || '-'}
+                                      </span>
+                                    </div>
+                                  )
+                                ) : (
+                                  row[col.accessor] || '-'
+                                )}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </StyledTable>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {activeTab === 'nilai' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                  <StyledInput type="date" label="Tanggal Mulai" value={nilaiStartDate} onChange={(e) => setNilaiStartDate(e.target.value)} />
+                  <StyledInput type="date" label="Tanggal Akhir" value={nilaiEndDate} onChange={(e) => setNilaiEndDate(e.target.value)} />
+                  <StyledSelect label="Kelas" value={selectedNilaiClass} onChange={(e) => setSelectedNilaiClass(e.target.value)}>
+                    <option value="">Pilih Kelas</option>
+                    {classes.map(c => <option key={c.id} value={c.rombel}>{c.rombel}</option>)}
+                  </StyledSelect>
+                  <StyledSelect label="Mata Pelajaran" value={selectedNilaiSubject} onChange={(e) => setSelectedNilaiSubject(e.target.value)}>
+                    <option value="">Pilih Mata Pelajaran</option>
+                    {subjects.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                  </StyledSelect>
+                  <StyledButton onClick={handleApplyNilaiFilter}>Terapkan Filter</StyledButton>
+                  <StyledButton onClick={handleNilaiPDFExport} disabled={nilaiData.length === 0}>Download PDF</StyledButton>
+                  <div className="flex items-center">
+                    <label htmlFor="detailed-grades-toggle" className="mr-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tampilkan Nilai Lengkap</label>
+                    <input type="checkbox" id="detailed-grades-toggle" checked={showDetailedGrades} onChange={() => setShowDetailedGrades(!showDetailedGrades)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                  </div>
+                </div>
+
+                {nilaiData.length > 0 && (
+                  <div className="p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                    <div className="overflow-x-auto mt-4">
+                      {showDetailedGrades ? (
+                        <StyledTable headers={detailedNilaiColumns.map(c => c.header)}>
+                          {nilaiData.map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-700'}>
+                              {detailedNilaiColumns.map(col => <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{row[col.accessor]}</td>)}
+                            </tr>
+                          ))}
+                        </StyledTable>
+                      ) : (
+                        <StyledTable headers={nilaiColumns.map(c => c.header)}>
+                          {nilaiData.map((row, index) => (
+                            <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-700'}>
+                              {nilaiColumns.map(col => <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">{row[col.accessor]}</td>)}
+                            </tr>
+                          ))}
+                        </StyledTable>
+                      )}
+                    </div>
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                      <p className="text-sm text-blue-800 dark:text-blue-300">
+                        <strong>Keterangan Pengambilan Nilai:</strong> Nilai Akhir (NA) dihitung berdasarkan bobot <strong>50% Rata-rata Akademik</strong> dan <strong>50% Nilai Sikap</strong>. Nilai Sikap dihitung dari skor dasar 100 dikurangi poin pelanggaran selama periode tersebut.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {activeTab === 'pelanggaran' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                  <StyledInput type="date" label="Tanggal Mulai" value={violationStartDate} onChange={(e) => setViolationStartDate(e.target.value)} />
+                  <StyledInput type="date" label="Tanggal Akhir" value={violationEndDate} onChange={(e) => setViolationEndDate(e.target.value)} />
+                  <StyledSelect label="Kelas" value={selectedViolationClass} onChange={(e) => setSelectedViolationClass(e.target.value)}>
+                    <option value="">Pilih Kelas</option>
+                    {classes.map(c => <option key={c.id} value={c.rombel}>{c.rombel}</option>)}
+                  </StyledSelect>
+                  <StyledButton onClick={handleApplyViolationFilter}>Terapkan Filter</StyledButton>
+                  <StyledButton onClick={handleViolationPDFExport} disabled={violationData.length === 0}>Download PDF</StyledButton>
+                </div>
+
+                {violationData.length > 0 && (
+                  <div className="p-4 bg-white dark:bg-surface-dark rounded-xl shadow-sm">
+                    <div className="overflow-x-auto mt-4">
+                      <StyledTable headers={pelanggaranColumns.map(c => c.header)}>
+                        {violationData.map((row, index) => (
+                          <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-700'}>
+                            {pelanggaranColumns.map(col => <td key={col.accessor} className="px-6 py-4 whitespace-normal text-sm text-gray-800 dark:text-gray-200">{row[col.accessor]}</td>)}
+                          </tr>
+                        ))}
+                      </StyledTable>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  export default RekapitulasiPage;

@@ -1,0 +1,164 @@
+/* Layout Containers */
+.calendar-layout-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+.sidebar-form-container {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.main-calendar-container {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  height: 600px;
+}
+
+.bottom-table-container {
+  margin-top: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+/* Form Styles - Light Purple Aesthetic */
+.form-field-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.form-input-purple {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #f5f3ff;
+  /* Light purple */
+  border: 1px solid #e9e4ff;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  transition: all 0.2s;
+}
+
+.form-input-purple:focus {
+  outline: none;
+  border-color: #c4b5fd;
+  box-shadow: 0 0 0 2px rgba(196, 181, 253, 0.2);
+}
+
+/* Custom Toggle Switch for Activity Type */
+.activity-toggle-container {
+  display: flex;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.activity-toggle-btn {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.activity-toggle-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+.activity-toggle-btn.inactive {
+  background: transparent;
+  color: #6b7280;
+}
+
+/* Table Styles */
+.saved-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.saved-schedule-table th {
+  text-align: left;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.saved-schedule-table td {
+  padding: 12px;
+  font-size: 14px;
+  color: #4b5563;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Calendar Overrides */
+.rbc-calendar {
+  font-family: inherit;
+}
+
+.rbc-toolbar button {
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.rbc-event {
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.event-holiday {
+  background-color: #ef4444 !important;
+  border: none !important;
+}
+
+.event-non-teaching {
+  background-color: #fbcfe8 !important;
+  /* Light Pink */
+  color: #b91c4b !important;
+  border: 1px dashed #ec4899 !important;
+}
+
+.event-teaching {
+  background-color: #3b82f6 !important;
+}
+
+.dark .calendar-layout-container,
+.dark .sidebar-form-container,
+.dark .main-calendar-container,
+.dark .bottom-table-container {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .form-input-purple {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+.dark .saved-schedule-table th,
+.dark .saved-schedule-table td {
+  color: #f3f4f6;
+  border-color: #374151;
+}

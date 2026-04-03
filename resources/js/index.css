@@ -1,0 +1,987 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese:wght@400;700&display=swap');
+
+:root {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Custom Scrollbar for Sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'DSEG7Classic';
+  src: url('/fonts/DSEG7Classic-Bold.woff2') format('woff2'),
+    url('/fonts/DSEG7Classic-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@layer base {
+  body {
+    /* Apply a light purple background and dark purple text for better contrast */
+    @apply bg-purple-50 text-purple-900 dark:bg-purple-950 dark:text-purple-50;
+    font-family: 'Inter', sans-serif;
+    /* Using a modern sans-serif font */
+  }
+
+
+
+  /* React Big Calendar overrides for better contrast */
+  .rbc-calendar {
+    @apply text-purple-900 dark:text-purple-100;
+  }
+
+  .rbc-header {
+    @apply text-purple-700 dark:text-purple-300;
+  }
+
+  .rbc-day-bg {
+    @apply bg-purple-50 dark:bg-purple-900;
+  }
+
+  .rbc-off-range-bg {
+    @apply bg-purple-100 dark:bg-purple-800;
+  }
+
+  .rbc-event {
+    /* Use a vibrant purple for events */
+    @apply bg-purple-600 text-white;
+  }
+
+  .rbc-toolbar button {
+    @apply text-purple-800 dark:text-purple-200;
+  }
+
+  /* More specific overrides for react-big-calendar */
+  .rbc-month-view .rbc-header,
+  .rbc-time-view .rbc-header {
+    @apply text-purple-800 dark:text-purple-200;
+  }
+
+  .rbc-date-cell {
+    @apply text-purple-800 dark:text-purple-200;
+  }
+
+  .rbc-event-content {
+    @apply text-white;
+  }
+
+  .rbc-today {
+    /* Use a distinct color for today's date */
+    @apply bg-purple-200 dark:bg-purple-700;
+  }
+
+  .rbc-current-time-indicator {
+    @apply bg-red-500;
+    /* Keep red for time indicator */
+  }
+
+  /* Ensure all text within calendar is readable */
+  .rbc-calendar * {
+    @apply text-purple-900 dark:text-purple-100;
+  }
+
+  /* Custom scrollbar for a modern look */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+/* Wavy Border Animation */
+.wavy-border-animation {
+  position: relative;
+  overflow: hidden;
+  /* Hide parts of the wave that go outside */
+}
+
+.wavy-border-animation::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  /* Make it wider to allow for movement */
+  height: 3px;
+  /* Thickness of the wave */
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.8) 10%,
+      /* White wave */
+      transparent 20%,
+      transparent 80%,
+      rgba(255, 255, 255, 0.8) 90%,
+      transparent 100%);
+  background-size: 50% 100%;
+  /* Control the wave pattern repetition */
+  animation: wave-move 2s linear infinite;
+  /* Animation duration and type */
+}
+
+@keyframes wave-move {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+    /* Move the wave across */
+  }
+}
+
+.shadow-cekung {
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-background {
+  background: linear-gradient(-45deg, #fb7c00, #ffc700, #fb9500);
+  background-size: 400% 400%;
+  animation: gradient-animation 10s ease infinite;
+}
+
+/* Print Styles */
+/* Consolidated Print Styles */
+@media print {
+  @page {
+    size: A4;
+    margin: 2cm 2cm 2cm 2.5cm !important;
+  }
+
+  /* Reset all potential clipping containers */
+  html,
+  body,
+  #root,
+  #root>div,
+  main,
+  main>div,
+  .lg\:col-span-3 {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    position: static !important;
+    background: white !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide UI strictly */
+  aside,
+  header,
+  nav,
+  footer,
+  button,
+  .no-print,
+  [role="navigation"],
+  [role="banner"],
+  #mobile-nav {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+
+  /* Printable area specific stability */
+  #printable-area {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .rpp-prose {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    color: #000 !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+  }
+
+  .rpp-prose table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    page-break-inside: auto !important;
+    margin: 1.5rem 0 !important;
+  }
+
+
+  tr {
+    page-break-inside: avoid !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  th,
+  td {
+    border: 1px solid black !important;
+    color: black !important;
+    padding: 6px 8px !important;
+  }
+
+  /* Ultra-Aggressive Signature Removal - Priority Overrides */
+  .rpp-prose div.rpp-signature table {
+    table-layout: fixed !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 2rem !important;
+  }
+
+  .rpp-prose div.rpp-signature table td,
+  div.rpp-signature td {
+    border: none !important;
+    border-width: 0 !important;
+    outline: none !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    text-align: center !important;
+    width: 50% !important;
+    vertical-align: top !important;
+    white-space: nowrap !important;
+    padding: 2px 5px !important;
+  }
+
+  /* Disable animations and force visibility */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* --- General AI Prose Styling --- */
+.prose {
+  @apply max-w-none text-gray-800 dark:text-gray-200;
+  line-height: 1.7;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  @apply font-bold mt-8 mb-4;
+}
+
+.prose h1 {
+  @apply text-2xl text-blue-800 dark:text-blue-100;
+}
+
+.prose h2 {
+  @apply text-xl text-blue-700 dark:text-blue-200 border-b pb-2;
+}
+
+.prose h3 {
+  @apply text-lg text-blue-600 dark:text-blue-300;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose ul,
+.prose ol {
+  @apply pl-6 mb-6;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose table {
+  @apply w-full border-collapse my-6;
+}
+
+.prose th,
+.prose td {
+  @apply border border-gray-300 dark:border-gray-600 p-2 text-left;
+}
+
+.prose th {
+  @apply bg-gray-50 dark:bg-gray-800 font-bold;
+}
+
+/* --- Si Pintar AI Personality Animations --- */
+@keyframes pintar-float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pintar-breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.3));
+  }
+
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+  }
+}
+
+@keyframes pintar-think {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(5deg) scale(1.1);
+  }
+
+  75% {
+    transform: rotate(-5deg) scale(1.1);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.animate-pintar-float {
+  animation: pintar-float 3s ease-in-out infinite;
+}
+
+.animate-pintar-breathe {
+  animation: pintar-breathe 4s ease-in-out infinite;
+}
+
+.animate-pintar-think {
+  animation: pintar-think 1s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.5));
+}
+
+/* ------------------------------------------ */
+/* --- RPP Paper-Like Styling System --- */
+.rpp-prose {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 11pt !important;
+  line-height: 1.5;
+  color: #000;
+  counter-reset: h2-count;
+}
+
+/* RPP Title (H1) */
+.rpp-prose h1 {
+  text-align: center !important;
+  font-size: 14pt !important;
+  font-weight: 800 !important;
+  margin-bottom: 2rem !important;
+  text-transform: uppercase;
+  border-bottom: 3px double #000 !important;
+  padding-bottom: 0.5rem;
+  color: #000 !important;
+}
+
+/* Main Sections (I, II, III) - Numbers handled by AI in prompt */
+.rpp-prose h2 {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.5rem;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1rem !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+  border-bottom: 2px solid #000 !important;
+  padding-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+/* Sub-sections (A, B, C) - Numbers handled by AI in prompt */
+.rpp-prose h3 {
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.5rem;
+  color: #000 !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid #eee !important;
+  padding-bottom: 0.25rem;
+}
+
+/* Page Break Marker */
+.page-break {
+  display: block;
+  page-break-before: always !important;
+  break-before: page !important;
+  height: 0;
+  margin: 0;
+  border: none;
+}
+
+@media print {
+
+  /* Global print optimizations */
+  .rpp-prose h3 {
+    page-break-before: auto !important;
+  }
+}
+
+/* List Item Formatting (1., a., i., and bullets) */
+.rpp-prose ol,
+.rpp-prose ul {
+  list-style: none !important;
+  list-style-type: none !important;
+  padding-left: 1.75rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.rpp-prose li {
+  position: relative !important;
+  margin-bottom: 0.5rem !important;
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+.rpp-prose ol {
+  counter-reset: ol-lvl1;
+}
+
+.rpp-prose ol>li {
+  counter-increment: ol-lvl1;
+}
+
+.rpp-prose ol>li::before {
+  content: counter(ol-lvl1, decimal) ". ";
+  position: absolute;
+  left: -1.75rem;
+  font-weight: bold;
+}
+
+/* Unordered List markers (Custom bullet to avoid double bullet) */
+.rpp-prose ul>li::before {
+  content: "•" !important;
+  position: absolute;
+  left: -1.25rem;
+  font-weight: bold;
+  color: #1a1a1a;
+  font-size: 1.2rem;
+}
+
+/* Nested lists (a, b, c) */
+.rpp-prose ol li ol {
+  counter-reset: ol-lvl2;
+  margin-top: 0.25rem;
+  padding-left: 1.5rem !important;
+}
+
+.rpp-prose ol li ol>li {
+  counter-increment: ol-lvl2;
+}
+
+.rpp-prose ol li ol>li::before {
+  content: counter(ol-lvl2, lower-alpha) ") ";
+  position: absolute;
+  left: -1.5rem;
+}
+
+/* Deeply nested (i, ii, iii) */
+.rpp-prose ol li ol li ol {
+  counter-reset: ol-lvl3;
+  padding-left: 1.5rem !important;
+}
+
+.rpp-prose ol li ol li ol>li {
+  counter-increment: ol-lvl3;
+}
+
+.rpp-prose ol li ol li ol>li::before {
+  content: counter(ol-lvl3, lower-roman) ". ";
+  position: absolute;
+  left: -1.5rem;
+}
+
+
+/* Formal Table Styling */
+.rpp-prose table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  background: white !important;
+}
+
+.rpp-prose th,
+.rpp-prose td {
+  border: 1px solid #000 !important;
+  padding: 8px 12px !important;
+  color: #000 !important;
+  font-size: 11pt;
+}
+
+.rpp-prose th {
+  background-color: #f0f0f0 !important;
+  text-align: center !important;
+}
+
+/* Spacing and Indentation */
+.rpp-prose p {
+  margin-bottom: 1rem !important;
+  text-align: justify;
+}
+
+.dark .rpp-prose {
+  color: #e5e7eb;
+}
+
+.dark .rpp-prose h2,
+.dark .rpp-prose h3 {
+  color: #fff !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .rpp-prose table {
+  background: #1f2937 !important;
+}
+
+.dark .rpp-prose th,
+.dark .rpp-prose td {
+  border-color: #4b5563 !important;
+  color: #fff !important;
+}
+
+.dark .rpp-prose th {
+  background-color: #374151 !important;
+}
+
+/* Aggressive Signature Style Reset - MUST BE AT THE END */
+.rpp-prose div.rpp-signature table {
+  table-layout: fixed !important;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 2rem !important;
+}
+
+.rpp-prose div.rpp-signature table td,
+div.rpp-signature td {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  text-align: center !important;
+  width: 50% !important;
+  vertical-align: top !important;
+  white-space: nowrap !important;
+  padding: 2px 5px !important;
+}
+
+/* --- End RPP Paper-Like Styling --- */
+
+/* Javanese Script Support */
+.font-carakan {
+  font-family: 'Noto Sans Javanese', serif !important;
+  line-height: 1.8 !important;
+  font-size: 1.1em;
+}
+
+/* Custom Animations for TeachingScheduleCard */
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-subtle {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: scale(0.995);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+.animate-pulse-yellow {
+  animation: pulse-yellow 2s infinite;
+}
+
+@keyframes pulse-yellow {
+
+  0%,
+  100% {
+    background-color: rgba(251, 191, 36, 0.1);
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
+  }
+
+  50% {
+    background-color: rgba(251, 191, 36, 0.2);
+    box-shadow: 0 0 0 8px rgba(251, 191, 36, 0);
+  }
+}
+
+@keyframes bounce-short {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-short {
+  animation: bounce-short 2s ease-in-out infinite;
+}
+
+/* Welcome Screen Animations */
+/* --- Welcome Screen Overhaul Animations --- */
+@keyframes aurora {
+  0% {
+    transform: translate(0%, 0%) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(10%, 10%) rotate(5deg);
+  }
+
+  50% {
+    transform: translate(-5%, 15%) rotate(-5deg);
+  }
+
+  75% {
+    transform: translate(-15%, -10%) rotate(10deg);
+  }
+
+  100% {
+    transform: translate(0%, 0%) rotate(0deg);
+  }
+}
+
+@keyframes welcome-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+    filter: blur(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes welcome-float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
+
+@keyframes progress-line {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-aurora {
+  animation: aurora 20s linear infinite;
+}
+
+.animate-welcome-zoom-in {
+  animation: welcome-zoom-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-welcome-float {
+  animation: welcome-float 6s ease-in-out infinite;
+}
+
+.animate-progress-line {
+  animation: progress-line 2.5s ease-in-out infinite;
+}
+
+.welcome-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.dark .welcome-glass {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* --- End Welcome Screen Overhaul Animations --- */
+
+/* Previous Animations */
+@keyframes fade-in-up-css {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up-css {
+  animation: fade-in-up-css 0.6s ease-out forwards;
+}
+
+.animate-welcome-fade-out {
+  animation: fadeOut 0.8s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.05);
+    filter: blur(20px);
+  }
+}
+
+@keyframes dots-blink {
+
+  0%,
+  100% {
+    opacity: 0.1;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-dots-blink {
+  animation: dots-blink 1.4s infinite ease-in-out;
+}
+
+/* --- Utility Classes --- */
+.custom-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes pulse-glow-head {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+    box-shadow: 0 0 4px 1px rgba(34, 211, 238, 0.4);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+    box-shadow: 0 0 12px 3px rgba(34, 211, 238, 0.8);
+  }
+}
+
+.animate-pulse-glow-head {
+  animation: pulse-glow-head 1.5s ease-in-out infinite;
+}
+
+/* --- Premium Chart Utilities --- */
+.chart-container-glass {
+  @apply bg-white/40 dark:bg-black/40 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-2xl transition-all duration-500 rounded-[2rem];
+  isolation: isolate;
+}
+
+.chart-glow-blue {
+  box-shadow: 0 20px 50px -15px rgba(59, 130, 246, 0.3);
+}
+
+.chart-glow-green {
+  box-shadow: 0 20px 50px -15px rgba(16, 185, 129, 0.3);
+}
+
+.chart-glow-purple {
+  box-shadow: 0 20px 50px -15px rgba(139, 92, 246, 0.3);
+}
+
+.chart-glow-red {
+  box-shadow: 0 20px 50px -15px rgba(239, 68, 68, 0.3);
+}
+
+.chart-glow-orange {
+  box-shadow: 0 20px 50px -15px rgba(245, 158, 11, 0.3);
+}
+
+.chart-inner-border {
+  @apply relative after:absolute after:inset-0 after:rounded-[inherit] after:border after:border-white/20 after:pointer-events-none;
+}
+
+.chart-card-gradient {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+/* CCTV Monitor Animations */
+@keyframes timer-bar {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@keyframes fade-in-premium {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.animate-fade-in-premium {
+  animation: fade-in-premium 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-timer-bar-cctv {
+  animation: timer-bar 5s linear forwards;
+}

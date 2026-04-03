@@ -1,0 +1,2782 @@
+{
+    "version": "2025.10",
+    "name": "Inteligensi Kurikulum Merdeka BSKAP 2025 (Kepka 046/2025)",
+    "last_updated": "2026-02-03",
+    "standards": {
+        "regulation": "Keputusan Kepala BSKAP No. 046/H/KR/2025",
+        "foundation": "Permendikbudristek No. 13 Tahun 2025",
+        "profile_regulation": "Permendikdasmen No. 10 Tahun 2025",
+        "philosophy": {
+            "name": "Deep Learning",
+            "pillars": [
+                {
+                    "name": "Mindful",
+                    "description": "Kesadaran penuh & fokus."
+                },
+                {
+                    "name": "Meaningful",
+                    "description": "Relevansi & pemahaman mendalam."
+                },
+                {
+                    "name": "Joyful",
+                    "description": "Motivasi & kesejahteraan emosional."
+                }
+            ]
+        },
+        "profile_lulusan_2025": [
+            {
+                "id": 1,
+                "dimensi": "Keimanan & Ketakwaan"
+            },
+            {
+                "id": 2,
+                "dimensi": "Kewargaan"
+            },
+            {
+                "id": 3,
+                "dimensi": "Penalaran Kritis"
+            },
+            {
+                "id": 4,
+                "dimensi": "Kreativitas"
+            },
+            {
+                "id": 5,
+                "dimensi": "Kolaborasi"
+            },
+            {
+                "id": 6,
+                "dimensi": "Kemandirian"
+            },
+            {
+                "id": 7,
+                "dimensi": "Kesehatan"
+            },
+            {
+                "id": 8,
+                "dimensi": "Komunikasi"
+            }
+        ],
+        "industry_competencies_2025_2026": [
+            {
+                "name": "Literasi AI & Sains Data",
+                "description": "Memahami pemanfaatan AI untuk efisiensi mengajar."
+            },
+            {
+                "name": "Kewargaan Digital",
+                "description": "Etika dan keamanan dalam ekosistem digital."
+            },
+            {
+                "name": "Analisis Data Modern",
+                "description": "Pengolahan data siswa untuk prediksi hasil belajar."
+            }
+        ],
+        "early_warning_standards": {
+            "low_grade_threshold": 65,
+            "high_absence_threshold": 3,
+            "infraction_score_threshold": 80
+        },
+        "cognitive_levels": [
+            {
+                "id": "L1",
+                "level": "LOTS",
+                "description": "Mengingat & Memahami"
+            },
+            {
+                "id": "L2",
+                "level": "MOTS",
+                "description": "Menerapkan & Menganalisis"
+            },
+            {
+                "id": "L3",
+                "level": "HOTS",
+                "description": "Evaluasi & Kreasi"
+            }
+        ],
+        "assessment_item_types": [
+            {
+                "id": "pg",
+                "name": "Pilihan Ganda"
+            },
+            {
+                "id": "pg_complex",
+                "name": "Pilihan Ganda Kompleks"
+            },
+            {
+                "id": "true_false",
+                "name": "Benar Salah"
+            },
+            {
+                "id": "matching",
+                "name": "Menjodohkan"
+            },
+            {
+                "id": "essay",
+                "name": "Uraian"
+            },
+            {
+                "id": "short_answer",
+                "name": "Isian Singkat"
+            }
+        ],
+        "semester_logic": {
+            "ganjil": {
+                "focus": "Fondasi Dasar & Penguatan Konsep"
+            },
+            "genap": {
+                "focus": "Pengembangan & Penerapan Berkelanjutan"
+            }
+        },
+        "regional_languages": [
+            "Bahasa Jawa",
+            "Bahasa Sunda",
+            "Bahasa Madura",
+            "Bahasa Minangkabau",
+            "Bahasa Bugis",
+            "Bahasa Banjar",
+            "Bahasa Bali",
+            "Bahasa Betawi",
+            "Bahasa Sasak",
+            "Bahasa Batak"
+        ],
+        "cp_components_structure": {
+            "rasional": "Alasan mempelajari mata pelajaran.",
+            "tujuan": "Target kompetensi yang dicapai.",
+            "karakteristik": "Sifat dan lingkup materi.",
+            "elemen": "Pembagian bidang kompetensi."
+        },
+        "phases": [
+            {
+                "phase": "A",
+                "grades": [
+                    1,
+                    2
+                ],
+                "level": "SD"
+            },
+            {
+                "phase": "B",
+                "grades": [
+                    3,
+                    4
+                ],
+                "level": "SD"
+            },
+            {
+                "phase": "C",
+                "grades": [
+                    5,
+                    6
+                ],
+                "level": "SD"
+            },
+            {
+                "phase": "D",
+                "grades": [
+                    7,
+                    8,
+                    9
+                ],
+                "level": "SMP"
+            },
+            {
+                "phase": "E",
+                "grades": [
+                    10
+                ],
+                "level": "SMA/SMK"
+            },
+            {
+                "phase": "F",
+                "grades": [
+                    11,
+                    12
+                ],
+                "level": "SMA/SMK"
+            }
+        ],
+        "duration_per_jp": {
+            "SD": 35,
+            "SMP": 40,
+            "SMA": 45
+        }
+    },
+    "subjects": {
+        "SD": {
+            "1": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "Bilangan 0-20"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Geometri"
+                        ],
+                        "materi_inti": [
+                            "Bangun Datar"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak"
+                        ],
+                        "materi_inti": [
+                            "Abjad & Suku Kata"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Kata Benda & Kerja"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila"
+                        ],
+                        "materi_inti": [
+                            "Simbol Negara"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Usia Mental < 7 Tahun/Kelas I"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Identitas Diri"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Usia Mental < 7 Tahun/Kelas I"
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an"
+                        ],
+                        "materi_inti": [
+                            "Huruf Hijaiyah"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih"
+                        ],
+                        "materi_inti": [
+                            "Rukun Islam"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Gerak"
+                        ],
+                        "materi_inti": [
+                            "Lari & Lompat"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Kesehatan"
+                        ],
+                        "materi_inti": [
+                            "Kebersihan Diri"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Seni Rupa": {
+                    "ganjil": {
+                        "elemen": [
+                            "Eksplorasi"
+                        ],
+                        "materi_inti": [
+                            "Garis & Warna"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Membuat"
+                        ],
+                        "materi_inti": [
+                            "Gambar Ekspresi"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak"
+                        ],
+                        "materi_inti": [
+                            "Greetings"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara"
+                        ],
+                        "materi_inti": [
+                            "My Family"
+                        ]
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Narasi (Diri Sendiri & Keluarga)",
+                            "Lagu Daerah/Tembang Dolanan",
+                            "Pengenalan Aksara Daerah Dasar"
+                        ],
+                        "cp_snippet": "Mengenali bunyi bahasa daerah dan simbol aksara daerah dasar; memahami isi teks narasi sederhana."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Narasi (Kegiatanku)",
+                            "Permainan Tradisional",
+                            "Aksara Daerah (Nulis Legena)"
+                        ],
+                        "cp_snippet": "Menceritakan kegiatan sehari-hari; menulis kata sederhana dengan aksara daerah."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Bahan Alam (Biji-bijian, Daun Kering)",
+                            "Membuat Produk Mainan Sederhana"
+                        ],
+                        "cp_snippet": "Mengenali berbagai bahan alam di sekitar; menciptakan karya kerajinan sederhana dari bahan alam."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Kertas (Melipat, Menggunting, Menempel)",
+                            "Mengenal Alat dan Bahan Prakarya Dasar"
+                        ],
+                        "cp_snippet": "Melakukan teknik dasar pengolahan kertas; menunjukkan hasil karya dengan rasa percaya diri."
+                    }
+                }
+            },
+            "2": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "Cacah s.d 100"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pengukuran"
+                        ],
+                        "materi_inti": [
+                            "Jam & Panjang"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Deskripsi (Benda & Lingkungan)",
+                            "Dongeng Binatang (Fabel Lokal)",
+                            "Aksara Daerah (Suku Kata)"
+                        ],
+                        "cp_snippet": "Memahami teks deskripsi sederhana; mengidentifikasi tokoh dalam fabel lokal."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Dialog Sederhana",
+                            "Tradisi Hidup Bersih Lokal",
+                            "Aksara Daerah (Lanjutan)"
+                        ],
+                        "cp_snippet": "Melakukan percakapan sederhana; menulis kalimat pendek dengan aksara daerah."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Bahan Buatan (Plastisin, Bekas Kemasan)",
+                            "Kebutuhan Peralatan Rumah Tangga Sederhana"
+                        ],
+                        "cp_snippet": "Mengeksplorasi bahan buatan; merancang dan membuat kerajinan dari bahan plastik atau kertas bekas."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Budi Daya Tanaman Hias Sederhana",
+                            "Laporan Pengamatan Pertumbuhan Tanaman"
+                        ],
+                        "cp_snippet": "Mempraktikkan cara merawat tanaman; mendokumentasikan hasil pengamatan secara sederhana."
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Teks Pendek"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Kalimat Tanya"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "UUD 1945"
+                        ],
+                        "materi_inti": [
+                            "Aturan Sekolah"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Usia Mental < 7 Tahun/Kelas I"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Bhinneka"
+                        ],
+                        "materi_inti": [
+                            "Keberagaman Teman"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Usia Mental < 7 Tahun/Kelas I"
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Aqidah"
+                        ],
+                        "materi_inti": [
+                            "Asmaul Husna"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Akhlak"
+                        ],
+                        "materi_inti": [
+                            "Hormat Orang Tua"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Gerak"
+                        ],
+                        "materi_inti": [
+                            "Senam Dasar"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Kesehatan"
+                        ],
+                        "materi_inti": [
+                            "Gizi Seimbang"
+                        ],
+                        "cp_snippet": "Fase A (Umumnya untuk Kelas I dan II SD/MI/Program"
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Colors & Shapes"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Animals"
+                        ]
+                    }
+                }
+            },
+            "3": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "Cacah s.d 1000"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Geometri"
+                        ],
+                        "materi_inti": [
+                            "Ciri Bangun Datar"
+                        ]
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Ide Pokok"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Ringkasan Berita"
+                        ]
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila"
+                        ],
+                        "materi_inti": [
+                            "Pengamalan Sila"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Cintai Produk Lokal"
+                        ]
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an"
+                        ],
+                        "materi_inti": [
+                            "Surah Pendek"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sejarah"
+                        ],
+                        "materi_inti": [
+                            "Kisah Nabi Muhammad"
+                        ]
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Gerak"
+                        ],
+                        "materi_inti": [
+                            "Bola Besar"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Kebugaran"
+                        ],
+                        "materi_inti": [
+                            "Daya Tahan Tubuh"
+                        ]
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak"
+                        ],
+                        "materi_inti": [
+                            "Daily Routine"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "School Subjects"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Laporan sederhana (Hasil Kunjungan)",
+                            "Puisi Daerah / Pantun Lokal",
+                            "Aksara Daerah (Membaca Kalimat)"
+                        ],
+                        "cp_snippet": "Memahami teks laporan sederhana; mengapresiasi keindahan puisi daerah; membaca kalimat aksara daerah."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Narasi (Cita-citaku)",
+                            "Pengalaman Menarik (Liburan)",
+                            "Aksara Daerah (Nulis Ukara)"
+                        ],
+                        "cp_snippet": "Menceritakan cita-cita dengan bahasa daerah; menulis kalimat sederhana dengan aksara daerah."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Tekstil Sederhana (Menjahit Jelujur)",
+                            "Membuat Boneka Jari"
+                        ],
+                        "cp_snippet": "Mengenal berbagai macam serat dan tekstil; mempraktikkan teknik menjahit dasar pada produk sederhana."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Budi Daya Tanaman Sayuran (Wadah Pot/Polybag)",
+                            "Pemanfaatan Lahan Sempit"
+                        ],
+                        "cp_snippet": "Mempraktikkan budi daya tanaman pangan sederhana; mengomunikasikan kesulitan dalam merawat tanaman."
+                    }
+                }
+            },
+            "4": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "Pecahan"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Data"
+                        ],
+                        "materi_inti": [
+                            "Pictogram"
+                        ]
+                    }
+                },
+                "IPAS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Fotosintesis"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sosial"
+                        ],
+                        "materi_inti": [
+                            "Peta & Wilayah"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Teks Eksplanasi"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Puisi Anak"
+                        ]
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila"
+                        ],
+                        "materi_inti": [
+                            "Gotong Royong"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "UUD 1945"
+                        ],
+                        "materi_inti": [
+                            "Musyawarah"
+                        ]
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an"
+                        ],
+                        "materi_inti": [
+                            "Surat At-Tin"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih"
+                        ],
+                        "materi_inti": [
+                            "Tayamum & Salat"
+                        ]
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Gerak"
+                        ],
+                        "materi_inti": [
+                            "Renang Dasar"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Kesehatan"
+                        ],
+                        "materi_inti": [
+                            "Bahaya Narkoba"
+                        ]
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Expressing Feelings"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Descriptions"
+                        ],
+                        "cp_snippet": "Fase B (Umumnya untuk Kelas III dan IV"
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Instruksi (Makanan Tradisional)",
+                            "Cerita Rakyat Lokal (Legenda)",
+                            "Sastra Daerah (Pupuh/Sekar Dasar)"
+                        ],
+                        "cp_snippet": "Memahami prosedur pembuatan makanan lokal; mengidentifikasi nilai moral dalam legenda; mengenal sastra daerah."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Eksposisi sederhana",
+                            "Iklan Layanan Masyarakat Daerah",
+                            "Aksara Daerah (Sandhangan Lanjutan)"
+                        ],
+                        "cp_snippet": "Menyampaikan pendapat tentang isu lokal; membuat iklan sederhana; menulis kata ber-sandhangan aksara daerah."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Anyaman (Bahan Alam/Buatan)",
+                            "Motif Hias Tradisional Daerah"
+                        ],
+                        "cp_snippet": "Mengeksplorasi teknik anyam sederhana; mengaplikasikan motif hias lokal pada hasil kerajinan."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Pengolahan Makan dari Buah (Minuman Segar)",
+                            "Teknik Penyajian dan Pengemasan Produk Pangan"
+                        ],
+                        "cp_snippet": "Mengolah bahan buah menjadi minuman; menyajikan hasil pengolahan pangan secara menarik dan higienis."
+                    }
+                }
+            },
+            "5": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "KPK & FPB"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Geometri"
+                        ],
+                        "materi_inti": [
+                            "Volume Bangun Ruang"
+                        ]
+                    }
+                },
+                "IPAS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Rantai Makanan"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sosial"
+                        ],
+                        "materi_inti": [
+                            "Kerajaan Indonesia"
+                        ]
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Karya Sastra"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Pidato Sederhana"
+                        ]
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bhinneka"
+                        ],
+                        "materi_inti": [
+                            "Budaya Daerah"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Bela Negara"
+                        ]
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Aqidah"
+                        ],
+                        "materi_inti": [
+                            "Iman Kitab Allah"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Akhlak"
+                        ],
+                        "materi_inti": [
+                            "Saling Menghargai"
+                        ]
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Historical Events"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Short Stories"
+                        ]
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Eksposisi (Seni Pertunjukan)",
+                            "Cerita Pahlawan/Tokoh Daerah",
+                            "Aksara Daerah (Aksara Pasangan/Gantungan)"
+                        ],
+                        "cp_snippet": "Memahami teks eksposisi tentang budaya; mengidentifikasi keteladanan tokoh daerah; menguasai aksara pasangan."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Pidato Sederhana (Perayaan)",
+                            "Menulis Teks Kreatif Daerah",
+                            "Aksara Daerah (Lanjutan Pasangan)"
+                        ],
+                        "cp_snippet": "Berpidato dalam bahasa daerah; menulis teks narasi kreatif; menulis kalimat ber-aksara pasangan."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Produk Rekayasa Sederhana (Pesawat/Kapal Air)",
+                            "Pemanfaatan Energi Angin/Air dalam Prakarya"
+                        ],
+                        "cp_snippet": "Merancang produk rekayasa sederhana; menerapkan prinsip energi pada karya kreatif."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Budi Daya Tanaman Obat Keluarga (TOGA)",
+                            "Manfaat dan Cara Pengolahan Tanaman Obat"
+                        ],
+                        "cp_snippet": "Mempraktikkan budi daya tanaman obat; memahami manfaat kesehatan dari produk budi daya sendiri."
+                    }
+                }
+            },
+            "6": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan"
+                        ],
+                        "materi_inti": [
+                            "Pecahan Desimal"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Data"
+                        ],
+                        "materi_inti": [
+                            "Rerata & Modus"
+                        ]
+                    }
+                },
+                "IPAS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Tata Surya"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sosial"
+                        ],
+                        "materi_inti": [
+                            "Modernisasi Dunia"
+                        ]
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Laporan Perjalanan"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Karya Ilmiah Anak"
+                        ]
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Otonomi Daerah"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pancasila"
+                        ],
+                        "materi_inti": [
+                            "Profil Pancasila"
+                        ]
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sejarah"
+                        ],
+                        "materi_inti": [
+                            "Dakwah Walisongo"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih"
+                        ],
+                        "materi_inti": [
+                            "Makanan Halal"
+                        ]
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Future Goals"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Personal Essay"
+                        ]
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Persuasi (Lingkungan)",
+                            "Pidato Perpisahan",
+                            "Etika Berbahasa (Tingkatan Bahasa Dasar)"
+                        ],
+                        "cp_snippet": "Menganalisis teks persuasi; menyampaikan pidato perpisahan dengan unggah-ungguh yang tepat."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Analisis Cerita Sastra Daerah",
+                            "Rekapitulasi Budaya Daerah",
+                            "Aksara Daerah (Review & Kecepatan)"
+                        ],
+                        "cp_snippet": "Mengapresiasi karya sastra klasik daerah; memahami kearifan lokal secara luas; mahir aksara daerah."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Wirausaha Cilik (Membuat Produk Sederhana)",
+                            "Menghitung Biaya Produksi dan Harga Jual"
+                        ],
+                        "cp_snippet": "Merancang usaha kreatif skala kecil; melakukan perhitungan ekonomi dasar untuk produk prakarya."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Analisis Produk Kreatif Inovatif",
+                            "Persiapan Pameran Hasil Karya (Exhibition)"
+                        ],
+                        "cp_snippet": "Mengevaluasi kualitas produk secara mandiri; menyajikan hasil karya dalam bentuk pameran sederhana."
+                    }
+                }
+            }
+        },
+        "SMP": {
+            "7": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan",
+                            "Aljabar"
+                        ],
+                        "materi_inti": [
+                            "Bilangan Bulat",
+                            "Bilangan Rasional",
+                            "Bentuk Aljabar"
+                        ],
+                        "cp_snippet": "Membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional. Mengenali, memprediksi dan menggeneralisasi pola dalam bentuk susunan benda dan bilangan."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Aljabar",
+                            "Geometri",
+                            "Analisis Data dan Peluang"
+                        ],
+                        "materi_inti": [
+                            "Persamaan dan Pertidaksamaan Linear Satu Variabel",
+                            "Perbandingan Senilai dan Berbalik Nilai",
+                            "Garis dan Sudut",
+                            "Pengolahan Data"
+                        ],
+                        "cp_snippet": "Menyelesaikan persamaan dan pertidaksamaan linear satu variabel. Menggunakan hubungan antar-sudut; menganalisis data berdasarkan tampilan data."
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Deskripsi (Jelajah Nusantara)",
+                            "Puisi Rakyat & Cerita Fantasi (Dunia Imajinasi)",
+                            "Teks Prosedur (Hal Baik bagi Tubuh)"
+                        ],
+                        "cp_snippet": "Menganalisis gagasan, pandangan, arahan, dan/atau pesan dari teks deskripsi, narasi, dan prosedur."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Berita (Pelindung Bumi)",
+                            "Buku Fiksi & Nonfiksi (Gerbang Dunia)",
+                            "Surat Resmi & Pribadi"
+                        ],
+                        "cp_snippet": "Mempresentasikan gagasan secara fasih; menulis gagasan, pandangan dalam berbagai tipe teks (berita, surat) secara logis."
+                    }
+                },
+                "IPA": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Hakikat Sains dan Metode Ilmiah",
+                            "Zat dan Perubahannya",
+                            "Suhu, Kalor, dan Pemuaian"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Gerak dan Gaya",
+                            "Klasifikasi Makhluk Hidup",
+                            "Ekologi dan Keanekaragaman Hayati",
+                            "Bumi dan Tata Surya"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    }
+                },
+                "IPS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Keluarga Awal Kehidupan",
+                            "Keberagaman Lingkungan Sekitar"
+                        ],
+                        "cp_snippet": "Menjelaskan keberagaman kondisi geografis Indonesia; memahami sejarah asal usul keluarga dan masyarakat."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Potensi Ekonomi Lingkungan",
+                            "Pemberdayaan Masyarakat"
+                        ],
+                        "cp_snippet": "Mengidentifikasi upaya masyarakat dalam memenuhi kebutuhannya melalui kegiatan ekonomi dan pemberdayaan."
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila",
+                            "UUD NRI Tahun 1945"
+                        ],
+                        "materi_inti": [
+                            "Sejarah Kelahiran Pancasila",
+                            "Penerapan Nilai-Nilai Pancasila",
+                            "Patuh Terhadap Norma"
+                        ],
+                        "cp_snippet": "Memahami sejarah kelahiran Pancasila; menerapkan norma dan aturan dalam kehidupan bermasyarakat."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Bhinneka Tunggal Ika",
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Keberagaman Bangsa Indonesia",
+                            "Wilayah NKRI dan Wawasan Nusantara"
+                        ],
+                        "cp_snippet": "Mengidentifikasi keberagaman dalam bingkai Bhinneka Tunggal Ika; memahami pentingnya menjaga wilayah NKRI."
+                    }
+                },
+                "Informatika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Berpikir Komputasional",
+                            "Teknologi Informasi dan Komunikasi",
+                            "Sistem Komputer",
+                            "Jaringan Komputer dan Internet"
+                        ],
+                        "materi_inti": [
+                            "Informatika dan Keterampilan Generik",
+                            "BK (Himpunan, Logika)",
+                            "TIK (Folder, Perangkat Lunak)",
+                            "SK (Perangkat Keras, OS)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Analisis Data",
+                            "Algoritma dan Pemrograman",
+                            "Dampak Sosial Informatika",
+                            "Praktik Lintas Bidang"
+                        ],
+                        "materi_inti": [
+                            "Analisis Data (Perkakas, Pengolahan)",
+                            "Algoritma dan Pemrograman (Visual Scratch)",
+                            "Dampak Sosial Informatika (Informasi Palsu)",
+                            "Praktika Lintas Bidang (Proyek)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak - Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Chapter 1: About Me",
+                            "Chapter 2: Culinary and Me",
+                            "Chapter 3: Home Sweet Home"
+                        ],
+                        "cp_snippet": "Using English to interact and exchange information, thoughts, and feelings on familiar topics."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Membaca - Memirsa",
+                            "Menulis - Mempresentasikan"
+                        ],
+                        "materi_inti": [
+                            "Chapter 4: My School Activities",
+                            "Chapter 5: This is My School"
+                        ],
+                        "cp_snippet": "Independently reading and responding to familiar and unfamiliar texts; producing a range of texts."
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Keterampilan Gerak",
+                            "Pengetahuan Gerak"
+                        ],
+                        "materi_inti": [
+                            "Permainan Bola Besar (Sepakbola, Basket)",
+                            "Lari Jarak Pendek",
+                            "Seni Beladiri Pencak Silat"
+                        ],
+                        "cp_snippet": "Mempraktikkan dan menganalisis keterampilan gerak spesifik dalam berbagai olahraga."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemanfaatan Gerak",
+                            "Pengembangan Karakter"
+                        ],
+                        "materi_inti": [
+                            "Senam Lantai",
+                            "Gerak Berirama",
+                            "Bahaya Pergaulan Bebas dan Rokok"
+                        ],
+                        "cp_snippet": "Memahami konsep latihan kebugaran jasmani; mempraktikkan gaya hidup sehat."
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an dan Hadis",
+                            "Akidah",
+                            "Akhlak"
+                        ],
+                        "materi_inti": [
+                            "Pedoman Hidup Al-Qur'an dan Sunnah",
+                            "Meneladani Nama dan Sifat Allah",
+                            "Menghadirkan Shalat dan Zikir"
+                        ],
+                        "cp_snippet": "Membaca Al-Qur'an dengan tartil; memahami asmaul husna; mempraktikkan shalat dan zikir."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih",
+                            "Sejarah Peradaban Islam"
+                        ],
+                        "materi_inti": [
+                            "Sujud Syukur, Sahwi, dan Tilawah",
+                            "Zakat, Haji, dan Umrah (Pengenalan)",
+                            "Sejarah Bani Umayyah di Damaskus"
+                        ],
+                        "cp_snippet": "Memahami ibadah sujud; menganalisis sejarah peradaban Islam masa Bani Umayyah."
+                    }
+                },
+                "Seni Rupa": {
+                    "ganjil": {
+                        "elemen": [
+                            "Mengalami",
+                            "Menciptakan"
+                        ],
+                        "materi_inti": [
+                            "Rupa Dasar (Titik, Garis, Bidang)",
+                            "Menggambar Flora, Fauna, dan Alam Benda",
+                            "Prinsip Gambar Perspektif"
+                        ],
+                        "cp_snippet": "Mengaplikasikan unsur rupa dan prinsip desain dalam karya dua dimensi."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Merefleksikan",
+                            "Berapresiasi"
+                        ],
+                        "materi_inti": [
+                            "Desain Poster dan Tipografi",
+                            "Mengenal Ragam Hias Nusantara",
+                            "Pameran Karya Seni Rupa"
+                        ],
+                        "cp_snippet": "Menganalisis dan mengapresiasi karya seni rupa berdasarkan konteks budaya."
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Deskripsi (Profil Diri & Sekolah)",
+                            "Cerita Rakyat (Legenda Lokal)",
+                            "Etika Berbicara (Unggah-ungguh)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu memahami informasi dari teks deskripsi dan cerita rakyat daerah; menerapkan etika berbicara sesuai konteks daerah."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Cerita Pengalaman Pribadi",
+                            "Teks Berita (Pawarta Lokal)",
+                            "Aksara Daerah (Dasar & Sandhangan)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu menceritakan pengalaman pribadi dengan bahasa daerah; menulis kalimat dengan aksara daerah dasar."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Bahan Alam (Lunak/Keras)",
+                            "Pengolahan Bahan Pangan Buah & Sayur",
+                            "Kemasan Produk Prakarya"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Produk Rekayasa Alat Penjernih Air",
+                            "Budi Daya Tanaman Sayuran",
+                            "Pemasaran Produk Sederhana"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    }
+                }
+            },
+            "8": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan",
+                            "Geometri",
+                            "Aljabar"
+                        ],
+                        "materi_inti": [
+                            "Bilangan Berpangkat",
+                            "Teorema Pythagoras",
+                            "Persamaan Linear dan Pertidaksamaan Linear Satu Variabel"
+                        ],
+                        "cp_snippet": "Mengenali bilangan berpangkat bulat dan akar; membuktikan teorema Pythagoras; menyelesaikan persamaan linear."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Aljabar",
+                            "Analisis Data dan Peluang"
+                        ],
+                        "materi_inti": [
+                            "Relasi dan Fungsi",
+                            "Persamaan Garis Lurus",
+                            "Statistika"
+                        ],
+                        "cp_snippet": "Menyajikan relasi dan fungsi; menggambar grafik persamaan garis lurus; menganalisis data statistik."
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Laporan Hasil Observasi (LHO)",
+                            "Iklan, Slogan, dan Poster",
+                            "Artikel Ilmiah Populer"
+                        ],
+                        "cp_snippet": "Menganalisis informasi dalam teks LHO; mengidentifikasi pesan dalam iklan, slogan, dan poster."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Mengulas Karya Fiksi",
+                            "Menulis Teks Pidato",
+                            "Membaca Karya Fiksi"
+                        ],
+                        "cp_snippet": "Menulis ulasan karya fiksi secara kreatif; menyampaikan pidato dengan intonasi yang tepat."
+                    }
+                },
+                "IPA": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Pengenalan Sel",
+                            "Struktur dan Fungsi Tubuh Makhluk Hidup",
+                            "Usaha, Energi, dan Pesawat Sederhana"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Getaran, Gelombang, dan Cahaya",
+                            "Unsur, Senyawa, dan Campuran",
+                            "Struktur Bumi dan Perkembangannya"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    }
+                },
+                "IPS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Kondisi Geografis dan Pelestarian SDA",
+                            "Kemajemukan Masyarakat Indonesia"
+                        ],
+                        "cp_snippet": "Menganalisis pengaruh kondisi geografis terhadap pelestarian SDA; memahami keberagaman budaya masyarakat."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Nasionalisme dan Jati Diri Bangsa",
+                            "Pembangunan Perekonomian Indonesia"
+                        ],
+                        "cp_snippet": "Menjelaskan perkembangan nasionalisme Indonesia; menganalisis dinamika pembangunan ekonomi."
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila",
+                            "UUD NRI Tahun 1945"
+                        ],
+                        "materi_inti": [
+                            "Kedudukan dan Fungsi Pancasila",
+                            "Kesadaran terhadap UUD NRI 1945",
+                            "Tata Urutan Peraturan Perundang-undangan"
+                        ],
+                        "cp_snippet": "Memahami fungsi Pancasila sebagai ideologi negara; menelaah kesadaran konstitusional."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Bhinneka Tunggal Ika",
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Kebangkitan Nasional dan Sumpah Pemuda",
+                            "Jati Diri Bangsa dalam Era Globalisasi",
+                            "Semangat Kerja Sama"
+                        ],
+                        "cp_snippet": "Memahami makna Kebangkitan Nasional; mengidentifikasi jati diri bangsa di tengah arus global."
+                    }
+                },
+                "Informatika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Berpikir Komputasional",
+                            "Teknologi Informasi dan Komunikasi",
+                            "Sistem Komputer",
+                            "Jaringan Komputer dan Internet"
+                        ],
+                        "materi_inti": [
+                            "BK (Dekomposisi, Abstraksi)",
+                            "TIK (Informasi Digital, Berbagi Konten)",
+                            "SK (Komponen Sistem Terintegrasi)",
+                            "JKI (Keamanan Data Cloud)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Analisis Data",
+                            "Algoritma dan Pemrograman",
+                            "Dampak Sosial Informatika",
+                            "Praktik Lintas Bidang"
+                        ],
+                        "materi_inti": [
+                            "Analisis Data (Visualisasi, Pencarian)",
+                            "Algoritma dan Pemrograman (Struktur Kontrol)",
+                            "Dampak Sosial Informatika (Etika Digital)",
+                            "Praktika Lintas Bidang (Proyek Terstruktur)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak - Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Celebrating Independence Day",
+                            "Kindness and Resilience",
+                            "My Experience"
+                        ],
+                        "cp_snippet": "Using English to talk about past experiences and personal qualities."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Membaca - Memirsa",
+                            "Menulis - Mempresentasikan"
+                        ],
+                        "materi_inti": [
+                            "Love Our World",
+                            "No Littering",
+                            "Environment"
+                        ],
+                        "cp_snippet": "Engaging with texts about environmental awareness; presenting arguments for sustainability."
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Keterampilan Gerak",
+                            "Pengetahuan Gerak"
+                        ],
+                        "materi_inti": [
+                            "Permainan Bola Kecil (Softball/Bulu Tangkis)",
+                            "Atletik (Lompat Jauh)",
+                            "Beladiri (Lanjutan)"
+                        ],
+                        "cp_snippet": "Mempraktikkan variasi dan kombinasi gerak spesifik dalam permainan dan olahraga."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemanfaatan Gerak",
+                            "Pengembangan Karakter"
+                        ],
+                        "materi_inti": [
+                            "Aktivitas Kebugaran Jasmani",
+                            "Bahaya Narkoba dan Psikotropika",
+                            "Sex Education (Dasar)"
+                        ],
+                        "cp_snippet": "Membuat rencana latihan peningkatan kebugaran; memahami dampak buruk zat adiktif."
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an dan Hadis",
+                            "Akidah",
+                            "Akhlak"
+                        ],
+                        "materi_inti": [
+                            "Melestarikan Alam Menjaga Kehidupan",
+                            "Meyakini Kitab-Kitab Allah",
+                            "Menjadi Pribadi Amanah dan Jujur"
+                        ],
+                        "cp_snippet": "Membaca Q.S. Ar-Rum; memahami fungsi kitab Allah; menerapkan perilaku jujur dalam keseharian."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih",
+                            "Sejarah Peradaban Islam"
+                        ],
+                        "materi_inti": [
+                            "Ibadah Shalat Gerhana dan Jenazah",
+                            "Jual Beli dan Hutang Piutang (Fikih Muamalah)",
+                            "Masa Keemasan Bani Abbasiyah di Baghdad"
+                        ],
+                        "cp_snippet": "Mempraktikkan tata cara shalat jenazah; memahami dasar mualamah Islam; menganalisis kemajuan ilmu pengetahuan masa Abbasiyah."
+                    }
+                },
+                "Seni Rupa": {
+                    "ganjil": {
+                        "elemen": [
+                            "Mengalami",
+                            "Menciptakan"
+                        ],
+                        "materi_inti": [
+                            "Menggambar Perspektif Satu Titik Hilang",
+                            "Melukis dengan Berbagai Media",
+                            "Menggambar Ragam Hias Nusantara"
+                        ],
+                        "cp_snippet": "Menerapkan prinsip perspektif dalam menggambar; mengekspresikan diri melalui karya lukis."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Merefleksikan",
+                            "Berapresiasi"
+                        ],
+                        "materi_inti": [
+                            "Desain Grafis dan Tipografi Dasar",
+                            "Apresiasi Karya Seni Rupa Daerah",
+                            "Persiapan dan Pelaksanaan Pameran"
+                        ],
+                        "cp_snippet": "Mengenal konsep desain grafis; mengapresiasi keunikan seni rupa daerah; mengorganisir pameran kelas."
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Cerita Pendek (Cerkak/Dongeng)",
+                            "Cerita Asal-Usul Tempat (Legenda)",
+                            "Etika Berbahasa (Ngoko & Krama/Tingkatan)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu mengidentifikasi unsur intrinsik cerita pendek daerah; membedakan tingkatan bahasa sesuai lawan bicara."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Puisi Daerah (Geguritan/Pupuh)",
+                            "Teks Berita (Pawarta Aktual)",
+                            "Aksara Daerah (Pasangan & Angka)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu membaca indah puisi daerah; menulis paragraf pendek menggunakan aksara daerah berpasangan."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Bahan Limbah (Organik/Anorganik)",
+                            "Pengolahan Serealia, Umbi, & Kacang-kacangan",
+                            "Kemasan Produk Limbah"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Alat Penjernih Air (Bahan Buatan)",
+                            "Budi Daya Satwa Harapan",
+                            "Wirausaha Produk Prakarya"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    }
+                }
+            },
+            "9": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Bilangan",
+                            "Aljabar"
+                        ],
+                        "materi_inti": [
+                            "Perpangkatan dan Bentuk Akar",
+                            "Persamaan Kuadrat",
+                            "Fungsi Kuadrat"
+                        ],
+                        "cp_snippet": "Menerapkan operasi bilangan berpangkat; menyelesaikan persamaan kuadrat; menganalisis fungsi kuadrat."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Geometri",
+                            "Pengukuran"
+                        ],
+                        "materi_inti": [
+                            "Transformasi Geometri (Refleksi, Translasi)",
+                            "Kesebangunan dan Kekongruenan",
+                            "Bangun Ruang Sisi Lengkung (Tabung, Kerucut, Bola)"
+                        ],
+                        "cp_snippet": "Melakukan transformasi geometri; memahami konsep kesebangunan; menghitung volume bangun ruang sisi lengkung."
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Laporan Percobaan",
+                            "Pidato Persuasif",
+                            "Menyusun Cerita Pendek (Cerpen)"
+                        ],
+                        "cp_snippet": "Menganalisis prosedur percobaan; mengidentifikasi ajakan dalam pidato; menulis cerpen secara kreatif."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Diskusi",
+                            "Cerita Inspiratif",
+                            "Literasi Buku Fiksi & Nonfiksi"
+                        ],
+                        "cp_snippet": "Menyampaikan argumen dalam diskusi; menulis cerita inspiratif; meresensi buku fiksi dan nonfiksi."
+                    }
+                },
+                "IPA": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Pertumbuhan dan Perkembangan",
+                            "Sistem Koordinasi dan Reproduksi",
+                            "Tekanan Zat (Padat, Cair, Gas)"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman IPA",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Listrik Magnet dan Sumber Energi",
+                            "Reaksi Kimia Dasar",
+                            "Pewarisan Sifat dan Bioteknologi"
+                        ],
+                        "cp_snippet": "Fase D dan Fase E. Hal tersebut bertujuan memberikan"
+                    }
+                },
+                "IPS": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Manusia dan Perubahan",
+                            "Perkembangan Ekonomi Digital"
+                        ],
+                        "cp_snippet": "Menganalisis perubahan sosial masyarakat; memahami dinamika ekonomi di era digital."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemahaman Konsep",
+                            "Keterampilan Proses"
+                        ],
+                        "materi_inti": [
+                            "Tantangan Pembangunan Indonesia",
+                            "Kerja Sama Dunia"
+                        ],
+                        "cp_snippet": "Mengidentifikasi tantangan pembangunan nasional; menganalisis peran Indonesia dalam kerja sama internasional."
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila",
+                            "UUD NRI Tahun 1945"
+                        ],
+                        "materi_inti": [
+                            "Dinamika Perwujudan Pancasila",
+                            "Pembukaan UUD NRI Tahun 1945",
+                            "Kedaulatan Negara RI"
+                        ],
+                        "cp_snippet": "Menganalisis dinamika Pancasila sebagai dasar negara; memahami kedaulatan dalam sistem hukum."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Bhinneka Tunggal Ika",
+                            "NKRI"
+                        ],
+                        "materi_inti": [
+                            "Menjaga dan Melestarikan Pancasila",
+                            "Kemerdekaan Berpendapat Warga Negara",
+                            "Bela Negara dan Keutuhan Wilayah"
+                        ],
+                        "cp_snippet": "Mengidentifikasi upaya pelestarian nilai Pancasila; memahami hak kebebasan berpendapat."
+                    }
+                },
+                "Informatika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Berpikir Komputasional",
+                            "Teknologi Informasi dan Komunikasi",
+                            "Sistem Komputer",
+                            "Jaringan Komputer dan Internet"
+                        ],
+                        "materi_inti": [
+                            "BK (Struktur Data, Logika Lanjut)",
+                            "TIK (Integrasi Aplikasi Kantor, Blog/Vlog)",
+                            "SK (Keamanan Komputer)",
+                            "JKI (Konfigurasi Jaringan)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Analisis Data",
+                            "Algoritma dan Pemrograman",
+                            "Dampak Sosial Informatika",
+                            "Praktik Lintas Bidang"
+                        ],
+                        "materi_inti": [
+                            "Analisis Data (Prediksi, Pemodelan)",
+                            "Algoritma dan Pemrograman (Modularisasi, Blocky)",
+                            "Dampak Sosial Informatika (Isu Keamanan Siber)",
+                            "Praktika Lintas Bidang (Proyek Inovasi Digital)"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII, dan XI"
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak - Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Exploring Fauna",
+                            "Taking Care of Our Earth",
+                            "Journey to Fantasy Worlds"
+                        ],
+                        "cp_snippet": "Engaging in detailed English discussions about natural phenomena and fictional narratives."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Membaca - Memirsa",
+                            "Menulis - Mempresentasikan"
+                        ],
+                        "materi_inti": [
+                            "Analytical Exposition",
+                            "Persuasive Texts",
+                            "Digital Literacy in English"
+                        ],
+                        "cp_snippet": "Evaluating complex arguments in English; producing persuasive digital content."
+                    }
+                },
+                "PJOK": {
+                    "ganjil": {
+                        "elemen": [
+                            "Keterampilan Gerak",
+                            "Pengetahuan Gerak"
+                        ],
+                        "materi_inti": [
+                            "Permainan Bola Basket (Strategi Tim)",
+                            "Atletik (Estafet/Lompat Tinggi)",
+                            "Aktivitas Air (Renang)"
+                        ],
+                        "cp_snippet": "Mempraktikkan variasi dan kombinasi gerak spesifik dalam situasi kompetitif."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Pemanfaatan Gerak",
+                            "Pengembangan Karakter"
+                        ],
+                        "materi_inti": [
+                            "Penyusunan Rencana Aktivitas Jasmani",
+                            "Kesehatan Reproduksi (Lanjutan)",
+                            "Etika Berolahraga"
+                        ],
+                        "cp_snippet": "Merancang program latihan kebugaran mandiri; memahami perubahan fisik remaja."
+                    }
+                },
+                "Pendidikan Agama Islam": {
+                    "ganjil": {
+                        "elemen": [
+                            "Al-Qur'an dan Hadis",
+                            "Akidah",
+                            "Akhlak"
+                        ],
+                        "materi_inti": [
+                            "Semangat Menuntut Ilmu (Q.S. Al-Mujadilah)",
+                            "Iman kepada Hari Akhir",
+                            "Etika Komunikasi dan Media Sosial"
+                        ],
+                        "cp_snippet": "Menganalisis hukum tajwid; memahami esatologi Islam; menerapkan etika digital Islami."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fikih",
+                            "Sejarah Peradaban Islam"
+                        ],
+                        "materi_inti": [
+                            "Penyembelihan Hewan, Akikah, dan Kurban",
+                            "Haji dan Umrah (Rukun & Syarat)",
+                            "Sejarah Daulah Usmani dan Perkembangan Islam Modern"
+                        ],
+                        "cp_snippet": "Memahami syariat kurban; mensimulasikan manasik haji; menganalisis sejarah kebangkitan dunia Islam."
+                    }
+                },
+                "Seni Rupa": {
+                    "ganjil": {
+                        "elemen": [
+                            "Mengalami",
+                            "Menciptakan"
+                        ],
+                        "materi_inti": [
+                            "Seni Lukis (Gaya, Aliran, Tema)",
+                            "Seni Patung (Media dan Teknik)",
+                            "Prosedur Berkarya Seni Lukis"
+                        ],
+                        "cp_snippet": "Mengeksplorasi gaya dan aliran seni lukis; menciptakan karya patung dengan berbagai teknik."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Merefleksikan",
+                            "Berapresiasi"
+                        ],
+                        "materi_inti": [
+                            "Seni Grafis (Cetak Tinggi, Cetak Dalam)",
+                            "Penyelenggaraan Pameran Seni Rupa",
+                            "Apresiasi Karya Seni Rupa Modern"
+                        ],
+                        "cp_snippet": "Membuat karya seni grafis; merancang pameran formal; mengevaluasi perkembangan seni rupa modern."
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Laporan Hasil Observasi (LHO)",
+                            "Cerita Wayang/Mitologi Lokal",
+                            "Aksara Daerah (Aksara Rekan & Murda/Lanjut)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu menganalisis struktur teks LHO daerah; memahami nilai moral dalam cerita wayang atau mitologi lokal."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Pidato Daerah (Sesorah)",
+                            "Kesenian Tradisional (Kethoprak/Seni Rakyat)",
+                            "Literasi Sastra Daerah (Karya Klasik)"
+                        ],
+                        "cp_snippet": "Peserta didik mampu membawakan pidato bahasa daerah dengan tepat; mengapresiasi seni pertunjukan tradisional."
+                    }
+                },
+                "Prakarya": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Kerajinan Bahan Keras (Alam/Buatan)",
+                            "Pengolahan Hasil Peternakan & Perikanan",
+                            "Eksplorasi Teknologi Produksi"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Dasar-dasar Sistem Instalasi Listrik",
+                            "Budi Daya Ikan Hias",
+                            "Laporan Keuangan & Evaluasi Bisnis Sederhana"
+                        ],
+                        "cp_snippet": "Fase D (Umumnya untuk Kelas VII, VIII dan IX"
+                    }
+                }
+            }
+        },
+        "SMA": {
+            "10": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Aljabar"
+                        ],
+                        "materi_inti": [
+                            "Eksponen"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Geometri"
+                        ],
+                        "materi_inti": [
+                            "Trigonometri Dasar"
+                        ]
+                    }
+                },
+                "Bahasa Indonesia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Membaca"
+                        ],
+                        "materi_inti": [
+                            "Teks LHO"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Anekdot"
+                        ]
+                    }
+                },
+                "Bahasa Inggris": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak"
+                        ],
+                        "materi_inti": [
+                            "Descriptive Text"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara"
+                        ],
+                        "materi_inti": [
+                            "Exposition"
+                        ]
+                    }
+                },
+                "Fisika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Pengukuran"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Energi"
+                        ],
+                        "materi_inti": [
+                            "Energi Terbarukan"
+                        ]
+                    }
+                },
+                "Kimia": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Struktur Atom"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Kimia Hijau"
+                        ]
+                    }
+                },
+                "Biologi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Keanekaragaman Hayati"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Virus & Ekosistem"
+                        ]
+                    }
+                },
+                "Ekonomi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Kelangkaan"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Sistem Pembayaran"
+                        ]
+                    }
+                },
+                "Geografi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Pengantar Geografi"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Peta & Pengindraan Jauh"
+                        ]
+                    }
+                },
+                "Sosiologi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Paradigma Sosiologi"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Interaksi & Identitas"
+                        ]
+                    }
+                },
+                "Sejarah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pemahaman"
+                        ],
+                        "materi_inti": [
+                            "Pengantar Ilmu Sejarah"
+                        ],
+                        "cp_snippet": ""
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Analisis"
+                        ],
+                        "materi_inti": [
+                            "Asal Usul Nenek Moyang"
+                        ],
+                        "cp_snippet": ""
+                    }
+                },
+                "Informatika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sistem"
+                        ],
+                        "materi_inti": [
+                            "Integrasi App"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Data"
+                        ],
+                        "materi_inti": [
+                            "Analisis Data Lanjut"
+                        ]
+                    }
+                },
+                "Pendidikan Pancasila": {
+                    "ganjil": {
+                        "elemen": [
+                            "Pancasila"
+                        ],
+                        "materi_inti": [
+                            "Ideologi Negara"
+                        ]
+                    },
+                    "genap": {
+                        "elemen": [
+                            "UUD 1945"
+                        ],
+                        "materi_inti": [
+                            "Norma & Hukum"
+                        ]
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Laporan Hasil Observasi (Budaya)",
+                            "Teks Anekdot/Humor Daerah",
+                            "Aksara Daerah (Review & Lanjut)"
+                        ],
+                        "cp_snippet": "Menganalisis teks LHO bertema budaya daerah; mengapresiasi teks anekdot daerah; menguasai aksara daerah tingkat mahir."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Negosiasi (Unggah-ungguh Adat)",
+                            "Teks Biografi Tokoh Daerah",
+                            "Sastra Daerah (Analisis Makna)"
+                        ],
+                        "cp_snippet": "Melakukan negosiasi dengan etika daerah; menulis biografi tokoh lokal; memaknai nilai-nilai luhur dalam sastra daerah."
+                    }
+                },
+                "PKWU": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan"
+                        ],
+                        "materi_inti": [
+                            "Ide dan Peluang Usaha Produk Inspirasi Budaya Lokal",
+                            "Analisis Sistem Produksi Produk Grafis/Kerajinan",
+                            "Perencanaan Pemasaran Langsung"
+                        ],
+                        "cp_snippet": "Mengidentifikasi peluang usaha berbasis budaya lokal; merancang sistem produksi dan pemasaran produk."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Produksi Produk Kerajinan/Rekayasa",
+                            "Evaluasi Hasil Usaha Sederhana",
+                            "Pengembangan Ide Kreatif Wirausaha"
+                        ],
+                        "cp_snippet": "Menciptakan produk wirausaha; melakukan evaluasi keuangan dan proses produksi secara kritis."
+                    }
+                }
+            },
+            "11": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Aljabar"
+                        ],
+                        "materi_inti": [
+                            "Matriks"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Analisis Data"
+                        ],
+                        "materi_inti": [
+                            "Regresi Linear"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Ekonomi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Pendapatan Nasional"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/SMK/MA/MAK"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "APBN & APBD"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/SMK/MA/MAK"
+                    }
+                },
+                "Fisika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Fisika"
+                        ],
+                        "materi_inti": [
+                            "Kinematika"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Fisika"
+                        ],
+                        "materi_inti": [
+                            "Termodinamika"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Biologi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Sel Lanjut"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Sains"
+                        ],
+                        "materi_inti": [
+                            "Sistem Organ"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Drama Tradisional (Lakon)",
+                            "Sastra Klasik/Babad/Serat Dasar",
+                            "Teks Biografi Tokoh Penemu/Ilmuwan Daerah"
+                        ],
+                        "cp_snippet": "Menganalisis struktur drama tradisional; memahami isi teks sastra klasik; meneladani perjuangan tokoh daerah."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Karya Ilmiah (Kearifan Lokal)",
+                            "Teks Cerita Rakyat (Interpretasi Baru)",
+                            "Etika Kepemimpinan Daerah"
+                        ],
+                        "cp_snippet": "Menyusun karya tulis tentang kearifan lokal; menyajikan cerita rakyat secara inovatif; memahami konsep kepemimpinan lokal."
+                    }
+                },
+                "PKWU": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Perencanaan Usaha Produk Limbah/Konversi Energi",
+                            "Sistem Produksi Produk Pembuatan (Batch/Massal)",
+                            "Perhitungan Titik Impas (BEP)"
+                        ],
+                        "cp_snippet": "Merancang usaha berbasis limbah atau energi; menghitung BEP untuk menentukan kelayakan usaha."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Strategi Promosi Produk Wirausaha",
+                            "Analisis Laporan Keuangan Tahunan",
+                            "Rencana Pengembangan Usaha (Scaling)"
+                        ],
+                        "cp_snippet": "Mengembangkan strategi promosi yang efektif; menganalisis profitabilitas dan melakukan ekspansi bisnis."
+                    }
+                }
+            },
+            "12": {
+                "Matematika": {
+                    "ganjil": {
+                        "elemen": [
+                            "Kalkulus"
+                        ],
+                        "materi_inti": [
+                            "Limit & Turunan"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Peluang"
+                        ],
+                        "materi_inti": [
+                            "Distribusi Normal"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Geografi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Pembangunan Wilayah"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Mitigasi Bencana"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Sosiologi": {
+                    "ganjil": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Perubahan Sosial"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Konsep"
+                        ],
+                        "materi_inti": [
+                            "Kearifan Lokal"
+                        ],
+                        "cp_snippet": "Fase F (Umumnya untuk Kelas XI dan XII SMA/MA/Program"
+                    }
+                },
+                "Bahasa Daerah": {
+                    "ganjil": {
+                        "elemen": [
+                            "Menyimak",
+                            "Membaca dan Memirsa"
+                        ],
+                        "materi_inti": [
+                            "Teks Artikel Ilmiah Populer (Budaya)",
+                            "Upacara Adat & Filosofi Hidup Daerah",
+                            "Aksara Daerah (Eksplorasi Prasasti)"
+                        ],
+                        "cp_snippet": "Mengevaluasi artikel budaya daerah; menjelaskan filosofi upacara adat; menginterpretasi aksara daerah pada sumber sejarah."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Berbicara dan Mempresentasikan",
+                            "Menulis"
+                        ],
+                        "materi_inti": [
+                            "Teks Kritik Sastra Daerah",
+                            "Filosofi Kepemimpinan Tradisional",
+                            "Integrasi Budaya Daerah & Global"
+                        ],
+                        "cp_snippet": "Membuat kritik sastra daerah secara objektif; menerapkan filosofi kepemimpinan lokal; mempromosikan budaya daerah di tingkat global."
+                    }
+                },
+                "PKWU": {
+                    "ganjil": {
+                        "elemen": [
+                            "Observasi dan Eksplorasi",
+                            "Desain/Perencanaan",
+                            "Produksi"
+                        ],
+                        "materi_inti": [
+                            "Wirausaha Produk Jasa/Fungsional (Pasar Global)",
+                            "Strategi Pemasaran Internasional (Digital)",
+                            "Sistem Produksi Jasa/Layanan"
+                        ],
+                        "cp_snippet": "Menganalisis potensi pasar global untuk produk jasa; merancang layanan yang inovatif dan kompetitif."
+                    },
+                    "genap": {
+                        "elemen": [
+                            "Produksi",
+                            "Refleksi dan Evaluasi"
+                        ],
+                        "materi_inti": [
+                            "Evaluasi Hasil Usaha (Laporan Akhir)",
+                            "Analisis SWOT Lanjutan",
+                            "Pembuatan Proposal Pengembangan Usaha Baru"
+                        ],
+                        "cp_snippet": "Menyusun laporan wirausaha secara profesional; melakukan refleksi atas kegagalan/keberhasilan bisnis."
+                    }
+                }
+            }
+        }
+    },
+    "kktp_standards": {
+        "methods": [
+            {
+                "type": "Deskripsi Kriteria",
+                "description": "Menggunakan kriteria kualitatif untuk menentukan ketercapaian."
+            },
+            {
+                "type": "Rubrik",
+                "description": "Menggunakan skala performa yang lebih detail untuk setiap kriteria."
+            },
+            {
+                "type": "Interval Nilai",
+                "description": "Menggunakan rentang nilai (misal: 0-70 belum tuntas) berdasarkan asesmen."
+            }
+        ]
+    },
+    "pedagogis": {
+        "preferred_models": [
+            {
+                "name": "PBL",
+                "suitability": "Analisis masalah dunia nyata, berpikir kritis, dan pemecahan masalah secara kolaboratif."
+            },
+            {
+                "name": "PjBL",
+                "suitability": "Pembuatan produk, proyek kreatif, dan integrasi lintas disiplin ilmu dalam jangka waktu tertentu."
+            },
+            {
+                "name": "Discovery Learning",
+                "suitability": "Pemberian stimulus, identifikasi masalah, pengumpulan data, pengolahan data, pembuktian, dan penarikan kesimpulan secara mandiri."
+            },
+            {
+                "name": "Inquiry Learning",
+                "suitability": "Pembelajaran berbasis penyelidikan ilmiah, observasi murni, dan pengujian hipotesis untuk menemukan konsep."
+            },
+            {
+                "name": "Cooperative Learning",
+                "suitability": "Kerja kelompok terstruktur, saling ketergantungan positif, dan tanggung jawab individu dalam tim."
+            },
+            {
+                "name": "Contextual Teaching and Learning (CTL)",
+                "suitability": "Mengaitkan materi dengan situasi dunia nyata peserta didik dan mendorong siswa membuat hubungan antara pengetahuan yang dimiliki dengan penerapannya."
+            },
+            {
+                "name": "Blended Learning",
+                "suitability": "Kombinasi pembelajaran tatap muka (luring) dengan pembelajaran mandiri berbasis teknologi (daring)."
+            },
+            {
+                "name": "Flipped Classroom",
+                "suitability": "Mempelajari materi secara mandiri di rumah sebelum pertemuan (via video/modul), dan menggunakan waktu kelas untuk diskusi/praktik."
+            },
+            {
+                "name": "Problem Solving",
+                "suitability": "Fokus pada langkah-langkah sistematis untuk menyelesaikan tantangan logis atau hitungan."
+            },
+            {
+                "name": "TaRL (Teaching at the Right Level)",
+                "suitability": "Pembelajaran yang disesuaikan dengan tingkat capaian atau kemampuan awal peserta didik, bukan hanya berdasarkan kelas."
+            },
+            {
+                "name": "CRT (Culturally Responsive Teaching)",
+                "suitability": "Mengintegrasikan latar belakang budaya, pengalaman, dan perspektif peserta didik ke dalam proses pembelajaran."
+            }
+        ]
+    }
+}
