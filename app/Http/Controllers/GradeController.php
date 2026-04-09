@@ -132,6 +132,25 @@ class GradeController extends Controller
             }
 
             DB::commit();
+
+            // Send Push Notifications
+            $subjectName = 'Pelajaran';
+            if (!empty($commonData['subject_id'])) {
+                $subject = \App\Models\Subject::find($commonData['subject_id']);
+                if ($subject) {
+                    $subjectName = $subject->name;
+                }
+            }
+            $topic = $commonData['topic'] ?? 'Evaluasi Baru';
+            foreach ($savedGrades as $grade) {
+                \App\Services\PushNotificationService::sendToStudentParent(
+                    $grade->student_id,
+                    'Penilaian Baru',
+                    "Informasi: Nilai materi {$topic} pada mata pelajaran {$subjectName} ananda baru saja diperbarui.",
+                    '/siswa/nilai'
+                );
+            }
+
             return response()->json(['message' => 'Nilai berhasil disimpan', 'count' => count($savedGrades)]);
 
         } catch (\Exception $e) {

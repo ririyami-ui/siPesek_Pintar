@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Minishlink\WebPush\WebPush;
+use Minishlink\WebPush\Subscription;
 
 class AuthController extends Controller
 {

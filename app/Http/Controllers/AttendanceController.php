@@ -90,6 +90,23 @@ class AttendanceController extends Controller
             }
 
             DB::commit();
+
+            // Send Push Notifications to Parents
+            $subjectName = 'Pelajaran';
+            if (!empty($validated['subject_id'])) {
+                $subject = \App\Models\Subject::find($validated['subject_id']);
+                if ($subject) {
+                    $subjectName = $subject->name;
+                }
+            }
+
+            $statusMap = ['hadir' => 'Hadir', 'sakit' => 'Sakit', 'izin' => 'Izin', 'alpa' => 'Alpa / Tanpa Keterangan'];
+            foreach ($validated['attendances'] as $item) {
+                $statusLabel = $statusMap[$item['status']] ?? $item['status'];
+                $title = "Update Absensi: {$statusLabel}";
+                $body = "Status kehadiran ananda pada mata pelajaran {$subjectName} telah tercatat sebagai {$statusLabel}.";
+                \App\Services\PushNotificationService::sendToStudentParent($item['student_id'], $title, $body, '/siswa/kehadiran');
+            }
             return response()->json(['message' => 'Attendance recorded successfully', 'data' => $records], 201);
         } catch (\Exception $e) {
             DB::rollBack();

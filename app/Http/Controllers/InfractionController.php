@@ -56,6 +56,13 @@ class InfractionController extends Controller
             ...$validated
         ]);
 
+        \App\Services\PushNotificationService::sendToStudentParent(
+            $validated['student_id'],
+            'Catatan Jurnal Kedisiplinan',
+            "Ananda baru saja mendapat catatan pelanggaran senilai {$validated['points']} poin. Deskripsi: {$validated['description']}",
+            '/siswa/pelanggaran'
+        );
+
         return response()->json($infraction, 201);
     }
 

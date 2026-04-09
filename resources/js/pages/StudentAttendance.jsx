@@ -179,7 +179,7 @@ export default function StudentAttendance() {
           {daily.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-sm">Belum ada riwayat.</div>
           ) : (
-            <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[360px] overflow-y-auto custom-scrollbar">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[640px] overflow-y-auto custom-scrollbar">
               {daily.map((d, i) => (
                 <div key={i} className="flex items-center px-5 py-3 gap-4">
                   <div className="w-24 shrink-0">

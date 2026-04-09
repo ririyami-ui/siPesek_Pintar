@@ -101,26 +101,6 @@ function App() {
         });
     }
 
-    // [PUSH NOTIFICATION] Subscribe user when logged in as student/parent
-    const subscribeToPush = async () => {
-      try {
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: 'BD4c8mBny9f3D_2_x0j-9H3NnWjP_-p906Wn9vNwJ905sWn9vNwJ905sWn9vNwJ905sWn9vNwJ905s-w' // VAPID Public Key
-        });
-        
-        await api.post('/save-push-subscription', { subscription });
-        console.log('Push Subscription saved.');
-      } catch (error) {
-        console.error('Push Subscription failed:', error);
-      }
-    };
-
-    if (user && user.role === 'student') {
-      subscribeToPush();
-    }
-
     // Show welcome screen for 3s only if it's visible
     let timer;
     if (isWelcomeVisible) {
@@ -133,6 +113,39 @@ function App() {
       if (timer) clearTimeout(timer);
     };
   }, []);
+
+  // [PUSH NOTIFICATION] Subscribe user when logged in as student/parent
+  useEffect(() => {
+    const subscribeToPush = async () => {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const urlBase64ToUint8Array = (base64String) => {
+          const padding = '='.repeat((4 - base64String.length % 4) % 4);
+          const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+          const rawData = window.atob(base64);
+          const outputArray = new Uint8Array(rawData.length);
+          for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+          }
+          return outputArray;
+        };
+
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array('BHSZ1jnMryxWKqEKAaQmUDF5oM1FkMHM82vKa2Ab2Vwx4ahvBqgg_UmMurpXfQTFINV-aBJzS3Ya-g3gDQh5QvA')
+        });
+        
+        await api.post('/save-push-subscription', { subscription });
+        console.log('Push Subscription saved.');
+      } catch (error) {
+        console.error('Push Subscription failed:', error);
+      }
+    };
+
+    if (user && user.role === 'student') {
+      subscribeToPush();
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e) => {
