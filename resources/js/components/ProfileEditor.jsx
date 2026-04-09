@@ -8,7 +8,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export default function ProfileEditor() {
   const { userProfile, loadingSettings, updateProfile } = useSettings();
-  const isAdmin = userProfile?.role === 'admin';
+  const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
 
   const [formData, setFormData] = useState({
     school_name: '',
@@ -47,11 +47,11 @@ export default function ProfileEditor() {
         active_semester: userProfile.active_semester || userProfile.activeSemester || 'Ganjil',
         gemini_model: userProfile.gemini_model || userProfile.geminiModel || 'gemini-3.1-flash-lite-preview',
         google_ai_api_key: userProfile.google_ai_api_key || userProfile.googleAiApiKey || '',
-        schedule_notifications_enabled: userProfile.schedule_notifications_enabled ?? userProfile.scheduleNotificationsEnabled ?? true,
-        school_days: userProfile.school_days || userProfile.schoolDays || 6,
-        audio_language: userProfile.audio_language || userProfile.audioLanguage || 'id-ID', // New: Audio language from profile
+        schedule_notifications_enabled: userProfile.schedule_notifications_enabled !== undefined ? !!userProfile.schedule_notifications_enabled : true,
+        school_days: userProfile.school_days || 6,
+        audio_language: userProfile.audio_language || 'id-ID',
       });
-
+      
       if (userProfile.logoUrl) {
         setLogoPreview(userProfile.logoUrl);
       }
@@ -65,6 +65,10 @@ export default function ProfileEditor() {
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Ukuran file maksimal 2MB.');
+        return;
+      }
       setLogoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -83,25 +87,25 @@ export default function ProfileEditor() {
       
       // If admin, send all data. If teacher, only send AI settings
       if (isAdmin) {
-        data.append('school_name', formData.school_name);
-        data.append('school_level', formData.school_level);
-        data.append('npsn', formData.npsn);
-        data.append('nss', formData.nss);
-        data.append('address', formData.address);
-        data.append('principalName', formData.principalName);
-        data.append('principalNip', formData.principalNip);
-        data.append('academic_year', formData.academic_year);
-        data.append('active_semester', formData.active_semester);
-        data.append('school_days', formData.school_days);
-        if (logoFile) {
+        data.append('school_name', formData.school_name || '');
+        data.append('school_level', formData.school_level || 'SD');
+        data.append('npsn', formData.npsn || '');
+        data.append('nss', formData.nss || '');
+        data.append('address', formData.address || '');
+        data.append('principalName', formData.principalName || '');
+        data.append('principalNip', formData.principalNip || '');
+        data.append('academic_year', formData.academic_year || '');
+        data.append('active_semester', formData.active_semester || 'Ganjil');
+        data.append('school_days', formData.school_days || 6);
+        if (logoFile instanceof File) {
           data.append('logo', logoFile);
         }
       }
       
-      data.append('gemini_model', formData.gemini_model);
-      data.append('google_ai_api_key', formData.google_ai_api_key);
+      data.append('gemini_model', formData.gemini_model || 'gemini-3.1-flash-lite-preview');
+      data.append('google_ai_api_key', formData.google_ai_api_key || '');
       data.append('schedule_notifications_enabled', formData.schedule_notifications_enabled ? '1' : '0');
-      data.append('audio_language', formData.audio_language); // New: Send audio language
+      data.append('audio_language', formData.audio_language || 'id-ID');
       
       // Use _method spoofing for multipart PUT
       data.append('_method', 'PUT');

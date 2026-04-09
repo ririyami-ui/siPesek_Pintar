@@ -23,13 +23,14 @@ export const getAllStudents = async (userId = null, rombel = null) => {
 };
 
 /**
- * Fetches all grades for a given user, optionally filtered by student.
+ * Fetches all grades for a given user, optionally filtered by student or class.
  */
-export const getAllGrades = async (userId = null, studentId = null, semester, academicYear) => {
+export const getAllGrades = async (userId = null, studentId = null, semester, academicYear, classId = null) => {
   try {
     const res = await api.get('/grades', {
       params: {
         student_id: studentId,
+        class_id: classId,
         semester,
         academic_year: academicYear
       }
@@ -51,13 +52,14 @@ export const getAllGrades = async (userId = null, studentId = null, semester, ac
 };
 
 /**
- * Fetches all attendance records for a given user, optionally filtered by student.
+ * Fetches all attendance records for a given user, optionally filtered by student or class.
  */
-export const getAllAttendance = async (userId = null, studentId = null, semester, academicYear) => {
+export const getAllAttendance = async (userId = null, studentId = null, semester, academicYear, classId = null) => {
   try {
     const res = await api.get('/attendances', {
       params: {
         student_id: studentId,
+        class_id: classId,
         semester,
         academic_year: academicYear
       }
@@ -80,12 +82,13 @@ export const getAllAttendance = async (userId = null, studentId = null, semester
 /**
  * Fetches all teaching journals for a given user.
  */
-export const getAllJournals = async (userId = null, semester, academicYear) => {
+export const getAllJournals = async (userId = null, semester, academicYear, classId = null) => {
   try {
     const res = await api.get('/journals', {
       params: {
         semester,
         academic_year: academicYear,
+        class_id: classId,
         all: true
       }
     });
@@ -104,13 +107,14 @@ export const getAllJournals = async (userId = null, semester, academicYear) => {
 };
 
 /**
- * Fetches all infraction records for a given user, optionally filtered by student.
+ * Fetches all infraction records for a given user, optionally filtered by student or class.
  */
-export const getAllInfractions = async (userId = null, studentId = null, semester, academicYear) => {
+export const getAllInfractions = async (userId = null, studentId = null, semester, academicYear, classId = null) => {
   try {
     const res = await api.get('/infractions', {
       params: {
         student_id: studentId,
+        class_id: classId,
         semester,
         academic_year: academicYear
       }

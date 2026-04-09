@@ -26,8 +26,8 @@ class GradeCalculationService
     {
         // 1. Attendance Summary
         $attendanceQuery = Attendance::where('student_id', $student->id);
-        if ($semester) $attendanceQuery->where('semester', $semester);
-        if ($academicYear) $attendanceQuery->where('academic_year', $academicYear);
+        // Note: attendances table does not have semester/academic_year columns currently.
+        // It's Date based. We fetch all for the student for the summary or could filter by date if passed.
         
         $attendances = $attendanceQuery->get();
         $uniqueDates = $attendances->pluck('date')->unique();
@@ -42,7 +42,7 @@ class GradeCalculationService
         $izin = $attendanceCounts->get('izin', 0);
         $alpa = $attendanceCounts->get('alpa', 0);
         $totalAttendance = $attendances->count();
-        $attPct = $numDays > 0 ? ($hadir / $numDays) * 100 : 100;
+        $attPct = $totalAttendance > 0 ? ($hadir / $totalAttendance) * 100 : 100;
 
         // 2. Infractions Summary
         $infractionsQuery = Infraction::where('student_id', $student->id);
@@ -56,10 +56,10 @@ class GradeCalculationService
 
         // 3. Class Agreement (Weights)
         $agreement = ClassAgreement::where('class_id', $student->class_id)->first();
-        $wk = ($agreement->knowledge_weight ?? 40) / 100;
-        $wp = ($agreement->practice_weight ?? 60) / 100;
-        $wa = ($agreement->academic_weight ?? 50) / 100;
-        $ws = ($agreement->attitude_weight ?? 50) / 100;
+        $wk = ($agreement?->knowledge_weight ?? 40) / 100;
+        $wp = ($agreement?->practice_weight ?? 60) / 100;
+        $wa = ($agreement?->academic_weight ?? 50) / 100;
+        $ws = ($agreement?->attitude_weight ?? 50) / 100;
 
         // 4. Group by subject and calculate scores
         $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws) {
@@ -158,10 +158,10 @@ class GradeCalculationService
         return [
             'by_subject' => $bySubject,
             'weights' => [
-                'knowledge' => ($agreement->knowledge_weight ?? 40),
-                'practice'  => ($agreement->practice_weight ?? 60),
-                'academic'  => ($agreement->academic_weight ?? 50),
-                'attitude'  => ($agreement->attitude_weight ?? 50),
+                'knowledge' => ($agreement?->knowledge_weight ?? 40),
+                'practice'  => ($agreement?->practice_weight ?? 60),
+                'academic'  => ($agreement?->academic_weight ?? 50),
+                'attitude'  => ($agreement?->attitude_weight ?? 50),
             ],
             'attendance_summary' => [
                 'hadir' => $hadir,

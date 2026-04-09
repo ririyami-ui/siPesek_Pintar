@@ -8,7 +8,7 @@ import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
 import StyledSelect from './StyledSelect';
 import StyledTable from './StyledTable';
-import { Plus, Upload, Download, Edit, Trash2, Sparkles } from 'lucide-react';
+import { Plus, Upload, Download, Edit, Trash2, Sparkles, Image as ImageIcon, FileArchive, CheckCircle2, AlertCircle, Loader2, X, Smartphone } from 'lucide-react';
 import Modal from './Modal';
 import StudentEditor from './StudentEditor';
 
@@ -32,6 +32,11 @@ export default function StudentMasterData() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+  
+  // Photo ZIP Upload States
+  const [zipFile, setZipFile] = useState(null);
+  const [uploadingZip, setUploadingZip] = useState(false);
+  const [zipUploadResult, setZipUploadResult] = useState(null);
 
   const handleEditStudent = (student) => {
     setSelectedStudent(student);
@@ -46,6 +51,36 @@ export default function StudentMasterData() {
   const handleSaveStudent = () => {
     getStudents(); // Refresh the list after saving
     handleCloseModal();
+  };
+
+  const handleZipUpload = async () => {
+    if (!zipFile) {
+      toast.error('Pilih file ZIP terlebih dahulu.');
+      return;
+    }
+
+    setUploadingZip(true);
+    setZipUploadResult(null);
+
+    const formData = new FormData();
+    formData.append('file', zipFile);
+
+    try {
+      const response = await api.post('/admin/students/upload-photos', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      
+      setZipUploadResult(response.data);
+      toast.success('File ZIP berhasil diproses!');
+      setZipFile(null);
+      // Reset input file
+      document.getElementById('zip-upload-input').value = '';
+    } catch (error) {
+      console.error("Error uploading ZIP:", error);
+      toast.error(error.response?.data?.message || 'Gagal mengunggah file ZIP.');
+    } finally {
+      setUploadingZip(false);
+    }
   };
 
   const getStudents = useCallback(async () => {
@@ -102,6 +137,27 @@ export default function StudentMasterData() {
     getStudents();
   }, [getClasses, getStudents]);
 
+  // Handle automatic generation of attendance number (Absen) when class changes
+  useEffect(() => {
+    if (newClassId && students.length > 0) {
+      // Find students in the selected class
+      const classStudents = students.filter(s => s.class_id == newClassId);
+      if (classStudents.length > 0) {
+        // Find max absen
+        const maxAbsen = Math.max(...classStudents.map(s => parseInt(s.absen) || 0));
+        setNewAbsen(String(maxAbsen + 1));
+      } else {
+        // First student in class
+        setNewAbsen('1');
+      }
+    }
+  }, [newClassId, students]);
+
+  // Derived: Find the last student code used in the system
+  const lastStudentCode = students.length > 0 
+    ? [...students].sort((a, b) => (b.id || 0) - (a.id || 0))[0]?.code 
+    : '-';
+
   const addStudent = async () => {
     if (!newStudentName || !newGender || !newClassId) {
       toast.error('Nama, Jenis Kelamin dan Kelas wajib diisi.');
@@ -140,6 +196,26 @@ export default function StudentMasterData() {
       error: (err) => {
         return err.response?.data?.message || 'Gagal menambah siswa.';
       },
+    });
+  };
+
+  const resetDevice = (id) => {
+    setConfirmModal({
+      isOpen: true,
+      title: 'Reset Perangkat',
+      message: 'Apakah Anda yakin ingin mereset kunci perangkat untuk siswa ini? Siswa akan bisa login kembali dari perangkat mana pun sekali saja untuk mengunci perangkat baru.',
+      onConfirm: async () => {
+        const promise = api.post(`/admin/students/${id}/reset-device`);
+        toast.promise(promise, {
+          loading: 'Mereset...',
+          success: () => {
+            getStudents();
+            setConfirmModal(prev => ({ ...prev, isOpen: false }));
+            return 'Perangkat berhasil direset!';
+          },
+          error: (err) => err.response?.data?.message || 'Gagal mereset perangkat.',
+        });
+      }
     });
   };
 
@@ -389,7 +465,13 @@ export default function StudentMasterData() {
             <div className="lg:col-span-12 space-y-4">
               <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700 pb-2">Informasi Identitas</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StyledInput label="Kode Siswa" type="text" placeholder="Contoh: SIS-001" value={newStudentCode} onChange={(e) => setNewStudentCode(e.target.value)} />
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center px-1">
+                    <label className="text-xs font-semibold text-gray-500">Kode Siswa</label>
+                    <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10 animate-pulse">Terakhir: {lastStudentCode}</span>
+                  </div>
+                  <StyledInput type="text" placeholder="Contoh: SIS-001" value={newStudentCode} onChange={(e) => setNewStudentCode(e.target.value)} />
+                </div>
                 <StyledInput label="NIS" type="text" placeholder="Nomor Induk Siswa" value={newNIS} onChange={(e) => setNewNIS(e.target.value)} />
                 <StyledInput label="NISN" type="text" placeholder="Nomor Induk Siswa Nasional" value={newNISN} onChange={(e) => setNewNISN(e.target.value)} />
                 <StyledInput label="Nama Lengkap" type="text" placeholder="Nama lengkap siswa" value={newStudentName} onChange={(e) => setNewStudentName(e.target.value)} />
@@ -432,13 +514,90 @@ export default function StudentMasterData() {
 
       {/* Import/Export Data - Only for Admin */}
       {isAdmin && (
-        <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl shadow-lg border border-purple-100 dark:border-purple-900/20">
-          <h3 className="text-lg font-bold mb-4 text-purple-600 dark:text-purple-400">Impor/Ekspor Data</h3>
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <StyledInput type="file" accept=".xlsx, .xls" onChange={handleFileUpload} className="flex-1" />
-            <div className="flex gap-2">
-              <StyledButton onClick={importStudents} variant="secondary"><Upload className="mr-2" size={16} />Impor</StyledButton>
-              <StyledButton onClick={downloadTemplate} variant="outline"><Download className="mr-2" size={16} />Unduh Template</StyledButton>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Excel Import */}
+          <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-[2rem] shadow-lg border border-purple-100 dark:border-purple-900/20 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:rotate-12 transition-transform duration-500">
+              <Upload size={64} />
+            </div>
+            <h3 className="text-lg font-black mb-4 text-purple-600 dark:text-purple-400 flex items-center gap-2">
+              <Upload size={20} />
+              Impor Data (Excel)
+            </h3>
+            <div className="space-y-4 relative z-10">
+              <div className="flex flex-col gap-3">
+                <StyledInput type="file" accept=".xlsx, .xls" onChange={handleFileUpload} className="w-full" />
+                <div className="flex gap-2">
+                  <StyledButton onClick={importStudents} variant="secondary" className="flex-1"><Upload className="mr-2" size={16} />Impor Siswa</StyledButton>
+                  <StyledButton onClick={downloadTemplate} variant="outline" className="flex-1"><Download className="mr-2" size={16} />Unduh Template</StyledButton>
+                </div>
+              </div>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">Gunakan template resmi untuk menghindari kegagalan impor data.</p>
+            </div>
+          </div>
+
+          {/* Student Photo ZIP Upload */}
+          <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-[2rem] shadow-lg border border-indigo-100 dark:border-indigo-900/20 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:-rotate-12 transition-transform duration-500">
+              <FileArchive size={64} />
+            </div>
+            <h3 className="text-lg font-black mb-4 text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+              <ImageIcon size={20} />
+              Unggah Foto Siswa (ZIP)
+            </h3>
+            <div className="space-y-4 relative z-10">
+              <div className="flex flex-col gap-3">
+                <StyledInput 
+                  id="zip-upload-input"
+                  type="file" 
+                  accept=".zip" 
+                  onChange={(e) => setZipFile(e.target.files[0])} 
+                  className="w-full" 
+                />
+                <StyledButton 
+                  onClick={handleZipUpload} 
+                  variant="primary" 
+                  disabled={uploadingZip}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 shadow-indigo-200"
+                >
+                  {uploadingZip ? (
+                    <><Loader2 className="mr-2 animate-spin" size={16} /> Mengekstrak...</>
+                  ) : (
+                    <><FileArchive className="mr-2" size={16} /> Ekstrak Foto ZIP</>
+                  )}
+                </StyledButton>
+              </div>
+              
+              {/* ZIP Upload Result Feedback */}
+              {zipUploadResult && (
+                <div className="p-3 bg-white/50 dark:bg-black/20 rounded-xl border border-indigo-100 dark:border-indigo-800/30 animate-in fade-in duration-500">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Hasil Ekstraksi</span>
+                    <button onClick={() => setZipUploadResult(null)} className="text-gray-400 hover:text-gray-600"><X size={12}/></button>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="flex items-center gap-1 text-emerald-600 font-black text-xs">
+                      <CheckCircle2 size={12} /> {zipUploadResult.extracted} Berhasil
+                    </div>
+                    {zipUploadResult.skipped > 0 && (
+                      <div className="flex items-center gap-1 text-rose-500 font-black text-xs">
+                        <AlertCircle size={12} /> {zipUploadResult.skipped} Dilewati
+                      </div>
+                    )}
+                  </div>
+                  {zipUploadResult.details && zipUploadResult.details.length > 0 && (
+                    <div className="mt-2 max-h-20 overflow-y-auto text-[9px] font-bold text-rose-400/80 custom-scrollbar">
+                      {zipUploadResult.details.map((d, i) => <div key={i}>• {d}</div>)}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="p-3 bg-indigo-50 dark:bg-indigo-950/20 rounded-xl border border-indigo-100 dark:border-indigo-800/30">
+                <p className="text-[9px] font-bold text-indigo-600 dark:text-indigo-400 leading-relaxed uppercase tracking-widest">
+                  Aturan: File foto harus bernama <span className="font-black text-indigo-700 dark:text-indigo-300">nisn.jpg / nisn.png</span>. Ukuran max <span className="font-black">300KB</span> per foto.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -491,9 +650,17 @@ export default function StudentMasterData() {
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm"><span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs font-bold text-text-muted-light dark:text-text-muted-dark">{student.rombel}</span></td>
                 {isAdmin && (
                   <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
-                    <div className="flex gap-2">
-                      <button onClick={() => handleEditStudent(student)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"><Edit size={16} /></button>
-                      <button onClick={() => deleteStudent(student.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                    <div className="flex gap-1.5 sm:gap-2">
+                       <button onClick={() => handleEditStudent(student)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit Data"><Edit size={16} /></button>
+                       <button 
+                         onClick={() => resetDevice(student.id)} 
+                         className={`p-1.5 rounded-lg transition-colors ${student.auth_user_id ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-gray-300 opacity-50 cursor-not-allowed'}`} 
+                         title={student.auth_user_id ? "Reset Kunci Perangkat (HP)" : "Belum ada akun login"}
+                         disabled={!student.auth_user_id}
+                       >
+                         <Smartphone size={16} />
+                       </button>
+                       <button onClick={() => deleteStudent(student.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Hapus Data"><Trash2 size={16} /></button>
                     </div>
                   </td>
                 )}

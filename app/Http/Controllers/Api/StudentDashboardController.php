@@ -18,6 +18,8 @@ use App\Services\GradeCalculationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class StudentDashboardController extends Controller
 {
@@ -28,7 +30,11 @@ class StudentDashboardController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        return Student::with(['class'])->where('auth_user_id', $user->id)->first();
+        
+        // Cache student data for 5 minutes per user session
+        return Cache::remember("student_data_{$user->id}", 300, function () use ($user) {
+            return Student::with(['class'])->where('auth_user_id', $user->id)->first();
+        });
     }
 
     /**
@@ -36,22 +42,24 @@ class StudentDashboardController extends Controller
      */
     private function getSchoolName(): string
     {
-        $adminUserId = User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
+        return Cache::remember('school_name', 3600, function () {
+            $adminUserId = User::whereIn('role', ['admin', 'adminer'])
+                ->orderBy('id', 'asc')
+                ->value('id');
 
-        if ($adminUserId) {
-            $schoolName = UserProfile::where('user_id', $adminUserId)->value('school_name');
-            if ($schoolName) return $schoolName;
-        }
+            if ($adminUserId) {
+                $schoolName = UserProfile::where('user_id', $adminUserId)->value('school_name');
+                if ($schoolName) return $schoolName;
+            }
 
-        return config('app.name', 'Si Pesek Pintar');
+            return config('app.name', 'Si Pesek Pintar');
+        });
     }
 
     /**
      * Get the planned material from the semester program (Promes) for a specific date and subject.
      */
-    private function getPlannedMaterial($student, $subjectId, $date)
+    private function getPlannedMaterial($student, $subjectId, $date, $profile = null)
     {
         if (!$subjectId || !$student) return null;
 
@@ -68,20 +76,26 @@ class StudentDashboardController extends Controller
         ];
         $monthName = $monthMap[$dt->englishMonth] ?? $dt->englishMonth;
 
-        // Get admin profile context
-        $adminUserId = User::whereIn('role', ['admin', 'adminer'])->orderBy('id', 'asc')->value('id');
-        $profile = UserProfile::where('user_id', $adminUserId)->first();
+        // Use pre-fetched profile or fetch and cache
+        if (!$profile) {
+            $profile = Cache::remember('admin_profile_context', 3600, function () {
+                $adminUserId = User::whereIn('role', ['admin', 'adminer'])->orderBy('id', 'asc')->value('id');
+                return UserProfile::where('user_id', $adminUserId)->first();
+            });
+        }
         
         $semester = $profile->active_semester ?? 'Ganjil';
         $academicYear = $profile->academic_year ?? '2025/2026';
 
-        // Fetch TeachingProgram
-        $program = TeachingProgram::where('type', 'subject_program')
-            ->where('subject_id', $subjectId)
-            ->where('grade_level', $student->class->level ?? '-')
-            ->where('semester', $semester)
-            ->where('academic_year', $academicYear)
-            ->first();
+        // Cache TeachingProgram queries for 1 hour to prevent N+1 overhead
+        $program = Cache::remember("teaching_program_{$subjectId}_{$student->class->level}_{$semester}_{$academicYear}", 3600, function () use ($subjectId, $student, $semester, $academicYear) {
+            return TeachingProgram::where('type', 'subject_program')
+                ->where('subject_id', $subjectId)
+                ->where('grade_level', $student->class->level ?? '-')
+                ->where('semester', $semester)
+                ->where('academic_year', $academicYear)
+                ->first();
+        });
 
         if (!$program || empty($program->promes) || empty($program->prota)) return null;
 
@@ -130,6 +144,7 @@ class StudentDashboardController extends Controller
         // Fetch all schedules for the student's class today
         $schedules = Schedule::with(['subject', 'teacher'])
             ->where('class_id', $student->class_id)
+            ->where('type', 'teaching') // Filter strictly teaching sessions
             ->where(function ($q) use ($dayName) {
                 $q->where('day', $dayName)
                   ->where(function ($q2) {
@@ -138,6 +153,7 @@ class StudentDashboardController extends Controller
             })
             ->orWhere(function ($q) use ($student, $today) {
                 $q->where('class_id', $student->class_id)
+                  ->where('type', 'teaching') // Filter strictly teaching sessions
                   ->where('start_date', '<=', $today)
                   ->where(function ($q2) use ($today) {
                       $q2->where('end_date', '>=', $today)->orWhereNull('end_date');
@@ -220,11 +236,29 @@ class StudentDashboardController extends Controller
             ];
         });
 
+        // Pre-fetch profile for context (used in getPlannedMaterial)
+        $profile = Cache::remember('admin_profile_context', 3600, function () {
+            $adminUserId = User::whereIn('role', ['admin', 'adminer'])->orderBy('id', 'asc')->value('id');
+            return UserProfile::where('user_id', $adminUserId)->first();
+        });
+
         $todayAttendance = Attendance::where('student_id', $student->id)->whereDate('date', $today)->first();
+
+        // Add student photo URL and gender for avatar
+        $studentPhoto = null;
+        $possibleExtensions = ['png', 'jpg', 'jpeg'];
+        foreach ($possibleExtensions as $ext) {
+            $filename = "student_photos/{$student->nisn}.{$ext}";
+            if (Storage::disk('public')->exists($filename)) {
+                $studentPhoto = asset('storage/' . $filename);
+                break;
+            }
+        }
+
         $currentSessionData = $currentSession ? [
             'subject_id'    => $currentSession->subject_id,
             'subject_name'  => $currentSession->subject?->name ?? $currentSession->activity_name ?? 'Kegiatan',
-            'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today),
+            'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today, $profile),
         ] : null;
 
         $dailyNarrative = $this->generateDailyNarrative($student, $todayAttendance, $currentSessionData);
@@ -238,8 +272,9 @@ class StudentDashboardController extends Controller
                 'nisn'      => $student->nisn,
                 'class'     => $this->getClassName($student),
                 'class_id'  => $student->class_id,
-                'gender'    => $student->gender,
+                'gender'    => $student->gender ?? 'L',
                 'absen'     => $student->absen,
+                'photo_url' => $studentPhoto,
             ],
             'current_session' => $currentSession ? [
                 'subject_id'    => $currentSession->subject_id,
@@ -253,22 +288,75 @@ class StudentDashboardController extends Controller
                 'end_time'      => substr($currentSession->end_time, 0, 5),
                 'status'        => 'ongoing',
                 'attendance_status' => $todayAttendances->get($currentSession->subject_id)?->status ?? null,
-                'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today),
+                'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today, $profile),
             ] : null,
             'upcoming_session' => $upcomingSession ? [
                 'subject_id'   => $upcomingSession->subject_id,
                 'subject_name' => $upcomingSession->subject?->name ?? $upcomingSession->activity_name ?? 'Kegiatan',
                 'start_time'   => substr($upcomingSession->start_time, 0, 5),
                 'end_time'     => substr($upcomingSession->end_time, 0, 5),
-                'planned_material' => $this->getPlannedMaterial($student, $upcomingSession->subject_id, $today),
+                'planned_material' => $this->getPlannedMaterial($student, $upcomingSession->subject_id, $today, $profile),
             ] : null,
-            'today_schedule'  => $scheduleWithStatus->map(function($s) use ($student, $today) {
-                $s['planned_material'] = isset($s['subject_id']) ? $this->getPlannedMaterial($student, $s['subject_id'], $today) : null;
+            'today_schedule'  => $scheduleWithStatus->map(function($s) use ($student, $today, $profile) {
+                $s['planned_material'] = isset($s['subject_id']) ? $this->getPlannedMaterial($student, $s['subject_id'], $today, $profile) : null;
                 return $s;
             }),
             'daily_narrative' => $dailyNarrative,
             'server_time'     => $now->toIso8601String(),
             'day'             => $dayName,
+        ]);
+    }
+
+    /**
+     * Get weekly schedule for the student.
+     */
+    public function getWeeklySchedule()
+    {
+        $student = $this->getStudent();
+        if (!$student) {
+            return response()->json(['message' => 'Data siswa tidak ditemukan.'], 404);
+        }
+
+        // Fetch all recurring schedules for the student's class
+        $schedules = Schedule::with(['subject', 'teacher'])
+            ->where('class_id', $student->class_id)
+            ->where('type', 'teaching')
+            ->where(function ($q) {
+                $q->where('is_recurring', true)->orWhereNull('is_recurring');
+            })
+            ->orderBy('start_time')
+            ->get();
+
+        // Get teacher assignments to resolve actual teacher names
+        $assignments = \App\Models\TeacherAssignment::with('teacher')
+            ->where('class_id', $student->class_id)
+            ->get()
+            ->keyBy('subject_id');
+
+        $formattedSchedules = $schedules->map(function ($schedule) use ($assignments) {
+            // Resolve actual teacher name
+            $teacherName = '-';
+            if (($schedule->type ?? 'teaching') === 'teaching' && isset($schedule->subject_id)) {
+                $assignment = $assignments->get($schedule->subject_id);
+                $teacherName = $assignment?->teacher?->name ?? $schedule->teacher?->name ?? '-';
+            } else {
+                $teacherName = $schedule->teacher?->name ?? '-';
+            }
+
+            return [
+                'id'             => $schedule->id,
+                'day'            => $schedule->day,
+                'subject_name'   => $schedule->subject?->name ?? $schedule->activity_name ?? 'Kegiatan',
+                'teacher_name'   => $teacherName,
+                'start_time'     => substr($schedule->start_time, 0, 5),
+                'end_time'       => substr($schedule->end_time, 0, 5),
+                'type'           => $schedule->type ?? 'teaching',
+            ];
+        });
+
+        return response()->json([
+            'student'  => ['name' => $student->name, 'class' => $this->getClassName($student)],
+            'schedule' => $formattedSchedules
         ]);
     }
 
@@ -404,9 +492,11 @@ class StudentDashboardController extends Controller
         $penalty     = $totalPoints; // 1:1 deduction ratio (sync with GradeCalculationService)
 
         // Group by category with metadata
-        $byCategory = $infractions->groupBy('category')->map(function ($records, $cat) {
+        $byCategory = $infractions->groupBy(function($item) {
+            return $item->category ?: 'Umum';
+        })->map(function ($records, $cat) {
             return [
-                'category'     => $cat ?: 'Umum',
+                'category'     => $cat,
                 'count'        => $records->count(),
                 'total_points' => $records->sum('points'),
                 'latest_date'  => $records->max('date')?->toDateString(),

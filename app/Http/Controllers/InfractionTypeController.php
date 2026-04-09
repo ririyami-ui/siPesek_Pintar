@@ -15,7 +15,77 @@ class InfractionTypeController extends Controller
     {
         // Return all infraction types, grouped by name to ensure no duplicates in the global view
         $types = InfractionType::orderBy('name', 'asc')->get()->groupBy('name')->map->first()->values();
+
+        // If empty, return a default set but don't seed database yet (let frontend handle it or seed here)
+        if ($types->isEmpty()) {
+            $defaults = [
+                ['name' => 'Tidur', 'points' => 5, 'sanction' => 'Teguran lisan'],
+                ['name' => 'Mengganggu teman', 'points' => 10, 'sanction' => 'Teguran lisan & dicatat'],
+                ['name' => 'Bertindak kurang sopan', 'points' => 15, 'sanction' => 'Teguran keras & pemanggilan orang tua'],
+                ['name' => 'Ramai di kelas', 'points' => 5, 'sanction' => 'Teguran lisan'],
+                ['name' => 'Tidak menghiraukan guru', 'points' => 10, 'sanction' => 'Teguran lisan & dicatat'],
+                ['name' => 'Terlambat masuk kelas', 'points' => 5, 'sanction' => 'Teguran lisan'],
+                ['name' => 'Sering ijin keluar', 'points' => 5, 'sanction' => 'Pembatasan ijin keluar'],
+                ['name' => 'Bolos pelajaran', 'points' => 15, 'sanction' => 'Teguran keras & pemanggilan orang tua'],
+                ['name' => 'Di luar kelas tanpa izin', 'points' => 5, 'sanction' => 'Teguran lisan'],
+                ['name' => 'Membuang sampah sembarangan', 'points' => 5, 'sanction' => 'Teguran lisan'],
+                ['name' => 'Mencontek', 'points' => 10, 'sanction' => 'Teguran lisan & dicatat'],
+                ['name' => 'Berbohong', 'points' => 10, 'sanction' => 'Teguran lisan & dicatat'],
+                ['name' => 'Perkelahian', 'points' => 20, 'sanction' => 'Pemanggilan orang tua & skorsing'],
+                ['name' => 'Membawa barang terlarang', 'points' => 25, 'sanction' => 'Barang disita & pemanggilan orang tua'],
+                ['name' => 'Membawa HP', 'points' => 10, 'sanction' => 'HP disita & teguran lisan'],
+                ['name' => 'Merokok', 'points' => 20, 'sanction' => 'Pemanggilan orang tua & skorsing'],
+                ['name' => 'Merusak fasilitas sekolah', 'points' => 25, 'sanction' => 'Ganti rugi & pemanggilan orang tua'],
+            ];
+
+            // Auto-seed for the current user if empty to ensure they see something
+            foreach ($defaults as $d) {
+                InfractionType::create([
+                    'user_id' => Auth::id(),
+                    'name' => $d['name'],
+                    'points' => $d['points'],
+                    'sanction' => $d['sanction'],
+                ]);
+            }
+            $types = InfractionType::orderBy('name', 'asc')->get()->groupBy('name')->map->first()->values();
+        }
+
         return response()->json($types);
+    }
+
+    /**
+     * Store multiple infraction types at once.
+     */
+    public function bulkStore(Request $request)
+    {
+        $validated = $request->validate([
+            'types' => 'required|array',
+            'types.*.name' => 'required|string|max:255',
+            'types.*.points' => 'required|integer',
+            'types.*.sanction' => 'nullable|string',
+        ]);
+
+        $created = [];
+        foreach ($validated['types'] as $typeData) {
+            // Check if exists for this user to avoid duplicates
+            $exists = InfractionType::where('user_id', Auth::id())
+                ->where('name', $typeData['name'])
+                ->exists();
+
+            if (!$exists) {
+                $created[] = InfractionType::create([
+                    'user_id' => Auth::id(),
+                    'name' => $typeData['name'],
+                    'points' => $typeData['points'],
+                    'sanction' => $typeData['sanction'] ?? 'Teguran sesuai aturan',
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => count($created) . ' types created.',
+            'data' => $created
+        ], 201);
     }
 
     /**
@@ -50,7 +120,9 @@ class InfractionTypeController extends Controller
      */
     public function show(InfractionType $infractionType)
     {
-        if (!Auth::user()->isAdmin() && $infractionType->user_id !== Auth::id()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin() && $infractionType->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         return response()->json($infractionType);
@@ -69,7 +141,9 @@ class InfractionTypeController extends Controller
      */
     public function update(Request $request, InfractionType $infractionType)
     {
-        if (!Auth::user()->isAdmin() && $infractionType->user_id !== Auth::id()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin() && $infractionType->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -88,7 +162,9 @@ class InfractionTypeController extends Controller
      */
     public function destroy(InfractionType $infractionType)
     {
-        if (!Auth::user()->isAdmin() && $infractionType->user_id !== Auth::id()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin() && $infractionType->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

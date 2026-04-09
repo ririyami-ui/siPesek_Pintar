@@ -27,12 +27,15 @@ import HandoutGeneratorPage from './pages/HandoutGeneratorPage.jsx';
 import AssessmentKktpPage from './pages/PenilaianKktpPage.jsx';
 import MonitoringAbsensiPage from './pages/MonitoringAbsensiPage.jsx';
 import MonitoringNilaiPage from './pages/MonitoringNilaiPage.jsx';
+import AbsensiTerlewatPage from './pages/AbsensiTerlewatPage.jsx';
+import WaliKelasPage from './pages/WaliKelasPage.jsx';
 // Student (Parent) portal pages
 import StudentDashboard from './pages/StudentDashboard.jsx';
 import StudentAttendance from './pages/StudentAttendance.jsx';
 import StudentGrades from './pages/StudentGrades.jsx';
 import StudentTasks from './pages/StudentTasks.jsx';
 import StudentInfractions from './pages/StudentInfractions.jsx';
+import StudentSchedule from './pages/StudentSchedule.jsx';
 import { ChatProvider } from './utils/ChatContext.jsx';
 import { SettingsProvider } from './utils/SettingsContext.jsx';
 import InstallPwaCard from './components/InstallPwaCard.jsx';
@@ -45,7 +48,7 @@ import api from './lib/axios';
 function App() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isWelcomeVisible, setIsWelcomeVisible] = useState(!localStorage.getItem('token')); // Skip if token exists
+  const [isWelcomeVisible, setIsWelcomeVisible] = useState(true); // Always show for 3s (Branding)
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showInstallCard, setShowInstallCard] = useState(false);
   const [isPwaInstalled, setIsPwaInstalled] = useState(false);
@@ -58,6 +61,14 @@ function App() {
     };
     checkPwaInstalled();
   }, []);
+
+  // [PWA] Hide global shell splash when React is ready
+  useEffect(() => {
+    if (!isLoading) {
+      const splash = document.getElementById('pwa-shell-splash');
+      if (splash) splash.classList.add('hidden');
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -79,12 +90,43 @@ function App() {
 
     checkAuth();
 
-    // Show welcome screen for 4s only if it's visible
+    // [PUSH NOTIFICATION] Register Service Worker for PWA
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch(err => {
+          console.error('Service Worker registration failed:', err);
+        });
+    }
+
+    // [PUSH NOTIFICATION] Subscribe user when logged in as student/parent
+    const subscribeToPush = async () => {
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: 'BD4c8mBny9f3D_2_x0j-9H3NnWjP_-p906Wn9vNwJ905sWn9vNwJ905sWn9vNwJ905sWn9vNwJ905s-w' // VAPID Public Key
+        });
+        
+        await api.post('/save-push-subscription', { subscription });
+        console.log('Push Subscription saved.');
+      } catch (error) {
+        console.error('Push Subscription failed:', error);
+      }
+    };
+
+    if (user && user.role === 'student') {
+      subscribeToPush();
+    }
+
+    // Show welcome screen for 3s only if it's visible
     let timer;
     if (isWelcomeVisible) {
       timer = setTimeout(() => {
         setIsWelcomeVisible(false);
-      }, 4000);
+      }, 3000);
     }
 
     return () => {
@@ -133,12 +175,19 @@ function App() {
     sessionStorage.setItem('pwa_dismissed', 'true');
   };
 
-  if (isWelcomeVisible || (isLoading && !user)) {
+  // Only show the 3-second WelcomeScreen for branding at every session start
+  if (isWelcomeVisible) {
     return (
-      <div className={!isWelcomeVisible ? 'animate-welcome-fade-out' : ''}>
+      <div className="animate-welcome-fade-in">
         <WelcomeScreen />
       </div>
     );
+  }
+
+  // If we are still checking auth, show nothing (this lets the server-side Shell Splash 
+  // from index.blade.php stay visible instead of flickering a white screen or login page)
+  if (isLoading) {
+    return null;
   }
 
   const basename = window.Laravel?.basePath || '/';
@@ -156,6 +205,7 @@ function App() {
                 <StudentLayout user={user} student={null} onLogout={() => setUser(null)}>
                   <Routes>
                     <Route path="/siswa"           element={<StudentDashboard />} />
+                    <Route path="/siswa/jadwal"    element={<StudentSchedule />} />
                     <Route path="/siswa/kehadiran" element={<StudentAttendance />} />
                     <Route path="/siswa/nilai"     element={<StudentGrades />} />
                     <Route path="/siswa/tugas"     element={<StudentTasks />} />
@@ -170,6 +220,7 @@ function App() {
                     <Route path="/" element={<DashboardPage />} />
                     <Route path="/jadwal" element={<JadwalPage />} />
                     <Route path="/absensi" element={<AbsensiPage />} />
+                    <Route path="/absensi-terlewat" element={<AbsensiTerlewatPage />} />
                     <Route path="/nilai" element={<NilaiPage />} />
                     <Route path="/jurnal" element={<JurnalPage />} />
                     <Route path="/rekapitulasi" element={<RekapitulasiPage />} />
@@ -191,6 +242,7 @@ function App() {
                     <Route path="/penilaian-kktp" element={<AssessmentKktpPage />} />
                     <Route path="/monitoring-absensi" element={<MonitoringAbsensiPage />} />
                     <Route path="/monitoring-nilai" element={<MonitoringNilaiPage />} />
+                    <Route path="/wali-kelas" element={<WaliKelasPage />} />
                   </Routes>
                 </DashboardLayout>
               )
@@ -205,6 +257,7 @@ function App() {
       </SettingsProvider>
       {showInstallCard && (
         <InstallPwaCard
+          role={user?.role}
           onInstall={handleInstall}
           onDismiss={handleDismiss}
         />

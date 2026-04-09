@@ -10,7 +10,7 @@ import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import Modal from './Modal';
-import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus } from 'lucide-react';
+import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus, Zap } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 import { getHolidaysByYear } from '../utils/holidayData';
 
@@ -277,13 +277,15 @@ const ScheduleCalendar = () => {
         return events;
     }, [schedules, classes, subjects, holidays]);
 
-    const resetForm = () => {
+    const resetForm = (keepDayAndClass = false) => {
         setEditingScheduleId(null);
-        setDay('');
+        if (!keepDayAndClass) {
+            setDay('');
+            setSelectedClass('');
+        }
         setStartTime('');
         setEndTime('');
         setSelectedSubject('');
-        setSelectedClass('');
         setStartDate('');
         setEndDate('');
         setIsRecurring(true);
@@ -338,7 +340,8 @@ const ScheduleCalendar = () => {
                 toast.success('Jadwal berhasil ditambahkan!');
             }
 
-            resetForm();
+            // Reset form but keep Day and Class for easier bulk input
+            resetForm(true);
             fetchSchedules(user);
         } catch (error) {
             console.error('Error saving schedule:', error);
@@ -551,9 +554,15 @@ const ScheduleCalendar = () => {
                                             <option value="">Pilih Mapel</option>
                                             {subjects
                                               .filter(sub => {
-                                                if (!selectedClass) return true;
-                                                if (assignments.length === 0) return true;
-                                                return assignments.some(a => a.subject_id === sub.id && a.class_id == selectedClass);
+                                                // [FIX] Admins should see all subjects to allow initial setup
+                                                if (!selectedClass || isAdmin) return true;
+                                                // If no assignments exist at all, show all as fallback
+                                                if (!assignments || assignments.length === 0) return true;
+                                                // Robust ID comparison (string vs integer)
+                                                return assignments.some(a => 
+                                                    String(a.subject_id) === String(sub.id) && 
+                                                    String(a.class_id) === String(selectedClass)
+                                                );
                                               })
                                               .map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
                                         </StyledSelect>
@@ -631,7 +640,23 @@ const ScheduleCalendar = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
                     <div className="flex items-center gap-3">
                         <h3 className="text-lg font-black text-gray-800 dark:text-white tracking-tight">Daftar Jadwal Tersimpan</h3>
-                        <span className="text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-600 px-3 py-1 rounded-full">{schedules.filter(s => (s.type || 'teaching') === tableTab).length}</span>
+                        <span className="text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-600 px-3 py-1 rounded-full">
+                            {schedules.filter(s => {
+                                const isMatchTab = (s.type || 'teaching') === tableTab;
+                                const filterDay = (day || '').trim();
+                                const filterClass = String(selectedClass || '');
+                                const scheduleDay = (s.day || '').trim();
+                                const scheduleClass = String(s.class_id || '');
+                                const matchDay = filterDay ? scheduleDay === filterDay : true;
+                                const matchClass = filterClass ? scheduleClass === filterClass : true;
+                                return isMatchTab && matchDay && matchClass;
+                            }).length}
+                        </span>
+                        {(day || selectedClass) && (
+                            <span className="text-[10px] font-bold px-2 py-1 bg-blue-50 text-blue-600 rounded-md border border-blue-100 flex items-center gap-1 animate-pulse">
+                                <Zap size={10} fill="currentColor" /> Terfilter: {day && `Hari ${day}`} {day && selectedClass && '&'} {selectedClass && `Kelas ${classes.find(c => String(c.id) === String(selectedClass))?.rombel || ''}`}
+                            </span>
+                        )}
                     </div>
                     
                     <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl w-full sm:w-auto">
@@ -669,12 +694,30 @@ const ScheduleCalendar = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {schedules.filter(s => (s.type || 'teaching') === tableTab).length === 0 ? (
+                            {schedules.filter(s => {
+                                const isMatchTab = (s.type || 'teaching') === tableTab;
+                                const filterDay = (day || '').trim();
+                                const filterClass = String(selectedClass || '');
+                                const scheduleDay = (s.day || '').trim();
+                                const scheduleClass = String(s.class_id || '');
+                                const matchDay = filterDay ? scheduleDay === filterDay : true;
+                                const matchClass = filterClass ? scheduleClass === filterClass : true;
+                                return isMatchTab && matchDay && matchClass;
+                            }).length === 0 ? (
                                 <tr>
                                     <td colSpan={tableTab === 'teaching' ? "6" : "4"} className="text-center py-12 text-gray-400 font-medium italic">Belum ada jadwal tersimpan.</td>
                                 </tr>
                             ) : (
-                                schedules.filter(s => (s.type || 'teaching') === tableTab).sort((a, b) => {
+                                schedules.filter(s => {
+                                    const isMatchTab = (s.type || 'teaching') === tableTab;
+                                    const filterDay = (day || '').trim();
+                                    const filterClass = String(selectedClass || '');
+                                    const scheduleDay = (s.day || '').trim();
+                                    const scheduleClass = String(s.class_id || '');
+                                    const matchDay = filterDay ? scheduleDay === filterDay : true;
+                                    const matchClass = filterClass ? scheduleClass === filterClass : true;
+                                    return isMatchTab && matchDay && matchClass;
+                                }).sort((a, b) => {
                                     // 1. Sort by Day
                                     const dayDiff = daysOfWeek.indexOf(a.day) - daysOfWeek.indexOf(b.day);
                                     if (dayDiff !== 0) return dayDiff;

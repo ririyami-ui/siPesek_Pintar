@@ -16,8 +16,16 @@ class GradeController extends Controller
     {
         $query = Grade::query()->with(['student', 'subject', 'schoolClass']);
         
-        if (!Auth::user()->isAdmin()) {
-            $query->where('user_id', Auth::id());
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            $query->where(function($q) use ($user) {
+                // Own inputted grades
+                $q->where('user_id', $user->id)
+                  // OR grades for students in classes where user is Wali Kelas
+                  ->orWhereHas('schoolClass', function($sq) use ($user) {
+                      $sq->where('user_id', $user->id);
+                  });
+            });
         }
 
         if ($request->has('semester')) {
@@ -227,7 +235,10 @@ class GradeController extends Controller
             ->where('student_id', $student_id);
         
         if (!Auth::user()->isAdmin()) {
-            $query->where('user_id', Auth::id());
+            $isWali = $student->schoolClass && $student->schoolClass->user_id === Auth::id();
+            if (!$isWali) {
+                $query->where('user_id', Auth::id());
+            }
         }
 
         if ($request->has('semester')) {

@@ -7,7 +7,6 @@ console.log('Axios baseURL:', baseURL);
 const api = axios.create({
     baseURL: baseURL,
     headers: {
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
     withCredentials: true, // For Sanctum CSRF protection

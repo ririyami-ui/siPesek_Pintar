@@ -25,6 +25,7 @@ class UserProfile extends Model
         'gemini_model',
         'google_ai_api_key',
         'schedule_notifications_enabled',
+        'audio_language',
     ];
 
     protected $casts = [

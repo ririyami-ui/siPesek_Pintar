@@ -71,14 +71,78 @@ class GeminiService
         }
     }
 
+    protected function getEffectiveApiKey()
+    {
+        // 1. Check current logged in user profile
+        if (auth()->check()) {
+            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
+            if ($profile && $profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
+                return $profile->google_ai_api_key;
+            }
+        }
+
+        // 2. Check .env / config
+        $configKey = config('services.gemini.api_key');
+        if ($configKey && $configKey !== 'your_gemini_api_key_here') {
+            return $configKey;
+        }
+
+        // 3. Fallback to primary admin profile
+        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id');
+            
+        if ($primaryAdminId) {
+            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
+            if ($adminProfile && $adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
+                return $adminProfile->google_ai_api_key;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getEffectiveModel()
+    {
+        // 1. Check current logged in user profile preference
+        if (auth()->check()) {
+            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
+            if ($profile && $profile->gemini_model) {
+                return $profile->gemini_model;
+            }
+        }
+
+        // 2. Fallback to primary admin profile preference
+        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id');
+            
+        if ($primaryAdminId) {
+            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
+            if ($adminProfile && $adminProfile->gemini_model) {
+                return $adminProfile->gemini_model;
+            }
+        }
+
+        // 3. Ultimate fallback
+        return 'gemini-3.1-flash-lite-preview';
+    }
+
     /**
      * Generate text from a prompt
      */
     public function generateText(string $prompt, array $options = []): ?string
     {
         try {
+            $apiKey = $this->getEffectiveApiKey();
+            if (!$apiKey) {
+                throw new \Exception('Gemini API Key is not configured.');
+            }
+
+            $model = $this->getEffectiveModel();
+
             $response = Http::timeout(30)->post(
-                "{$this->baseUrl}/models/{$this->model}:generateContent?key={$this->apiKey}",
+                "{$this->baseUrl}/models/{$model}:generateContent?key={$apiKey}",
                 [
                     'contents' => [
                         [

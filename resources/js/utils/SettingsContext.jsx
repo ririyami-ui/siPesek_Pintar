@@ -36,7 +36,10 @@ export const SettingsProvider = ({ children }) => {
         try {
             // 1. Initialize AudioContext
             if (!audioContextRef.current) {
-                audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass && typeof AudioContextClass === 'function') {
+                    audioContextRef.current = new AudioContextClass();
+                }
             }
             
             // 2. Resume if suspended
@@ -55,9 +58,11 @@ export const SettingsProvider = ({ children }) => {
 
             // 4. Trigger Speech Synthesis (Safari/Chrome Mobile requirement)
             window.speechSynthesis.cancel();
-            const silent = new SpeechSynthesisUtterance(" ");
-            silent.volume = 0;
-            window.speechSynthesis.speak(silent);
+            if (typeof window.SpeechSynthesisUtterance === 'function') {
+                const silent = new window.SpeechSynthesisUtterance(" ");
+                silent.volume = 0;
+                window.speechSynthesis.speak(silent);
+            }
             
             setSettings(prev => ({ ...prev, isAudioUnlocked: true }));
             console.log('Audio Assistant: System Fully Unlocked via Interaction');
@@ -138,8 +143,14 @@ export const SettingsProvider = ({ children }) => {
 
     const playChime = () => new Promise(res => {
         try {
-            if (!audioContextRef.current) audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+            if (!audioContextRef.current) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass && typeof AudioContextClass === 'function') {
+                    audioContextRef.current = new AudioContextClass();
+                }
+            }
             const ctx = audioContextRef.current;
+            if (!ctx) { res(); return; }
             if (ctx.state === 'suspended') ctx.resume().catch(() => {});
             const n = [659.25, 523.25, 587.33, 392.00];
             const d = 0.4, g = 0.22;
@@ -166,7 +177,12 @@ export const SettingsProvider = ({ children }) => {
             // Cancel any current speech to prevent queuing overlap or "stuck" speech
             window.speechSynthesis.cancel();
             
-            const u = new SpeechSynthesisUtterance(next.text);
+            if (typeof window.SpeechSynthesisUtterance !== 'function') {
+                isAnnouncingRef.current = false;
+                return;
+            }
+            
+            const u = new window.SpeechSynthesisUtterance(next.text);
             u.lang = next.lang || 'id-ID'; // Use specified language or default to id-ID
             u.rate = 1.1; // Slightly faster for responsiveness
             u.onend = () => { isAnnouncingRef.current = false; setTimeout(processQueue, 300); };
@@ -225,12 +241,12 @@ export const SettingsProvider = ({ children }) => {
             setSettings(prev => ({ ...prev, userProfile: null, loadingSettings: false }));
         }
         
-        // Auto-refresh monitoring data every 30 seconds to keep it near real-time
+        // Auto-refresh monitoring data every 10 seconds to keep it near real-time
         const monitoringPoll = setInterval(() => {
             if (settings.userProfile?.role?.toLowerCase() === 'admin') {
                 fetchMonitoringData();
             }
-        }, 30 * 1000);
+        }, 10 * 1000);
 
         return () => {
             if (fetchIntervalRef.current) clearInterval(fetchIntervalRef.current);
@@ -271,9 +287,13 @@ export const SettingsProvider = ({ children }) => {
                 data.data.forEach(item => {
                     if (!item.time) return;
                     const times = item.time.split(' - ');
+                    // [TRANSITION FIX] Trigger sync 2 seconds BEFORE and AT the boundary
                     [times[0], times[1]].forEach(t => {
                         const triggerTime = t?.length === 5 ? `${t}:00` : t;
-                        if (currentSecond === triggerTime) {
+                        const triggerMoment = moment(triggerTime, 'HH:mm:ss');
+                        const diffSec = now.diff(triggerMoment, 'seconds');
+                        
+                        if (diffSec >= -2 && diffSec <= 0) {
                             shouldTriggerRefresh = true;
                         }
                     });
@@ -307,14 +327,20 @@ export const SettingsProvider = ({ children }) => {
         }
 
         // Initialize Web Worker
-        if (!workerRef.current) {
-            workerRef.current = new Worker('/audio-timer-worker.js');
-            workerRef.current.onmessage = (e) => {
-                if (e.data === 'tick') {
-                    handleTick();
-                }
-            };
-            workerRef.current.postMessage('start');
+        if (!workerRef.current && typeof window.Worker === 'function') {
+            try {
+                // Use a safe path or fallback to absolute
+                workerRef.current = new window.Worker('/audio-timer-worker.js');
+                workerRef.current.onmessage = (e) => {
+                    if (e.data === 'tick') {
+                        handleTick();
+                    }
+                };
+                workerRef.current.postMessage('start');
+            } catch (e) {
+                console.error("Audio Assistant: Worker initialization failed, falling back to interval.", e);
+                // Fallback can be implemented here if needed, but usually modern browsers support Worker
+            }
         }
 
         const handleTick = () => {
@@ -330,7 +356,53 @@ export const SettingsProvider = ({ children }) => {
                 lastDateRef.current = date;
             }
 
-            // [NEW] Logic for Non-Teaching Activities (Higher Priority)
+            // [PRIORITY 1] Logic for Teaching Activities (KBM) - Moved up to prioritize teacher calls
+            // Use full_data if available (contains all schedules), fallback to data.data (grouped by rombel)
+            const kbmSource = data.full_data || data.data;
+
+            if (kbmSource) {
+                // Group by Subject, Start Time AND Teacher to ensure every teacher is called uniquely
+                const startTriggers = {};
+                
+                kbmSource.forEach(item => {
+                    const startRaw = item.time?.split(' - ')[0] || "";
+                    if (!startRaw) return;
+                    const startFull = startRaw.length === 5 ? `${startRaw}:00` : startRaw;
+                    
+                    const startMoment = moment(startFull, 'HH:mm:ss');
+                    const currentMoment = moment(time, 'HH:mm:ss');
+                    const diffSeconds = currentMoment.diff(startMoment, 'seconds');
+                    
+                    // Increased window to 15s to be more robust
+                    if (diffSeconds >= 0 && diffSeconds <= 15 && item.status !== 'selesai') {
+                        // Key includes Time, Subject, and Teacher for perfect uniqueness
+                        const key = `${startFull}-${item.subject}-${item.teacher}`;
+                        if (!startTriggers[key]) startTriggers[key] = { startFull, subject: item.subject, teacher: item.teacher, classes: [] };
+                        if (!startTriggers[key].classes.includes(item.rombel)) {
+                            startTriggers[key].classes.push(item.rombel);
+                        }
+                    }
+                });
+
+                // Process grouped triggers
+                Object.values(startTriggers).forEach(trigger => {
+                    const classList = trigger.classes.sort().join(', ');
+                    // [ID FIX] Include startFull in ID to allow repeating subject/teacher at different times
+                    const id = `kbm-${trigger.startFull}-${trigger.subject}-${trigger.teacher}-${date}`;
+                    
+                    if (!announcedIdsRef.current.has(id)) {
+                        announcedIdsRef.current.add(id);
+                        const texts = {
+                            'id-ID': `Mohon perhatian. Pelajaran ${normalizeForSpeech(trigger.subject)} untuk Kelas ${normalizeForSpeech(classList)} segera dimulai. Kepada Bapak atau Ibu ${trigger.teacher} harap segera menuju kelas.`,
+                            'en-US': `Attention please. The lesson for ${normalizeForSpeech(trigger.subject)} for Class ${normalizeForSpeech(classList)} will begin shortly. Teacher ${trigger.teacher} is requested to proceed to the class.`
+                        };
+                        audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
+                        processQueue();
+                    }
+                });
+            }
+
+            // [PRIORITY 2] Logic for Non-Teaching Activities (Lower Priority than Teachers)
             if (data.non_teaching_schedules) {
                 data.non_teaching_schedules.forEach(act => {
                     const startRaw = `${act.start_time}:00`;
@@ -341,8 +413,8 @@ export const SettingsProvider = ({ children }) => {
                         const currentMoment = moment(time, 'HH:mm:ss');
                         const diffSeconds = currentMoment.diff(targetMoment, 'seconds');
 
-                        // Within 10 seconds and not announced yet
-                        if (diffSeconds >= 0 && diffSeconds <= 10) {
+                        // Within 15 seconds window
+                        if (diffSeconds >= 0 && diffSeconds <= 15) {
                             const id = `act-${act.activity_name}-${i === 0 ? 'start' : 'end'}-${date}`;
                             if (!announcedIdsRef.current.has(id)) {
                                 announcedIdsRef.current.add(id);
@@ -371,47 +443,6 @@ export const SettingsProvider = ({ children }) => {
                 });
             }
 
-            // [NEW] Logic for Teaching Activities (KBM)
-            if (data.data) {
-                // [OPTIMIZATION] Group by Subject and Start Time to avoid spamming announcements
-                const startTriggers = {};
-                
-                data.data.forEach(item => {
-                    const startRaw = item.time?.split(' - ')[0] || "";
-                    if (!startRaw) return;
-                    const startFull = startRaw.length === 5 ? `${startRaw}:00` : startRaw;
-                    
-                    const startMoment = moment(startFull, 'HH:mm:ss');
-                    const currentMoment = moment(time, 'HH:mm:ss');
-                    const diffSeconds = currentMoment.diff(startMoment, 'seconds');
-                    
-                    // Within 10 seconds window and not completed yet
-                    if (diffSeconds >= 0 && diffSeconds <= 10 && item.status !== 'selesai') {
-                        const key = `${startFull}-${item.subject}`;
-                        if (!startTriggers[key]) startTriggers[key] = { subject: item.subject, teacher: item.teacher, classes: [] };
-                        if (!startTriggers[key].classes.includes(item.rombel)) {
-                            startTriggers[key].classes.push(item.rombel);
-                        }
-                    }
-                });
-
-                // Process grouped triggers
-                Object.values(startTriggers).forEach(trigger => {
-                    const classList = trigger.classes.sort().join(', ');
-                    const id = `kbm-${trigger.subject}-${trigger.classes.sort().join('-')}-${date}`;
-                    
-                    if (!announcedIdsRef.current.has(id)) {
-                        announcedIdsRef.current.add(id);
-                        const texts = {
-                            'id-ID': `Mohon perhatian. Pelajaran ${normalizeForSpeech(trigger.subject)} untuk Kelas ${normalizeForSpeech(classList)} segera dimulai. Kepada Bapak atau Ibu ${trigger.teacher} harap segera menuju kelas.`,
-                            'en-US': `Attention please. The lesson for ${normalizeForSpeech(trigger.subject)} for Class ${normalizeForSpeech(classList)} will begin shortly. Teacher ${trigger.teacher} is requested to proceed to the class.`
-                        };
-                        audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
-                        processQueue();
-                    }
-                });
-            }
-
             // [NEW] Trigger for End of School Day (Lowest Priority)
             if (data.max_end_time) {
                 const targetTime = `${data.max_end_time}:00`;
@@ -421,14 +452,20 @@ export const SettingsProvider = ({ children }) => {
 
                 // Trigger in 10s window
                 if (diffSeconds >= 0 && diffSeconds <= 10) {
-                    // Check if there are any non-teaching activities starting NOW or in the future
-                    // This prevents "End of School" announcement if a non-KBM is the last thing.
-                    const anyMoreActivities = data.non_teaching_schedules?.some(act => {
+                    // Check if there are ANY activities (teaching or non-teaching) starting NOW or in the future
+                    const anyMoreNonTeaching = data.non_teaching_schedules?.some(act => {
                         const actStart = moment(`${act.start_time}:00`, 'HH:mm:ss');
-                        return actStart.isAfter(targetMoment) || actStart.isSame(targetMoment);
+                        return actStart.isAfter(targetMoment);
                     });
 
-                    if (!anyMoreActivities) {
+                    const anyMoreTeaching = data.data?.some(item => {
+                        const startRaw = item.time?.split(' - ')[0] || "";
+                        const startFull = startRaw.length === 5 ? `${startRaw}:00` : startRaw;
+                        const startMoment = moment(startFull, 'HH:mm:ss');
+                        return startMoment.isAfter(targetMoment);
+                    });
+
+                    if (!anyMoreNonTeaching && !anyMoreTeaching) {
                         const id = `school-over-${date}`;
                         if (!announcedIdsRef.current.has(id)) {
                             announcedIdsRef.current.add(id);

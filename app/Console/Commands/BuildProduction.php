@@ -56,6 +56,7 @@ class BuildProduction extends Command
             'artisan',
             'composer.json',
             '.env.example',
+            '.htaccess',
         ];
 
         foreach ($include as $path) {
@@ -79,6 +80,14 @@ class BuildProduction extends Command
         File::cleanDirectory($buildDir . '/storage/framework/cache');
         File::cleanDirectory($buildDir . '/storage/framework/sessions');
 
+        // Clean bootstrap cache
+        $cacheFiles = glob($buildDir . '/bootstrap/cache/*.php');
+        foreach ($cacheFiles as $file) {
+            if (basename($file) !== 'packages.php' && basename($file) !== 'services.php') {
+                File::delete($file);
+            }
+        }
+
         // 4. Create ZIP Archive
         $this->info('Step 4: Creating ZIP archive...');
         $zipFile = base_path('smart-school-production.zip');
@@ -97,6 +106,10 @@ class BuildProduction extends Command
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($buildDir) + 1);
+                    
+                    // Fix: Ensure forward slashes for Linux/cPanel compatibility
+                    $relativePath = str_replace('\\', '/', $relativePath);
+                    
                     $zip->addFile($filePath, $relativePath);
                 }
             }

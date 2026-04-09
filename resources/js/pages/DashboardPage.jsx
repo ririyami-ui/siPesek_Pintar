@@ -267,7 +267,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4">
       {/* Welcome Message for Teacher */}
-      {userProfile?.role === 'teacher' && (
+      {userProfile?.role?.toLowerCase() === 'teacher' && (
         <div className="bg-gradient-to-r from-primary/10 to-indigo-500/10 dark:from-primary/20 dark:to-indigo-500/20 p-6 rounded-3xl border border-primary/20 dark:border-primary/40 mb-6">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-2xl bg-primary text-white shadow-lg shadow-primary/30">
@@ -282,7 +282,7 @@ export default function DashboardPage() {
       )}
 
       {/* All Schedules Finished Celebration & Reminder */}
-      {userProfile?.role === 'teacher' && allTodayFinished && (
+      {userProfile?.role?.toLowerCase() === 'teacher' && allTodayFinished && (
         <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-[2.5rem] text-white shadow-2xl shadow-emerald-500/20 mb-6 animate-in zoom-in-95 duration-700">
           <div className="flex flex-col md:flex-row items-center gap-6">
             <div className="relative">
@@ -319,14 +319,14 @@ export default function DashboardPage() {
       )}
 
       {/* Clock Display - Full width on mobile - Teacher Only */}
-      {userProfile?.role === 'teacher' && (
+      {userProfile?.role?.toLowerCase() === 'teacher' && (
         <div className="block lg:hidden">
           <ClockDisplay showProgress={true} activeSchedule={activeSchedule} />
         </div>
       )}
 
       {/* Top Section: Clock and Schedule - Desktop only - Teacher Only */}
-      {userProfile?.role === 'teacher' && (
+      {userProfile?.role?.toLowerCase() === 'teacher' && (
         <div className="hidden lg:grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-1">
             <ClockDisplay showProgress={true} activeSchedule={activeSchedule} />
@@ -347,7 +347,7 @@ export default function DashboardPage() {
       )}
 
       {/* Schedule Card - Mobile only - Teacher Only */}
-      {userProfile?.role === 'teacher' && (
+      {userProfile?.role?.toLowerCase() === 'teacher' && (
         <div className="block lg:hidden">
           <TeachingScheduleCard
             schedules={todaySchedules}

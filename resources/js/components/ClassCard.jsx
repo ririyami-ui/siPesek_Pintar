@@ -12,6 +12,12 @@ const ClassCard = ({ classItem, onEdit, onDelete }) => {
           <p className="text-lg font-semibold text-text-light dark:text-text-dark">{classItem.code}</p>
           <p className="text-sm text-text-muted-light dark:text-text-muted-dark">Tingkat: {classItem.level}</p>
           <p className="text-sm text-text-muted-light dark:text-text-muted-dark">Rombel: {classItem.rombel}</p>
+          <div className="mt-1 flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase text-gray-400">Wali:</span>
+            <span className="text-xs font-bold text-purple-600 dark:text-purple-400 truncate max-w-[120px]">
+              {classItem.wali?.name || 'Belum ditentukan'}
+            </span>
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex space-x-2">

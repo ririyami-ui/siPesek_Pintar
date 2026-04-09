@@ -44,7 +44,9 @@ class DatabaseManagementController extends Controller
         'kktp_assessments',
         'student_notes',
         'teacher_assignments',
-        'user_profiles'
+        'user_profiles',
+        'users',
+        'personal_access_tokens'
     ];
 
     public function getTables()
@@ -154,6 +156,10 @@ class DatabaseManagementController extends Controller
             return response()->json(['message' => 'Password salah. Akses ditolak.'], 403);
         }
 
+        // Increase limits for large SQL files
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
         $file = $request->file('backup_file');
         $sql = file_get_contents($file->getRealPath());
 
@@ -162,41 +168,26 @@ class DatabaseManagementController extends Controller
         }
 
         try {
-            $dbName = config('database.connections.mysql.database');
-            $host = config('database.connections.mysql.host');
-            $port = config('database.connections.mysql.port');
-            $user = config('database.connections.mysql.username');
-            $pass = config('database.connections.mysql.password');
-
-            // 1. Create a connection WITHOUT a specific database first
-            $dsn = "mysql:host={$host};port={$port}";
-            $pdo = new \PDO($dsn, $user, $pass);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            DB::beginTransaction();
             
-            // 2. Create the database if it doesn't exist
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            // 1. Get existing PDO connection (safe for shared hosting)
+            $pdo = DB::getPdo();
             
-            // 3. Switch to using that database
-            $pdo->exec("USE `{$dbName}`;");
-            
-            // 4. Disable foreign key checks for the session
+            // 2. Disable foreign key checks
             $pdo->exec("SET FOREIGN_KEY_CHECKS=0;");
 
-            // 5. Use a more robust split that ignores semicolons inside quotes
-            $statements = preg_split("/;(?=(?:[^'\"`]*['\"`][^'\"`]*['\"`])*[^'\"`]*$)/", $sql);
-            
-            foreach ($statements as $statement) {
-                $statement = trim($statement);
-                if (!empty($statement)) {
-                    $pdo->exec($statement . ';');
-                }
-            }
+            // 3. Simple and robust execution of the full SQL file
+            // DB::unprepared is ideal for raw SQL that might contain multiple statements
+            DB::unprepared($sql);
 
-            // 6. Re-enable foreign key checks
+            // 4. Re-enable foreign key checks
             $pdo->exec("SET FOREIGN_KEY_CHECKS=1;");
+
+            DB::commit();
 
             return response()->json(['message' => 'Database berhasil dipulihkan dari file cadangan.']);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['message' => 'Gagal memulihkan database: ' . $e->getMessage()], 500);
         }
     }
@@ -212,36 +203,25 @@ class DatabaseManagementController extends Controller
         }
 
         try {
-            $host = config('database.connections.mysql.host');
-            $port = config('database.connections.mysql.port');
-            $dbName = config('database.connections.mysql.database');
-            $user = config('database.connections.mysql.username');
-            $pass = config('database.connections.mysql.password');
-
-            // 1. Connect without database first
-            $dsn = "mysql:host={$host};port={$port}";
-            $pdo = new \PDO($dsn, $user, $pass);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
-            // 2. Create database if not exists and switch to it
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            $pdo->exec("USE `{$dbName}`;");
-
-            $pdo->exec("SET FOREIGN_KEY_CHECKS=0;");
+            ini_set('memory_limit', '256M');
+            
+            DB::beginTransaction();
+            
+            DB::statement("SET FOREIGN_KEY_CHECKS=0;");
 
             foreach ($this->tablesToManage as $table) {
-                // Check if table exists before truncating
-                $stmt = $pdo->prepare("SHOW TABLES LIKE ?");
-                $stmt->execute([$table]);
-                if ($stmt->rowCount() > 0) {
-                    $pdo->exec("TRUNCATE TABLE `{$table}`;");
+                if (Schema::hasTable($table)) {
+                    DB::table($table)->truncate();
                 }
             }
 
-            $pdo->exec("SET FOREIGN_KEY_CHECKS=1;");
+            DB::statement("SET FOREIGN_KEY_CHECKS=1;");
+            
+            DB::commit();
 
             return response()->json(['message' => 'Seluruh data aplikasi berhasil dihapus.']);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['message' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
         }
     }
@@ -271,7 +251,9 @@ class DatabaseManagementController extends Controller
             'kktp_assessments' => 'Penilaian KKTP Digital',
             'student_notes' => 'Catatan Siswa',
             'teacher_assignments' => 'Penugasan Guru',
-            'user_profiles' => 'Profil Pengguna'
+            'user_profiles' => 'Profil Pengguna',
+            'users' => 'Akun Pengguna',
+            'personal_access_tokens' => 'Token Sesi Login'
         ];
 
         return $labels[$table] ?? $table;

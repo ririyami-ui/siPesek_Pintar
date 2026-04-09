@@ -148,6 +148,27 @@ class StudentController extends Controller
     }
 
     /**
+     * Reset the locked device ID for a student.
+     */
+    public function resetDevice(Student $student)
+    {
+        if (!auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
+        if ($student->auth_user_id) {
+            $user = User::find($student->auth_user_id);
+            if ($user) {
+                $user->device_id = null;
+                $user->save();
+                return response()->json(['message' => 'Perangkat berhasil direset.']);
+            }
+        }
+
+        return response()->json(['message' => 'Akun login tidak ditemukan untuk siswa ini.'], 404);
+    }
+
+    /**
      * Create or update the User account that parents use to log in.
      * Username = NISN, Password = NIS
      */

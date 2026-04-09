@@ -57,11 +57,11 @@ const AdminMonitoringDashboard = () => {
     
     // Improved detection: all scheduled times have passed
     const isPastSchoolDay = monitoringData?.max_end_time && 
-        moment(currentTime.format('HH:mm'), 'HH:mm').isSameOrAfter(moment(monitoringData.max_end_time, 'HH:mm'));
+        moment(currentTime.format('HH:mm'), 'HH:mm').isAfter(moment(monitoringData.max_end_time, 'HH:mm'));
         
-    // [FIX] Learning is finished ONLY IF stats are 0 AND there are no active non-teaching activities
+    // [FIX] Learning is finished ONLY IF all KBM sessions are completed AND no upcoming sessions AND no active non-KBM
     const isAllLearningFinished = data.length > 0 && 
-        (stats.berlangsung === 0 && stats.belum_mulai === 0 && !monitoringData?.active_non_teaching || isPastSchoolDay);
+        (stats.berlangsung === 0 && stats.belum_mulai === 0 && !monitoringData?.active_non_teaching && isPastSchoolDay);
 
     const getStatusConfig = (status) => {
         switch (status) {
@@ -93,58 +93,76 @@ const AdminMonitoringDashboard = () => {
                 </div>
             )}
 
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-2xl bg-indigo-600 text-white shadow-lg">
-                        <Activity size={24} />
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white dark:bg-slate-900 p-6 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+                {/* Decorative background element */}
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000" />
+                
+                <div className="flex items-center gap-5 relative z-10">
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-indigo-500 blur-xl opacity-20 animate-pulse" />
+                        {userProfile?.logoUrl || userProfile?.logo_url || userProfile?.logo_path || userProfile?.school_logo_url ? (
+                            <img 
+                                src={userProfile?.logoUrl || userProfile?.logo_url || userProfile?.school_logo_url || (window.Laravel?.baseUrl + '/storage/' + userProfile?.logo_path)} 
+                                alt="School Logo" 
+                                className="w-16 h-16 object-contain rounded-2xl bg-white p-2 shadow-lg border border-slate-100 relative z-10" 
+                                onError={(e) => {
+                                    e.target.onerror = null; 
+                                    e.target.src = (window.Laravel?.baseUrl || "") + "/Logo Smart Teaching Baru_.png";
+                                }}
+                            />
+                        ) : (
+                            <div className="w-16 h-16 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg relative z-10">
+                                <School size={32} />
+                            </div>
+                        )}
                     </div>
+                    
                     <div>
-                        <div className="flex items-center gap-2 mb-0.5">
-                            <h2 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">Monitoring Aktivitas Kelas</h2>
-                            <div className="px-2 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-900 border border-indigo-100 text-indigo-600 font-mono text-sm font-black flex items-center gap-2">
+                        <div className="flex items-center gap-3 mb-1.5">
+                            <h1 className="text-2xl font-black text-slate-800 dark:text-white tracking-tighter uppercase italic">
+                                {userProfile?.school_name || userProfile?.schoolName || "SMART SCHOOL"}
+                            </h1>
+                            <div className="h-6 w-[2px] bg-slate-200 dark:bg-slate-700 hidden sm:block" />
+                            <div className="px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800/50 text-indigo-600 dark:text-indigo-400 font-mono text-sm font-black flex items-center gap-2 shadow-sm">
+                                <Activity size={14} className="animate-pulse" />
                                 {currentTime.format('HH:mm:ss')}
-                                {isRefreshing && <Loader2 size={12} className="animate-spin opacity-50" />}
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark font-medium">
-                                <School size={14} className="opacity-50" />
-                                <p className="text-sm font-bold opacity-80">{userProfile?.schoolName || 'Smart School'}</p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                                <p className="text-xs font-black uppercase tracking-[0.2em] opacity-80">Monitoring Aktivitas Real-time</p>
                             </div>
-                            {isAudioEnabled && (
-                                <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${isAudioUnlocked ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'}`}>
-                                    <div className={`w-1.5 h-1.5 rounded-full ${isAudioUnlocked ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-                                    Audio: {isAudioUnlocked ? 'Aktif' : 'Terkunci'}
-                                </div>
-                            )}
-                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                                <Clock size={10} />
-                                Update: {lastUpdated.format('HH:mm:ss')}
+                            <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 text-[10px] font-bold text-slate-400 uppercase tracking-widest border border-slate-100 dark:border-slate-700">
+                                <Clock size={12} />
+                                Terakhir Update: {lastUpdated.format('HH:mm:ss')}
+                                {isRefreshing && <Loader2 size={10} className="animate-spin ml-1.5 opacity-50" />}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
+
+                <div className="flex items-center gap-3 relative z-10 self-end md:self-center">
                     {isAudioEnabled && (
                         <button 
                             onClick={testAudio}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border bg-white dark:bg-gray-800 text-gray-500 font-bold text-xs transition-all hover:bg-gray-50 dark:hover:bg-gray-700"
+                            className="group flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-black text-[10px] uppercase tracking-widest transition-all hover:shadow-lg hover:border-indigo-200 border border-slate-100 dark:border-slate-700 active:scale-95"
                             title="Uji coba suara pengumuman"
                         >
-                            <Volume2 size={16} />
+                            <Volume2 size={16} className="group-hover:text-indigo-500 transition-colors" />
                             Cek Audio
                         </button>
                     )}
                     <button 
                         onClick={() => setShowOnlyMissing(!showOnlyMissing)}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-xs transition-all ${showOnlyMissing ? 'bg-rose-500 text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-500'}`}
+                        className={`group flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all active:scale-95 shadow-sm ${showOnlyMissing ? 'bg-rose-500 text-white shadow-rose-200 shadow-lg' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700 hover:border-rose-200'}`}
                     >
-                        <AlertCircle size={16} />
+                        <AlertCircle size={16} className={showOnlyMissing ? 'animate-bounce' : 'group-hover:text-rose-500 transition-colors'} />
                         {showOnlyMissing ? 'Tampilkan Semua' : 'Butuh Perhatian'}
                     </button>
                     <button 
                         onClick={handleManualRefresh}
-                        className={`p-2.5 rounded-xl bg-white dark:bg-gray-800 border text-gray-400 transition-all ${isRefreshing ? 'opacity-50' : 'hover:text-indigo-600 hover:border-indigo-200'}`}
+                        className={`p-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-400 transition-all hover:shadow-lg active:scale-95 ${isRefreshing ? 'opacity-50' : 'hover:text-indigo-600 hover:border-indigo-200'}`}
                         disabled={isRefreshing}
                         title="Refresh data sekarang"
                     >
@@ -194,7 +212,7 @@ const AdminMonitoringDashboard = () => {
                 </div>
             )}
 
-            <div className={`transition-opacity duration-1000 ${monitoringData?.active_non_teaching ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+            <div className={`transition-all duration-1000 ${monitoringData?.active_non_teaching ? 'opacity-70 grayscale-[30%]' : 'opacity-100'}`}>
                 {isAllLearningFinished && !showOnlyMissing && (
                     <div className="p-8 rounded-[2.5rem] bg-emerald-500/10 border border-emerald-200 text-center mb-6">
                         <CheckCircle2 size={32} className="mx-auto text-emerald-500 mb-4" />
@@ -282,9 +300,13 @@ const AdminMonitoringDashboard = () => {
                                             </div>
                                         </div>
 
-                                        {isLive && getCountdown(item.time?.split(' - ')[1]) && (
-                                            <div className="mt-auto px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors backdrop-blur-sm rounded-2xl text-xs font-black text-center flex items-center justify-center gap-2 border border-white/10">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                                        {(isLive || item.status === 'alfa') && getCountdown(item.time?.split(' - ')[1]) && (
+                                            <div className={`mt-auto px-4 py-3 transition-colors backdrop-blur-sm rounded-2xl text-xs font-black text-center flex items-center justify-center gap-2 border ${
+                                                isLive 
+                                                    ? 'bg-white/10 hover:bg-white/20 border-white/10 text-white' 
+                                                    : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-600'
+                                            }`}>
+                                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? 'bg-white' : 'bg-rose-500'}`} />
                                                 Sisa: {getCountdown(item.time?.split(' - ')[1])}
                                             </div>
                                         )}

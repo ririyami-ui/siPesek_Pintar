@@ -3,22 +3,24 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   MonitorPlay, BookOpen, BarChart2, ClipboardList,
   LogOut, Menu, X, School, ChevronRight, User, Loader2,
-  ShieldAlert
+  ShieldAlert, CalendarDays
 } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
-import InstallPwaCard from './InstallPwaCard';
 import StudentChatWidget from './StudentChatWidget';
+import { useSettings } from '../utils/SettingsContext';
 
 const NAV_ITEMS = [
   { path: '/siswa',               icon: MonitorPlay,    label: 'Pantau Belajar',  desc: 'Realtime & hari ini' },
-  { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Kehadiran',       desc: 'Rekap presensi' },
+  { path: '/siswa/jadwal',        icon: CalendarDays,   label: 'Jadwal',          desc: 'Jadwal Mingguan' },
+  { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Presensi',        desc: 'Rekap presensi' },
   { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
   { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai' },
   { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib' },
 ];
 
 export default function StudentLayout({ user, onLogout, children }) {
+  const { userProfile } = useSettings();
   const [mobileOpen, setMobileOpen]   = useState(false);
   const [studentInfo, setStudentInfo] = useState(null);
   const [schoolName, setSchoolName]   = useState('Sekolah');
@@ -148,21 +150,41 @@ export default function StudentLayout({ user, onLogout, children }) {
           <button onClick={() => setMobileOpen(true)} className="p-2 rounded-lg hover:bg-white/10">
             <Menu size={20} />
           </button>
-          <div className="text-center flex-1 min-w-0 px-2">
-            <p className="text-[10px] font-black text-white/90 uppercase tracking-[0.15em] leading-none mb-1 truncate">{schoolName}</p>
-            <p className="font-bold text-sm leading-tight">Portal Wali Murid</p>
-            {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">Kelas {studentInfo.class}</p>}
+          <div className="flex items-center gap-3 min-w-0 flex-1 px-2">
+            {userProfile?.logoUrl ? (
+              <img 
+                src={userProfile.logoUrl} 
+                alt="School Logo" 
+                className="h-10 w-10 object-contain rounded-lg bg-white p-1 shadow-sm shrink-0" 
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-md shrink-0">
+                <School size={20} />
+              </div>
+            )}
+            <div className="flex flex-col min-w-0">
+              <p className="text-[10px] font-black text-white/90 uppercase tracking-[0.15em] leading-none mb-1 truncate">
+                {userProfile?.school_name || schoolName}
+              </p>
+              <p className="font-bold text-sm leading-tight">Portal Wali Murid</p>
+              {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">Kelas {studentInfo.class}</p>}
+            </div>
           </div>
-          <div className="w-9" />
+          <button 
+            onClick={handleLogout}
+            className="p-2 rounded-lg hover:bg-white/10 text-white/80"
+            title="Keluar"
+          >
+            <LogOut size={20} />
+          </button>
         </header>
 
         {/* Page content */}
-        <main key={window.location.pathname} className="flex-1 overflow-y-auto p-4 md:p-6 pb-24 lg:pb-6 animate-fade-in-premium">
+        <main key={window.location.pathname} className="flex-1 overflow-y-auto p-4 md:p-6 pb-36 lg:pb-10 animate-fade-in-premium">
           {children}
         </main>
 
         {/* Global Floating Widgets (Fixed outside main scroll area) */}
-        <InstallPwaCard />
         <StudentChatWidget />
 
         {/* Mobile Bottom Navigation */}

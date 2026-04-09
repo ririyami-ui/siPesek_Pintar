@@ -55,6 +55,31 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+        
+        // [DEVICE LOCK] Logic for students to bind account to 1 device
+        if ($user->role === 'student') {
+            $deviceId = $request->input('device_id');
+            if ($deviceId) {
+                if (!$user->device_id) {
+                    // First time login - bind to this device
+                    $user->device_id = $deviceId;
+                    $user->save();
+                } else if ($user->device_id !== $deviceId) {
+                    // Already bound to another device
+                    Auth::logout();
+                    return response()->json([
+                        'message' => 'Akun Anda sudah terikat ke perangkat lain. Silakan hubungi Admin untuk melakukan reset perangkat.'
+                    ], 403);
+                }
+            }
+        }
+
+        // Update push subscription if provided
+        if ($request->has('push_subscription')) {
+            $user->push_subscription = $request->input('push_subscription');
+            $user->save();
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -74,5 +99,21 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Save the Web Push subscription for the authenticated user.
+     */
+    public function savePushSubscription(Request $request)
+    {
+        $validated = $request->validate([
+            'subscription' => 'required'
+        ]);
+
+        $user = auth()->user();
+        $user->push_subscription = json_encode($request->input('subscription'));
+        $user->save();
+
+        return response()->json(['message' => 'Subscription saved successfully.']);
     }
 }

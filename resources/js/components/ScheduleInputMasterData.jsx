@@ -6,7 +6,7 @@ import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import StyledTable from './StyledTable';
 import Modal from './Modal';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, Zap } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 
 const ScheduleInputMasterData = () => {
@@ -131,12 +131,12 @@ const ScheduleInputMasterData = () => {
         toast.success('Jadwal berhasil ditambahkan!');
       }
 
-      // Reset form
-      setDay('');
+      // Reset form fields except Day and Class
       setStartTime('');
       setEndTime('');
       setSelectedSubject('');
-      setSelectedClass('');
+      // setDay(''); // Keep day
+      // setSelectedClass(''); // Keep class
       setScheduleType('teaching');
       setStartPeriod('');
       setEndPeriod('');
@@ -183,6 +183,12 @@ const ScheduleInputMasterData = () => {
       }
     });
   };
+
+  // Debugging state changes
+  useEffect(() => {
+    console.log('Filter State:', { day, selectedClass });
+    console.log('First Schedule Item:', schedules[0]);
+  }, [day, selectedClass, schedules]);
 
   const cancelEditing = () => {
     setEditingScheduleId(null);
@@ -330,13 +336,34 @@ const ScheduleInputMasterData = () => {
         </div>
 
         <div className="md:col-span-2">
-          <h3 className="text-lg font-semibold mb-3">Daftar Jadwal Tersimpan</h3>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-2">
+            <h3 className="text-lg font-semibold">Daftar Jadwal Tersimpan</h3>
+            {(day || selectedClass) && (
+              <span className="text-[10px] font-bold px-2 py-1 bg-blue-50 text-blue-600 rounded-md border border-blue-100 flex items-center gap-1 animate-pulse">
+                <Zap size={10} fill="currentColor" /> Terfilter: {day && `Hari ${day}`} {day && selectedClass && '&'} {selectedClass && `Kelas ${classes.find(c => c.id == selectedClass)?.rombel || ''}`}
+              </span>
+            )}
+          </div>
           {schedules.length === 0 ? (
             <p className="text-gray-500">Tidak ada jadwal yang tersimpan.</p>
           ) : (
             <div className="overflow-x-auto">
               <StyledTable headers={['Hari', 'Kelas', 'Mata Pelajaran', 'Waktu', 'Aksi']}>
-                {schedules.sort((a, b) => {
+                {schedules
+                .filter(s => {
+                  // Normalize values for comparison
+                  const filterDay = (day || '').trim();
+                  const filterClass = String(selectedClass || '');
+                  
+                  const scheduleDay = (s.day || '').trim();
+                  const scheduleClass = String(s.class_id || '');
+
+                  const matchDay = filterDay ? scheduleDay === filterDay : true;
+                  const matchClass = filterClass ? scheduleClass === filterClass : true;
+                  
+                  return matchDay && matchClass;
+                })
+                .sort((a, b) => {
                   const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
                   const dayDiff = days.indexOf(a.day) - days.indexOf(b.day);
                   if (dayDiff !== 0) return dayDiff;

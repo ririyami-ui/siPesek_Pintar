@@ -18,6 +18,59 @@ class UserProfileController extends Controller
     }
 
     /**
+     * Get public school settings for PWA and Welcome Screen
+     */
+    public function getPublicSettings()
+    {
+        $adminUserId = $this->getMasterAdminId();
+        $profile = UserProfile::where('user_id', $adminUserId)->first();
+
+        return response()->json([
+            'school_name' => $profile->school_name ?? 'Sekolah',
+            'logo_url' => ($profile && $profile->logo_path) ? asset('storage/' . $profile->logo_path) : null,
+        ]);
+    }
+
+    /**
+     * Get PWA Manifest with dynamic logo
+     */
+    public function getPwaManifest()
+    {
+        $adminUserId = $this->getMasterAdminId();
+        $profile = UserProfile::where('user_id', $adminUserId)->first();
+        
+        $schoolName = $profile->school_name ?? 'Si Pesek Pintar';
+        $logoUrl = ($profile && $profile->logo_path) ? asset('storage/' . $profile->logo_path) : asset('logo.png');
+
+        return response()->json([
+            'name' => $schoolName . ' - Portal',
+            'short_name' => 'Si Pesek',
+            'start_url' => '/',
+            'display' => 'standalone',
+            'background_color' => '#065f46',
+            'theme_color' => '#065f46',
+            'description' => 'Portal Sekolah ' . $schoolName . ' - Pantau Belajar Realtime',
+            'orientation' => 'portrait',
+            'icons' => [
+                [
+                    'src' => $logoUrl,
+                    'sizes' => '192x192',
+                    'type' => 'image/png',
+                    'purpose' => 'any maskable'
+                ],
+                [
+                    'src' => $logoUrl,
+                    'sizes' => '512x512',
+                    'type' => 'image/png',
+                    'purpose' => 'any maskable'
+                ]
+            ]
+        ], 200, [
+            'Content-Type' => 'application/manifest+json'
+        ]);
+    }
+
+    /**
      * Get user profile
      */
     public function show(Request $request)
@@ -108,6 +161,7 @@ class UserProfileController extends Controller
                 'google_ai_api_key' => 'nullable|string|max:255',
                 'gemini_model' => 'nullable|string|max:50',
                 'schedule_notifications_enabled' => 'nullable',
+                'audio_language' => 'nullable|string|max:20',
             ];
 
             // Only admin can update school data
@@ -118,7 +172,7 @@ class UserProfileController extends Controller
                     'npsn' => 'nullable|string|max:50',
                     'nss' => 'nullable|string|max:50',
                     'address' => 'nullable|string',
-                    'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                    'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                     'principalName' => 'nullable|string|max:255',
                     'principalNip' => 'nullable|string|max:50',
                     'academic_year' => 'nullable|string|max:20',
@@ -129,15 +183,14 @@ class UserProfileController extends Controller
 
             $validated = $request->validate($rules);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Illuminate\Support\Facades\Log::warning('Profile validation failed: ', [
-                'user_id' => $request->user()->id,
+            \Illuminate\Support\Facades\Log::error('Profile validation failed: ', [
+                'user_id' => $user->id,
                 'errors' => $e->errors(),
                 'received' => $request->all()
             ]);
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $e->errors(),
-                'received' => $request->all()
             ], 422);
         }
 
@@ -146,32 +199,43 @@ class UserProfileController extends Controller
 
         $profile = UserProfile::firstOrNew(['user_id' => $targetUserId]);
 
-        // Handle logo upload
-        if ($request->hasFile('logo')) {
-            // Delete old logo if exists
-            if ($profile->logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->logo_path)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->logo_path);
-            }
-            
-            $path = $request->file('logo')->store('school_logos', 'public');
-            $profile->logo_path = $path;
-            \Illuminate\Support\Facades\Log::info('Logo uploaded: ' . $path);
-        }
-
         // Use validated data instead of except() to ensure only allowed fields are saved
-        $dataToSave = collect($validated)->except(['logo'])->toArray();
+        $dataToSave = collect($validated)->forget('logo')->toArray();
         
         // Explicitly handle boolean string from FormData
         if (isset($dataToSave['schedule_notifications_enabled'])) {
             $dataToSave['schedule_notifications_enabled'] = filter_var($dataToSave['schedule_notifications_enabled'], FILTER_VALIDATE_BOOLEAN);
         }
 
+        // Handle logo upload AFTER collecting dataToSave
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            \Illuminate\Support\Facades\Log::info('Logo detected in request: ' . $file->getClientOriginalName());
+            
+            if ($file->isValid()) {
+                // Delete old logo if exists
+                if ($profile->logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->logo_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->logo_path);
+                }
+                
+                // Store in school_logos folder inside public disk
+                $path = $file->store('school_logos', 'public');
+                $profile->logo_path = $path;
+                \Illuminate\Support\Facades\Log::info('Logo stored successfully at: ' . $path);
+            } else {
+                \Illuminate\Support\Facades\Log::error('Logo file is not valid: ' . $file->getErrorMessage());
+            }
+        }
+
         \Illuminate\Support\Facades\Log::info('Saving profile data: ', [
             'target_user_id' => $targetUserId,
-            'data' => $dataToSave
+            'data' => $dataToSave,
+            'logo_path_to_save' => $profile->logo_path
         ]);
 
         $profile->fill($dataToSave);
+        // Ensure logo_path is NOT overwritten by fill if it was just updated by store()
+        // but it's not in $dataToSave, so it should be fine.
         $saved = $profile->save();
 
         if ($saved) {

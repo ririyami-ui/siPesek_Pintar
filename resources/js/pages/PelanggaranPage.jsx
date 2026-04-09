@@ -254,6 +254,26 @@ const PelanggaranPage = () => {
     }
   };
 
+  const handleSeedDefaultTypes = async () => {
+    setIsSettingsLoading(true);
+    try {
+      const typesToSeed = Object.entries(DEFAULT_INFRACTION_TYPES).map(([name, data]) => ({
+        name,
+        points: data.points,
+        sanction: data.sanction
+      }));
+
+      await api.post('/infraction-types/bulk', { types: typesToSeed });
+      toast.success("Data awal berhasil dimuat");
+      fetchDynamicTypes();
+    } catch (error) {
+      console.error("Error seeding types:", error);
+      toast.error("Gagal memuat data awal");
+    } finally {
+      setIsSettingsLoading(false);
+    }
+  };
+
   const handleUpdateType = async (id) => {
     if (!editingTypeName.trim() || !editingTypePoints) return;
     try {
@@ -353,6 +373,17 @@ const PelanggaranPage = () => {
           <span className="text-[10px] text-gray-400 italic">Klik tombol untuk memilih</span>
         </div>
         <div className="flex flex-wrap gap-2 p-3 md:p-5 bg-gray-50 dark:bg-gray-900/30 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+          {dynamicInfractionTypes.length === 0 && !isSettingsLoading && (
+            <div className="w-full py-2 text-center">
+              <p className="text-xs text-gray-500 italic mb-2">Daftar jenis pelanggaran belum diatur.</p>
+              <button 
+                onClick={() => setIsSettingsOpen(true)}
+                className="text-[10px] font-bold text-blue-600 hover:underline"
+              >
+                Klik "Atur Jenis Pelanggaran" untuk memuat data awal.
+              </button>
+            </div>
+          )}
           {dynamicInfractionTypes.map(type => (
             <button
               key={type.id}
@@ -559,6 +590,18 @@ const PelanggaranPage = () => {
             <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
               {isSettingsLoading ? (
                 <div className="text-center py-10 text-gray-400">Memuat data...</div>
+              ) : dynamicInfractionTypes.length === 0 ? (
+                <div className="text-center py-10 px-6 bg-gray-50 dark:bg-gray-700/30 rounded-3xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                  <p className="text-gray-500 dark:text-gray-400 mb-4 font-medium italic">Belum ada jenis pelanggaran yang dikonfigurasi.</p>
+                  <StyledButton
+                    onClick={handleSeedDefaultTypes}
+                    variant="primary"
+                    className="flex items-center gap-2 mx-auto"
+                  >
+                    <Plus size={18} />
+                    Muat Data Pelanggaran Default
+                  </StyledButton>
+                </div>
               ) : dynamicInfractionTypes.map(type => (
                 <div key={type.id} className="p-4 bg-gray-50 dark:bg-gray-700/30 rounded-2xl border border-gray-100 dark:border-gray-700 flex items-center justify-between group">
                   {editingTypeId === type.id ? (

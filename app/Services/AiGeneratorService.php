@@ -63,9 +63,16 @@ class AiGeneratorService
     protected function loadBskapData()
     {
         try {
-            if (Storage::exists('json/bskap_2025_intel.json')) {
+            $intelPath = resource_path('js/utils/bskap_2025_intel.json');
+            if (file_exists($intelPath)) {
+                $this->bskapIntel = json_decode(file_get_contents($intelPath), true);
+            }
+
+            // Also check storage as fallback or for verbatim
+            if (Storage::exists('json/bskap_2025_intel.json') && !$this->bskapIntel) {
                 $this->bskapIntel = json_decode(Storage::get('json/bskap_2025_intel.json'), true);
             }
+            
             if (Storage::exists('json/bskap_2025_verbatim.json')) {
                 $this->bskapVerbatim = json_decode(Storage::get('json/bskap_2025_verbatim.json'), true);
             }
@@ -231,48 +238,112 @@ class AiGeneratorService
         $bskapData = $this->bskapIntel;
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
 
+        // Summarize data to keep prompt size manageable
+        $studentsCount = count($data['students'] ?? []);
+        
+        // Summarize attendance (Robust counting)
+        $attendanceData = $data['attendanceSummary'] ?? [];
+        $attSummaryStr = "Data tidak tersedia";
+        if (is_array($attendanceData)) {
+            $hCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Hadir') === 0));
+            $sCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Sakit') === 0));
+            $iCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Ijin') === 0));
+            $aCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Alpha') === 0));
+            $attSummaryStr = "Hadir: {$hCount}, Sakit: {$sCount}, Ijin: {$iCount}, Alpha: {$aCount}";
+        }
+
+        // Summarize grades
+        $gradesData = $data['gradesSummary'] ?? [];
+        $gradesSummaryStr = "Belum ada data nilai.";
+        if (is_array($gradesData) && count($gradesData) > 0) {
+            $scores = array_map(fn($g) => (float)($g['score'] ?? 0), $gradesData);
+            $avg = count($scores) > 0 ? array_sum($scores) / count($scores) : 0;
+            $max = count($scores) > 0 ? max($scores) : 0;
+            $min = count($scores) > 0 ? min($scores) : 0;
+            $gradesSummaryStr = "Rata-rata: " . round($avg, 1) . ", Tertinggi: $max, Terendah: $min (dari " . count($gradesData) . " entri nilai)";
+        }
+
+        // Summarize infractions
+        $infractionsData = $data['infractionsSummary'] ?? [];
+        $infSummaryStr = "Tidak ada catatan pelanggaran.";
+        if (is_array($infractionsData) && count($infractionsData) > 0) {
+            $totalPoints = array_reduce($infractionsData, fn($acc, $i) => $acc + (int)($i['points'] ?? 0), 0);
+            $infSummaryStr = "Total Pelanggaran: " . count($infractionsData) . ", Total Poin Terpotong: " . $totalPoints;
+        }
+
+        // Summarize journals
+        $journalsData = $data['journalsSummary'] ?? [];
+        $journalsSummaryStr = is_array($journalsData) ? "Total Jurnal Mengajar: " . count($journalsData) : "Belum ada jurnal mengajar.";
+
         $prompt = "
         Anda adalah asisten AI untuk guru yang ahli dalam analisis data pendidikan berbasis standar nasional **{$regulation}**.
-        Tugas Anda adalah menganalisis data kelas \"{$className}\" dan memberikan laporan yang mendalam namun praktis.
+        Tugas Anda adalah menganalisis data kelas \"{$className}\" dan memberikan laporan infografis yang mendalam namun praktis.
 
-        Data Kelas:
-        - Jumlah Siswa: " . count($data['students'] ?? []) . "
-        - Ringkasan Kehadiran: " . json_encode($data['attendanceSummary'] ?? [], JSON_UNESCAPED_UNICODE) . "
-        - Ringkasan Nilai: " . json_encode($data['gradesSummary'] ?? [], JSON_UNESCAPED_UNICODE) . "
-        - Ringkasan Pelanggaran: " . json_encode($data['infractionsSummary'] ?? [], JSON_UNESCAPED_UNICODE) . "
-        - Catatan Jurnal Guru: " . json_encode($data['journalsSummary'] ?? [], JSON_UNESCAPED_UNICODE) . "
+        ### DATA KELAS:
+        - **Jumlah Siswa**: {$studentsCount}
+        - **Rekap Kehadiran**: {$attSummaryStr}
+        - **Rekap Nilai**: {$gradesSummaryStr}
+        - **Rekap Pelanggaran**: {$infSummaryStr}
+        - **Jurnal Guru**: {$journalsSummaryStr}
+
+        ### INSTRUKSI OUTPUT:
+        Gunakan format Markdown yang sangat rapi untuk laporan ini. Berikan jawaban dalam struktur berikut:
+
+        # 📊 INFOGRAFIS CAPAIAN KELAS
+        [Berikan ringkasan eksekutif 2-3 kalimat]
+
+        ## 🏆 KEKUATAN UTAMA (Strengths)
+        - [Poin kekuatan 1]
+        - [Poin kekuatan 2]
+        - [Poin kekuatan 3]
+
+        ## ⚠️ KELEMAHAN & TANTANGAN (Weaknesses)
+        - [Poin kelemahan 1]
+        - [Poin kelemahan 2]
+        - [Poin kelemahan 3]
+
+        ## 💡 SARAN PERBAIKAN (Action Plan)
+        - [Saran 1]
+        - [Saran 2]
+        - [Saran 3]
+
+        Gunakan bahasa yang profesional, suportif, dan berbasis data. Fokuslah pada aspek pedagogis dan perkembangan karakter siswa.
 
         ATURAN ANALISIS:
         1. **Privasi**: Gunakan nama siswa secara profesional, jangan gunakan ID teknis.
         2. **Objektivitas**: Berikan analisis berdasarkan data yang ada, jangan berasumsi berlebihan.
         3. **Solutif**: Setiap masalah yang ditemukan HARUS disertai saran perbaikan pedagogis yang konkret (PBL, Differentiation, Deep Learning).
-        
-        " . ($isConcise ? "
-        FORMAT LAPORAN (RINGKAS):
-        ### Analisis Ringkas Kelas: {$className}
-        **1. Poin Utama Akademik**
-        - (1-2 poin signifikan)
-        **2. Poin Utama Perilaku & Kehadiran**
-        - (1-2 poin menonjol)
-        **3. Tiga Rekomendasi Teratas**
-        - (3 saran praktis)
-        " : "
-        FORMAT LAPORAN (LENGKAP):
-        ### Laporan Analisis Mendalam Kelas: {$className}
-        
-        **I. GAMBARAN UMUM AKADEMIK**
-        (Analisis tren nilai, penguasaan materi, dan identifikasi siswa yang butuh perhatian/remedial).
-        
-        **II. POLA KEHADIRAN & KEDISIPLINAN**
-        (Analisis tingkat kehadiran dan pola pelanggaran jika ada).
-        
-        **III. ANALISIS PEDAGOGIS (BERDASARKAN JURNAL)**
-        (Bagaimana proses belajar mengajar berlangsung dan hambatan yang sering muncul).
-        
-        **IV. REKOMENDASI STRATEGIS (DEEP LEARNING)**
-        (Saran spesifik untuk meningkatkan kualitas pembelajaran di kelas ini).
-        ") . "
         ";
+
+        if ($isConcise) {
+            $prompt .= "
+            FORMAT LAPORAN (RINGKAS):
+            ### Analisis Ringkas Kelas: {$className}
+            **1. Poin Utama Akademik**
+            - (1-2 poin signifikan)
+            **2. Poin Utama Perilaku & Kehadiran**
+            - (1-2 poin menonjol)
+            **3. Tiga Rekomendasi Teratas**
+            - (3 saran praktis)
+            ";
+        } else {
+            $prompt .= "
+            FORMAT LAPORAN (LENGKAP):
+            ### Laporan Analisis Mendalam Kelas: {$className}
+            
+            **I. GAMBARAN UMUM AKADEMIK**
+            (Analisis tren nilai, penguasaan materi, dan identifikasi siswa yang butuh perhatian/remedial).
+            
+            **II. POLA KEHADIRAN & KEDISIPLINAN**
+            (Analisis tingkat kehadiran dan pola pelanggaran jika ada).
+            
+            **III. ANALISIS PEDAGOGIS (BERDASARKAN JURNAL)**
+            (Bagaimana proses belajar mengajar berlangsung dan hambatan yang sering muncul).
+            
+            **IV. REKOMENDASI STRATEGIS (DEEP LEARNING)**
+            (Saran spesifik untuk meningkatkan kualitas pembelajaran di kelas ini).
+            ";
+        }
 
         return $this->callGeminiApi($prompt, $modelName, 4096);
     }
@@ -1290,36 +1361,84 @@ class AiGeneratorService
         return $decoded ?? [];
     }
 
+    protected function getEffectiveApiKey()
+    {
+        // 1. Check current logged in user profile
+        if (auth()->check()) {
+            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
+            if ($profile && $profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
+                return $profile->google_ai_api_key;
+            }
+        }
+
+        // 2. Check .env / config
+        $configKey = config('services.gemini.api_key');
+        if ($configKey && $configKey !== 'your_gemini_api_key_here') {
+            return $configKey;
+        }
+
+        // 3. Fallback to primary admin profile
+        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id');
+            
+        if ($primaryAdminId) {
+            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
+            if ($adminProfile && $adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
+                return $adminProfile->google_ai_api_key;
+            }
+        }
+
+        return null;
+    }
+
+    protected function getEffectiveModel($requestedModel = null)
+    {
+        // 1. If a specific model was requested for this call, use it
+        if ($requestedModel) return $requestedModel;
+
+        // 2. Check current logged in user profile preference
+        if (auth()->check()) {
+            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
+            if ($profile && $profile->gemini_model) {
+                return $profile->gemini_model;
+            }
+        }
+
+        // 3. Fallback to primary admin profile preference
+        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id');
+            
+        if ($primaryAdminId) {
+            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
+            if ($adminProfile && $adminProfile->gemini_model) {
+                return $adminProfile->gemini_model;
+            }
+        }
+
+        // 4. Ultimate fallback
+        return 'gemini-3.1-flash-lite-preview';
+    }
+
     protected function callGeminiApi($promptOrContent, $modelName, $maxTokens = 8192)
     {
         $retries = 3;
         $delay = 1000; // 1 second initial delay
         $lastError = null;
 
+        $apiKey = $this->getEffectiveApiKey();
+        if (!$apiKey) {
+            throw new \Exception("Gemini API Key is not configured. Please set it in your profile.");
+        }
+
+        $finalModel = $this->getEffectiveModel($modelName);
+
         for ($i = 0; $i < $retries; $i++) {
             try {
-                // Priority for model:
-                // 1. $modelName passed to this method
-                // 2. User preference in profile
-                // 3. Fallback default
-                $finalModel = $modelName;
-
-                if (auth()->check()) {
-                    $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-                    if ($profile && $profile->gemini_model) {
-                        $finalModel = $profile->gemini_model;
-                    }
-                }
-
                 // If we are in a retry loop and it's not the first attempt, try a fallback model if it's a 503
                 if ($i > 0 && $lastError && str_contains($lastError, '503')) {
-                    // Fallback to a different stable model version if the main one is busy
                     $finalModel = 'gemini-3.1-flash-lite-preview'; 
-                }
-
-                // Check for API key
-                if (!$this->apiKey) {
-                    throw new \Exception("Gemini API Key is not configured. Please set it in your profile.");
                 }
 
                 // Construct contents based on input type
@@ -1340,7 +1459,7 @@ class AiGeneratorService
                     ];
                 }
 
-                $apiUrl = "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$this->apiKey}";
+                $apiUrl = "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$apiKey}";
 
                 $response = Http::withHeaders(['Content-Type' => 'application/json'])
                     ->timeout(60) // Increase timeout for complex generations

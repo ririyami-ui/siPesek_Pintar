@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -69,19 +70,21 @@ class AttendanceController extends Controller
 
         DB::beginTransaction();
         try {
+            $user = auth()->user();
             $records = [];
+            
             foreach ($validated['attendances'] as $item) {
                 $records[] = Attendance::updateOrCreate(
                     [
                         'student_id' => $item['student_id'],
-                        'date' => $validated['date'],
+                        'date'       => $validated['date'],
                         'subject_id' => $validated['subject_id'],
                     ],
                     [
                         'class_id' => $validated['class_id'],
-                        'status' => $item['status'],
-                        'note' => $item['note'] ?? null,
-                        'user_id' => auth()->id(),
+                        'status'   => $item['status'],
+                        'note'     => $item['note'] ?? null,
+                        'user_id'  => $user->id,
                     ]
                 );
             }
@@ -114,5 +117,72 @@ class AttendanceController extends Controller
             ->get();
 
         return response()->json($summary);
+    }
+
+    /**
+     * Get missing attendance schedules for past days
+     */
+    public function missing(Request $request)
+    {
+        $daysToLookBack = $request->query('days', 7);
+        $user = auth()->user();
+        $isAdmin = ($user->role === 'admin' || $user->role === 'adminer');
+        
+        $dayMapping = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+
+        $missing = [];
+        $today = Carbon::today();
+
+        for ($i = 1; $i <= $daysToLookBack; $i++) {
+            $date = $today->copy()->subDays($i);
+            $dayName = $dayMapping[$date->format('l')];
+            
+            // Skip weekends if not specified otherwise
+            if ($dayName === 'Minggu' || $dayName === 'Sabtu') continue;
+
+            $schedules = \App\Models\Schedule::where('day', $dayName)
+                ->where('type', 'teaching')
+                ->with(['class', 'subject', 'teacher']);
+
+            if (!$isAdmin) {
+                // If not admin, only show schedules assigned to this teacher
+                $schedules->where('teacher_id', $user->id);
+            }
+
+            $daySchedules = $schedules->get();
+
+            foreach ($daySchedules as $sch) {
+                // Check if attendance exists for this date, class, and subject
+                $exists = Attendance::where([
+                    'date' => $date->format('Y-m-d'),
+                    'class_id' => $sch->class_id,
+                    'subject_id' => $sch->subject_id
+                ])->exists();
+
+                if (!$exists) {
+                    $missing[] = [
+                        'date' => $date->format('Y-m-d'),
+                        'day' => $dayName,
+                        'class_id' => $sch->class_id,
+                        'rombel' => $sch->class->rombel ?? '-',
+                        'subject_id' => $sch->subject_id,
+                        'subject_name' => $sch->subject->name ?? '-',
+                        'teacher_name' => $sch->teacher->name ?? '-',
+                        'teacher_id' => $sch->teacher_id,
+                        'time' => Carbon::parse($sch->start_time)->format('H:i') . ' - ' . Carbon::parse($sch->end_time)->format('H:i'),
+                    ];
+                }
+            }
+        }
+
+        return response()->json(['data' => $missing]);
     }
 }

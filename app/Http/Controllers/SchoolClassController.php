@@ -49,7 +49,7 @@ class SchoolClassController extends Controller
             }
         }
 
-        return response()->json(['data' => $query->get()]);
+        return response()->json(['data' => $query->with(['wali'])->get()]);
     }
 
     /**
@@ -75,16 +75,18 @@ class SchoolClassController extends Controller
             'code' => [
                 'required',
                 'string',
-                \Illuminate\Validation\Rule::unique('classes')->where(function ($query) {
-                    return $query->where('user_id', auth()->id());
-                }),
+                \Illuminate\Validation\Rule::unique('classes'),
             ],
             'level' => 'required|string',
             'rombel' => 'required|string',
             'description' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
         ]);
         
-        $validatedData['user_id'] = auth()->id();
+        // If user_id is not provided, default to current admin (as owner)
+        if (!isset($validatedData['user_id'])) {
+            $validatedData['user_id'] = auth()->id();
+        }
 
         $class = SchoolClass::create($validatedData);
 
@@ -99,15 +101,15 @@ class SchoolClassController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SchoolClass $schoolClass)
+    public function show(SchoolClass $class)
     {
-        return response()->json(['data' => $schoolClass]);
+        return response()->json(['data' => $class]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SchoolClass $schoolClass)
+    public function update(Request $request, SchoolClass $class)
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -118,31 +120,44 @@ class SchoolClassController extends Controller
 
         $validatedData = $request->validate([
             'code' => [
-                'required',
+                'nullable',
                 'string',
-                \Illuminate\Validation\Rule::unique('classes')->where(function ($query) use ($schoolClass) {
-                    return $query->where('user_id', auth()->id());
-                })->ignore($schoolClass->id),
+                \Illuminate\Validation\Rule::unique('classes')->ignore($class->id),
             ],
             'level' => 'required|string',
             'rombel' => 'required|string',
             'description' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
-        $schoolClass->update($validatedData);
+        $class->update($validatedData);
 
         // [CACHE INVALIDATION] Clear monitoring cache for all days
         foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {
             Cache::forget("monitoring_schedules_{$day}");
         }
 
-        return response()->json(['data' => $schoolClass]);
+        return response()->json(['data' => $class]);
+    }
+
+    public function myClass()
+    {
+        $user = auth()->user();
+        $class = SchoolClass::where('user_id', $user->id)
+            ->with(['wali'])
+            ->first();
+            
+        if (!$class) {
+            return response()->json(['message' => 'Anda bukan wali kelas.'], 404);
+        }
+        
+        return response()->json(['data' => $class]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SchoolClass $schoolClass)
+    public function destroy(SchoolClass $class)
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
@@ -151,7 +166,7 @@ class SchoolClassController extends Controller
             abort(403, 'Unauthorized. Admin role required.');
         }
 
-        $schoolClass->delete();
+        $class->delete();
 
         // [CACHE INVALIDATION] Clear monitoring cache for all days
         foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {

@@ -39,6 +39,8 @@ import {
   Users,
   Volume2,
   VolumeX,
+  History,
+  Scale
 } from 'lucide-react';
 import useDarkMode from '../hooks/useDarkMode';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -74,6 +76,7 @@ const NAV_CATEGORIES = [
     icon: <BookOpen size={14} />,
     items: [
       { name: 'Monitoring Absensi', icon: <Users size={20} />, path: '/monitoring-absensi' },
+      { name: 'Absensi Terlewat', icon: <History size={20} />, path: '/absensi-terlewat' },
       { name: 'Jurnal Mengajar', icon: <FileText size={20} />, path: '/jurnal' },
       { name: 'Monitoring Nilai', icon: <GraduationCap size={20} />, path: '/monitoring-nilai' },
     ]
@@ -132,6 +135,7 @@ const TEACHER_NAV_CATEGORIES = [
     icon: <BookOpen size={14} />,
     items: [
       { name: 'Absensi Siswa', icon: <ClipboardList size={20} />, path: '/absensi' },
+      { name: 'Absensi Terlewat', icon: <History size={20} />, path: '/absensi-terlewat' },
       { name: 'Jurnal Mengajar', icon: <FileText size={20} />, path: '/jurnal' },
       { name: 'Input Nilai', icon: <GraduationCap size={20} />, path: '/nilai' },
       { name: 'Penilaian KKTP', icon: <ClipboardCheck size={20} />, path: '/penilaian-kktp' },
@@ -183,8 +187,37 @@ export default function DashboardLayout({ children, user, onLogout }) {
   const navigate = useNavigate();
   const { activeSemester, academicYear, userProfile, loadingSettings } = useSettings();
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isWali, setIsWali] = useState(false);
 
-  const categories = user?.role?.toLowerCase() === 'admin' ? NAV_CATEGORIES : TEACHER_NAV_CATEGORIES;
+  useEffect(() => {
+    const checkWaliStatus = async () => {
+      if (user?.role === 'teacher') {
+        try {
+          const res = await api.get('/wali/my-class');
+          if (res.data.data) setIsWali(true);
+        } catch (err) {
+          setIsWali(false);
+        }
+      }
+    };
+    checkWaliStatus();
+  }, [user]);
+
+  let categories = user?.role?.toLowerCase() === 'admin' ? NAV_CATEGORIES : TEACHER_NAV_CATEGORIES;
+
+  // Inject Wali Kelas menu if applicable
+  if (isWali) {
+    const waliCategory = {
+      title: 'Perwalian',
+      icon: <Users size={14} />,
+      items: [
+        { name: 'Monitoring Wali Kelas', icon: <Scale size={20} />, path: '/wali-kelas' },
+      ]
+    };
+    const newCategories = [...categories];
+    newCategories.splice(1, 0, waliCategory); // Insert after Dashboard
+    categories = newCategories;
+  }
 
   useEffect(() => {
     const handleOffline = () => setIsOffline(true);
@@ -287,13 +320,22 @@ export default function DashboardLayout({ children, user, onLogout }) {
     );
   };
 
+  // Helper to find navigation item by path
+  const findNavItem = (path) => {
+    for (const category of categories) {
+      const item = category.items.find(i => i.path === path);
+      if (item) return item;
+    }
+    return null;
+  };
+
   const footerNavItems = [
-    { ...categories[0].items[0], shortName: 'Dashboard' },
-    { ...categories[2].items[0], shortName: 'Absen' },
-    { ...categories[2].items[2], shortName: 'Nilai' },
-    { ...categories[2].items[1], shortName: 'Jurnal' },
-    { ...categories[0].items[1], shortName: 'Si Pintar' }
-  ].filter(Boolean);
+    { ...findNavItem('/'), shortName: 'Dashboard' },
+    { ...(findNavItem('/absensi') || findNavItem('/monitoring-absensi')), shortName: 'Presensi' },
+    { ...(findNavItem('/nilai') || findNavItem('/monitoring-nilai')), shortName: 'Nilai' },
+    { ...findNavItem('/jurnal'), shortName: 'Jurnal' },
+    { ...findNavItem('/asisten-guru'), shortName: 'Si Pintar' }
+  ].filter(item => item && item.path);
 
   // Show loading while fetching settings
   if (loadingSettings) {
@@ -314,11 +356,23 @@ export default function DashboardLayout({ children, user, onLogout }) {
       {/* Desktop Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 flex-col bg-white/80 dark:bg-black/80 backdrop-blur-2xl border-r border-gray-100 dark:border-gray-800/50 p-4 shadow-2xl transition-transform duration-300 ease-in-out hidden md:flex ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="mb-6 flex items-center justify-between gap-3 px-4 py-2 h-20 border-b border-gray-100 dark:border-gray-800/50">
-          <div className="flex items-center gap-3">
-            <img src={(window.Laravel?.baseUrl || "") + "/Logo Smart Teaching Baru_.png"} alt="Si Pesek Pintar Logo" className="h-10 w-auto" />
-            <div className="flex flex-col">
-              <h1 className="font-sans text-lg font-extrabold text-blue-600 dark:text-blue-500 tracking-tight leading-tight">Si Pesek</h1>
-              <h1 className="font-sans text-lg font-extrabold text-gray-800 dark:text-white tracking-tight leading-tight -mt-1">Pintar</h1>
+          <div className="flex items-center gap-3 overflow-hidden">
+            {userProfile?.logoUrl ? (
+              <img 
+                src={userProfile.logoUrl} 
+                alt="School Logo" 
+                className="h-12 w-12 object-contain rounded-lg bg-white p-1 shadow-sm shrink-0" 
+              />
+            ) : (
+              <img src={(window.Laravel?.baseUrl || "") + "/Logo Smart Teaching Baru_.png"} alt="Si Pesek Pintar Logo" className="h-10 w-auto shrink-0" />
+            )}
+            <div className="flex flex-col min-w-0">
+              <h1 className="font-sans text-sm font-extrabold text-blue-600 dark:text-blue-500 tracking-tight leading-tight truncate">
+                {userProfile?.school_name || "Si Pesek"}
+              </h1>
+              <h1 className="font-sans text-sm font-extrabold text-gray-800 dark:text-white tracking-tight leading-tight truncate">
+                {userProfile?.school_name ? "Pintar" : "Pintar"}
+              </h1>
             </div>
           </div>
           <button
@@ -559,27 +613,44 @@ export default function DashboardLayout({ children, user, onLogout }) {
         </div>
       </nav>
 
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
+        {/* Mobile Sidebar Overlay */}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+        )}
         <div
-          className="fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
-      <div
-        className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-surface-light dark:bg-surface-dark p-4 shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-      >
-        <div className="mb-6 flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800/50">
-          <div className="flex items-center gap-3">
-            <img src={(window.Laravel?.baseUrl || "") + "/Logo Smart Teaching Baru_.png"} alt="Si Pesek Pintar Logo" className="h-8 w-auto" />
-            <h1 className="font-sans text-lg font-extrabold text-blue-600 dark:text-blue-500 tracking-tight leading-none">Si Pesek Pintar</h1>
-            <p className="text-[8px] font-black text-blue-400 opacity-60 uppercase tracking-tighter leading-none">Sistem Pengelolaan Sekolah Pintar</p>
+          className={`fixed inset-y-0 left-0 z-[70] flex w-64 flex-col bg-surface-light dark:bg-surface-dark p-4 shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+        >
+          <div className="mb-6 flex items-center justify-between gap-3 px-4 py-2 h-20 border-b border-gray-100 dark:border-gray-800/50">
+            <div className="flex items-center gap-3 overflow-hidden">
+              {userProfile?.logoUrl ? (
+                <img 
+                  src={userProfile.logoUrl} 
+                  alt="School Logo" 
+                  className="h-10 w-10 object-contain rounded-lg bg-white p-1 shadow-sm shrink-0" 
+                />
+              ) : (
+                <img src={(window.Laravel?.baseUrl || "") + "/Logo Smart Teaching Baru_.png"} alt="Si Pesek Pintar Logo" className="h-8 w-auto shrink-0" />
+              )}
+              <div className="flex flex-col min-w-0">
+                <h1 className="font-sans text-sm font-extrabold text-blue-600 dark:text-blue-500 tracking-tight leading-tight truncate">
+                  {userProfile?.school_name || "Si Pesek"}
+                </h1>
+                <h1 className="font-sans text-sm font-extrabold text-gray-800 dark:text-white tracking-tight leading-tight truncate">
+                  {userProfile?.school_name ? "Pintar" : "Pintar"}
+                </h1>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-400"
+            >
+              <X size={24} />
+            </button>
           </div>
-          <button onClick={() => setIsSidebarOpen(false)}>
-            <X size={24} />
-          </button>
-        </div>
         <nav className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
           {categories.map((category, idx) => {
             const isExpanded = expandedCategories[category.title];
@@ -618,7 +689,7 @@ export default function DashboardLayout({ children, user, onLogout }) {
           })}
         </nav>
       </div>
-      <OfflineIndicator />
-    </div>
-  );
-}
+        <OfflineIndicator />
+      </div>
+    );
+  }

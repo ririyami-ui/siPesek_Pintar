@@ -100,9 +100,9 @@ class ScheduleController extends Controller
                 ]);
             }
 
-            // Ensure H:i format for start_time and end_time if they have seconds
-            $validated['start_time'] = substr($validated['start_time'], 0, 5);
-            $validated['end_time'] = substr($validated['end_time'], 0, 5);
+            // Ensure H:i format and normalize dots to colons
+            $validated['start_time'] = str_replace('.', ':', substr($validated['start_time'], 0, 5));
+            $validated['end_time'] = str_replace('.', ':', substr($validated['end_time'], 0, 5));
 
             // [AUTO-DETECT TEACHER FROM ASSIGNMENT]
             if (($validated['type'] ?? null) === 'teaching' && !empty($validated['class_id']) && !empty($validated['subject_id'])) {
@@ -135,22 +135,45 @@ class ScheduleController extends Controller
                 }
             }
 
+            // [INFO] Non-KBM agenda (like breaks) are intentionally allowed to overlap with
+            // teaching schedules. They serve as 'pause' periods, not blockers.
+
             // [VALIDASI BENTROK JADWAL GURU]
             if (!empty($validated['teacher_id'])) {
-                $isConflict = Schedule::where('teacher_id', $validated['teacher_id'])
+                $conflict = Schedule::where('teacher_id', $validated['teacher_id'])
                     ->where('day', $validated['day'])
                     ->where(function($query) use ($validated) {
-                        $query->where('start_time', '<', $validated['end_time'] . ':00')
-                              ->where('end_time', '>', $validated['start_time'] . ':00');
+                        $query->whereRaw("TIME(start_time) < TIME(?)", [$validated['end_time']])
+                              ->whereRaw("TIME(end_time) > TIME(?)", [$validated['start_time']]);
                     })
-                    ->exists();
+                    ->first();
 
-                if ($isConflict) {
+                if ($conflict) {
                      $teacher = User::find($validated['teacher_id']);
                      $teacherName = $teacher ? $teacher->name : 'Guru pengampu';
+                     $conflictTime = substr($conflict->start_time, 0, 5) . '-' . substr($conflict->end_time, 0, 5);
                      throw ValidationException::withMessages([
-                         'start_time' => ["Jadwal Bentrok: $teacherName sudah terjadwal mengajar di kelas lain pada jam yang bersinggungan di hari ini."]
+                         'start_time' => ["Jadwal Bentrok: $teacherName sudah terjadwal di hari {$validated['day']} jam $conflictTime. Mohon periksa kembali."]
                      ]);
+                }
+            }
+
+            // [VALIDASI BENTROK KELAS]
+            if (!empty($validated['class_id'])) {
+                $classConflict = Schedule::where('class_id', $validated['class_id'])
+                    ->where('day', $validated['day'])
+                    ->where(function($query) use ($validated) {
+                        $query->whereRaw("TIME(start_time) < TIME(?)", [$validated['end_time']])
+                              ->whereRaw("TIME(end_time) > TIME(?)", [$validated['start_time']]);
+                    })
+                    ->first();
+
+                if ($classConflict) {
+                    $conflictTime = substr($classConflict->start_time, 0, 5) . '-' . substr($classConflict->end_time, 0, 5);
+                    $activity = $classConflict->type === 'teaching' ? ($classConflict->subject->name ?? 'Pelajaran lain') : $classConflict->activity_name;
+                    throw ValidationException::withMessages([
+                        'start_time' => ["Kelas Bentrok: Kelas ini sudah memiliki agenda '$activity' pada jam $conflictTime."]
+                    ]);
                 }
             }
 
@@ -209,10 +232,10 @@ class ScheduleController extends Controller
             }
 
             if (isset($validated['start_time'])) {
-                $validated['start_time'] = substr($validated['start_time'], 0, 5);
+                $validated['start_time'] = str_replace('.', ':', substr($validated['start_time'], 0, 5));
             }
             if (isset($validated['end_time'])) {
-                $validated['end_time'] = substr($validated['end_time'], 0, 5);
+                $validated['end_time'] = str_replace('.', ':', substr($validated['end_time'], 0, 5));
             }
 
             // [AUTO-DETECT TEACHER FROM ASSIGNMENT ON UPDATE]
@@ -238,27 +261,50 @@ class ScheduleController extends Controller
                 $teacherId = null;
             }
 
-            // [VALIDASI BENTROK JADWAL GURU UPDATE]
+            // [INFO] Non-KBM agenda (like breaks) are intentionally allowed to overlap with
+            // teaching schedules on update. They serve as 'pause' periods, not blockers.
             $day = $validated['day'] ?? $schedule->day;
             $start = $validated['start_time'] ?? substr($schedule->start_time, 0, 5);
             $end = $validated['end_time'] ?? substr($schedule->end_time, 0, 5);
 
+            // [VALIDASI BENTROK JADWAL GURU UPDATE]
             if ($teacherId) {
-                $isConflict = Schedule::where('teacher_id', $teacherId)
+                $conflict = Schedule::where('teacher_id', $teacherId)
                     ->where('day', $day)
-                    ->where('id', '!=', $schedule->id) // DO NOT check against itself!
+                    ->where('id', '!=', $schedule->id) // Exclude current schedule when updating
                     ->where(function($query) use ($start, $end) {
-                        $query->where('start_time', '<', $end . ':00')
-                              ->where('end_time', '>', $start . ':00');
+                        $query->whereRaw("TIME(start_time) < TIME(?)", [$end])
+                              ->whereRaw("TIME(end_time) > TIME(?)", [$start]);
                     })
-                    ->exists();
+                    ->first();
 
-                if ($isConflict) {
+                if ($conflict) {
                      $teacher = User::find($teacherId);
                      $teacherName = $teacher ? $teacher->name : 'Guru pengampu';
+                     $conflictTime = substr($conflict->start_time, 0, 5) . '-' . substr($conflict->end_time, 0, 5);
                      throw ValidationException::withMessages([
-                         'start_time' => ["Jadwal Bentrok: $teacherName sudah terjadwal mengajar di kelas lain pada jam yang bersinggungan di hari ini."]
+                         'start_time' => ["Jadwal Bentrok: $teacherName sudah terjadwal di hari $day jam $conflictTime."]
                      ]);
+                }
+            }
+
+            // [VALIDASI BENTROK KELAS UPDATE]
+            if (!empty($classId)) {
+                $classConflict = Schedule::where('class_id', $classId)
+                    ->where('day', $day)
+                    ->where('id', '!=', $schedule->id)
+                    ->where(function($query) use ($start, $end) {
+                        $query->whereRaw("TIME(start_time) < TIME(?)", [$end])
+                              ->whereRaw("TIME(end_time) > TIME(?)", [$start]);
+                    })
+                    ->first();
+
+                if ($classConflict) {
+                    $conflictTime = substr($classConflict->start_time, 0, 5) . '-' . substr($classConflict->end_time, 0, 5);
+                    $activity = $classConflict->type === 'teaching' ? ($classConflict->subject->name ?? 'Pelajaran lain') : $classConflict->activity_name;
+                    throw ValidationException::withMessages([
+                        'start_time' => ["Kelas Bentrok: Kelas ini sudah memiliki agenda '$activity' pada jam $conflictTime."]
+                    ]);
                 }
             }
 

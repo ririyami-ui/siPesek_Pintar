@@ -17,43 +17,51 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
+        if (!$user) {
+            return response()->json(['data' => []]);
+        }
+
         $query = Subject::query();
 
-        // Admin can request everything
-        if ($request->has('all') && $user->isAdmin()) {
+        // 1. Admin Logic
+        if ($user->isAdmin()) {
+            if ($request->has('class_id') || $request->has('teacher_id')) {
+                $assignmentQuery = TeacherAssignment::query();
+                if ($request->has('class_id')) {
+                    $assignmentQuery->where('class_id', $request->class_id);
+                }
+                if ($request->has('teacher_id')) {
+                    $assignmentQuery->where('teacher_id', $request->teacher_id);
+                }
+                $subjectIds = $assignmentQuery->pluck('subject_id')->unique();
+                $query->whereIn('id', $subjectIds);
+            }
             return response()->json(['data' => $query->get()]);
         }
 
-        // Determine teacher context
-        $teacherId = $request->input('teacher_id');
-        if (!$teacherId && $user->role === 'teacher') {
+        // 2. Teacher Logic
+        if ($user->role === 'teacher') {
             $teacherRecord = Teacher::where('auth_user_id', $user->id)->first();
-            $teacherId = $teacherRecord ? $teacherRecord->id : null;
-        }
-
-        // Apply filters based on TeacherAssignment
-        if ($teacherId || $request->has('class_id')) {
-            $assignmentQuery = TeacherAssignment::query();
-
-            if ($teacherId) {
-                $assignmentQuery->where('teacher_id', $teacherId);
+            
+            if (!$teacherRecord) {
+                return response()->json(['data' => []]);
             }
 
+            $assignmentQuery = TeacherAssignment::where('teacher_id', $teacherRecord->id);
             if ($request->has('class_id')) {
                 $assignmentQuery->where('class_id', $request->class_id);
             }
-
-            $subjectIds = $assignmentQuery->pluck('subject_id')->unique();
             
-            // If class_id was provided but no assignments found, result should be empty
-            if ($request->has('class_id') && $subjectIds->isEmpty()) {
-                $query->whereRaw('1 = 0');
-            } else {
-                $query->whereIn('id', $subjectIds);
-            }
-        } elseif ($user->role === 'teacher' && !$user->isAdmin()) {
-            // If logged in as teacher but no assignments found at all
-            $query->whereRaw('1 = 0');
+            $subjectIds = $assignmentQuery->pluck('subject_id')->unique();
+            $query->whereIn('id', $subjectIds);
+            
+            return response()->json(['data' => $query->get()]);
+        }
+
+        // 3. Other Roles
+        if ($request->has('class_id')) {
+            $subjectIds = TeacherAssignment::where('class_id', $request->class_id)->pluck('subject_id')->unique();
+            $query->whereIn('id', $subjectIds);
         }
 
         return response()->json(['data' => $query->get()]);

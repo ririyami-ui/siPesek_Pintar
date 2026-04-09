@@ -141,21 +141,28 @@ class DashboardController extends Controller
                 return $p->class_id . '-' . $p->subject_id;
             });
 
-        $monitoringData = $schedules->map(function ($schedule) use ($todayDate, $currentTime, $assignments, $journalsBySchedule, $journalsByClassSubject, $attendanceData, $studentCounts, $programs, $monthIndex, $currentDay, $teachingPlans) {
+        $monitoringData = $schedules->map(function ($schedule) use ($todayDate, $currentTime, $assignments, $journalsBySchedule, $journalsByClassSubject, $attendanceData, $studentCounts, $programs, $monthIndex, $currentDay, $teachingPlans, $activeNonTeaching) {
             // Priority 1: Search by schedule_id (most accurate)
             $journal = $journalsBySchedule->has($schedule->id) ? $journalsBySchedule->get($schedule->id)->first() : null;
             
-            // Fallback: Search by Class-Subject-Date for older/manual entries (schedule_id IS NULL)
-            if (!$journal) {
-                $key = $schedule->class_id . '-' . $schedule->subject_id;
-                $journal = $journalsByClassSubject->has($key) ? $journalsByClassSubject->get($key)->first() : null;
-            }
+            // [REMOVED FALLBACK] Fallback journal search by Class-Subject-Date often causes 
+            // false "Live" status for double sessions or manual entries.
+            // We now strictly use schedule_id for real-time monitoring accuracy.
 
             $startTime = Carbon::parse($schedule->start_time)->format('H:i');
             $endTime = Carbon::parse($schedule->end_time)->format('H:i');
             
             $isActive = $currentTime >= $startTime && $currentTime < $endTime;
 
+            // [IMPROVED] If a non-teaching activity (break/ceremony) is currently active,
+            // teaching sessions should NEVER be "berlangsung" or "alfa".
+            // They should wait for the non-teaching session to end.
+            if ($activeNonTeaching) {
+                $isActive = false;
+            }
+
+            $key = $schedule->class_id . '-' . $schedule->subject_id;
+            
             // Status priority: TIME first, then journal existence
             $assignment = isset($assignments[$key]) ? $assignments[$key]->first() : null;
             $teacherName = $assignment ? $assignment->teacher->name : ($schedule->teacher->name ?? '-');
@@ -178,6 +185,7 @@ class DashboardController extends Controller
                     $status = 'alfa';    // No journal after class ended
                 }
             }
+            
             // Handle assignment status (overrides normal flow)
             if ($journal && $journal->is_assignment) {
                 $status = 'assignment';
@@ -321,6 +329,7 @@ class DashboardController extends Controller
             'max_end_time' => $maxEndTime,
             'is_weekend' => $isWeekend,
             'data' => $groupedMonitoringData->values(),
+            'full_data' => $monitoringData->values(),
             'stats' => [
                 'total' => $monitoringData->count(),
                 'berlangsung' => $monitoringData->where('status', 'berlangsung')->count(),

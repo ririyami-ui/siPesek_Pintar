@@ -71,7 +71,7 @@ export default function StudentAttendance() {
       <div>
         <h1 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
           <BookOpen size={22} className="text-emerald-600" />
-          Rekap Kehadiran
+          Rekap Presensi
         </h1>
         <p className="text-sm text-slate-500 mt-0.5">{data?.student?.name} · {data?.student?.class}</p>
       </div>

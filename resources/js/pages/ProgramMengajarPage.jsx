@@ -672,12 +672,12 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                                 const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
                                 
                                 // Threshold based on school days
-                                // In Indonesia: 5 days school usually means 3 days holiday blocks a week
+                                // In Indonesia: 5 days school usually means 3 days holiday blocks a week (Majority of school week)
                                 // 6 days school usually means 4 days holiday blocks a week
-                                const schoolDaysCount = userProfile?.school_days || userProfile?.schoolDays || 6;
-                                const threshold = parseInt(schoolDaysCount) === 5 ? 3 : 4; 
-                                
-                                return overlapDays >= threshold; 
+                                const schoolDaysCount = parseInt(userProfile?.school_days || userProfile?.schoolDays || 6);
+                                const threshold = schoolDaysCount === 5 ? 3 : 4;
+
+                                return overlapDays >= threshold;
                             });
 
                             if (blockingHoliday) {
@@ -793,79 +793,91 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
         }
     };
 
-    // Manual Sync Button Handler
+    // Manual Sync Button Handler (Algorithm Refined - Curriculum Expert Style)
     const handleSyncWithCalendar = async () => {
         setLoading(true);
         try {
             const hRes = await api.get('/holidays');
-            const allHolidays = hRes.data.data || hRes.data || [];
+            const allHolidays = (hRes.data.data || hRes.data || []).filter(h => h.is_holiday !== false || h.category?.includes('semester') || h.type === 'manual'); // Only count significant ones
 
             setMonths(prevMonths => {
                 const updatedMonths = prevMonths.map(m => {
                     const mNum = MONTH_MAP[m.name];
                     const years = year.split('/');
                     const actualYear = mNum >= 7 ? years[0] : years[1];
-                    const daysInMonth = moment(`${actualYear}-${mNum}`, 'YYYY-M').daysInMonth();
+                    
+                    // --- REFINED ALGORITHM ---
+                    const schoolDaysCount = parseInt(userProfile?.school_days || 6);
+                    const threshold = schoolDaysCount === 5 ? 3 : 4;
+                    
+                    const startDate = moment([actualYear, mNum - 1]).startOf('month');
+                    const endDate = moment(startDate).endOf('month');
+                    
+                    let totalWeeksCount = 0;
+                    let nonEffectiveCount = 0;
+                    let holidayNotes = [];
 
-                    let calculatedNonEffective = 0;
-                    let holidaynotes = [];
+                    // Iterate through every possible week block that overlaps this month
+                    let currentWeek = moment(startDate).startOf('isoWeek'); // Use ISO week (Monday-Sunday)
+                    
+                    while (currentWeek.isBefore(endDate)) {
+                        const weekEnd = moment(currentWeek).endOf('isoWeek');
+                        
+                        // 1. Count school days of THIS WEEK that fall WITHIN THIS MONTH
+                        let schoolDaysInMonth = 0;
+                        let dayIter = moment(currentWeek);
+                        while (dayIter.isSameOrBefore(weekEnd)) {
+                            if (dayIter.month() === mNum - 1) {
+                                const dIndex = dayIter.day(); // 0:Sun, 1:Mon... 6:Sat
+                                if (schoolDaysCount === 5) {
+                                    if (dIndex >= 1 && dIndex <= 5) schoolDaysInMonth++;
+                                } else {
+                                    if (dIndex >= 1 && dIndex <= 6) schoolDaysInMonth++;
+                                }
+                            }
+                            dayIter.add(1, 'day');
+                        }
 
-                    const totalWeeks = daysInMonth > 28 ? 5 : 4;
-                    for (let w = 0; w < totalWeeks; w++) {
-                        const weekStart = moment(`${actualYear}-${mNum}-${(w * 7) + 1}`, 'YYYY-MM-D').startOf('day');
-                        const weekEnd = weekStart.clone().add(6, 'days').endOf('day');
+                        // A week is only counted as a "Calendar Week" for this month if it has enough school days
+                        if (schoolDaysInMonth >= threshold) {
+                            totalWeeksCount++;
 
-                        const blockingHoliday = allHolidays.find(h => {
-                            // Include all holidays (manual, national_sync, etc.)
-                            const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
-                            const hEnd = moment(h.endDate || h.end_date || h.date).startOf('day');
+                            // 2. Check if this specific week is non-effective (Blocked by Agenda)
+                            const blockingHoliday = allHolidays.find(h => {
+                                const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
+                                const hEnd = moment(h.endDate || h.end_date || h.date).startOf('day');
+                                const overlapStart = moment.max(currentWeek, hStart);
+                                const overlapEnd = moment.min(weekEnd, hEnd);
+                                if (overlapEnd.isBefore(overlapStart)) return false;
 
-                            const overlapStart = moment.max(weekStart, hStart);
-                            const overlapEnd = moment.min(weekEnd, hEnd);
+                                const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
+                                return overlapDays >= threshold;
+                            });
 
-                            if (overlapEnd.isBefore(overlapStart)) return false;
-
-                            const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
-                            
-                            // Threshold based on school days
-                            const schoolDaysCount = userProfile?.school_days || userProfile?.schoolDays || 6;
-                            const threshold = parseInt(schoolDaysCount) === 5 ? 3 : 4; 
-                            
-                            return overlapDays >= threshold; 
-                        });
-
-                        if (blockingHoliday) {
-                            calculatedNonEffective++;
-                            const holidayTitle = blockingHoliday.title || blockingHoliday.name;
-                            if (holidayTitle && !holidaynotes.includes(holidayTitle)) {
-                                holidaynotes.push(holidayTitle);
+                            if (blockingHoliday) {
+                                nonEffectiveCount++;
+                                const title = blockingHoliday.name || blockingHoliday.title;
+                                if (title && !holidayNotes.includes(title)) holidayNotes.push(title);
                             }
                         }
+                        currentWeek.add(1, 'week');
                     }
 
-                    if (calculatedNonEffective > 0) {
-                        return {
-                            ...m,
-                            nonEffectiveWeeks: calculatedNonEffective,
-                            keterangan: holidaynotes.join(', '),
-                            isAuto: true
-                        };
-                    } else {
-                        // Reset if no holidays found during sync
-                        return {
-                            ...m,
-                            nonEffectiveWeeks: 0,
-                            keterangan: '',
-                        };
-                    }
+                    return {
+                        ...m,
+                        totalWeeks: totalWeeksCount,
+                        nonEffectiveWeeks: nonEffectiveCount,
+                        keterangan: holidayNotes.join(', '),
+                        isAuto: true
+                    };
                 });
                 return updatedMonths;
             });
             isInternalChange.current = true;
-            toast.success("Berhasil sinkronisasi dengan Agenda Sekolah!");
+            toast.success("Berhasil sinkronisasi sinkronisasi 'Pakar Kurikulum': Jumlah pekan dan libur telah diperbarui.");
         } catch (error) {
             console.error("Sync error:", error);
-            toast.error("Gagal sinkronisasi.");
+            toast.error("Gagal sinkronisasi kalender.");
         } finally {
             setLoading(false);
         }
@@ -907,17 +919,9 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
     };
 
     const handleSyncWeeksWithCalendar = () => {
-        const years = year.split('/');
-        const newMonths = months.map(m => {
-            const mNum = MONTH_MAP[m.name];
-            const actualYear = mNum >= 7 ? years[0] : years[1];
-            const daysInMonth = moment(`${actualYear}-${mNum}`, 'YYYY-M').daysInMonth();
-            const totalWeeks = daysInMonth > 28 ? 5 : 4;
-            return { ...m, totalWeeks };
-        });
-        setMonths(newMonths);
-        isInternalChange.current = true;
-        toast.success("Jumlah pekan telah disinkronkan dengan kalender nyata.");
+        // This is now redundant as handleSyncWithCalendar handles both, 
+        // but let's keep it as an alias or simplified version
+        handleSyncWithCalendar();
     };
 
 
@@ -1309,6 +1313,19 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                         </tr>
                     </tbody>
                 </table>
+            </div>
+
+            {/* Info Kebijakan */}
+            <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-800 border-dashed">
+                <div className="flex items-center gap-3 text-blue-800 dark:text-blue-200">
+                    <Workflow size={20} className="shrink-0" />
+                    <div>
+                        <p className="text-sm font-bold">Kebijakan Belajar: {userProfile?.school_days || 6} Hari Kerja</p>
+                        <p className="text-xs opacity-80">
+                            Pekan dianggap <b>Tidak Efektif</b> jika terdapat minimal <b>{parseInt(userProfile?.school_days || 6) === 5 ? '3' : '4'} hari</b> agenda/libur dalam sepekan.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <SignatureSection userProfile={userProfile} signingLocation={signingLocation} />
@@ -2009,7 +2026,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
         return {
             ...holiday,
-            isBlocking: overlapDays >= 4
+            isBlocking: overlapDays >= (parseInt(userProfile?.school_days || 6) === 5 ? 3 : 4)
         };
     };
 
@@ -2172,17 +2189,31 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
             </table>
 
             <div style="margin-top: 20px; font-size: 9pt;">
-                <strong>KETERANGAN WARNA:</strong>
-                <table style="width: auto; border: none; margin-top: 5px;">
-                    <tr>
-                        <td style="width: 30px; background-color: #e8f5e9; border: 1px solid black;">&nbsp;</td>
-                        <td style="border: none; padding-left: 10px;">Belajar Efektif / Tatap Muka</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 30px; background-color: #ffebee; border: 1px solid black;">&nbsp;</td>
-                        <td style="border: none; padding-left: 10px;">Libur Resmi / Agenda Sekolah</td>
-                    </tr>
+                <strong>KETERANGAN PEKAN TIDAK EFEKTIF & HARI LIBUR:</strong>
+                <table style="width: 100%; border: none; margin-top: 5px;">
+                    ${pekanEfektifSource.map((month) => {
+            const monthAgendas = [];
+            const totalWeeks = parseInt(month.totalWeeks || 4);
+            for (let w = 0; w < totalWeeks; w++) {
+                const h = getHolidayForWeek(month.name, w);
+                if (h && h.isBlocking) {
+                    const label = h.name || h.title;
+                    if (!monthAgendas.some(a => a.label === label)) {
+                        monthAgendas.push({ week: w + 1, label });
+                    }
+                }
+            }
+            if (monthAgendas.length === 0) return '';
+            return `
+                            <tr>
+                                <td style="border: none; width: 100px; font-weight: bold;">${month.name}</td>
+                                <td style="border: none; width: 10px;">:</td>
+                                <td style="border: none;">${monthAgendas.map(a => `P${a.week} (${a.label})`).join(', ')}</td>
+                            </tr>
+                        `;
+        }).join('')}
                 </table>
+                <p style="font-size: 8pt; font-style: italic; margin-top: 10px;">* Berdasarkan kebijakan sekolah ${userProfile?.school_days || 6} hari kerja.</p>
             </div>
 
             <table class="signature-table">
@@ -2375,9 +2406,38 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                     1: { cellWidth: 20 }, // KD
                     2: { cellWidth: 35 }, // Materi
                     3: { cellWidth: 8 }   // JP
-                    // Dynamic columns for weeks will use default or calculated width
                 }
             });
+
+            // Add Administrative Notes for PDF
+            let currentY = doc.lastAutoTable.finalY + 10;
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.text('KETERANGAN PEKAN TIDAK EFEKTIF & HARI LIBUR:', margins.left, currentY);
+            currentY += 5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+
+            pekanEfektifSource.forEach((month) => {
+                const monthAgendas = [];
+                const totalWeeks = parseInt(month.totalWeeks || 4);
+                for (let w = 0; w < totalWeeks; w++) {
+                    const h = getHolidayForWeek(month.name, w);
+                    if (h && h.isBlocking) {
+                        const label = h.name || h.title;
+                        if (!monthAgendas.some(a => a.label === label)) {
+                            monthAgendas.push({ week: w + 1, label });
+                        }
+                    }
+                }
+                if (monthAgendas.length > 0) {
+                    const text = `${month.name}: ${monthAgendas.map(a => `P${a.week} (${a.label})`).join(', ')}`;
+                    doc.text(text, margins.left, currentY);
+                    currentY += 4;
+                }
+            });
+            doc.setFont('helvetica', 'italic');
+            doc.text(`* Berdasarkan kebijakan sekolah ${userProfile?.school_days || 6} hari kerja.`, margins.left, currentY + 2);
 
             // Signature Section
             let finalY = doc.lastAutoTable.finalY + 20;
@@ -2765,23 +2825,62 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
             {/* Keterangan Kode Warna Pekan Tidak Efektif */}
             <div className="mt-4 mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 text-xs">
-                <h4 className="font-bold mb-2 text-gray-700 dark:text-gray-300">Keterangan Kode Warna Pekan Tidak Efektif:</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-red-50 dark:bg-red-900/40 border border-gray-300 rounded opacity-80"></div>
-                        <span className="text-gray-600 dark:text-gray-400">Libur Semester</span>
+                <div className="flex flex-col md:flex-row justify-between gap-6">
+                    <div className="flex-1">
+                        <h4 className="font-bold mb-3 text-gray-700 dark:text-gray-300 uppercase tracking-wider">Legenda Warna & Status:</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-green-50 dark:bg-green-900/30 border border-green-200 rounded-md"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Belajar Efektif (Tatap Muka)</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-red-50 dark:bg-red-900/40 border border-red-200 rounded-md opacity-80 flex items-center justify-center font-bold text-[10px] text-red-600">OFF</div>
+                                <span className="text-gray-600 dark:text-gray-400">Pekan Tidak Efektif (Libur/Agenda)</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-purple-50 dark:bg-purple-900/40 border border-purple-200 rounded-md opacity-80"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Penilaian Tengah Semester (PTS)</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-orange-100 dark:bg-orange-900/40 border border-orange-200 rounded-md opacity-80"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Penilaian Akhir Semester (PAS/PAT)</span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-purple-50 dark:bg-purple-900/40 border border-gray-300 rounded opacity-80"></div>
-                        <span className="text-gray-600 dark:text-gray-400">Penilaian Tengah Semester (PTS)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-orange-100 dark:bg-orange-900/40 border border-gray-300 rounded opacity-80"></div>
-                        <span className="text-gray-600 dark:text-gray-400">Penilaian Akhir Semester (PAS/PAT)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-blue-50 dark:bg-blue-900/30 border border-gray-300 rounded opacity-80"></div>
-                        <span className="text-gray-600 dark:text-gray-400">Kegiatan Sekolah Lainnya</span>
+
+                    <div className="flex-1 border-l border-gray-200 dark:border-gray-700 pl-6">
+                        <h4 className="font-bold mb-3 text-gray-700 dark:text-gray-300 uppercase tracking-wider">Catatan Administrasi (Agenda Sekolah):</h4>
+                        <div className="space-y-1.5 max-h-32 overflow-y-auto pr-2 custom-scrollbar">
+                            {pekanEfektifSource.some(m => m.keterangan || (userHolidays || []).some(h => getHolidayForWeek(m.name, 0)?.id === h.id)) ? (
+                                pekanEfektifSource.map((month, mIdx) => {
+                                    const monthAgendas = [];
+                                    const totalWeeks = parseInt(month.totalWeeks || 4);
+                                    for (let w = 0; w < totalWeeks; w++) {
+                                        const h = getHolidayForWeek(month.name, w);
+                                        if (h && h.isBlocking) {
+                                            const label = h.name || h.title;
+                                            if (!monthAgendas.some(a => a.label === label)) {
+                                                monthAgendas.push({ week: w + 1, label });
+                                            }
+                                        }
+                                    }
+
+                                    if (monthAgendas.length === 0) return null;
+
+                                    return (
+                                        <div key={mIdx} className="flex gap-2 text-gray-600 dark:text-gray-400">
+                                            <span className="font-bold min-w-[70px]">{month.name}:</span>
+                                            <span>{monthAgendas.map(a => `P${a.week} (${a.label})`).join(', ')}</span>
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <p className="text-gray-400 italic">Tidak ada agenda sekolah yang memblokir pekan efektif di semester ini.</p>
+                            )}
+                        </div>
+                        <div className="mt-3 pt-2 border-t border-gray-100 dark:border-gray-800 text-[10px] text-gray-500 italic">
+                            * Berdasarkan kebijakan sekolah {userProfile?.school_days || 6} hari kerja.
+                        </div>
                     </div>
                 </div>
             </div>

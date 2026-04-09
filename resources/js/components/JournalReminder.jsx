@@ -163,7 +163,7 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
 
     return (
         <div className={`rounded-2xl border mb-6 animate-in slide-in-from-top-4 duration-500 ${
-            userProfile?.role === 'admin' 
+            userProfile?.role?.toLowerCase() === 'admin' 
                 ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800 p-4' 
                 : 'bg-amber-50 dark:bg-amber-900/10 border-amber-200 dark:border-amber-800 p-5'
         }`}>
@@ -178,7 +178,7 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
                     </div>
                     <div>
                         <h3 className={`font-bold mb-1 ${
-                            userProfile?.role === 'admin' 
+                            userProfile?.role?.toLowerCase() === 'admin' 
                                 ? 'text-lg text-blue-900 dark:text-blue-100' 
                                 : 'text-lg text-gray-800 dark:text-gray-100'
                         }`}>

@@ -17,8 +17,10 @@ import QuickDateFilter from '../components/QuickDateFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { generateAttendanceRecapPDF, generateDetailedAttendanceRecapPDF, generateJurnalRecapPDF, generateNilaiRecapPDF, generateViolationRecapPDF } from '../utils/pdfGenerator';
 import { getAllGrades, getAllAttendance, getAllInfractions } from '../utils/analysis';
+import { useSettings } from '../utils/SettingsContext';
 
 const RekapitulasiPage = () => {
+  const { activeSemester, academicYear } = useSettings();
   const [activeTab, setActiveTab] = useState('kehadiran');
   const [dailyTab, setDailyTab] = useState('rangkuman'); // 'rangkuman' or 'harian'
 
@@ -45,6 +47,7 @@ const RekapitulasiPage = () => {
   const [chartData, setChartData] = useState({ Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
   const [numDays, setNumDays] = useState(0);
   const [dailyAttendanceData, setDailyAttendanceData] = useState([]);
+  const [rawAttendanceLogs, setRawAttendanceLogs] = useState([]);
 
   // Jurnal State
   const [jurnalStartDate, setJurnalStartDate] = useState('');
@@ -182,13 +185,21 @@ const RekapitulasiPage = () => {
       const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
       setNumDays(dayDiff);
 
-      const response = await api.get('/attendance', {
+      const response = await api.get('/attendances', {
         params: {
           class_id: selectedClass,
           date_start: startDate,
           date_end: endDate
         }
       });
+
+      // Fetch matching students for the selected class to ensure synchronization
+      const studentsRes = await api.get('/students', {
+        params: { class_id: selectedClass }
+      });
+      const currentStudents = studentsRes.data.data || studentsRes.data || [];
+      const sortedStudents = [...currentStudents].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      setStudents(sortedStudents);
 
       let attendanceList = response.data.data || response.data || [];
       if (!Array.isArray(attendanceList)) {
@@ -203,12 +214,12 @@ const RekapitulasiPage = () => {
 
       let summary = {};
       students.forEach(student => {
-        summary[student.id] = { absen: student.absen, nis: student.nis, name: student.name, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
+        summary[student.id] = { absen: student.absen, nis: student.nis, name: student.name, gender: student.gender, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
       });
 
       rawDocs.forEach(record => {
         if (summary[record.studentId] && record.status) {
-          const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Izin': 'Ijin', 'Alpa': 'Alpha' };
+          const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
           const mappedStatus = statusMap[record.status] || record.status;
           if (summary[record.studentId][mappedStatus] !== undefined) {
             summary[record.studentId][mappedStatus]++;
@@ -223,9 +234,9 @@ const RekapitulasiPage = () => {
       const realSchoolDays = uniqueDates.length > 0 ? uniqueDates.length : dayDiff;
       setNumDays(realSchoolDays);
       setAttendanceDates(uniqueDates); // Save dates for PDF export
+      setRawAttendanceLogs(rawDocs); // Save raw logs for session export
 
       const tableData = Object.values(summary);
-      setAttendanceData(tableData);
       const totalSummary = tableData.reduce((acc, curr) => {
         acc.Hadir += curr.Hadir;
         acc.Sakit += curr.Sakit;
@@ -233,10 +244,20 @@ const RekapitulasiPage = () => {
         acc.Alpha += curr.Alpha;
         return acc;
       }, { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
+
+      // Calculate attendance percentage
+      const totalRecords = totalSummary.Hadir + totalSummary.Sakit + totalSummary.Ijin + totalSummary.Alpha;
+      const attendancePercentage = totalRecords > 0 
+        ? ((totalSummary.Hadir / totalRecords) * 100).toFixed(1) 
+        : 0;
+
+      setAttendanceData(tableData);
       setChartData({
         ...totalSummary,
         schoolDays: realSchoolDays,
-        studentCount: students.length
+        studentCount: sortedStudents.length,
+        attendancePercentage: attendancePercentage,
+        totalPossibleAttendance: totalRecords
       });
 
       // Process daily attendance data
@@ -250,11 +271,12 @@ const RekapitulasiPage = () => {
             ijin: 0,
             alpha: 0,
             total: 0,
-            students: []
+            students: [],
+            className: classes.find(c => String(c.id) === String(selectedClass))?.name || '-'
           };
         }
 
-        const student = students.find(s => s.id === record.studentId);
+        const student = sortedStudents.find(s => s.id === record.studentId);
         if (student) {
           dailyDataMap[record.date].total++;
           const statusMap = { 'Hadir': 'hadir', 'Sakit': 'sakit', 'Izin': 'ijin', 'Alpa': 'alpha' };
@@ -267,6 +289,12 @@ const RekapitulasiPage = () => {
             status: record.status === 'Izin' ? 'Ijin' : (record.status === 'Alpa' ? 'Alpha' : record.status)
           });
         }
+      });
+
+      // Calculate daily percentages
+      Object.values(dailyDataMap).forEach(day => {
+        const totalInClass = sortedStudents.length || day.total;
+        day.percentage = ((day.hadir / totalInClass) * 100).toFixed(1);
       });
 
       // Convert to array and sort by date (newest first)
@@ -301,9 +329,18 @@ const RekapitulasiPage = () => {
       ijin: item.Ijin || 0,
       alpa: item.Alpha || 0,
     }));
-    const classObj = classes.find(c => c.id === selectedClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedClass));
     // Use the new Detailed Generator
-    generateDetailedAttendanceRecapPDF(attendanceData, attendanceDates, schoolName, startDate, endDate, teacherName, classObj?.rombel || selectedClass, userProfile);
+    generateDetailedAttendanceRecapPDF(
+      attendanceData, 
+      attendanceDates, 
+      schoolName, 
+      startDate, 
+      endDate, 
+      teacherName, 
+      classObj?.rombel || selectedClass, 
+      { ...userProfile, academicYear, activeSemester }
+    );
   };
 
   const handleKehadiranExcelExport = () => {
@@ -324,8 +361,40 @@ const RekapitulasiPage = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Kehadiran');
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const classObj = classes.find(c => c.id === selectedClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedClass));
     saveAs(data, `Rekapitulasi_Kehadiran_${classObj?.rombel || selectedClass}_${startDate}_${endDate}.xlsx`);
+  };
+
+  const handleKehadiranSesiExcelExport = () => {
+    if (rawAttendanceLogs.length === 0) {
+      alert('Tidak ada data kehadiran untuk diekspor.');
+      return;
+    }
+
+    const classObj = classes.find(c => String(c.id) === String(selectedClass));
+    
+    // Sort raw logs by date and time
+    const sortedLogs = [...rawAttendanceLogs].sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
+        return (a.time || '').localeCompare(b.time || '');
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(sortedLogs.map(item => ({
+      'Tanggal': item.date || '',
+      'Jam Sesi': item.time ? item.time.split(' - ')[0] : '',
+      'Mata Pelajaran': item.subject || '',
+      'NIS': item.student?.nis || '',
+      'Nama Siswa': item.student?.name || 'Unknown',
+      'Status': item.status || '',
+      'Guru': item.teacher || '',
+      'Sesi ID': item.id || '',
+    })));
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Log Sesi');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(data, `Log_Sesi_Kehadiran_${classObj?.rombel || selectedClass}_${startDate}_${endDate}.xlsx`);
   };
 
   const handleShowJurnal = async () => {
@@ -369,7 +438,8 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data jurnal untuk diekspor ke PDF.');
       return;
     }
-    generateJurnalRecapPDF(jurnalData, jurnalStartDate, jurnalEndDate, teacherName, userProfile);
+    const classObj = classes.find(c => String(c.id) === String(selectedJurnalClass));
+    generateJurnalRecapPDF(jurnalData, jurnalStartDate, jurnalEndDate, teacherName, { ...userProfile, academicYear, activeSemester });
   };
 
   const handleJurnalExcelExport = () => {
@@ -512,7 +582,7 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data nilai untuk diekspor ke PDF.');
       return;
     }
-    const classObj = classes.find(c => c.id === selectedNilaiClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedNilaiClass));
     const subjectObj = subjects.find(s => s.id === selectedNilaiSubject);
     generateNilaiRecapPDF(nilaiData, schoolName, nilaiStartDate, nilaiEndDate, teacherName, classObj?.rombel || selectedNilaiClass, subjectObj?.name || selectedNilaiSubject, userProfile);
   };
@@ -522,7 +592,7 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data nilai untuk diekspor ke Excel.');
       return;
     }
-    const classObj = classes.find(c => c.id === selectedNilaiClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedNilaiClass));
     const subjectObj = subjects.find(s => s.id === selectedNilaiSubject);
     const worksheet = XLSX.utils.json_to_sheet(nilaiData);
     const workbook = XLSX.utils.book_new();
@@ -635,7 +705,7 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data pelanggaran untuk diekspor ke PDF.');
       return;
     }
-    const classObj = classes.find(c => c.id === selectedViolationClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedViolationClass));
     generateViolationRecapPDF(violationData, schoolName, violationStartDate, violationEndDate, teacherName, classObj?.rombel || selectedViolationClass, userProfile);
   };
 
@@ -644,7 +714,7 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data pelanggaran untuk diekspor ke Excel.');
       return;
     }
-    const classObj = classes.find(c => c.id === selectedViolationClass);
+    const classObj = classes.find(c => String(c.id) === String(selectedViolationClass));
     const worksheet = XLSX.utils.json_to_sheet(violationData.map(item => ({
       'No. Absen': item.absen || '',
       'NIS': item.nis || '',
@@ -797,8 +867,11 @@ const RekapitulasiPage = () => {
                         <StyledButton onClick={handleKehadiranPDFExport} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 border-red-100 dark:border-red-900/30">
                           <FileDown className="w-5 h-5" />
                         </StyledButton>
-                        <StyledButton onClick={handleKehadiranExcelExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-100 dark:border-green-900/30">
+                        <StyledButton onClick={handleKehadiranExcelExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-100 dark:border-green-900/30" title="Unduh Rangkuman Excel">
                           <FileDown className="w-5 h-5" />
+                        </StyledButton>
+                        <StyledButton onClick={handleKehadiranSesiExcelExport} className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 border-blue-100 dark:border-blue-900/30" title="Unduh Log Sesi Excel (Detail)">
+                          <FileDown className="w-5 h-5" /> Sesi
                         </StyledButton>
                       </div>
                     )}
@@ -813,131 +886,139 @@ const RekapitulasiPage = () => {
                 <div className="py-20"><LoadingSpinner label="Memuat data kehadiran..." /></div>
               ) : attendanceData.length > 0 ? (
                 <>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <SummaryCard title="Hadir" value={chartData.Hadir} icon={<CheckCircle className="w-8 h-8 text-green-500" />} color="green" />
                     <SummaryCard title="Sakit" value={chartData.Sakit} icon={<TrendingUp className="w-8 h-8 text-blue-500" />} color="blue" />
                     <SummaryCard title="Ijin" value={chartData.Ijin} icon={<Calendar className="w-8 h-8 text-yellow-500" />} color="yellow" />
                     <SummaryCard title="Alpha" value={chartData.Alpha} icon={<AlertTriangle className="w-8 h-8 text-red-500" />} color="red" />
+                    <SummaryCard 
+                      title="Rata-rata Kehadiran" 
+                      value={`${chartData.attendancePercentage}%`} 
+                      icon={<TrendingUp className="w-8 h-8 text-primary" />} 
+                      color="indigo" 
+                      subtitle={`Dari ${chartData.totalPossibleAttendance} log`}
+                    />
                   </div>
 
-                  {/* Sub-tabs untuk Rangkuman dan Harian */}
-                  <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit mb-4">
-                    <button
-                      className={`py-2 px-4 rounded-md font-medium text-sm transition ${dailyTab === 'rangkuman'
-                        ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                        }`}
-                      onClick={() => setDailyTab('rangkuman')}
-                    >
-                      Rangkuman
-                    </button>
-                    <button
-                      className={`py-2 px-4 rounded-md font-medium text-sm transition ${dailyTab === 'harian'
-                        ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-                        }`}
-                      onClick={() => setDailyTab('harian')}
-                    >
-                      Rekap Harian
-                    </button>
-                  </div>
-
-                  {dailyTab === 'rangkuman' ? (
-                    <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                      <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Rangkuman Kehadiran per Siswa</h3>
-                        <span className="text-xs font-medium px-2 py-1 bg-primary/10 text-primary rounded-full">Total {numDays} Hari</span>
-                      </div>
-                      <div className="overflow-x-auto">
-                        <StyledTable headers={kehadiranColumns.map(c => c.header)}>
-                          {attendanceData.map((row, index) => (
-                            <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                              {kehadiranColumns.map(col => (
-                                <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 border-b border-gray-50 dark:border-gray-800">
-                                  {col.accessor === 'name' ? (
-                                    <div className="font-semibold text-gray-900 dark:text-white">{row[col.accessor]}</div>
-                                  ) : (
-                                    <span className={row[col.accessor] > 0 ? (col.accessor === 'Hadir' ? 'text-green-600 font-bold' : 'text-red-500 font-medium') : ''}>
-                                      {row[col.accessor]}
-                                    </span>
-                                  )}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </StyledTable>
-                      </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                    <div className="lg:col-span-1">
+                      <PieChart data={chartData} />
                     </div>
-                  ) : (
-                    <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                      <div className="p-6 border-b border-gray-100 dark:border-gray-800">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Rekap Kehadiran per Tanggal</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Melihat kehadiran siswa setiap hari pada periode yang dipilih</p>
+                    <div className="lg:col-span-2 space-y-4">
+                      {/* Sub-tabs untuk Rangkuman dan Harian */}
+                      <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit">
+                        <button
+                          className={`py-2 px-4 rounded-md font-bold text-xs uppercase tracking-widest transition ${dailyTab === 'rangkuman'
+                            ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                            }`}
+                          onClick={() => setDailyTab('rangkuman')}
+                        >
+                          Rangkuman Siswa
+                        </button>
+                        <button
+                          className={`py-2 px-4 rounded-md font-bold text-xs uppercase tracking-widest transition ${dailyTab === 'harian'
+                            ? 'bg-white dark:bg-surface-dark text-primary shadow-sm'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                            }`}
+                          onClick={() => setDailyTab('harian')}
+                        >
+                          Rekap Harian
+                        </button>
                       </div>
-                      <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
-                        {dailyAttendanceData.length > 0 ? (
-                          <div className="p-6 space-y-4">
-                            {dailyAttendanceData.map((dayData, index) => (
-                              <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                                <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 flex items-center justify-between">
-                                  <div>
-                                    <h4 className="font-bold text-gray-900 dark:text-white">{dayData.date}</h4>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                      Total: {dayData.total} siswa
-                                    </p>
-                                  </div>
-                                  <div className="flex gap-4 text-sm">
-                                    <span className="text-green-600 font-semibold">✓ {dayData.hadir}</span>
-                                    <span className="text-blue-600">S {dayData.sakit}</span>
-                                    <span className="text-yellow-600">I {dayData.ijin}</span>
-                                    <span className="text-red-600">A {dayData.alpha}</span>
-                                  </div>
-                                </div>
-                                <div className="p-4">
-                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                    {dayData.students.map((student, idx) => (
-                                      <div
-                                        key={idx}
-                                        className={`p-3 rounded-lg border text-sm ${student.status === 'Hadir'
-                                          ? 'bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800'
-                                          : student.status === 'Sakit'
-                                            ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800'
-                                            : student.status === 'Ijin'
-                                              ? 'bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800'
-                                              : 'bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800'
-                                          }`}
-                                      >
-                                        <div className="font-semibold text-gray-900 dark:text-white truncate">{student.name}</div>
-                                        <div className="flex items-center justify-between mt-1">
-                                          <span className="text-xs text-gray-600 dark:text-gray-400">Absen {student.absen}</span>
-                                          <span
-                                            className={`text-xs font-bold ${student.status === 'Hadir'
-                                              ? 'text-green-600'
-                                              : student.status === 'Sakit'
-                                                ? 'text-blue-600'
-                                                : student.status === 'Ijin'
-                                                  ? 'text-yellow-600'
-                                                  : 'text-red-600'
-                                              }`}
-                                          >
-                                            {student.status}
-                                          </span>
+
+                      {dailyTab === 'rangkuman' ? (
+                        <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                          <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Rangkuman Kehadiran per Siswa</h3>
+                            <span className="text-xs font-medium px-2 py-1 bg-primary/10 text-primary rounded-full">Total {numDays} Hari</span>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <StyledTable headers={kehadiranColumns.map(c => c.header)}>
+                              {attendanceData.map((row, index) => (
+                                <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                                  {kehadiranColumns.map(col => (
+                                    <td key={col.accessor} className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 border-b border-gray-50 dark:border-gray-800">
+                                      {col.accessor === 'name' ? (
+                                        <div className="font-semibold text-gray-900 dark:text-white">{row[col.accessor]}</div>
+                                      ) : (
+                                        <span className={row[col.accessor] > 0 ? (col.accessor === 'Hadir' ? 'text-green-600 font-bold' : 'text-red-500 font-medium') : ''}>
+                                          {row[col.accessor]}
+                                        </span>
+                                      )}
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))}
+                            </StyledTable>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
+                          <div className="p-6 border-b border-gray-100 dark:border-gray-800">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Rekap Kehadiran per Tanggal</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Melihat kehadiran siswa setiap hari pada periode yang dipilih</p>
+                          </div>
+                          <div className="overflow-x-auto max-h-[600px] overflow-y-auto p-6 space-y-4">
+                            {dailyAttendanceData.length > 0 ? (
+                               <>
+                                {dailyAttendanceData.map((dayData, index) => (
+                                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm">
+                                    <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 flex items-center justify-between">
+                                      <div className="flex items-center gap-4">
+                                        <div className="text-center bg-white dark:bg-surface-dark p-2 rounded-xl min-w-[60px] border border-gray-100 dark:border-gray-700">
+                                          <div className="text-xs font-black text-primary">{dayData.percentage}%</div>
+                                          <div className="text-[8px] font-bold text-gray-400 uppercase">Hadir</div>
+                                        </div>
+                                        <div>
+                                          <h4 className="font-bold text-gray-900 dark:text-white">{dayData.date}</h4>
+                                          <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-tighter">
+                                            Kelas: {dayData.className} • Total: {dayData.total} entry • Dari {students.length} siswa
+                                          </p>
                                         </div>
                                       </div>
-                                    ))}
+                                      <div className="flex gap-4 text-xs font-black">
+                                        <span className="text-green-600">H: {dayData.hadir}</span>
+                                        <span className="text-blue-600">S: {dayData.sakit}</span>
+                                        <span className="text-yellow-600">I: {dayData.ijin}</span>
+                                        <span className="text-red-600">A: {dayData.alpha}</span>
+                                      </div>
+                                    </div>
+                                    <div className="p-4 bg-white dark:bg-surface-dark">
+                                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                                        {dayData.students.map((student, idx) => (
+                                          <div
+                                            key={idx}
+                                            className={`px-3 py-2 rounded-xl border text-[11px] font-bold transition-all ${student.status === 'Hadir'
+                                              ? 'bg-green-50/50 border-green-100 text-green-700 dark:bg-green-900/10 dark:border-green-900/20 dark:text-green-400'
+                                              : student.status === 'Sakit'
+                                                ? 'bg-blue-50/50 border-blue-100 text-blue-700 dark:bg-blue-900/10 dark:border-blue-900/20 dark:text-blue-400'
+                                                : student.status === 'Ijin'
+                                                  ? 'bg-yellow-50/50 border-yellow-100 text-yellow-700 dark:bg-yellow-900/10 dark:border-yellow-900/20 dark:text-yellow-400'
+                                                  : 'bg-red-50/50 border-red-100 text-red-700 dark:bg-red-900/10 dark:border-red-900/20 dark:text-red-400'
+                                              }`}
+                                          >
+                                            <div className="flex justify-between items-center gap-2">
+                                                <span className="truncate max-w-[80px]">{student.name}</span>
+                                                <span className="opacity-70 text-[9px]">{student.status.charAt(0)}</span>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
+                                ))}
+                               </>
+                            ) : (
+                              <div className="p-12 text-center text-gray-500 dark:text-gray-400">
+                                Tidak ada data kehadiran harian.
                               </div>
-                            ))}
+                            )}
                           </div>
-                        ) : (
-                          <div className="p-12 text-center text-gray-500 dark:text-gray-400">
-                            Tidak ada data kehadiran harian.
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </>
               ) : (
                 <EmptyState title="Belum ada data kehadiran" description="Silakan pilih kelas dan rentang tanggal lalu klik Terapkan Filter." icon={<Users className="w-16 h-16 text-gray-300" />} />
@@ -1024,7 +1105,7 @@ const RekapitulasiPage = () => {
                             item.className?.toLowerCase().includes(jurnalSearchTerm.toLowerCase()) ||
                             item.subjectName?.toLowerCase().includes(jurnalSearchTerm.toLowerCase());
 
-                          const classObj = classes.find(c => c.id === selectedJurnalClass);
+                          const classObj = classes.find(c => String(c.id) === String(selectedJurnalClass));
                           const classMatch = !selectedJurnalClass || item.classId === selectedJurnalClass || item.className === classObj?.rombel;
 
                           const subjectObj = subjects.find(s => s.id === selectedJurnalSubject);

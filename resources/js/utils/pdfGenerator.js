@@ -768,12 +768,24 @@ const addWrappedText = (doc, text, x, y, maxWidth, lineHeight) => {
     let fontSize = doc.internal.getFontSize();
 
     // 1. Detect Headers
-    if (trimmed.startsWith('### ')) {
+    if (trimmed.startsWith('# ')) {
       isHeader = true;
-      content = trimmed.substring(4);
+      content = trimmed.substring(2);
+      doc.setFontSize(fontSize + 4);
+      doc.setFont('helvetica', 'bold');
+      currentY += 4; // Extra spacing before header
+    } else if (trimmed.startsWith('## ')) {
+      isHeader = true;
+      content = trimmed.substring(3);
       doc.setFontSize(fontSize + 2);
       doc.setFont('helvetica', 'bold');
       currentY += 2; // Extra spacing before header
+    } else if (trimmed.startsWith('### ')) {
+      isHeader = true;
+      content = trimmed.substring(4);
+      doc.setFontSize(fontSize + 1);
+      doc.setFont('helvetica', 'bold');
+      currentY += 1; // Extra spacing before header
     }
     // 2. Detect Bullet Points
     else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {

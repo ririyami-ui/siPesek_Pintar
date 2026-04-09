@@ -3,20 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GeminiController;
-
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\StudentController;
@@ -28,18 +14,17 @@ use App\Http\Controllers\Api\StudentDashboardController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1'); // Limit login attempts to 5 per minute
+
+// Public Settings Route for PWA and Welcome Screen
+Route::get('/public-settings', [App\Http\Controllers\UserProfileController::class, 'getPublicSettings']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/save-push-subscription', [AuthController::class, 'savePushSubscription']);
     
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
@@ -57,13 +42,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/admin/database/truncate', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'truncateTable']);
         Route::get('/admin/database/backup', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'backupDatabase']);
         Route::post('/admin/database/wipe', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'wipeDatabase']);
-    Route::post('/admin/database/restore', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'restoreDatabase']);
+        Route::post('/admin/database/restore', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'restoreDatabase']);
+        
+        // Student Photo Upload
+        Route::post('/admin/students/upload-photos', [App\Http\Controllers\StudentPhotoController::class, 'uploadZip']);
+
+        // Device Management
+        Route::post('/admin/students/{student}/reset-device', [App\Http\Controllers\StudentController::class, 'resetDevice']);
     });
 
     // Student Portal Routes (Accessible by Students)
-    Route::get('/student/realtime', [StudentDashboardController::class, 'getRealtimeData']);
+    Route::get('/student/realtime', [StudentDashboardController::class, 'getRealtimeLearning']);
+    Route::get('/student/schedule', [StudentDashboardController::class, 'getWeeklySchedule']);
     Route::get('/student/grades', [StudentDashboardController::class, 'getGradeData']);
-    Route::post('/student/chat', [\App\Http\Controllers\Api\StudentChatController::class, 'chat']);
+    Route::post('/student/chat', [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1'); // Limit chat to 10 messages per minute
 
     Route::apiResource('students', StudentController::class);
     Route::apiResource('schedules', ScheduleController::class);
@@ -73,9 +65,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/class-agreements', [App\Http\Controllers\ClassAgreementController::class, 'store']);
 
     // Attendance Routes
+    Route::get('/attendances/missing', [App\Http\Controllers\AttendanceController::class, 'missing']);
     Route::get('/attendances', [App\Http\Controllers\AttendanceController::class, 'index']);
     Route::post('/attendances/bulk', [App\Http\Controllers\AttendanceController::class, 'storeBulk']);
     Route::get('/attendances/summary', [App\Http\Controllers\AttendanceController::class, 'summary']);
+    Route::get('/wali/my-class', [App\Http\Controllers\SchoolClassController::class, 'myClass']);
 
     // Teaching Journals
     Route::apiResource('journals', App\Http\Controllers\JournalController::class);
@@ -96,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('teaching-programs', App\Http\Controllers\TeachingProgramController::class);
     Route::apiResource('student-tasks', App\Http\Controllers\StudentTaskController::class);
     Route::apiResource('student-notes', App\Http\Controllers\StudentNoteController::class);
+    Route::post('/infraction-types/bulk', [App\Http\Controllers\InfractionTypeController::class, 'bulkStore']);
     Route::apiResource('infraction-types', App\Http\Controllers\InfractionTypeController::class);
 
     // AI Services
@@ -117,6 +112,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/handout-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteHandout']);
         
         Route::post('/analyze-student', [GeminiController::class, 'analyzeStudent']);
+        Route::post('/analyze-class', [App\Http\Controllers\AiFeaturesController::class, 'analyzeClass']);
         Route::post('/chat', [GeminiController::class, 'chat']);
     });
 

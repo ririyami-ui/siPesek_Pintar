@@ -1,72 +1,95 @@
-import React from 'react';
-import { Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Sparkles } from 'lucide-react';
+import api from '../lib/axios';
 
 const WelcomeScreen = () => {
+    const [publicSettings, setPublicSettings] = useState(null);
+    const [showSchoolName, setShowSchoolName] = useState(false);
+
+    useEffect(() => {
+        api.get('/public-settings')
+            .then(res => setPublicSettings(res.data))
+            .catch(() => {});
+        
+        // Staggered transition for premium experience
+        const timer = setTimeout(() => setShowSchoolName(true), 1500);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const logoSrc = publicSettings?.logo_url || (window.Laravel?.basePath || "") + "/Logo Smart Teaching Baru_.png";
+
     return (
-        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#f8f9ff] dark:bg-[#020617] overflow-hidden">
-            {/* Premium Aurora Background */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-purple-500/20 dark:bg-purple-600/10 rounded-full blur-[120px] animate-aurora"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-blue-500/20 dark:bg-blue-600/10 rounded-full blur-[120px] animate-aurora" style={{ animationDelay: '-5s' }}></div>
-                <div className="absolute top-[20%] right-[10%] w-[40%] h-[40%] bg-indigo-500/10 dark:bg-indigo-600/5 rounded-full blur-[100px] animate-aurora" style={{ animationDelay: '-10s' }}></div>
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#f8f9ff] dark:bg-[#020617] overflow-hidden font-sans">
+            {/* Dynamic Premium Aurora Background */}
+            <div className="absolute inset-0 pointer-events-none opacity-40">
+                <div className="absolute top-[-10%] left-[-10%] w-[70%] h-[70%] bg-blue-500/10 dark:bg-blue-600/5 rounded-full blur-[140px] animate-aurora"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[70%] h-[70%] bg-indigo-500/10 dark:bg-indigo-600/5 rounded-full blur-[140px] animate-aurora" style={{ animationDelay: '-10s' }}></div>
             </div>
 
-            <div className="relative flex flex-col items-center">
-                {/* 3D Glass Logo Container */}
-                <div className="relative mb-10 animate-welcome-zoom-in">
-                    <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full scale-110 animate-pulse"></div>
-                    <div className="relative p-1 bg-gradient-to-br from-white/80 to-white/20 dark:from-white/10 dark:to-white/5 rounded-[3.5rem] backdrop-blur-2xl shadow-2xl border border-white/50 dark:border-white/10 p-10 welcome-glass animate-welcome-float">
-                        <div className="relative z-10">
-                            <img
-                                src={(window.Laravel?.basePath || "") + "/Logo Smart Teaching Baru_.png"}
-                                alt="Si Pesek Pintar Logo"
-                                className="w-28 h-28 object-contain filter drop-shadow-2xl"
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = (window.Laravel?.basePath || "") + "/logo.png";
-                                }}
-                            />
-                            {/* Decorative Sparkle */}
-                            <div className="absolute -top-4 -right-4 p-2.5 bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 rounded-2xl shadow-xl border border-white/40 dark:border-white/10 rotate-12 scale-110">
-                                <Sparkles size={22} className="text-white animate-pulse" />
-                            </div>
-                        </div>
+            <div className="relative flex flex-col items-center max-w-xl w-full px-8">
+                {/* 3D Floating Logo Container with Glassmorphism */}
+                <div className="relative mb-16 animate-welcome-float">
+                    <div className="absolute inset-8 bg-blue-500/20 blur-[80px] rounded-full scale-125"></div>
+                    
+                    <div className="relative welcome-glass rounded-[4rem] p-10 overflow-hidden group">
+                        <img
+                            src={logoSrc}
+                            className="w-32 h-32 object-contain relative z-10 animate-welcome-zoom-in"
+                            alt="Branding Logo"
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = (window.Laravel?.basePath || "") + "/logo.png";
+                            }}
+                        />
+                        {/* Shimmer interaction */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shimmer"></div>
+                    </div>
 
-                        {/* Internal Glows */}
-                        <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-purple-400/20 to-transparent blur-xl rounded-full"></div>
+                    {/* Authentication Badge */}
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-5 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-full shadow-2xl border border-blue-100/50 dark:border-gray-800/50 flex items-center gap-2.5 animate-fade-in-up-css" style={{ animationDelay: '0.8s' }}>
+                        <ShieldCheck size={16} className="text-blue-600" />
+                        <span className="text-[11px] font-black uppercase tracking-[0.25em] text-blue-900 dark:text-blue-100">Verified System</span>
                     </div>
                 </div>
 
-                {/* Text Content with Premium Typography */}
-                <div className="text-center space-y-3 animate-welcome-zoom-in" style={{ animationDelay: '0.2s' }}>
-                    <h1 className="text-5xl font-black tracking-tighter">
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-800 dark:from-white dark:via-purple-300 dark:to-blue-200">
-                            Si Pesek Pintar
-                        </span>
-                    </h1>
-                    <div className="flex flex-col items-center">
-                        <p className="text-purple-600/70 dark:text-purple-400/60 font-black tracking-[0.3em] uppercase text-[10px]">
-                            AI-Powered Professional Assistant
-                        </p>
+                {/* Main Branding: Progressive Crossfade */}
+                <div className="text-center relative h-48 flex flex-col items-center justify-center w-full">
+                    
+                    {/* Stage 1: Product Branding (Si Pesek Pintar) */}
+                    <div className={`transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) absolute w-full px-6 ${showSchoolName ? 'opacity-0 scale-95 -translate-y-8 blur-md pointer-events-none' : 'opacity-100 scale-100 translate-y-0'}`}>
+                        <p className="text-blue-600/50 dark:text-blue-400/40 font-black tracking-[0.4em] uppercase text-[9px] mb-4">Official Product of SMPN 7 Bondowoso</p>
+                        <h1 className="text-2xl md:text-4xl font-black tracking-tighter text-gray-900 dark:text-white leading-tight break-words antialiased">
+                            Si Pesek <span className="bg-gradient-to-br from-blue-600 to-indigo-700 bg-clip-text text-transparent italic">Pintar</span>
+                        </h1>
+                    </div>
 
-                        {/* Progress Line */}
-                        <div className="mt-8 w-48 h-[2px] bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500 to-transparent w-full h-full animate-progress-line"></div>
-                        </div>
+                    {/* Stage 2: Entity Branding (School Name) */}
+                    <div className={`transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) absolute w-full px-6 ${showSchoolName ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-110 translate-y-8 blur-md pointer-events-none'}`}>
+                        <p className="text-indigo-600/50 dark:text-indigo-400/40 font-black tracking-[0.4em] uppercase text-[9px] mb-4">Welcome to Environment of</p>
+                        <h1 className="text-lg md:text-2xl font-black tracking-tighter bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-indigo-100 bg-clip-text text-transparent leading-tight break-words antialiased px-2">
+                            {publicSettings?.school_name || "Si Pesek Pintar"}
+                        </h1>
                     </div>
                 </div>
-            </div>
 
-            {/* Build Info Overlay */}
-            <div className="absolute bottom-12 text-center animate-fade-in-up" style={{ animationDelay: '1.2s' }}>
-                <div className="px-4 py-2 rounded-full bg-white/30 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/5">
-                    <p className="text-gray-500 dark:text-gray-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                        Initializing Core Engine v2.0.2
+                {/* Progress Visualizer */}
+                <div className="mt-16 w-64 h-[4px] bg-gray-100 dark:bg-gray-800/40 rounded-full overflow-hidden relative shadow-inner">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-600 to-transparent w-full animate-progress-line"></div>
+                </div>
+                
+                <div className="mt-10 flex items-center gap-3 animate-pulse opacity-50">
+                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.6em]">
+                        Finalizing Environment
                     </p>
                 </div>
-                <p className="mt-4 text-purple-900/20 dark:text-purple-100/10 text-[9px] font-bold uppercase tracking-[0.5em]">
-                    Developed by Deepmind Team
+            </div>
+
+            {/* Premium Footnote */}
+            <div className="absolute bottom-12 flex flex-col items-center gap-2 opacity-20">
+                <div className="w-8 h-[1px] bg-gray-400 mb-2"></div>
+                <p className="text-[9px] font-black uppercase tracking-[0.8em] text-gray-600">
+                    Smart Teaching Assistant
                 </p>
             </div>
         </div>

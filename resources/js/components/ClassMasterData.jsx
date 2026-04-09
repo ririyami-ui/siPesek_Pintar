@@ -20,27 +20,32 @@ export default function ClassMasterData() {
   const [newLevel, setNewLevel] = useState('');
   const [newRombel, setNewRombel] = useState('');
   const [newDescription, setNewDescription] = useState('');
+  const [newUserId, setNewUserId] = useState('');
+  const [teachers, setTeachers] = useState([]);
   // State for file import
   const [file, setFile] = useState(null);
   // State for edit modal
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAgreementModalOpen, setIsAgreementModalOpen] = useState(false);
   const [currentClass, setCurrentClass] = useState(null);
-  const [editData, setEditData] = useState({ code: '', level: '', rombel: '', description: '' });
+  const [editData, setEditData] = useState({ code: '', level: '', rombel: '', description: '', user_id: '' });
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
 
   const getClasses = useCallback(async () => {
     setLoading(true);
     try {
-      const [classRes, userRes] = await Promise.all([
+      const [classRes, userRes, teacherRes] = await Promise.all([
         api.get('/classes'),
-        api.get('/me')
+        api.get('/me'),
+        api.get('/teachers')
       ]);
       const classData = classRes.data.data || classRes.data || [];
+      const teacherData = teacherRes.data.data || teacherRes.data || [];
       
       // Backend already filters based on role and assignments
       setClasses(classData.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
       setUser(userRes.data);
+      setTeachers(teacherData);
     } catch (error) {
       console.error("Error getting classes: ", error);
       toast.error('Gagal memuat data kelas.');
@@ -63,7 +68,8 @@ export default function ClassMasterData() {
       code: newCode,
       level: newLevel,
       rombel: newRombel,
-      description: newDescription
+      description: newDescription,
+      user_id: newUserId || null
     };
 
     const promise = api.post('/classes', payload);
@@ -75,6 +81,7 @@ export default function ClassMasterData() {
         setNewLevel('');
         setNewRombel('');
         setNewDescription('');
+        setNewUserId('');
         getClasses();
         return 'Kelas berhasil ditambahkan!';
       },
@@ -106,7 +113,13 @@ export default function ClassMasterData() {
 
   const handleOpenEditModal = (classItem) => {
     setCurrentClass(classItem);
-    setEditData(classItem);
+    setEditData({
+      code: classItem.code || '',
+      level: classItem.level || '',
+      rombel: classItem.rombel || '',
+      description: classItem.description || '',
+      user_id: classItem.user_id || ''
+    });
     setIsEditModalOpen(true);
   };
 
@@ -119,7 +132,10 @@ export default function ClassMasterData() {
     e.preventDefault();
     if (!currentClass) return;
 
-    const promise = api.put(`/classes/${currentClass.id}`, editData);
+    const payload = { ...editData };
+    if (!payload.user_id) payload.user_id = null;
+
+    const promise = api.put(`/classes/${currentClass.id}`, payload);
 
     toast.promise(promise, {
       loading: 'Memperbarui...',
@@ -247,6 +263,16 @@ export default function ClassMasterData() {
               <StyledInput type="text" placeholder="Tingkat (e.g., X, XI)" value={newLevel} onChange={(e) => setNewLevel(e.target.value)} />
               <StyledInput type="text" placeholder="Rombel (e.g., A, B, 1)" value={newRombel} onChange={(e) => setNewRombel(e.target.value)} />
               <StyledInput type="text" placeholder="Keterangan (Opsional)" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+              <select 
+                value={newUserId} 
+                onChange={(e) => setNewUserId(e.target.value)}
+                className="w-full px-4 py-3 rounded-2xl bg-gray-50 dark:bg-black/20 border-2 border-transparent focus:border-purple-500 focus:bg-white dark:focus:bg-black/40 transition-all outline-none text-sm font-medium"
+              >
+                <option value="">-- Pilih Wali Kelas --</option>
+                {teachers.map(t => (
+                  <option key={t.id} value={t.auth_user_id}>{t.name}</option>
+                ))}
+              </select>
             </div>
             <div className="mt-4 flex justify-end">
               <StyledButton onClick={addClass}><Plus className="mr-2" size={16} />Tambah Data Kelas</StyledButton>
@@ -309,27 +335,40 @@ export default function ClassMasterData() {
             <StyledInput
               type="text"
               placeholder="Kode Kelas"
-              value={editData.code}
+              value={editData.code || ''}
               onChange={(e) => setEditData({ ...editData, code: e.target.value })}
             />
             <StyledInput
               type="text"
               placeholder="Tingkat"
-              value={editData.level}
+              value={editData.level || ''}
               onChange={(e) => setEditData({ ...editData, level: e.target.value })}
             />
             <StyledInput
               type="text"
               placeholder="Rombel"
-              value={editData.rombel}
+              value={editData.rombel || ''}
               onChange={(e) => setEditData({ ...editData, rombel: e.target.value })}
             />
             <StyledInput
               type="text"
               placeholder="Keterangan"
-              value={editData.description}
+              value={editData.description || ''}
               onChange={(e) => setEditData({ ...editData, description: e.target.value })}
             />
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-gray-500 ml-1 uppercase">Wali Kelas</label>
+              <select 
+                value={editData.user_id || ''} 
+                onChange={(e) => setEditData({ ...editData, user_id: e.target.value })}
+                className="w-full px-4 py-3 rounded-2xl bg-gray-50 dark:bg-black/20 border-2 border-transparent focus:border-purple-500 focus:bg-white dark:focus:bg-black/40 transition-all outline-none text-sm font-medium"
+              >
+                <option value="">-- Pilih Wali Kelas --</option>
+                {teachers.map(t => (
+                  <option key={t.id} value={t.auth_user_id}>{t.name}</option>
+                ))}
+              </select>
+            </div>
             <div className="flex justify-end gap-2 mt-6">
               <StyledButton type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>Batal</StyledButton>
               <StyledButton type="submit">Simpan Perubahan</StyledButton>

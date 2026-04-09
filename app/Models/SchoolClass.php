@@ -12,4 +12,9 @@ class SchoolClass extends Model
     protected $table = 'classes';
 
     protected $fillable = ['code', 'level', 'rombel', 'description', 'user_id'];
+
+    public function wali()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

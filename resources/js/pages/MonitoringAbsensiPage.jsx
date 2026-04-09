@@ -11,7 +11,9 @@ import {
     AlertCircle, 
     CheckCircle2,
     Calendar,
-    Radio
+    Radio,
+    UserCheck,
+    ClipboardList
 } from 'lucide-react';
 import api from '../lib/axios';
 import { useSettings } from '../utils/SettingsContext';
@@ -196,6 +198,7 @@ const ClassAttendanceCard = ({ rombel, schedules, currentTime }) => {
 };
 
 const MonitoringAbsensiPage = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -204,9 +207,9 @@ const MonitoringAbsensiPage = () => {
     const fetchData = async () => {
         try {
             const response = await api.get('/admin/dashboard/monitoring');
-            setData(response.data.data || []);
+            setData(response.data.full_data || response.data.data || []);
             // DEBUG LOG
-            console.log('Monitoring Data Feed:', response.data.data?.map(item => ({
+            console.log('Monitoring Data Feed:', (response.data.full_data || response.data.data)?.map(item => ({
                 rombel: item.rombel,
                 subject: item.subject,
                 assign: item.is_assignment,
@@ -242,14 +245,53 @@ const MonitoringAbsensiPage = () => {
     }, [data]);
 
     const filteredRombels = useMemo(() => {
-        return Object.keys(rombelGroups).filter(rombel => 
-            rombel.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            rombelGroups[rombel].some(s => 
-                s.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                s.teacher.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        ).sort();
+        return Object.keys(rombelGroups).filter(rombel => {
+            // Check if this rombel has any ongoing or upcoming sessions
+            const hasActiveOrUpcoming = rombelGroups[rombel].some(s => 
+                s.status === 'berlangsung' || s.status === 'belum_mulai'
+            );
+
+            // If no active/upcoming sessions, don't show the CCTV card
+            if (!hasActiveOrUpcoming) return false;
+
+            // Apply search filter if any
+            return rombel.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                   rombelGroups[rombel].some(s => 
+                       s.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       s.teacher.toLowerCase().includes(searchTerm.toLowerCase())
+                   );
+        }).sort();
     }, [rombelGroups, searchTerm]);
+
+    const missingAttendanceClasses = useMemo(() => {
+        return data.filter(item => {
+            const totalAttendance = (item.attendance_summary?.hadir || 0) + 
+                                  (item.attendance_summary?.sakit?.count || 0) + 
+                                  (item.attendance_summary?.izin?.count || 0) + 
+                                  (item.attendance_summary?.alpa?.count || 0);
+            
+            // [FIX] hasActivity strictly checks for Individual Attendance Records or Journal
+            const hasActivity = (item.attendance_summary && totalAttendance > 0) || !!item.journal_id;
+            
+            const isAssignment = item.is_assignment === true || item.is_assignment == 1;
+
+            // If it's an assignment (out-of-office/manual task), Admin help is usually not needed
+            if (isAssignment) return false;
+
+            // Scenario 1: Session has ended (status 'alfa' or 'selesai' but NO activity)
+            if (item.status === 'alfa' || item.status === 'selesai') {
+                return !hasActivity;
+            }
+            
+            // Scenario 2: Session is currently ongoing (status 'berlangsung') but presensi is still 0
+            // This allows Admin to help while the class is still in progress
+            if (item.status === 'berlangsung') {
+                return !hasActivity;
+            }
+
+            return false;
+        });
+    }, [data, currentTime]);
 
     if (loading && data.length === 0) {
         return (
@@ -319,6 +361,81 @@ const MonitoringAbsensiPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Special Section: Classes with Missing Attendance */}
+            {missingAttendanceClasses.length > 0 && (
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                    <div className="flex items-center gap-3 mb-4 px-4">
+                        <div className="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-xl">
+                            <AlertCircle size={20} className="text-rose-600" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-black text-gray-800 dark:text-white tracking-tight">Perhatian: Kelas Belum Absen</h3>
+                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sesi KBM yang membutuhkan tindakan Admin</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white/40 dark:bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-gray-800/40 shadow-2xl overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-800">
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Waktu</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Kelas</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Mata Pelajaran</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Guru Pengampu</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Tindakan</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                                    {missingAttendanceClasses.map((item, idx) => (
+                                        <tr key={idx} className="group hover:bg-white/60 dark:hover:bg-gray-800/60 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <span className="text-xs font-black text-gray-500">{item.time}</span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white text-[10px] font-black italic">
+                                                        {item.rombel.substring(0, 2)}
+                                                    </div>
+                                                    <span className="text-sm font-black text-gray-800 dark:text-white">{item.rombel}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{item.subject}</span>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2">
+                                                    <User size={14} className="text-gray-400" />
+                                                    <span className="text-xs font-bold text-gray-500">{item.teacher}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-2 px-3 py-1 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-full border border-rose-100 dark:border-rose-800/30 w-fit">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+                                                    <span className="text-[10px] font-black uppercase tracking-tighter">
+                                                        {item.status === 'alfa' ? 'Sesi Berakhir' : 'Belum Absen'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <button 
+                                                    onClick={() => navigate(`/absensi?classId=${item.class_id || item.rombel}&subjectId=${item.subject_id || item.subject}&date=${moment().format('YYYY-MM-DD')}`)}
+                                                    className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-rose-500/20"
+                                                >
+                                                    <UserCheck size={14} />
+                                                    Bantu Absen
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="flex justify-end px-4 mb-4">
                 <div className="relative w-full sm:w-80 group">

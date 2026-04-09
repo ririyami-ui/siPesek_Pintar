@@ -11,6 +11,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="mobile-web-app-capable" content="yes">
+        <meta name="google" content="notranslate">
         <script>
             // Robust subfolder detection
             const getSubfolder = () => {
@@ -23,19 +24,80 @@
             
             window.Laravel = {
                 baseUrl: origin + subfolder,
-                basePath: subfolder, // Use empty string for root, e.g., "" or "/subfolder"
-                apiBaseUrl: origin + subfolder + '/api'
+                basePath: subfolder, 
+                apiBaseUrl: subfolder + '/api'
             };
             
             // Set manifest link dynamically
-            document.getElementById('manifest-link').href = window.Laravel.baseUrl + '/pwa-manifest.json';
-            console.log('Laravel Config (Robust):', window.Laravel);
+            document.getElementById('manifest-link').href = window.Laravel.baseUrl + '/pwa-manifest.json?v=' + Date.now();
         </script>
 
         @viteReactRefresh
         @vite('resources/js/main.jsx')
+        
+        <style>
+            /* Shell Splash Screen - Instant Load - Outside Root */
+            #pwa-shell-splash {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: #f8f9ff;
+                z-index: 10000;
+                transition: opacity 0.5s ease-out, visibility 0.5s;
+            }
+            .dark #pwa-shell-splash {
+                background: #020617;
+            }
+            .splash-logo {
+                width: 90px;
+                height: 90px;
+                margin-bottom: 24px;
+                animation: pulse-glow 2s infinite ease-in-out;
+            }
+            .splash-spinner {
+                width: 28px;
+                height: 28px;
+                border: 2px solid rgba(99, 102, 241, 0.1);
+                border-top: 2px solid #6366f1;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin { to { transform: rotate(360deg); } }
+            @keyframes pulse-glow {
+                0%, 100% { transform: scale(1); opacity: 0.8; }
+                50% { transform: scale(1.06); opacity: 1; }
+            }
+            #pwa-shell-splash.hidden {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
+        </style>
     </head>
     <body class="antialiased">
-        <div id="root"></div>
+        <!-- Splash Screen OVERLAY (Outside Root for better transition) -->
+        <div id="pwa-shell-splash">
+            <img src="/Logo Smart Teaching Baru_.png" class="splash-logo" alt="..." onerror="this.style.display='none'">
+            <div class="splash-spinner"></div>
+            <div style="margin-top: 20px; font-family: sans-serif; font-size: 10px; color: #6366f1; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;">Initializing...</div>
+        </div>
+
+        <div id="root">
+            <!-- React will mount here -->
+        </div>
+
+        <script>
+            // Safety timeout to hide splash screen even if React fails
+            setTimeout(() => {
+                const splash = document.getElementById('pwa-shell-splash');
+                if (splash && !splash.classList.contains('hidden')) {
+                    console.log('Splash Screen closed via safety timeout');
+                    splash.classList.add('hidden');
+                }
+            }, 8000);
+        </script>
     </body>
 </html>

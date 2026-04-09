@@ -6,14 +6,22 @@ import StyledTable from '../components/StyledTable';
 import ClockDisplay from '../components/ClockDisplay';
 import { useSettings } from '../utils/SettingsContext';
 import RunningText from '../components/RunningText';
+import { useSearchParams } from 'react-router-dom';
+import { History } from 'lucide-react';
 
 const AbsensiPage = () => {
+  const [searchParams] = useSearchParams();
+  const classIdFromUrl = searchParams.get('classId');
+  const subjectIdFromUrl = searchParams.get('subjectId');
+  const dateFromUrl = searchParams.get('date');
+
   const [activeSchedule, setActiveSchedule] = useState(null);
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({}); // { studentId: "Hadir" }
   const [previousMaterial, setPreviousMaterial] = useState(null);
   const [previousLearningActivities, setPreviousLearningActivities] = useState(null);
-  const { activeSemester, academicYear } = useSettings();
+  const { activeSemester, academicYear, userProfile } = useSettings();
+  const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
 
   const autoSaveTimeout = useRef(null);
 
@@ -21,7 +29,7 @@ const AbsensiPage = () => {
     const fetchActiveScheduleAndStudentsAndAttendance = async () => {
       try {
         const now = moment();
-        const todayDayName = now.locale('en').format('dddd');
+        const targetDate = dateFromUrl || now.format('YYYY-MM-DD');
         const dayMap = {
           'Sunday': 'Minggu',
           'Monday': 'Senin',
@@ -31,41 +39,64 @@ const AbsensiPage = () => {
           'Friday': 'Jumat',
           'Saturday': 'Sabtu',
         };
-        const currentDayIndonesian = dayMap[todayDayName];
-        const attendanceDate = now.format('YYYY-MM-DD');
+        const targetDayIndonesian = dayMap[moment(targetDate).format('dddd')];
 
-        // Fetch schedules for today
+        // Fetch schedules
         const scheduleRes = await api.get('/schedules', {
-          params: { day: currentDayIndonesian }
+          params: { day: targetDayIndonesian }
         });
         const schedules = scheduleRes.data.data || scheduleRes.data;
 
         let foundActiveSchedule = null;
 
-        for (const schedule of schedules) {
-          const className = schedule.class?.rombel || schedule.className || '';
-          const classId = schedule.class_id || schedule.classId || '';
-          const subjectId = schedule.subject_id || schedule.subjectId || '';
-          const subjectName = schedule.subject?.name || schedule.subjectName || schedule.subject || '';
+        // If classId and subjectId provided via URL (Admin help mode)
+        if (classIdFromUrl && subjectIdFromUrl) {
+          const matchedSchedule = schedules.find(s => 
+            (s.class_id == classIdFromUrl || s.class?.rombel == classIdFromUrl) && 
+            (s.subject_id == subjectIdFromUrl || s.subject?.name == subjectIdFromUrl)
+          );
 
-          const startTime = moment(schedule.start_time || schedule.startTime, 'HH:mm:ss');
-          let endTime = moment(schedule.end_time || schedule.endTime, 'HH:mm:ss');
-
-          if (endTime.isBefore(startTime)) {
-            endTime.add(1, 'day');
-          }
-
-          if (now.isBetween(startTime, endTime, null, '[]')) {
+          if (matchedSchedule) {
             foundActiveSchedule = {
-              id: schedule.id,
-              class: className,
-              classId: classId,
-              subject: subjectName,
-              subjectId: subjectId,
-              startTime: startTime.format('HH:mm'),
-              endTime: endTime.format('HH:mm'),
+              id: matchedSchedule.id,
+              class: matchedSchedule.class?.rombel || matchedSchedule.className || '',
+              classId: matchedSchedule.class_id || matchedSchedule.classId,
+              subject: matchedSchedule.subject?.name || matchedSchedule.subjectName || '',
+              subjectId: matchedSchedule.subject_id || matchedSchedule.subjectId,
+              startTime: matchedSchedule.start_time,
+              endTime: matchedSchedule.end_time,
+              isManualMode: true
             };
-            break;
+          }
+        }
+
+        // Standard Real-time Mode (if no URL params or URL params didn't match)
+        if (!foundActiveSchedule) {
+          for (const schedule of schedules) {
+            const className = schedule.class?.rombel || schedule.className || '';
+            const classId = schedule.class_id || schedule.classId || '';
+            const subjectId = schedule.subject_id || schedule.subjectId || '';
+            const subjectName = schedule.subject?.name || schedule.subjectName || schedule.subject || '';
+
+            const startTime = moment(schedule.start_time || schedule.startTime, 'HH:mm:ss');
+            let endTime = moment(schedule.end_time || schedule.endTime, 'HH:mm:ss');
+
+            if (endTime.isBefore(startTime)) {
+              endTime.add(1, 'day');
+            }
+
+            if (now.isBetween(startTime, endTime, null, '[]')) {
+              foundActiveSchedule = {
+                id: schedule.id,
+                class: className,
+                classId: classId,
+                subject: subjectName,
+                subjectId: subjectId,
+                startTime: startTime.format('HH:mm'),
+                endTime: endTime.format('HH:mm'),
+              };
+              break;
+            }
           }
         }
 
@@ -83,56 +114,66 @@ const AbsensiPage = () => {
           });
           setStudents(fetchedStudents);
 
-          // Fetch last journal entry for previous material context
-          try {
-            const journalRes = await api.get('/journals', {
-              params: {
-                class_id: foundActiveSchedule.classId,
-                subject_id: foundActiveSchedule.subjectId,
-              }
-            });
-            const journals = journalRes.data.data || journalRes.data || [];
-            if (journals.length > 0) {
-              // Get the most recent journal
-              const lastJournal = journals.sort((a, b) => moment(b.date).diff(moment(a.date)))[0];
-              setPreviousMaterial(lastJournal.topic || 'Tidak ada materi sebelumnya');
-              setPreviousLearningActivities(lastJournal.notes || 'Tidak ada aktivitas pembelajaran sebelumnya');
-            } else {
-              setPreviousMaterial('Tidak ada materi sebelumnya');
-              setPreviousLearningActivities('Tidak ada aktivitas pembelajaran sebelumnya');
-            }
-          } catch (err) {
-            console.log('No previous journal found');
-            setPreviousMaterial('Tidak ada materi sebelumnya');
-            setPreviousLearningActivities('Tidak ada aktivitas pembelajaran sebelumnya');
-          }
-
-          // Fetch existing attendance for today
+          // Fetch all attendance for this class on the target date to allow carry-over
           try {
             const attendanceRes = await api.get('/attendances', {
               params: {
-                date: attendanceDate,
+                date: targetDate,
                 class_id: foundActiveSchedule.classId,
-                subject_id: foundActiveSchedule.subjectId,
+                // We don't filter by subject_id here so we can see other sessions' attendance
               }
             });
-            const existingAttendance = attendanceRes.data.data || [];
-            const loadedAttendance = {};
-            existingAttendance.forEach(record => {
-              loadedAttendance[record.student_id] = record.status;
-            });
+            const allDayAttendance = attendanceRes.data.data || [];
+            
+            // 1. Check if current subject already has attendance
+            const currentSubjectAttendance = allDayAttendance.filter(
+              record => record.subject_id == foundActiveSchedule.subjectId
+            );
+
+            let attendanceToUse = {};
+
+            if (currentSubjectAttendance.length > 0) {
+              // Use existing attendance for this subject
+              currentSubjectAttendance.forEach(record => {
+                attendanceToUse[record.student_id] = record.status;
+              });
+            } else if (allDayAttendance.length > 0) {
+              // PRE-FILL LOGIC: If current subject is empty, take from the EARLIEST session recorded today
+              // This is the "Daily Attendance" (Absen Harian) logic requested by the user
+              
+              // Group by subject to find sessions
+              const sessions = {};
+              allDayAttendance.forEach(record => {
+                const subId = record.subject_id || 'daily';
+                if (!sessions[subId]) sessions[subId] = [];
+                sessions[subId].push(record);
+              });
+
+              // Take the first available session (usually the morning one)
+              const firstSessionId = Object.keys(sessions)[0];
+              const templateRecords = sessions[firstSessionId];
+              
+              templateRecords.forEach(record => {
+                attendanceToUse[record.student_id] = record.status;
+              });
+
+              toast('Absensi otomatis diisi dari sesi sebelumnya hari ini.', {
+                icon: 'ℹ️',
+                duration: 4000
+              });
+            }
 
             setAttendance(prev => {
               const newAttendance = { ...prev };
               fetchedStudents.forEach(student => {
-                if (!newAttendance[student.id]) {
-                  newAttendance[student.id] = loadedAttendance[student.id] || 'hadir';
+                // Priority: Use found attendanceToUse, then fall back to 'hadir'
+                if (!newAttendance[student.id] || currentSubjectAttendance.length === 0) {
+                   newAttendance[student.id] = attendanceToUse[student.id] || 'hadir';
                 }
               });
               return newAttendance;
             });
           } catch (err) {
-            // No existing attendance, default to 'hadir'
             setAttendance(prev => {
               const newAttendance = {};
               fetchedStudents.forEach(student => {
@@ -152,10 +193,16 @@ const AbsensiPage = () => {
     };
 
     fetchActiveScheduleAndStudentsAndAttendance();
-    const interval = setInterval(fetchActiveScheduleAndStudentsAndAttendance, 60000);
+    // Only auto-refresh in real-time mode
+    let interval;
+    if (!classIdFromUrl) {
+      interval = setInterval(fetchActiveScheduleAndStudentsAndAttendance, 60000);
+    }
 
-    return () => clearInterval(interval);
-  }, [activeSemester, academicYear]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [activeSemester, academicYear, classIdFromUrl, subjectIdFromUrl, dateFromUrl]);
 
   const handleAttendanceChange = (studentId, status) => {
     setAttendance(prev => ({ ...prev, [studentId]: status }));
@@ -168,14 +215,14 @@ const AbsensiPage = () => {
     }
 
     try {
-      const attendanceDate = moment().format('YYYY-MM-DD');
+      const attendanceDate = dateFromUrl || moment().format('YYYY-MM-DD');
       const attendanceData = studentsToSave.map(student => ({
         student_id: student.id,
         status: attendanceToSave[student.id] || 'hadir',
         note: null,
       }));
 
-      await api.post('/attendances/bulk', {
+      const response = await api.post('/attendances/bulk', {
         date: attendanceDate,
         class_id: scheduleToSave.classId,
         subject_id: scheduleToSave.subjectId,
@@ -185,16 +232,18 @@ const AbsensiPage = () => {
       toast.success(`Absensi untuk kelas ${scheduleToSave.class} berhasil disimpan!`);
     } catch (error) {
       console.error('Error saving attendance:', error);
-      toast.error('Gagal menyimpan absensi.');
+      const msg = error.response?.data?.message || 'Gagal menyimpan absensi.';
+      toast.error(msg);
     }
-  }, []);
+  }, [dateFromUrl]);
 
   useEffect(() => {
     if (autoSaveTimeout.current) {
       clearTimeout(autoSaveTimeout.current);
     }
 
-    if (activeSchedule) {
+    // Only auto-save in real-time mode (not manual help mode)
+    if (activeSchedule && !dateFromUrl) {
       const now = moment();
       const endTime = moment(activeSchedule.endTime, 'HH:mm');
 
@@ -273,7 +322,20 @@ const AbsensiPage = () => {
     <div className="p-3 sm:p-6 bg-background-light dark:bg-background-dark min-h-screen">
       <h1 className="text-2xl sm:text-3xl font-bold text-primary-dark dark:text-primary-light mb-6">Absensi Siswa</h1>
 
+      {dateFromUrl && dateFromUrl !== moment().format('YYYY-MM-DD') && (
+        <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-500 rounded-3xl flex items-center gap-4 animate-pulse">
+          <div className="p-3 bg-amber-500 rounded-2xl text-white shadow-lg">
+            <History size={24} />
+          </div>
+          <div>
+            <h3 className="text-sm font-black text-amber-800 dark:text-amber-200 uppercase tracking-tighter">Mode Perbaikan Absensi</h3>
+            <p className="text-xs font-bold text-amber-600 dark:text-amber-400">Anda sedang mengisi absensi untuk tanggal {moment(dateFromUrl).format('DD MMMM YYYY')}.</p>
+          </div>
+        </div>
+      )}
+
       <div className="relative overflow-hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl shadow-lg mb-6 border border-gray-200 dark:border-gray-700">
+
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">

@@ -18,14 +18,19 @@ export default function LoginPage() {
     }
     setIsSigningIn(true);
 
-    try {
-      // CSRF cookie is handled by axios.js withCredentials in API requests usually,
-      // but for Sanctum SPA auth, we might need to get CSRF cookie first.
-      // However, with API Token auth (which we implemented in AuthController), we just need the token.
-      // Wait, I implemented createToken in AuthController, so it returns a token.
-      // I should just use that token.
+    // [DEVICE LOCK] Generate or retrieve unique device ID for this browser/device
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+      deviceId = 'dev-' + Math.random().toString(36).substring(2, 11) + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem('device_id', deviceId);
+    }
 
-      const response = await api.post('/login', { email, password });
+    try {
+      const response = await api.post('/login', { 
+        email, 
+        password,
+        device_id: deviceId 
+      });
 
       const { access_token, user } = response.data;
 

@@ -34,15 +34,15 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
 
         const takenClassIds = new Set();
         allTeachers.forEach(t => {
-            if (t.id === teacher.id) return; // Skip current teacher
+            if (String(t.id) === String(teacher.id)) return; // Skip current teacher
             t.assignments?.forEach(a => {
-                if (a.subject_id === selectedSubject.value) {
-                    takenClassIds.add(a.class_id);
+                if (String(a.subject_id) === String(selectedSubject.value)) {
+                    takenClassIds.add(String(a.class_id));
                 }
             });
         });
 
-        return baseOptions.filter(opt => !takenClassIds.has(opt.value));
+        return baseOptions.filter(opt => !takenClassIds.has(String(opt.value)));
     }, [classes, selectedSubject, allTeachers, teacher.id]);
 
     const handleSaveAssignment = async () => {

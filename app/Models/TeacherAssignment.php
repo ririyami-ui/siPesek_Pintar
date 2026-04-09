@@ -15,6 +15,12 @@ class TeacherAssignment extends Model
         'class_id',
     ];
 
+    protected $casts = [
+        'teacher_id' => 'integer',
+        'subject_id' => 'integer',
+        'class_id' => 'integer',
+    ];
+
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);

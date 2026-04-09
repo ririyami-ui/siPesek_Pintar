@@ -238,37 +238,41 @@ const AsistenGuruPage = () => {
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = false; // Stop after one sentence/phrase for better UX in chat
-      recognition.interimResults = false;
-      recognition.lang = 'id-ID'; // Indonesian
+    if (SpeechRecognition && typeof SpeechRecognition === 'function') {
+      try {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false; // Stop after one sentence/phrase for better UX in chat
+        recognition.interimResults = false;
+        recognition.lang = 'id-ID'; // Indonesian
 
-      recognition.onstart = () => {
-        setIsListening(true);
-      };
+        recognition.onstart = () => {
+          setIsListening(true);
+        };
 
-      recognition.onend = () => {
-        setIsListening(false);
-      };
+        recognition.onend = () => {
+          setIsListening(false);
+        };
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(prev => {
-          const newValue = prev ? `${prev} ${transcript}` : transcript;
-          return newValue;
-        });
-        // Trigger resize after state update
-        setTimeout(autoResizeTextarea, 0);
-      };
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(prev => {
+            const newValue = prev ? `${prev} ${transcript}` : transcript;
+            return newValue;
+          });
+          // Trigger resize after state update
+          setTimeout(autoResizeTextarea, 0);
+        };
 
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error", event.error);
-        setIsListening(false);
-        toast.error("Gagal mengenali suara. Pastikan izin mikrofon aktif.");
-      };
+        recognition.onerror = (event) => {
+          console.error("Speech recognition error", event.error);
+          setIsListening(false);
+          toast.error("Gagal mengenali suara. Pastikan izin mikrofon aktif.");
+        };
 
-      recognitionRef.current = recognition;
+        recognitionRef.current = recognition;
+      } catch (e) {
+        console.error("Audio Assistant: SpeechRecognition failed", e);
+      }
     } else {
       console.warn("Browser does not support Speech Recognition");
     }
@@ -292,7 +296,7 @@ const AsistenGuruPage = () => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event) => {
-        const img = new Image();
+        const img = new window.Image();
         img.src = event.target.result;
         img.onload = () => {
           const canvas = document.createElement('canvas');

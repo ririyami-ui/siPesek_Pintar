@@ -12,18 +12,25 @@ class InfractionController extends Controller
     {
         $query = Infraction::query()->with(['student']);
         
-        if (!Auth::user()->isAdmin()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
 
-        if ($request->has('student_id')) {
+        if ($request->filled('student_id')) {
             $query->where('student_id', $request->student_id);
         }
-        if ($request->has('semester')) {
+        if ($request->filled('semester')) {
             $query->where('semester', $request->semester);
         }
-        if ($request->has('academic_year')) {
+        if ($request->filled('academic_year')) {
             $query->where('academic_year', $request->academic_year);
+        }
+        if ($request->filled('class_id')) {
+            $query->whereHas('student', function($q) use ($request) {
+                $q->where('class_id', $request->class_id);
+            });
         }
         if ($request->has('date_start') && $request->has('date_end')) {
             $query->whereBetween('date', [$request->date_start, $request->date_end]);
@@ -54,7 +61,9 @@ class InfractionController extends Controller
 
     public function update(Request $request, Infraction $infraction)
     {
-        if (!Auth::user()->isAdmin() && $infraction->user_id !== Auth::id()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin() && $infraction->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -74,7 +83,9 @@ class InfractionController extends Controller
 
     public function destroy(Infraction $infraction)
     {
-        if (!Auth::user()->isAdmin() && $infraction->user_id !== Auth::id()) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user->isAdmin() && $infraction->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

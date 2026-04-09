@@ -15,6 +15,13 @@ class Schedule extends Model
         'start_date', 'end_date', 'is_recurring', 'activity_name'
     ];
 
+    protected $casts = [
+        'class_id' => 'integer',
+        'subject_id' => 'integer',
+        'teacher_id' => 'integer',
+        'is_recurring' => 'boolean',
+    ];
+
     public function class()
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
