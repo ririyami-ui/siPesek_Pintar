@@ -127,6 +127,11 @@ class UserProfileController extends Controller
             }
         }
 
+        // Ensure teaching_time_slots is in the new multi-profile format
+        if ($mergedProfile->teaching_time_slots) {
+            $mergedProfile->teaching_time_slots = $this->formatTeachingTimeSlots($mergedProfile->teaching_time_slots);
+        }
+
         return response()->json([
             'profile' => $mergedProfile,
             'logo_url' => $mergedProfile->logo_path ? asset('storage/' . $mergedProfile->logo_path) : null,
@@ -139,6 +144,30 @@ class UserProfileController extends Controller
                 'nip' => $user->nip,
             ]
         ]);
+    }
+
+    /**
+     * Ensure teaching_time_slots is in the multi-profile format
+     */
+    private function formatTeachingTimeSlots($data)
+    {
+        // If it's already in the new format { profiles: [...] }
+        if (isset($data['profiles']) && is_array($data['profiles'])) {
+            return $data;
+        }
+
+        // If it's the old format { "Senin": [...], ... }
+        // Migrate to { profiles: [{ id: 'default', name: 'Default', is_active: true, slots: { ... } }] }
+        return [
+            'profiles' => [
+                [
+                    'id' => 'default',
+                    'name' => 'Default',
+                    'is_active' => true,
+                    'slots' => $data
+                ]
+            ]
+        ];
     }
 
     /**
@@ -178,6 +207,7 @@ class UserProfileController extends Controller
                     'academic_year' => 'nullable|string|max:20',
                     'active_semester' => 'nullable|in:Ganjil,Genap',
                     'school_days' => 'nullable|integer|in:5,6',
+                    'teaching_time_slots' => 'nullable|array',
                 ]);
             }
 

@@ -7,10 +7,14 @@ use App\Models\Teacher;
 use App\Models\Journal;
 use App\Models\User;
 use App\Models\TeacherAssignment;
+use App\Models\UserProfile;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
+use App\Services\AutoScheduleService;
 
 class ScheduleController extends Controller
 {
@@ -330,5 +334,344 @@ class ScheduleController extends Controller
         // [CACHE INVALIDATION ON DELETE]
         Cache::forget("monitoring_schedules_{$day}");
         return response()->json(null, 204);
+    }
+
+    /**
+     * Bulk synchronize schedules with a specific teaching hour template profile
+     */
+    public function syncWithTemplate(Request $request)
+    {
+        $request->validate([
+            'profile_id' => 'required|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $profileId = $request->profile_id;
+        $rangeStart = $request->start_date;
+        $rangeEnd = $request->end_date;
+
+        // Get the master admin ID (usually the first admin ever created)
+        $adminUserId = User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id') ?? 1;
+        $adminProfile = UserProfile::where('user_id', $adminUserId)->first();
+
+        if (!$adminProfile || !$adminProfile->teaching_time_slots) {
+            return response()->json(['message' => 'Template waktu belum diatur oleh Admin.'], 404);
+        }
+
+        $allData = $adminProfile->teaching_time_slots;
+        $profiles = $allData['profiles'] ?? [];
+        $selectedProfile = collect($profiles)->firstWhere('id', $profileId);
+
+        if (!$selectedProfile) {
+            return response()->json(['message' => 'Profil template tidak ditemukan.'], 404);
+        }
+
+        $templateSlots = $selectedProfile['slots'] ?? [];
+
+        // Build the query for schedules
+        $query = Schedule::where('type', 'teaching'); // Only KBM as per user request
+        
+        if ($rangeStart && $rangeEnd) {
+            $query->where(function($q) use ($rangeStart, $rangeEnd) {
+                $q->whereBetween('start_date', [$rangeStart, $rangeEnd])
+                  ->orWhereBetween('end_date', [$rangeStart, $rangeEnd])
+                  ->orWhere(function($sub) use ($rangeStart, $rangeEnd) {
+                      $sub->where('start_date', '<=', $rangeStart)
+                          ->where('end_date', '>=', $rangeEnd);
+                  });
+            });
+        }
+
+        $schedules = $query->get();
+        $updatedCount = 0;
+        $skippedCount = 0;
+
+        DB::beginTransaction();
+        try {
+            foreach ($schedules as $schedule) {
+                $day = $schedule->day;
+                $slots = $templateSlots[$day] ?? [];
+                
+                if (empty($slots)) {
+                    $skippedCount++;
+                    continue;
+                }
+
+                $startTime = null;
+                $endTime = null;
+
+                // Match Start Period
+                if ($schedule->start_period) {
+                    $match = collect($slots)->firstWhere('jam_ke', $schedule->start_period);
+                    if ($match) $startTime = $match['mulai'];
+                }
+
+                // Match End Period
+                if ($schedule->end_period) {
+                    $match = collect($slots)->firstWhere('jam_ke', $schedule->end_period);
+                    if ($match) $endTime = $match['selesai'];
+                } else if ($schedule->start_period) {
+                    // Fallback: if only start period is set, use the end time of that period
+                    $match = collect($slots)->firstWhere('jam_ke', $schedule->start_period);
+                    if ($match) $endTime = $match['selesai'];
+                }
+
+                if ($startTime && $endTime) {
+                    $schedule->update([
+                        'start_time' => str_replace('.', ':', substr($startTime, 0, 5)),
+                        'end_time' => str_replace('.', ':', substr($endTime, 0, 5)),
+                    ]);
+                    $updatedCount++;
+                } else {
+                    $skippedCount++;
+                }
+            }
+
+            DB::commit();
+            
+            // Clear cache
+            Cache::flush(); 
+
+            return response()->json([
+                'message' => 'Sinkronisasi selesai.',
+                'updated' => $updatedCount,
+                'skipped' => $skippedCount,
+                'total_processed' => $schedules->count()
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Terjadi kesalahan saat sinkronisasi: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Analyze synchronization between active template slots and teaching assignments
+     */
+    public function getSyncAnalysis()
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat mengakses analisis sinkronisasi.');
+        }
+
+        // 1. Get Active Template Capacity
+        $adminProfile = UserProfile::where('user_id', $user->id)->first();
+        if (!$adminProfile || !$adminProfile->teaching_time_slots) {
+            $adminProfile = UserProfile::whereNotNull('teaching_time_slots')->first();
+        }
+
+        if (!$adminProfile) {
+            return response()->json(['message' => 'Template waktu belum diatur.'], 404);
+        }
+
+        $allData = $adminProfile->teaching_time_slots;
+        $activeProfile = collect($allData['profiles'] ?? [])->firstWhere('is_active', true);
+        
+        if (!$activeProfile) {
+            return response()->json(['message' => 'Tidak ada profil templat waktu yang aktif.'], 404);
+        }
+
+        $templateSlotsCount = 0;
+        foreach ($activeProfile['slots'] ?? [] as $daySlots) {
+            if (is_array($daySlots)) {
+                $templateSlotsCount += count($daySlots);
+            }
+        }
+
+        // 2. Get Assignments Burden per Class
+        $classes = \App\Models\SchoolClass::orderBy('rombel', 'asc')->get();
+        $analysis = [];
+
+        foreach ($classes as $class) {
+            $weeklyHours = TeacherAssignment::where('class_id', $class->id)
+                ->with('subject')
+                ->get()
+                ->sum(fn($a) => ($a->subject->weekly_hours ?? 0));
+
+            $diff = $templateSlotsCount - $weeklyHours;
+            
+            $analysis[] = [
+                'class_id' => $class->id,
+                'rombel' => $class->rombel,
+                'capacity' => $templateSlotsCount,
+                'burden' => intval($weeklyHours),
+                'diff' => $diff,
+                'status' => $diff === 0 ? 'balanced' : ($diff > 0 ? 'underload' : 'overload')
+            ];
+        }
+
+        return response()->json([
+            'profile_name' => $activeProfile['name'] ?? 'Biasa',
+            'total_capacity' => (int)$templateSlotsCount,
+            'data' => $analysis
+        ]);
+    }
+
+    /**
+     * Audit subject allocation per class
+     */
+    public function getAllocationAudit()
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat mengakses audit alokasi.');
+        }
+
+        $classes = \App\Models\SchoolClass::orderBy('rombel', 'asc')->get();
+        $audit = [];
+
+        foreach ($classes as $class) {
+            $assignments = TeacherAssignment::where('class_id', $class->id)
+                ->with(['subject', 'teacher'])
+                ->get();
+            
+            $classData = [];
+            foreach ($assignments as $as) {
+                // Ignore subjects with 0 weekly hours
+                $target = $as->subject->weekly_hours ?? 0;
+                if ($target <= 0) continue;
+
+                // Sum periods in Schedule: (end - start + 1)
+                $scheduled = Schedule::where('class_id', $class->id)
+                    ->where('subject_id', $as->subject_id)
+                    ->where('type', 'teaching')
+                    ->get()
+                    ->sum(fn($s) => ($s->end_period - $s->start_period + 1));
+                
+                $status = 'exact';
+                if ($scheduled === 0) $status = 'undistributed';
+                elseif ($scheduled < $target) $status = 'incomplete';
+                elseif ($scheduled > $target) $status = 'overload';
+
+                $classData[] = [
+                    'subject' => $as->subject->name,
+                    'teacher' => $as->teacher->name ?? '?',
+                    'target' => (int)$target,
+                    'scheduled' => (int)$scheduled,
+                    'diff' => $scheduled - $target,
+                    'status' => $status
+                ];
+            }
+
+            $audit[] = [
+                'class_id' => $class->id,
+                'rombel' => $class->rombel,
+                'subjects' => $classData
+            ];
+        }
+
+        return response()->json($audit);
+    }
+
+    /**
+     * Audit teacher workload across all classes
+     */
+    public function getTeacherWorkloadAudit()
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat mengakses audit beban guru.');
+        }
+
+        // 1. Get capacity from active profile
+        $capacity = 0;
+        $activeProfileName = 'Biasa';
+        $profileContent = \App\Models\UserProfile::whereNotNull('teaching_time_slots')->first();
+        if ($profileContent) {
+            $allData = is_string($profileContent->teaching_time_slots) 
+                ? json_decode($profileContent->teaching_time_slots, true) 
+                : $profileContent->teaching_time_slots;
+            
+            $activeProfile = collect($allData['profiles'] ?? [])->firstWhere('is_active', true);
+            if ($activeProfile) {
+                $activeProfileName = $activeProfile['name'] ?? 'Biasa';
+                foreach ($activeProfile['slots'] ?? [] as $daySlots) {
+                    if (is_array($daySlots)) $capacity += count($daySlots);
+                }
+            }
+        }
+
+        if ($capacity === 0) $capacity = 40; // Safe Fallback
+
+        // 2. Fetch all teachers with their assignments
+        $teachers = \App\Models\Teacher::whereHas('assignments')
+            ->with(['assignments.subject', 'assignments.schoolClass'])
+            ->get();
+
+        $audit = [];
+        foreach ($teachers as $teacher) {
+            $totalHours = $teacher->total_weekly_hours;
+            
+            $details = $teacher->assignments->map(fn($as) => [
+                'class' => $as->schoolClass->rombel ?? '?',
+                'subject' => $as->subject->name ?? '?',
+                'hours' => (int)($as->subject->weekly_hours ?? 0)
+            ])->values();
+
+            $saturation = ($totalHours / $capacity) * 100;
+            
+            $status = 'healthy';
+            if ($saturation > 85) $status = 'critical';
+            elseif ($saturation >= 75) $status = 'high';
+            elseif ($saturation < 20) $status = 'underload';
+
+            $audit[] = [
+                'id' => $teacher->id,
+                'name' => $teacher->name,
+                'total_hours' => (int)$totalHours,
+                'capacity' => $capacity,
+                'saturation' => (float)round($saturation, 1),
+                'status' => $status,
+                'assignments' => $details
+            ];
+        }
+
+        return response()->json([
+            'profile_name' => $activeProfileName,
+            'capacity' => $capacity,
+            'teachers' => collect($audit)->sortByDesc('saturation')->values()
+        ]);
+    }
+
+    /**
+     * Automatically generate teaching schedules based on assignments and weekly hours
+     */
+    public function autoGenerate(Request $request)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat membuat jadwal otomatis.');
+        }
+
+        // Use the current admin ID as the primary search for the template
+        $adminUserId = $user->id;
+
+        $service = new AutoScheduleService($adminUserId);
+        $result = $service->generate();
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+                'errors' => $result['errors'] ?? []
+            ], 422);
+        }
+
+        // [CACHE INVALIDATION] Clear monitoring cache for all days
+        foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {
+            Cache::forget("monitoring_schedules_{$day}");
+        }
+
+        return response()->json([
+            'message' => 'Jadwal berhasil dibuat secara otomatis!',
+            'count' => $result['count']
+        ]);
     }
 }

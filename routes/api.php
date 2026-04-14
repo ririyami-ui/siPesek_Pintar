@@ -21,6 +21,9 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,
 // Public Settings Route for PWA and Welcome Screen
 Route::get('/public-settings', [App\Http\Controllers\UserProfileController::class, 'getPublicSettings']);
 
+// Secure Backup Download via Ticket (Outside Sanctum to allow direct browser download)
+Route::get('/admin/database/backup/download', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'downloadBackup']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -29,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
+    Route::post('/teachers/bulk-clear', [App\Http\Controllers\TeacherController::class, 'bulkClear']);
     Route::post('/teachers/{teacher}/sync-assignments', [App\Http\Controllers\TeacherController::class, 'syncAssignments']);
 
     Route::middleware('admin')->group(function () {
@@ -43,6 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/database/backup', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'backupDatabase']);
         Route::post('/admin/database/wipe', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'wipeDatabase']);
         Route::post('/admin/database/restore', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'restoreDatabase']);
+        Route::post('/admin/database/clean-logs', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'cleanSystemLogs']);
         
         // Student Photo Upload
         Route::post('/admin/students/upload-photos', [App\Http\Controllers\StudentPhotoController::class, 'uploadZip']);
@@ -58,7 +63,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/student/chat', [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1'); // Limit chat to 10 messages per minute
 
     Route::apiResource('students', StudentController::class);
+    Route::get('/schedules/sync-analysis', [ScheduleController::class, 'getSyncAnalysis']);
+    Route::get('/schedules/allocation-audit', [ScheduleController::class, 'getAllocationAudit']);
+    Route::get('/schedules/teacher-workload', [ScheduleController::class, 'getTeacherWorkloadAudit']);
     Route::apiResource('schedules', ScheduleController::class);
+    Route::post('/schedules/sync-template', [ScheduleController::class, 'syncWithTemplate']);
+    Route::post('/schedules/auto-generate', [ScheduleController::class, 'autoGenerate']);
 
     // Class Agreement Routes
     Route::get('/class-agreements/{classId}', [App\Http\Controllers\ClassAgreementController::class, 'show']);

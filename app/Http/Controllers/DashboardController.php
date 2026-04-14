@@ -165,7 +165,12 @@ class DashboardController extends Controller
             
             // Status priority: TIME first, then journal existence
             $assignment = isset($assignments[$key]) ? $assignments[$key]->first() : null;
-            $teacherName = $assignment ? $assignment->teacher->name : ($schedule->teacher->name ?? '-');
+            $teacherName = '-';
+            if ($assignment && $assignment->teacher) {
+                $teacherName = $assignment->teacher->name;
+            } elseif ($schedule->teacher) {
+                $teacherName = $schedule->teacher->name;
+            }
 
             $currentAttendance = $attendanceData->get($key, collect());
             $hasTakenAttendance = $currentAttendance->count() > 0;
@@ -310,23 +315,33 @@ class DashboardController extends Controller
 
         $maxEndTime = $finalMaxEndTimeRaw ? Carbon::parse($finalMaxEndTimeRaw)->format('H:i') : null;
 
+        // Find the absolute minimum start time
+        $minStartTimeRaw = $schedules->min('start_time');
+        $minNonTeachingStartTimeRaw = $nonTeachingSchedules->min('start_time');
+        $finalMinStartTimeRaw = $minStartTimeRaw;
+        if ($minNonTeachingStartTimeRaw && (!$finalMinStartTimeRaw || $minNonTeachingStartTimeRaw < $finalMinStartTimeRaw)) {
+            $finalMinStartTimeRaw = $minNonTeachingStartTimeRaw;
+        }
+        $minStartTime = $finalMinStartTimeRaw ? Carbon::parse($finalMinStartTimeRaw)->format('H:i') : null;
+
         return response()->json([
             'date' => $todayDate,
             'day' => $todayDay,
             'current_time' => $currentTime,
+            'min_start_time' => $minStartTime,
+            'max_end_time' => $maxEndTime,
             'active_non_teaching' => $activeNonTeaching ? [
                 'activity_name' => $activeNonTeaching->activity_name,
-                'start_time' => Carbon::parse($activeNonTeaching->start_time)->format('H:i'),
-                'end_time' => Carbon::parse($activeNonTeaching->end_time)->format('H:i'),
+                'start_time' => $activeNonTeaching->start_time ? Carbon::parse($activeNonTeaching->start_time)->format('H:i') : null,
+                'end_time' => $activeNonTeaching->end_time ? Carbon::parse($activeNonTeaching->end_time)->format('H:i') : null,
             ] : null,
             'non_teaching_schedules' => $nonTeachingSchedules->map(function($sch) {
                 return [
                     'activity_name' => $sch->activity_name,
-                    'start_time' => Carbon::parse($sch->start_time)->format('H:i'),
-                    'end_time' => Carbon::parse($sch->end_time)->format('H:i'),
+                    'start_time' => $sch->start_time ? Carbon::parse($sch->start_time)->format('H:i') : null,
+                    'end_time' => $sch->end_time ? Carbon::parse($sch->end_time)->format('H:i') : null,
                 ];
             }),
-            'max_end_time' => $maxEndTime,
             'is_weekend' => $isWeekend,
             'data' => $groupedMonitoringData->values(),
             'full_data' => $monitoringData->values(),

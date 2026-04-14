@@ -10,16 +10,20 @@ import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import Modal from './Modal';
-import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus, Zap } from 'lucide-react';
+import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus, Zap, Settings } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 import { getHolidaysByYear } from '../utils/holidayData';
+import TimeSlotModal from './TimeSlotModal';
+import SchedulingReportModal from './SchedulingReportModal';
+import SchedulingSyncModal from './SchedulingSyncModal';
+import { Calculator as CalculatorIcon } from 'lucide-react';
 
 // Set moment locale to Indonesian
 moment.locale('id');
 const localizer = momentLocalizer(moment);
 
 const ScheduleCalendar = () => {
-    const { activeSemester, academicYear } = useSettings();
+    const { activeSemester, academicYear, userProfile, refreshProfile } = useSettings();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -37,6 +41,7 @@ const ScheduleCalendar = () => {
     const [activityName, setActivityName] = useState('');
     const [startPeriod, setStartPeriod] = useState('');
     const [endPeriod, setEndPeriod] = useState('');
+    const [selectedTemplateId, setSelectedTemplateId] = useState('');
 
     // Data states
     const [subjects, setSubjects] = useState([]);
@@ -57,6 +62,12 @@ const ScheduleCalendar = () => {
     });
     const [editingHolidayId, setEditingHolidayId] = useState(null);
     const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+    const [showTimeSlotModal, setShowTimeSlotModal] = useState(false);
+    const [isGeneratingAuto, setIsGeneratingAuto] = useState(false);
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportErrors, setReportErrors] = useState([]);
+    const [reportMessage, setReportMessage] = useState('');
+    const [showSyncModal, setShowSyncModal] = useState(false);
 
     const daysOfWeek = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
@@ -146,7 +157,39 @@ const ScheduleCalendar = () => {
             setSchedules(scheduleData);
         } catch (error) {
             console.error('Error fetching schedules:', error);
-            toast.error('Gagal memuat jadwal.');
+            // Don't show toast if it's the auto-generate cleanup
+            if (!isGeneratingAuto) toast.error('Gagal memuat jadwal.');
+        }
+    };
+
+    const handleAutoGenerate = async () => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Buat Jadwal Otomatis?',
+            message: 'Seluruh jadwal KBM yang ada akan DIHAPUS dan diganti dengan susunan baru berdasarkan penugasan guru dan jam per pekan. Lanjutkan?',
+            onConfirm: confirmAutoGenerate
+        });
+    };
+
+    const confirmAutoGenerate = async () => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        setIsGeneratingAuto(true);
+        const toastId = toast.loading('Sedang menyusun jadwal cerdas...');
+
+        try {
+            const res = await api.post('/schedules/auto-generate');
+            toast.success(res.data.message || 'Jadwal berhasil dibuat!', { id: toastId });
+            await fetchSchedules(user);
+        } catch (error) {
+            console.error("Auto-generate error:", error);
+            const data = error.response?.data;
+            // Always open the report modal on failure to show the full message
+            setReportMessage(data?.message || 'Gagal membuat jadwal otomatis.');
+            setReportErrors(data?.errors || []);
+            setShowReportModal(true);
+            toast.dismiss(toastId);
+        } finally {
+            setIsGeneratingAuto(false);
         }
     };
 
@@ -294,6 +337,47 @@ const ScheduleCalendar = () => {
         setStartPeriod('');
         setEndPeriod('');
     };
+
+    // [NEW] Set initial active template
+    useEffect(() => {
+        if (userProfile?.teaching_time_slots?.profiles && !selectedTemplateId) {
+            const active = userProfile.teaching_time_slots.profiles.find(p => p.is_active);
+            if (active) setSelectedTemplateId(active.id);
+            else if (userProfile.teaching_time_slots.profiles.length > 0) {
+                setSelectedTemplateId(userProfile.teaching_time_slots.profiles[0].id);
+            }
+        }
+    }, [userProfile, selectedTemplateId]);
+
+    // [NEW] Auto-fill times from template (Teaching Hour Template - Multi Profile Support)
+    useEffect(() => {
+        if (scheduleType === 'teaching' && day && userProfile?.teaching_time_slots?.profiles && selectedTemplateId) {
+            const profile = userProfile.teaching_time_slots.profiles.find(p => p.id === selectedTemplateId);
+            const slots = profile?.slots?.[day] || [];
+            
+            // Auto-fill Start Time
+            if (startPeriod && slots.length > 0) {
+                const startMatch = slots.find(s => String(s.jam_ke) === String(startPeriod));
+                if (startMatch && startMatch.mulai) {
+                    setStartTime(startMatch.mulai);
+                }
+            }
+            
+            // Auto-fill End Time
+            if (endPeriod && slots.length > 0) {
+                const endMatch = slots.find(s => String(s.jam_ke) === String(endPeriod));
+                if (endMatch && endMatch.selesai) {
+                    setEndTime(endMatch.selesai);
+                } else if (startPeriod) {
+                    // Fallback to end of start period if only start period is provided
+                    const startMatch = slots.find(s => String(s.jam_ke) === String(startPeriod));
+                    if (startMatch && startMatch.selesai) {
+                        setEndTime(startMatch.selesai);
+                    }
+                }
+            }
+        }
+    }, [day, startPeriod, endPeriod, scheduleType, selectedTemplateId, userProfile?.teaching_time_slots]);
 
     const handleAddSchedule = async (e) => {
         e.preventDefault();
@@ -480,11 +564,34 @@ const ScheduleCalendar = () => {
                         Semester: {activeSemester} (TA {academicYear})
                     </p>
                 </div>
-                {isAdmin && (
-                    <StyledButton onClick={() => setShowHolidayModal(true)} variant="outline" className="flex items-center gap-2">
-                        <CalendarIcon size={18} /> Kelola Agenda Sekolah
-                    </StyledButton>
-                )}
+                <div className="flex gap-2">
+                    {isAdmin && (
+                        <div className="flex flex-wrap gap-2">
+                            <StyledButton
+                                onClick={() => setShowSyncModal(true)}
+                                variant="outline"
+                                className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                            >
+                                <CalculatorIcon size={18} /> Cek Keselarasan
+                            </StyledButton>
+                            <StyledButton
+                                onClick={handleAutoGenerate}
+                                loading={isGeneratingAuto}
+                                className="!bg-purple-600 hover:!bg-purple-700 !text-white flex items-center gap-2 group relative overflow-hidden"
+                            >
+                                <Zap size={18} className={isGeneratingAuto ? 'animate-pulse' : 'group-hover:animate-bounce'} />
+                                <span className="relative z-10">Generate Otomatis</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] skew-x-12" />
+                            </StyledButton>
+                            <StyledButton onClick={() => setShowTimeSlotModal(true)} variant="outline" className="flex items-center gap-2 border-purple-200 text-purple-600 hover:bg-purple-50">
+                                <Settings size={18} /> Kelola Template Waktu
+                            </StyledButton>
+                            <StyledButton onClick={() => setShowHolidayModal(true)} variant="outline" className="flex items-center gap-2">
+                                <CalendarIcon size={18} /> Kelola Agenda Sekolah
+                            </StyledButton>
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -567,6 +674,22 @@ const ScheduleCalendar = () => {
                                               .map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
                                         </StyledSelect>
                                     </div>
+
+                                    {/* Template Selector Dropdown */}
+                                    {userProfile?.teaching_time_slots?.profiles?.length > 0 && (
+                                        <div className="space-y-1 p-3 bg-purple-50 dark:bg-purple-900/10 rounded-2xl border border-purple-100 dark:border-purple-800/30">
+                                            <label className="text-[10px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-widest ml-1">Template Waktu</label>
+                                            <StyledSelect 
+                                                value={selectedTemplateId} 
+                                                onChange={(e) => setSelectedTemplateId(e.target.value)}
+                                                className="!bg-white dark:!bg-gray-800"
+                                            >
+                                                {userProfile.teaching_time_slots.profiles.map(p => (
+                                                    <option key={p.id} value={p.id}>{p.name} {p.is_active ? '(Aktif)' : ''}</option>
+                                                ))}
+                                            </StyledSelect>
+                                        </div>
+                                    )}
                                 </>
                             )}
 
@@ -675,22 +798,22 @@ const ScheduleCalendar = () => {
                     </div>
                 </div>
                 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-separate border-spacing-y-2">
-                        <thead>
-                            <tr className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4">
-                                <th className="pb-4 pl-4">Hari</th>
+                <div className="overflow-x-auto overflow-y-auto max-h-[520px] custom-scrollbar rounded-2xl">
+                    <table className="w-full text-left border-separate border-spacing-y-2 min-w-[600px]">
+                        <thead className="sticky top-0 z-10">
+                            <tr className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 bg-white dark:bg-[#1a1a2e]">
+                                <th className="pb-4 pl-4 pt-2">Hari</th>
                                 {tableTab === 'teaching' ? (
                                     <>
-                                        <th className="pb-4">Kelas</th>
-                                        <th className="pb-4">Mata Pelajaran</th>
-                                        <th className="pb-4">Jam Ke</th>
+                                        <th className="pb-4 pt-2">Kelas</th>
+                                        <th className="pb-4 pt-2">Mata Pelajaran</th>
+                                        <th className="pb-4 pt-2">Jam Ke</th>
                                     </>
                                 ) : (
-                                    <th className="pb-4">Nama Kegiatan</th>
+                                    <th className="pb-4 pt-2">Nama Kegiatan</th>
                                 )}
-                                <th className="pb-4">Waktu</th>
-                                <th className="pb-4 pr-4 text-right">Aksi</th>
+                                <th className="pb-4 pt-2">Waktu</th>
+                                <th className="pb-4 pr-4 text-right pt-2">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -879,6 +1002,29 @@ const ScheduleCalendar = () => {
                         </div>
                     </div>
                 </Modal>
+            )}
+            {showTimeSlotModal && (
+                <TimeSlotModal 
+                    isOpen={showTimeSlotModal} 
+                    onClose={() => setShowTimeSlotModal(false)} 
+                    onSaveSuccess={() => refreshProfile()} // Optional: ensure profile is reloaded
+                />
+            )}
+
+            {showReportModal && (
+                <SchedulingReportModal 
+                    isOpen={showReportModal} 
+                    onClose={() => setShowReportModal(false)}
+                    errors={reportErrors}
+                    message={reportMessage}
+                />
+            )}
+
+            {showSyncModal && (
+                <SchedulingSyncModal 
+                    isOpen={showSyncModal} 
+                    onClose={() => setShowSyncModal(false)}
+                />
             )}
         </div>
     );

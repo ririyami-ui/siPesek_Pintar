@@ -15,6 +15,7 @@ export default function ClassMasterData() {
   const [classes, setClasses] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [syncAnalysis, setSyncAnalysis] = useState([]);
   // State for new class form
   const [newCode, setNewCode] = useState('');
   const [newLevel, setNewLevel] = useState('');
@@ -34,18 +35,21 @@ export default function ClassMasterData() {
   const getClasses = useCallback(async () => {
     setLoading(true);
     try {
-      const [classRes, userRes, teacherRes] = await Promise.all([
+      const [classRes, userRes, teacherRes, syncRes] = await Promise.all([
         api.get('/classes'),
         api.get('/me'),
-        api.get('/teachers')
+        api.get('/teachers'),
+        api.get('/schedules/sync-analysis').catch(() => ({ data: [] }))
       ]);
       const classData = classRes.data.data || classRes.data || [];
       const teacherData = teacherRes.data.data || teacherRes.data || [];
+      const syncData = syncRes.data || [];
       
       // Backend already filters based on role and assignments
       setClasses(classData.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
       setUser(userRes.data);
       setTeachers(teacherData);
+      setSyncAnalysis(syncData);
     } catch (error) {
       console.error("Error getting classes: ", error);
       toast.error('Gagal memuat data kelas.');
@@ -314,14 +318,18 @@ export default function ClassMasterData() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 h-[500px] overflow-y-auto p-2 scrollbar-hide">
-              {classes.map((classItem) => (
-                <ClassCard
-                  key={classItem.id}
-                  classItem={{ ...classItem, onAgreement: handleOpenAgreementModal }}
-                  onEdit={isAdmin ? handleOpenEditModal : null}
-                  onDelete={isAdmin ? deleteClass : null}
-                />
-              ))}
+              {classes.map((classItem) => {
+                const analysis = syncAnalysis.find(a => a.id === classItem.id);
+                return (
+                  <ClassCard
+                    key={classItem.id}
+                    classItem={{ ...classItem, onAgreement: handleOpenAgreementModal }}
+                    analysis={analysis}
+                    onEdit={isAdmin ? handleOpenEditModal : null}
+                    onDelete={isAdmin ? deleteClass : null}
+                  />
+                );
+              })}
             </div>
           )}
         </div>

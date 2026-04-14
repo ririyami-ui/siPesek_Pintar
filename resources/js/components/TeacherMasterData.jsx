@@ -42,6 +42,8 @@ export default function TeacherMasterData() {
         id: null
     });
 
+    const [isBulkClearOpen, setIsBulkClearOpen] = useState(false);
+
     const getTeachers = useCallback(async () => {
         setLoading(true);
         try {
@@ -121,6 +123,19 @@ export default function TeacherMasterData() {
                 return 'Data guru berhasil dihapus!';
             },
             error: 'Gagal menghapus data guru.',
+        });
+    };
+
+    const handleBulkClear = async () => {
+        const promise = api.post('/teachers/bulk-clear');
+        toast.promise(promise, {
+            loading: 'Mengosongkan data...',
+            success: (res) => {
+                getTeachers();
+                setIsBulkClearOpen(false);
+                return res.data.message || 'Semua data guru berhasil dihapus.';
+            },
+            error: (err) => err.response?.data?.message || 'Gagal mengosongkan data.',
         });
     };
 
@@ -302,13 +317,19 @@ export default function TeacherMasterData() {
                                 onChange={handleFileUpload}
                                 className="flex-1"
                             />
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 <StyledButton onClick={importTeachers} variant="secondary">
                                     <Upload className="mr-2" size={16} /> Impor
                                 </StyledButton>
                                 <StyledButton onClick={downloadTemplate} variant="outline">
                                     <Download className="mr-2" size={16} /> Unduh Template
                                 </StyledButton>
+                                <button 
+                                    onClick={() => setIsBulkClearOpen(true)}
+                                    className="flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 text-red-600 font-bold rounded-xl transition-all duration-300 text-sm"
+                                >
+                                    <Trash2 className="mr-2" size={16} /> Kosongkan Semua Data Guru
+                                </button>
                             </div>
                         </div>
                         <p className="text-[10px] text-gray-500 mt-2 italic">*Gunakan template yang disediakan untuk menghindari kesalahan format.</p>
@@ -446,6 +467,37 @@ export default function TeacherMasterData() {
                                 className="flex-1 px-6 py-3 bg-red-600 text-white font-bold rounded-2xl hover:bg-red-700 shadow-xl shadow-red-200 dark:shadow-none transition-all duration-300 active:scale-95"
                             >
                                 Hapus
+                            </button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
+
+            {/* Bulk Clear Modal */}
+            {isBulkClearOpen && (
+                <Modal onClose={() => setIsBulkClearOpen(false)}>
+                    <div className="text-center p-4">
+                        <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-100 dark:bg-red-900/20 mb-6">
+                            <Trash2 className="h-10 w-10 text-red-600 dark:text-red-400" />
+                        </div>
+                        <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-3">Kosongkan Semua Guru?</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-xs mx-auto text-sm font-medium">
+                            Tindakan ini akan menghapus **SELURUH DATA GURU, AKUN LOGIN, dan PENUGASAN MAPEL**. 
+                            <br/><br/>
+                            Data Mata Pelajaran dan Kelas tetap utuh, namun semua link ke guru akan terputus. Tindakan ini tidak dapat dibatalkan.
+                        </p>
+                        <div className="flex gap-4 justify-center">
+                            <button
+                                onClick={() => setIsBulkClearOpen(false)}
+                                className="flex-1 px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={handleBulkClear}
+                                className="flex-1 px-6 py-3 bg-red-600 text-white font-bold rounded-2xl hover:bg-red-700 shadow-xl shadow-red-200 dark:shadow-none transition-all duration-300 active:scale-95"
+                            >
+                                Ya, Kosongkan Semua
                             </button>
                         </div>
                     </div>

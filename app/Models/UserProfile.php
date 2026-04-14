@@ -26,10 +26,12 @@ class UserProfile extends Model
         'google_ai_api_key',
         'schedule_notifications_enabled',
         'audio_language',
+        'teaching_time_slots',
     ];
 
     protected $casts = [
         'schedule_notifications_enabled' => 'boolean',
+        'teaching_time_slots' => 'array',
     ];
 
     /**

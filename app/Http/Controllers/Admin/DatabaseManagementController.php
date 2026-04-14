@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class DatabaseManagementController extends Controller
 {
@@ -96,53 +98,98 @@ class DatabaseManagementController extends Controller
 
     public function backupDatabase()
     {
-        $databaseName = config('database.connections.mysql.database');
-        $username = config('database.connections.mysql.username');
-        $password = config('database.connections.mysql.password');
-        $host = config('database.connections.mysql.host');
+        // Increase limits for processing large databases
+        ini_set('memory_limit', '512M');
+        set_time_limit(600); // 10 minutes
 
-        $filename = "backup-" . Carbon::now()->format('Y-m-d-H-i-s') . ".sql";
-        $path = storage_path('app/backups/' . $filename);
-
-        if (!file_exists(storage_path('app/backups'))) {
-            mkdir(storage_path('app/backups'), 0755, true);
-        }
-
-        // Use mysqldump if available, otherwise manual backup
-        // For simplicity in different environments, we'll do a manual SQL generation
-        // for the tables we manage.
+        $filename = "backup-smart-school-" . Carbon::now()->format('Y-m-d-H-i-s') . ".sql";
+        $directory = storage_path('app/backups');
         
-        $sql = "-- Smart School Manager Database Backup\n";
-        $sql .= "-- Date: " . Carbon::now()->toDateTimeString() . "\n\n";
-        $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
-
-        foreach ($this->tablesToManage as $table) {
-            if (!Schema::hasTable($table)) continue;
-
-            $rows = DB::table($table)->get();
-            $sql .= "-- Table: {$table}\n";
-            $sql .= "TRUNCATE TABLE `{$table}`;\n";
-
-            foreach ($rows as $row) {
-                $rowArray = (array)$row;
-                $columns = implode("`, `", array_keys($rowArray));
-                $values = array_map(function($value) {
-                    if (is_null($value)) return "NULL";
-                    return "'" . addslashes($value) . "'";
-                }, array_values($rowArray));
-                $valuesList = implode(", ", $values);
-                
-                $sql .= "INSERT INTO `{$table}` (`{$columns}`) VALUES ({$valuesList});\n";
-            }
-            $sql .= "\n";
+        if (!file_exists($directory)) {
+            mkdir($directory, 0755, true);
         }
 
-        $sql .= "SET FOREIGN_KEY_CHECKS=1;";
+        $path = $directory . '/' . $filename;
+        $handle = fopen($path, 'w');
+        
+        if (!$handle) {
+            return response()->json(['message' => 'Gagal membuat file backup di server.'], 500);
+        }
 
-        return Response::make($sql, 200, [
-            'Content-Type' => 'application/sql',
-            'Content-Disposition' => "attachment; filename={$filename}"
-        ]);
+        try {
+            fwrite($handle, "-- Smart School Manager Database Backup\n");
+            fwrite($handle, "-- Date: " . Carbon::now()->toDateTimeString() . "\n\n");
+            fwrite($handle, "SET FOREIGN_KEY_CHECKS=0;\n\n");
+
+            foreach ($this->tablesToManage as $table) {
+                if (!Schema::hasTable($table)) continue;
+
+                fwrite($handle, "-- Table: {$table}\n");
+                fwrite($handle, "TRUNCATE TABLE `{$table}`;\n");
+
+                // Use chunking to process rows efficiently
+                DB::table($table)->orderBy('id')->chunk(500, function($rows) use ($handle, $table) {
+                    foreach ($rows as $row) {
+                        $rowArray = (array)$row;
+                        $columns = implode("`, `", array_keys($rowArray));
+                        $values = array_map(function($value) {
+                            if (is_null($value)) return "NULL";
+                            return "'" . addslashes($value) . "'";
+                        }, array_values($rowArray));
+                        $valuesList = implode(", ", $values);
+                        
+                        fwrite($handle, "INSERT INTO `{$table}` (`{$columns}`) VALUES ({$valuesList});\n");
+                    }
+                });
+                
+                fwrite($handle, "\n");
+            }
+
+            fwrite($handle, "SET FOREIGN_KEY_CHECKS=1;");
+            fclose($handle);
+
+            // Generate a secure one-time ticket for the download
+            $ticket = Str::random(64);
+            Cache::put('backup_ticket_' . $ticket, $path, now()->addMinutes(5));
+
+            return response()->json([
+                'ticket' => $ticket,
+                'filename' => $filename
+            ]);
+
+        } catch (\Exception $e) {
+            if ($handle) fclose($handle);
+            if (file_exists($path)) unlink($path);
+            return response()->json(['message' => 'Error saat membuat backup: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Publicly accessible but secure download via ticket
+     */
+    public function downloadBackup(Request $request)
+    {
+        $ticket = $request->query('ticket');
+        
+        if (!$ticket) {
+            abort(403, 'Ticket backup tidak ditemukan.');
+        }
+
+        $cacheKey = 'backup_ticket_' . $ticket;
+        $path = Cache::get($cacheKey);
+
+        if (!$path || !file_exists($path)) {
+            abort(404, 'File backup sudah kedaluwarsa atau tidak ditemukan.');
+        }
+
+        // Remove ticket after use (one-time use)
+        Cache::forget($cacheKey);
+
+        $filename = basename($path);
+
+        return response()->download($path, $filename, [
+            'Content-Type' => 'application/octet-stream',
+        ])->deleteFileAfterSend();
     }
 
     public function restoreDatabase(Request $request)
@@ -223,6 +270,38 @@ class DatabaseManagementController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Gagal menghapus data: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function cleanSystemLogs(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string'
+        ]);
+
+        if (!$this->verifyPassword($request->password)) {
+            return response()->json(['message' => 'Password salah. Akses ditolak.'], 403);
+        }
+
+        try {
+            // 1. Clear laravel.log
+            $logPath = storage_path('logs/laravel.log');
+            if (file_exists($logPath)) {
+                file_put_contents($logPath, '');
+            }
+
+            // 2. Prune expired Sanctum tokens
+            DB::table('personal_access_tokens')
+                ->where('expires_at', '<', now())
+                ->delete();
+            
+            // 3. Clear application cache & views
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+
+            return response()->json(['message' => 'Log sistem berhasil dibersihkan dan sistem telah dioptimasi.']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Gagal membersihkan log: ' . $e->getMessage()], 500);
         }
     }
 

@@ -23,6 +23,8 @@ export default function SubjectMasterData() {
   const [editedRegion, setEditedRegion] = useState('');
   const [customSubjectText, setCustomSubjectText] = useState('');
   const [editedCustomSubjectText, setEditedCustomSubjectText] = useState('');
+  const [newWeeklyHours, setNewWeeklyHours] = useState(2);
+  const [editedWeeklyHours, setEditedWeeklyHours] = useState(2);
 
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
 
@@ -54,11 +56,6 @@ export default function SubjectMasterData() {
   };
 
   const saveSubject = async () => {
-    if (!newSubjectName.trim() || !newSubjectCode.trim()) {
-      toast.error('Kode dan Nama mata pelajaran wajib diisi.');
-      return;
-    }
-
     if (editingSubjectId) {
       // Update existing subject
       let baseFinalName = editedSubjectName === 'Lainnya' ? editedCustomSubjectText : editedSubjectName;
@@ -78,7 +75,8 @@ export default function SubjectMasterData() {
           await api.put(`/subjects/${editingSubjectId}`, {
             code: editedSubjectCode.trim(),
             name: finalName,
-            school_level: selectedSchoolLevel
+            school_level: selectedSchoolLevel,
+            weekly_hours: editedWeeklyHours 
           });
           toast.success('Mata pelajaran berhasil diperbarui!');
           setEditingSubjectId(null);
@@ -112,7 +110,8 @@ export default function SubjectMasterData() {
           await api.post('/subjects', {
             code: newSubjectCode.trim(),
             name: finalName,
-            school_level: selectedSchoolLevel
+            school_level: selectedSchoolLevel,
+            weekly_hours: newWeeklyHours
           });
           toast.success('Mata pelajaran berhasil ditambahkan!');
           setNewSubjectCode('');
@@ -179,6 +178,7 @@ export default function SubjectMasterData() {
     if (subject.school_level) {
       setSelectedSchoolLevel(subject.school_level);
     }
+    setEditedWeeklyHours(subject.weekly_hours || 2);
   };
 
   const cancelEditing = () => {
@@ -188,7 +188,7 @@ export default function SubjectMasterData() {
     setEditedCustomSubjectText('');
   };
 
-  const tableHeaders = ['Jenjang', 'Kode', 'Nama', 'Aksi'];
+  const tableHeaders = ['Jenjang', 'Kode', 'Nama', 'Jam/Pekan', 'Aksi'];
 
   const isAdmin = user?.role === 'admin';
 
@@ -278,6 +278,16 @@ export default function SubjectMasterData() {
               )}
             </div>
           </div>
+          <div className="w-full md:w-32">
+            <StyledInput
+              type="number"
+              label="Jam/Pekan"
+              min="1"
+              max="6"
+              value={editingSubjectId ? editedWeeklyHours : newWeeklyHours}
+              onChange={(e) => (editingSubjectId ? setEditedWeeklyHours(e.target.value) : setNewWeeklyHours(e.target.value))}
+            />
+          </div>
           <StyledButton onClick={saveSubject} className="mb-0.5 h-[42px]">
             {editingSubjectId ? 'Perbarui' : 'Tambah'}
           </StyledButton>
@@ -292,7 +302,10 @@ export default function SubjectMasterData() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-text-light dark:text-text-dark">Daftar Mata Pelajaran</h3>
-          <span className="text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-600 px-3 py-1 rounded-full">{subjects.length} Mapel</span>
+          <div className="flex gap-2">
+            <span className="text-xs font-bold bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 px-3 py-1 rounded-full">Total: {subjects.reduce((sum, s) => sum + (parseInt(s.weekly_hours) || 0), 0)} Jam/Pekan</span>
+            <span className="text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-600 px-3 py-1 rounded-full">{subjects.length} Mapel</span>
+          </div>
         </div>
         
         {subjects.length === 0 ? (
@@ -306,6 +319,11 @@ export default function SubjectMasterData() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark">{subject.school_level || '-'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-purple-600 dark:text-purple-400">{subject.code}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium">{subject.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
+                  <span className="bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 px-2.5 py-1 rounded-lg font-black border border-purple-100 dark:border-purple-800/30">
+                    {subject.weekly_hours || 2}
+                  </span>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex gap-2">
                     <StyledButton onClick={() => startEditing(subject)} variant="primary" size="sm" className="!p-2"><Edit size={16} /></StyledButton>

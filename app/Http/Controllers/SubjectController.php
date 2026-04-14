@@ -83,6 +83,7 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:subjects,code',
             'school_level' => 'nullable|string|max:10',
+            'weekly_hours' => 'required|integer|min:1|max:6',
         ]);
 
         $subject = Subject::create($validated);
@@ -119,6 +120,7 @@ class SubjectController extends Controller
             'name' => 'string|max:255',
             'code' => 'string|unique:subjects,code,' . $subject->id,
             'school_level' => 'nullable|string|max:10',
+            'weekly_hours' => 'nullable|integer|min:1|max:6',
         ]);
 
         $subject->update($validated);

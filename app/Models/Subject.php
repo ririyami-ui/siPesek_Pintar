@@ -9,5 +9,5 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'school_level'];
+    protected $fillable = ['name', 'code', 'school_level', 'weekly_hours'];
 }

@@ -18,6 +18,23 @@ const ClassCard = ({ classItem, onEdit, onDelete }) => {
               {classItem.wali?.name || 'Belum ditentukan'}
             </span>
           </div>
+          <div className="mt-1.5 flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase text-gray-400">Beban:</span>
+            <div className="flex items-center gap-1">
+              <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md ${
+                analysis?.status === 'balanced' ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400' :
+                analysis?.status === 'overload' ? 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
+                'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
+              }`}>
+                {analysis ? `${analysis.burdenJam}/${analysis.capacitasJam} Jam` : '-/- Jam'}
+              </span>
+              {analysis?.delta !== 0 && (
+                <span className={`text-[9px] font-bold ${analysis?.delta > 0 ? 'text-red-500' : 'text-amber-500'}`}>
+                  ({analysis?.delta > 0 ? `+${analysis.delta}` : analysis.delta})
+                </span>
+              )}
+            </div>
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex space-x-2">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Trash2, Download, Upload, AlertTriangle, Database, RefreshCw, Zap } from 'lucide-react';
+import { Trash2, Download, Upload, AlertTriangle, Database, RefreshCw, Zap, Sparkles } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
 import StyledButton from './StyledButton';
@@ -40,24 +40,28 @@ const DatabaseManagerAdmin = () => {
 
   const handleBackup = async () => {
     try {
-      toast.loading('Menyiapkan backup...', { id: 'backup-loading' });
-      const response = await api.get('/admin/database/backup', {
-        responseType: 'blob'
-      });
+      toast.loading('Menyiapkan backup (Proses ini mungkin memakan waktu)...', { id: 'backup-loading' });
       
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      const filename = `backup-smart-school-${new Date().toISOString().split('T')[0]}.sql`;
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      // Phase 1: Request the backup ticket
+      const response = await api.get('/admin/database/backup');
+      const { ticket } = response.data;
       
-      toast.success('Backup database berhasil diunduh!', { id: 'backup-loading' });
+      if (!ticket) {
+        throw new Error('Gagal mendapatkan tiket backup.');
+      }
+
+      // Phase 2: Redirect to the public direct download route with the ticket
+      // We use the full API URL to ensure the browser hits the correct endpoint
+      const downloadUrl = `${api.defaults.baseURL}/admin/database/backup/download?ticket=${ticket}`;
+      
+      // Trigger native browser download by redirecting
+      window.location.assign(downloadUrl);
+      
+      toast.success('Backup database sedang diunduh!', { id: 'backup-loading' });
     } catch (error) {
       console.error('Error backing up database:', error);
-      toast.error('Gagal melakukan backup database.', { id: 'backup-loading' });
+      const message = error.response?.data?.message || error.message || 'Gagal melakukan backup database.';
+      toast.error(message, { id: 'backup-loading' });
     }
   };
 
@@ -168,6 +172,35 @@ const DatabaseManagerAdmin = () => {
     }
   };
 
+  const handleCleanLogs = () => {
+    setConfirmationText('');
+    setPassword('');
+    setConfirmModal({
+      isOpen: true,
+      title: 'Bersihkan Log & Perawatan',
+      message: 'Tindakan ini akan mengosongkan file log sistem, membersihkan token sesi lama, dan menyegarkan cache aplikasi. Akun dan data Anda tetap aman.',
+      requiresInput: false,
+      requiresPassword: true,
+      onConfirm: async (currentPassword) => {
+        setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        await performClean(currentPassword);
+      }
+    });
+  };
+
+  const performClean = async (currentPassword) => {
+    toast.loading('Membersihkan log & optimasi...', { id: 'clean-loading' });
+    try {
+      await api.post('/admin/database/clean-logs', {
+        password: currentPassword
+      });
+      toast.success('Sistem berhasil dibersihkan dan dioptimasi!', { id: 'clean-loading' });
+    } catch (error) {
+      console.error('Error cleaning logs:', error);
+      toast.error(error.response?.data?.message || 'Gagal membersihkan sistem.', { id: 'clean-loading' });
+    }
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Action Header */}
@@ -175,7 +208,7 @@ const DatabaseManagerAdmin = () => {
         <div>
           <h3 className="text-xl font-black text-gray-800 dark:text-white flex items-center gap-2">
             <Database className="text-blue-600" size={24} />
-            Manajemen Basis Data (SQL)
+            Manajemen Basis Data (SQL) <span className="text-[10px] bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 rounded-full font-bold ml-1">v2.1-ticket</span>
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium">
             Cadangkan, kosongkan, atau reset data aplikasi Anda secara aman.
@@ -211,6 +244,16 @@ const DatabaseManagerAdmin = () => {
               <Trash2 size={20} />
             </div>
             <span className="tracking-tight">Reset Total Data</span>
+          </button>
+
+          <button 
+            onClick={handleCleanLogs} 
+            className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white font-black rounded-2xl shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:-translate-y-1 transition-all duration-300 active:scale-95 group"
+          >
+            <div className="p-2 bg-white/20 rounded-xl group-hover:rotate-12 transition-transform">
+              <Sparkles size={20} />
+            </div>
+            <span className="tracking-tight">Bersihkan Log & Perawatan</span>
           </button>
         </div>
       </div>

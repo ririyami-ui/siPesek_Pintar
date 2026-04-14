@@ -28,6 +28,15 @@ class Teacher extends Model
         'password',
     ];
 
+    protected $appends = ['total_weekly_hours'];
+
+    public function getTotalWeeklyHoursAttribute()
+    {
+        return $this->assignments()->with('subject')->get()->sum(function($a) {
+            return $a->subject ? (int)$a->subject->weekly_hours : 0;
+        });
+    }
+
     public function authUser()
     {
         return $this->belongsTo(User::class, 'auth_user_id');

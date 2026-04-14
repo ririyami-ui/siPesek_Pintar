@@ -171,7 +171,7 @@ export default function JadwalPage() {
                 <p className="text-[10px] font-bold opacity-80 uppercase tracking-widest">{getDayDate(day).format('DD MMMM YYYY')}</p>
               </div>
               
-              <ul className="p-3 space-y-2">
+              <ul className="p-3 space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar">
                 {groupedSchedules[day].map((schedule, index) => {
                   const displayClass = typeof schedule.class === 'object' && schedule.class !== null
                     ? schedule.class.rombel

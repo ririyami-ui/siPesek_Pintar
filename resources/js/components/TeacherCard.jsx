@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Pencil, ChevronDown, ChevronUp, User, Plus, X, GraduationCap, BookOpen } from 'lucide-react';
+import { Trash2, Pencil, ChevronDown, ChevronUp, User, Plus, X, GraduationCap, BookOpen, Clock } from 'lucide-react';
 import StyledButton from './StyledButton';
 import Select from 'react-select';
 import api from '../lib/axios';
@@ -24,6 +24,11 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
         acc[subjectId].classes.push(curr.school_class || { rombel: 'Unknown' });
         return acc;
     }, {}) || {};
+    
+    // Calculate total teaching burden (sum of weekly hours from all assignments)
+    const totalBurden = teacher.assignments?.reduce((acc, curr) => {
+        return acc + (parseInt(curr.subject?.weekly_hours) || 0);
+    }, 0) || 0;
 
     const subjectOptions = subjects.map(s => ({ value: s.id, label: `${s.name} (${s.code})` }));
     
@@ -116,6 +121,9 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
                         <p className="text-lg font-bold text-text-light dark:text-text-dark leading-tight">{teacher.name}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                             <span className="text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-1.5 py-0.5 rounded-md">{teacher.code || '-'}</span>
+                            <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded-md flex items-center gap-1" title="Total Beban Mengajar per Pekan">
+                                <Clock size={12} /> {totalBurden} Jam
+                            </span>
                             <span className="text-[10px] font-medium text-text-muted-light dark:text-text-muted-dark">NIP: {teacher.nip || '-'}</span>
                         </div>
                     </div>

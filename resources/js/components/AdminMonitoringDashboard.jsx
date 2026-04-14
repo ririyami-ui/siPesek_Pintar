@@ -57,11 +57,13 @@ const AdminMonitoringDashboard = () => {
     
     // Improved detection: all scheduled times have passed
     const isPastSchoolDay = monitoringData?.max_end_time && 
-        moment(currentTime.format('HH:mm'), 'HH:mm').isAfter(moment(monitoringData.max_end_time, 'HH:mm'));
+        moment(currentTime.format('HH:mm'), 'HH:mm').isSameOrAfter(moment(monitoringData.max_end_time, 'HH:mm'));
+
+    const isBeforeSchoolDay = monitoringData?.min_start_time &&
+        moment(currentTime.format('HH:mm'), 'HH:mm').isBefore(moment(monitoringData.min_start_time, 'HH:mm'));
         
-    // [FIX] Learning is finished ONLY IF all KBM sessions are completed AND no upcoming sessions AND no active non-KBM
-    const isAllLearningFinished = data.length > 0 && 
-        (stats.berlangsung === 0 && stats.belum_mulai === 0 && !monitoringData?.active_non_teaching && isPastSchoolDay);
+    // [FIX] Learning is finished if we are past the school day OR before the school day started
+    const isAllLearningFinished = (isPastSchoolDay || isBeforeSchoolDay) && !monitoringData?.active_non_teaching;
 
     const getStatusConfig = (status) => {
         switch (status) {
@@ -215,8 +217,13 @@ const AdminMonitoringDashboard = () => {
             <div className={`transition-all duration-1000 ${monitoringData?.active_non_teaching ? 'opacity-70 grayscale-[30%]' : 'opacity-100'}`}>
                 {isAllLearningFinished && !showOnlyMissing && (
                     <div className="p-8 rounded-[2.5rem] bg-emerald-500/10 border border-emerald-200 text-center mb-6">
-                        <CheckCircle2 size={32} className="mx-auto text-emerald-500 mb-4" />
-                        <h3 className="text-2xl font-black text-emerald-800">Pembelajaran Selesai</h3>
+                        {isPastSchoolDay ? <CheckCircle2 size={32} className="mx-auto text-emerald-500 mb-4" /> : <Clock size={32} className="mx-auto text-indigo-500 mb-4" />}
+                        <h3 className="text-2xl font-black text-slate-800">
+                            {isPastSchoolDay ? 'Pembelajaran Selesai' : 'Pembelajaran Belum Mulai'}
+                        </h3>
+                        <p className="text-sm text-slate-500 mt-2">
+                            {isPastSchoolDay ? 'Semua tugas mengajar hari ini telah tuntas.' : `Jadwal hari ini akan dimulai pada pukul ${monitoringData?.min_start_time}.`}
+                        </p>
                     </div>
                 )}
 
