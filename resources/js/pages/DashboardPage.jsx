@@ -41,7 +41,8 @@ export default function DashboardPage() {
   const { 
     activeSemester, 
     academicYear, 
-    userProfile
+    userProfile,
+    monitoringData
   } = useSettings();
   const [activeSchedule, setActiveSchedule] = useState(null);
 
@@ -99,42 +100,53 @@ export default function DashboardPage() {
       setTodayHoliday(activeHoliday || null);
 
       // Fetch Students & Stats
+      let students = [];
       const studentsResponse = await api.get('/students');
       const fetchedStudentsRaw = studentsResponse.data.data || studentsResponse.data || [];
 
-      // De-duplicate if needed (as requested by user logic)
+      // De-duplicate if needed
       const uniqueStudentsMap = new Map();
       fetchedStudentsRaw.forEach(student => {
         const key = student.id || JSON.stringify(student);
         uniqueStudentsMap.set(key, student);
       });
-      const students = Array.from(uniqueStudentsMap.values());
+      students = Array.from(uniqueStudentsMap.values());
 
-      let total = 0, male = 0, female = 0;
-      const byRombel = {};
+      // [SYNC OPTIMIZATION] If admin, we can use basic stats from monitoringData for consistency
+      // but we still needed students list for ranking below.
+      if (userProfile?.role?.toLowerCase() === 'admin' && monitoringData?.stats?.student_stats) {
+          const mStats = monitoringData.stats.student_stats;
+          setStudentStats(prev => ({
+              ...prev,
+              totalStudents: mStats.total || 0,
+              maleStudents: mStats.male || 0,
+              femaleStudents: mStats.female || 0,
+          }));
+      } else {
+          let total = 0, male = 0, female = 0;
+          const byRombel = {};
 
-      students.forEach(student => {
-        total++;
-        const gender = student.gender?.toLowerCase() || '';
-        // Robust matching for Laki-laki/L and Perempuan/P
-        const isMale = gender === 'laki-laki' || gender === 'l';
-        const isFemale = gender === 'perempuan' || gender === 'p';
+          students.forEach(student => {
+            total++;
+            const gender = student.gender?.toLowerCase() || '';
+            const isMale = gender === 'laki-laki' || gender === 'l';
+            const isFemale = gender === 'perempuan' || gender === 'p';
 
-        if (isMale) male++;
-        else if (isFemale) female++;
+            if (isMale) male++;
+            else if (isFemale) female++;
 
-        // Access rombel from nested class or direct property
-        const rombel = student.rombel || student.class_name || student.class?.rombel || 'Tanpa Kelas';
+            const rombel = student.rombel || student.class_name || student.class?.rombel || 'Tanpa Kelas';
 
-        if (!byRombel[rombel]) {
-          byRombel[rombel] = { total: 0, male: 0, female: 0, students: [] };
-        }
-        byRombel[rombel].total++;
-        if (isMale) byRombel[rombel].male++;
-        else if (isFemale) byRombel[rombel].female++;
-        byRombel[rombel].students.push(student);
-      });
-      setStudentStats({ totalStudents: total, maleStudents: male, femaleStudents: female, studentsByRombel: byRombel });
+            if (!byRombel[rombel]) {
+              byRombel[rombel] = { total: 0, male: 0, female: 0, students: [] };
+            }
+            byRombel[rombel].total++;
+            if (isMale) byRombel[rombel].male++;
+            else if (isFemale) byRombel[rombel].female++;
+            byRombel[rombel].students.push(student);
+          });
+          setStudentStats({ totalStudents: total, maleStudents: male, femaleStudents: female, studentsByRombel: byRombel });
+      }
 
       // Fetch Top Students (lowest infractions)
       const infractionsResponse = await api.get('/infractions', {
@@ -144,8 +156,8 @@ export default function DashboardPage() {
 
       const ranked = students.map(s => {
         const penalty = infractions
-          .filter(inf => inf.student_id === s.id)
-          .reduce((acc, curr) => acc + curr.points, 0);
+          ? infractions.filter(inf => inf.student_id === s.id).reduce((acc, curr) => acc + curr.points, 0)
+          : 0;
         return { ...s, score: 100 - penalty };
       }).sort((a, b) => b.score - a.score).slice(0, 3);
       setTopStudents(ranked);
@@ -245,13 +257,18 @@ export default function DashboardPage() {
       const now = moment();
       setCurrentTime(now);
 
-      // Detect active schedule
+      // Detect active schedule based on backend status for consistency
       const active = todaySchedules.find(s => {
         if (s.type === 'non-teaching') return false;
-        const start = moment(s.startTime || s.start_time, 'HH:mm');
-        const end = moment(s.endTime || s.end_time, 'HH:mm');
-        if (end.isBefore(start)) end.add(1, 'day');
-        return now.isBetween(start, end, null, '[]');
+        
+        // If backend provided status, trust it
+        if (s.status === 'berlangsung' || s.status === 'menunggu_absen' || s.status === 'alfa' || s.status === 'assignment') {
+            const start = moment(s.startTime || s.start_time, 'HH:mm');
+            const end = moment(s.endTime || s.end_time, 'HH:mm');
+            if (end.isBefore(start)) end.add(1, 'day');
+            return now.isBetween(start, end, null, '[]');
+        }
+        return false;
       });
       setActiveSchedule(active);
     }, 1000);
@@ -260,8 +277,7 @@ export default function DashboardPage() {
 
   const allTodayFinished = todaySchedules.length > 0 && todaySchedules.every(s => {
     if (s.type === 'non-teaching') return true;
-    const end = moment(s.endTime || s.end_time, 'HH:mm');
-    return currentTime.isAfter(end);
+    return s.status === 'selesai' || (s.status === 'alfa' && currentTime.isAfter(moment(s.endTime || s.end_time, 'HH:mm')));
   });
 
   return (
@@ -314,7 +330,7 @@ export default function DashboardPage() {
       {/* Monitoring for Admin */}
       {userProfile?.role?.toLowerCase() === 'admin' && (
         <div className="mb-8">
-          <AdminMonitoringDashboard />
+          <AdminMonitoringDashboard holiday={todayHoliday} />
         </div>
       )}
 
@@ -341,6 +357,7 @@ export default function DashboardPage() {
               carryOverMap={carryOverMap}
               activeSemester={activeSemester}
               academicYear={academicYear}
+              userProfile={userProfile}
             />
           </div>
         </div>
@@ -358,6 +375,7 @@ export default function DashboardPage() {
             carryOverMap={carryOverMap}
             activeSemester={activeSemester}
             academicYear={academicYear}
+            userProfile={userProfile}
           />
         </div>
       )}

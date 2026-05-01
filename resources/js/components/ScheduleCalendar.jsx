@@ -16,7 +16,9 @@ import { getHolidaysByYear } from '../utils/holidayData';
 import TimeSlotModal from './TimeSlotModal';
 import SchedulingReportModal from './SchedulingReportModal';
 import SchedulingSyncModal from './SchedulingSyncModal';
-import { Calculator as CalculatorIcon } from 'lucide-react';
+import PrintScheduleModal from './PrintScheduleModal';
+import { Calculator as CalculatorIcon, Printer, Download } from 'lucide-react';
+import AutoScheduleService from '../utils/AutoScheduleService';
 
 // Set moment locale to Indonesian
 moment.locale('id');
@@ -68,6 +70,9 @@ const ScheduleCalendar = () => {
     const [reportErrors, setReportErrors] = useState([]);
     const [reportMessage, setReportMessage] = useState('');
     const [showSyncModal, setShowSyncModal] = useState(false);
+    const [showPrintModal, setShowPrintModal] = useState(false);
+    const [isClearingAll, setIsClearingAll] = useState(false);
+    const [teachers, setTeachers] = useState([]);
 
     const daysOfWeek = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
@@ -95,24 +100,29 @@ const ScheduleCalendar = () => {
 
     const fetchMasterData = async (userData) => {
         try {
-            const [subjectsRes, classesRes] = await Promise.all([
+            const [subjectsRes, classesRes, assignmentsRes, teachersRes] = await Promise.all([
                 api.get('/subjects'),
-                api.get('/classes')
+                api.get('/classes'),
+                api.get('/assignments'),
+                api.get('/teachers')
             ]);
             
             const fetchedSubjects = subjectsRes.data.data || subjectsRes.data || [];
             const fetchedClasses = classesRes.data.data || classesRes.data || [];
+            const fetchedAssignments = assignmentsRes.data.data || assignmentsRes.data || [];
+            const fetchedTeachers = teachersRes.data.data || teachersRes.data || [];
             
+            setTeachers(fetchedTeachers);
+
             if (userData.role === 'teacher') {
-                const teacherRes = await api.get('/teachers');
-                const teachers = teacherRes.data.data || teacherRes.data || [];
-                const currentTeacher = teachers.find(t => t.auth_user_id === userData.id);
+                const currentTeacher = fetchedAssignments.find(a => a.teacher?.auth_user_id === userData.id)?.teacher;
                 
-                if (currentTeacher && currentTeacher.assignments) {
-                    setAssignments(currentTeacher.assignments);
+                if (currentTeacher) {
+                    const teacherAssignments = fetchedAssignments.filter(a => a.teacher_id === currentTeacher.id);
+                    setAssignments(teacherAssignments);
                     
-                    const assignedSubjectIds = new Set(currentTeacher.assignments.map(a => a.subject_id));
-                    const assignedClassIds = new Set(currentTeacher.assignments.map(a => a.class_id));
+                    const assignedSubjectIds = new Set(teacherAssignments.map(a => a.subject_id));
+                    const assignedClassIds = new Set(teacherAssignments.map(a => a.class_id));
 
                     setSubjects(fetchedSubjects.filter(s => assignedSubjectIds.has(s.id)));
                     setClasses(fetchedClasses.filter(c => assignedClassIds.has(c.id)).sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
@@ -122,23 +132,9 @@ const ScheduleCalendar = () => {
                     setClasses([]);
                 }
             } else if (userData.role === 'admin') {
-                // For admin, fetch all teachers and extract their assignments
-                try {
-                    const teacherRes = await api.get('/teachers');
-                    const teachers = teacherRes.data.data || teacherRes.data || [];
-                    // Flatten all assignments from all teachers
-                    const allAssignments = teachers.reduce((acc, t) => {
-                        if (t.assignments) {
-                            return [...acc, ...t.assignments];
-                        }
-                        return acc;
-                    }, []);
-                    setAssignments(allAssignments);
-                    setSubjects(fetchedSubjects);
-                    setClasses(fetchedClasses.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
-                } catch (err) {
-                    console.error("Error fetching assignments:", err);
-                }
+                setAssignments(fetchedAssignments);
+                setSubjects(fetchedSubjects);
+                setClasses(fetchedClasses.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
             } else {
                 setAssignments([]);
                 setSubjects(fetchedSubjects);
@@ -173,24 +169,69 @@ const ScheduleCalendar = () => {
 
     const confirmAutoGenerate = async () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
-        setIsGeneratingAuto(true);
-        const toastId = toast.loading('Sedang menyusun jadwal cerdas...');
-
-        try {
-            const res = await api.post('/schedules/auto-generate');
-            toast.success(res.data.message || 'Jadwal berhasil dibuat!', { id: toastId });
-            await fetchSchedules(user);
-        } catch (error) {
-            console.error("Auto-generate error:", error);
-            const data = error.response?.data;
-            // Always open the report modal on failure to show the full message
-            setReportMessage(data?.message || 'Gagal membuat jadwal otomatis.');
-            setReportErrors(data?.errors || []);
-            setShowReportModal(true);
-            toast.dismiss(toastId);
-        } finally {
-            setIsGeneratingAuto(false);
+        
+        // --- VALIDASI AWAL ---
+        if (!userProfile) {
+            toast.error('Profil sekolah belum dimuat.');
+            return;
         }
+
+        if (!assignments || assignments.length === 0) {
+            setReportMessage("Data Penugasan Guru masih kosong. Silakan isi Penugasan Guru terlebih dahulu di Master Data.");
+            setShowReportModal(true);
+            return;
+        }
+
+        // Delay sedikit agar modal konfirmasi benar-benar tertutup dan UI tidak freeze
+        setIsGeneratingAuto(true);
+        const toastId = toast.loading('Menyiapkan data...');
+
+        setTimeout(async () => {
+            try {
+                console.log("AutoSchedule: Starting...");
+
+                const adminData = {
+                    profile: userProfile,
+                    assignments: assignments,
+                    classes: classes,
+                    subjects: subjects
+                };
+
+                const service = new AutoScheduleService(adminData);
+                
+                const result = await service.generate((attempt, max, customMessage) => {
+                    if (customMessage) {
+                        console.log(`[UI-Progress] ${customMessage}`);
+                        toast.loading(customMessage, { id: toastId });
+                    } else {
+                        console.log(`[UI-Progress] Simulasi #${attempt}`);
+                        toast.loading(`Mencari solusi bentrok (Simulasi #${attempt})...`, { id: toastId });
+                    }
+                });
+
+                if (!result.success) {
+                    setReportMessage(result.message);
+                    setReportErrors(result.errors || []);
+                    setShowReportModal(true);
+                    toast.dismiss(toastId);
+                    setIsGeneratingAuto(false);
+                    return;
+                }
+
+                toast.loading('Menyimpan jadwal ke server...', { id: toastId });
+                const res = await api.post('/schedules/bulk-store', {
+                    schedules: result.schedules
+                });
+
+                toast.success(res.data.message || 'Jadwal berhasil disimpan!', { id: toastId });
+                await fetchSchedules(user);
+            } catch (error) {
+                console.error("Auto-generate error:", error);
+                toast.error('Gagal menyusun jadwal.', { id: toastId });
+            } finally {
+                setIsGeneratingAuto(false);
+            }
+        }, 300);
     };
 
     const fetchHolidays = async () => {
@@ -232,16 +273,24 @@ const ScheduleCalendar = () => {
         }
     };
 
-    const handleDeleteHoliday = async (id) => {
-        if (window.confirm('Hapus agenda ini?')) {
-            try {
-                await api.delete(`/holidays/${id}`);
-                toast.success('Agenda dihapus');
-                fetchHolidays();
-            } catch (error) {
-                toast.error('Gagal menghapus agenda');
+    const handleDeleteHoliday = (id) => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Hapus Agenda Sekolah',
+            message: 'Apakah Anda yakin ingin menghapus agenda ini? Tindakan ini akan mengaktifkan kembali jadwal rutin pada tanggal terkait.',
+            onConfirm: async () => {
+                try {
+                    await api.delete(`/holidays/${id}`);
+                    toast.success('Agenda berhasil dihapus!');
+                    fetchHolidays();
+                } catch (error) {
+                    console.error('Error deleting holiday:', error);
+                    toast.error('Gagal menghapus agenda.');
+                } finally {
+                    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                }
             }
-        }
+        });
     };
 
     const calendarEvents = useMemo(() => {
@@ -466,7 +515,7 @@ const ScheduleCalendar = () => {
         setConfirmModal({
             isOpen: true,
             title: 'Hapus Jadwal',
-            message: 'Apakah Anda yakin ingin menghapus jadwal ini?',
+            message: 'Apakah Anda yakin ingin menghapus satu jadwal ini?',
             onConfirm: async () => {
                 try {
                     await api.delete(`/schedules/${id}`);
@@ -476,6 +525,30 @@ const ScheduleCalendar = () => {
                     console.error('Error deleting schedule:', error);
                     toast.error('Gagal menghapus jadwal.');
                 } finally {
+                    setConfirmModal(prev => ({ ...prev, isOpen: false }));
+                }
+            }
+        });
+    };
+
+    const handleClearAllSchedules = () => {
+        setConfirmModal({
+            isOpen: true,
+            title: 'Hapus Semua Jadwal',
+            message: 'Apakah Anda yakin ingin menghapus SELURUH jadwal mengajar? Tindakan ini tidak dapat dibatalkan.',
+            onConfirm: async () => {
+                setIsClearingAll(true);
+                const toastId = toast.loading('Menghapus semua jadwal...');
+                try {
+                    // We use the bulk-store endpoint with an empty array to clear all teaching schedules
+                    await api.post('/schedules/bulk-store', { schedules: [] });
+                    toast.success('Semua jadwal berhasil dikosongkan!', { id: toastId });
+                    fetchSchedules(user);
+                } catch (error) {
+                    console.error('Error clearing schedules:', error);
+                    toast.error('Gagal mengosongkan jadwal.', { id: toastId });
+                } finally {
+                    setIsClearingAll(false);
                     setConfirmModal(prev => ({ ...prev, isOpen: false }));
                 }
             }
@@ -498,6 +571,35 @@ const ScheduleCalendar = () => {
         } catch (error) {
             console.error('Error syncing holidays:', error);
             toast.error('Gagal sinkronisasi hari libur.');
+        }
+    };
+
+    const handleExportCsv = async () => {
+        const toastId = toast.loading('Menyiapkan file CSV...');
+        try {
+            const response = await api.get('/schedules/export/csv', {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            
+            // Get filename from response headers or fallback
+            let filename = `jadwal_pelajaran_${moment().format('YYYY-MM-DD_HH-mm-ss')}.csv`;
+            const contentDisposition = response.headers['content-disposition'];
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="?(.+)"?/);
+                if (fileNameMatch && fileNameMatch[1]) filename = fileNameMatch[1];
+            }
+            
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            toast.success('CSV berhasil diunduh!', { id: toastId });
+        } catch (error) {
+            console.error('Error exporting CSV:', error);
+            toast.error('Gagal mengekspor CSV.', { id: toastId });
         }
     };
 
@@ -583,8 +685,30 @@ const ScheduleCalendar = () => {
                                 <span className="relative z-10">Generate Otomatis</span>
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] skew-x-12" />
                             </StyledButton>
+                            <StyledButton
+                                onClick={() => setShowPrintModal(true)}
+                                variant="outline"
+                                className="flex items-center gap-2 border-emerald-200 text-emerald-600 hover:bg-emerald-50"
+                            >
+                                <Printer size={18} /> Cetak Jadwal
+                            </StyledButton>
                             <StyledButton onClick={() => setShowTimeSlotModal(true)} variant="outline" className="flex items-center gap-2 border-purple-200 text-purple-600 hover:bg-purple-50">
                                 <Settings size={18} /> Kelola Template Waktu
+                            </StyledButton>
+                            <StyledButton
+                                onClick={handleExportCsv}
+                                variant="outline"
+                                className="flex items-center gap-2 border-amber-200 text-amber-600 hover:bg-amber-50"
+                            >
+                                <Download size={18} /> Ekspor CSV
+                            </StyledButton>
+                            <StyledButton 
+                                onClick={handleClearAllSchedules} 
+                                variant="outline" 
+                                className="flex items-center gap-2 border-red-200 text-red-600 hover:bg-red-50"
+                                loading={isClearingAll}
+                            >
+                                <Trash2 size={18} /> Hapus Semua Jadwal
                             </StyledButton>
                             <StyledButton onClick={() => setShowHolidayModal(true)} variant="outline" className="flex items-center gap-2">
                                 <CalendarIcon size={18} /> Kelola Agenda Sekolah
@@ -1025,6 +1149,47 @@ const ScheduleCalendar = () => {
                     isOpen={showSyncModal} 
                     onClose={() => setShowSyncModal(false)}
                 />
+            )}
+
+            {showPrintModal && (
+                <PrintScheduleModal
+                    isOpen={showPrintModal}
+                    onClose={() => setShowPrintModal(false)}
+                    schedules={schedules}
+                    classes={classes}
+                    subjects={subjects}
+                    teachers={teachers}
+                    schoolName={userProfile?.name}
+                    teachingSlots={userProfile?.teaching_time_slots?.profiles?.find(p => p.id === selectedTemplateId)?.slots || {}}
+                />
+            )}
+
+            {/* Confirm Modal UI */}
+            {confirmModal.isOpen && (
+                <Modal onClose={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}>
+                    <div className="text-center p-4">
+                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 dark:bg-red-900/20 mb-6">
+                            <Trash2 className="h-8 w-8 text-red-600 dark:text-red-400" />
+                        </div>
+                        <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">{confirmModal.title}</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">{confirmModal.message}</p>
+                        <div className="flex gap-3 justify-center">
+                            <StyledButton 
+                                variant="outline" 
+                                onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+                                className="flex-1"
+                            >
+                                Batal
+                            </StyledButton>
+                            <StyledButton 
+                                onClick={confirmModal.onConfirm}
+                                className="flex-1 !bg-red-600 hover:!bg-red-700 !text-white"
+                            >
+                                Ya, Hapus
+                            </StyledButton>
+                        </div>
+                    </div>
+                </Modal>
             )}
         </div>
     );

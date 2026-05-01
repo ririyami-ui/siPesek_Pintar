@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -56,10 +57,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Check if the user is a librarian or admin
+     */
+    public function isLibrarian(): bool
+    {
+        return in_array($this->role, ['admin', 'adminer', 'librarian']);
+    }
+
+    /**
      * Check if the user is a super admin (for very specific bypasses if needed)
      */
     public function isSuperAdmin(): bool
     {
         return $this->username === 'admin' || $this->role === 'admin';
+    }
+
+    public function libraryLoans()
+    {
+        return $this->hasMany(LibraryLoan::class, 'librarian_id');
     }
 }

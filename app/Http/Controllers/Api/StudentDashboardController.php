@@ -145,20 +145,20 @@ class StudentDashboardController extends Controller
         $schedules = Schedule::with(['subject', 'teacher'])
             ->where('class_id', $student->class_id)
             ->where('type', 'teaching') // Filter strictly teaching sessions
-            ->where(function ($q) use ($dayName) {
-                $q->where('day', $dayName)
-                  ->where(function ($q2) {
-                      $q2->where('is_recurring', true)->orWhereNull('is_recurring');
-                  });
-            })
-            ->orWhere(function ($q) use ($student, $today) {
-                $q->where('class_id', $student->class_id)
-                  ->where('type', 'teaching') // Filter strictly teaching sessions
-                  ->where('start_date', '<=', $today)
-                  ->where(function ($q2) use ($today) {
-                      $q2->where('end_date', '>=', $today)->orWhereNull('end_date');
-                  })
-                  ->where('is_recurring', false);
+            ->where('day', $dayName)
+            ->where(function($q) use ($today) {
+                // [UNIFIED LOGIC] Match if NO dates are set (assume always active for that day)
+                // OR if today is within the set date range
+                $q->where(function($sub) {
+                    $sub->whereNull('start_date')->whereNull('end_date');
+                })
+                ->orWhere(function($sub) use ($today) {
+                    $sub->where('start_date', '<=', $today)
+                        ->where(function($dateRange) use ($today) {
+                            $dateRange->where('end_date', '>=', $today)
+                                      ->orWhereNull('end_date');
+                        });
+                });
             })
             ->orderBy('start_time')
             ->get();
@@ -212,11 +212,17 @@ class StudentDashboardController extends Controller
                 $status = 'ongoing';
             }
 
-            // Resolve actual teacher name
+            // [FIX] Resolve actual teacher name: Prioritize the teacher explicitly set in the Schedule table
+            // This ensures manual changes in Master Data Jadwal are reflected in the student portal.
             $teacherName = '-';
             if (($schedule->type ?? 'teaching') === 'teaching' && isset($schedule->subject_id)) {
-                $assignment = $assignments->get($schedule->subject_id);
-                $teacherName = $assignment?->teacher?->name ?? $schedule->teacher?->name ?? '-';
+                $teacherName = $schedule->teacher?->name;
+                
+                // Fallback to assignment teacher only if schedule table has no teacher_id
+                if (!$teacherName) {
+                    $assignment = $assignments->get($schedule->subject_id);
+                    $teacherName = $assignment?->teacher?->name ?? '-';
+                }
             } else {
                 $teacherName = $schedule->teacher?->name ?? '-';
             }
@@ -281,7 +287,7 @@ class StudentDashboardController extends Controller
                 'subject_name'  => $currentSession->subject?->name ?? $currentSession->activity_name ?? 'Kegiatan',
                 'teacher_name'  => (
                     (($currentSession->type ?? 'teaching') === 'teaching' && isset($currentSession->subject_id))
-                        ? ($assignments->get($currentSession->subject_id)?->teacher?->name ?? $currentSession->teacher?->name ?? '-')
+                        ? ($currentSession->teacher?->name ?? $assignments->get($currentSession->subject_id)?->teacher?->name ?? '-')
                         : ($currentSession->teacher?->name ?? '-')
                 ),
                 'start_time'    => substr($currentSession->start_time, 0, 5),
@@ -334,23 +340,26 @@ class StudentDashboardController extends Controller
             ->keyBy('subject_id');
 
         $formattedSchedules = $schedules->map(function ($schedule) use ($assignments) {
-            // Resolve actual teacher name
+            // [FIX] Resolve actual teacher name: Prioritize Schedule table over Assignments
             $teacherName = '-';
             if (($schedule->type ?? 'teaching') === 'teaching' && isset($schedule->subject_id)) {
-                $assignment = $assignments->get($schedule->subject_id);
-                $teacherName = $assignment?->teacher?->name ?? $schedule->teacher?->name ?? '-';
+                $teacherName = $schedule->teacher?->name;
+                
+                if (!$teacherName) {
+                    $assignment = $assignments->get($schedule->subject_id);
+                    $teacherName = $assignment?->teacher?->name ?? '-';
+                }
             } else {
                 $teacherName = $schedule->teacher?->name ?? '-';
             }
 
             return [
-                'id'             => $schedule->id,
-                'day'            => $schedule->day,
-                'subject_name'   => $schedule->subject?->name ?? $schedule->activity_name ?? 'Kegiatan',
-                'teacher_name'   => $teacherName,
-                'start_time'     => substr($schedule->start_time, 0, 5),
-                'end_time'       => substr($schedule->end_time, 0, 5),
-                'type'           => $schedule->type ?? 'teaching',
+                'id'           => $schedule->id,
+                'subject_name' => $schedule->subject?->name ?? $schedule->activity_name ?? 'Kegiatan',
+                'teacher_name' => $teacherName,
+                'start_time'   => substr($schedule->start_time, 0, 5),
+                'end_time'     => substr($schedule->end_time, 0, 5),
+                'day'          => $schedule->day,
             ];
         });
 

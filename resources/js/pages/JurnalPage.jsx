@@ -34,6 +34,8 @@ export default function JurnalPage() {
   const [editingJournalId, setEditingJournalId] = useState(null);
   const [filterClass, setFilterClass] = useState('');
   const [filterTeacher, setFilterTeacher] = useState('');
+  const [holidays, setHolidays] = useState([]);
+  const [activeHoliday, setActiveHoliday] = useState(null);
   const { activeSemester, academicYear, userProfile } = useSettings();
 
   const [searchParams] = useSearchParams();
@@ -64,6 +66,7 @@ export default function JurnalPage() {
           api.get('/classes'),
           api.get('/subjects'),
           api.get('/teaching-programs'),
+          api.get('/holidays'),
         ];
         
         if (isAdmin) {
@@ -74,7 +77,8 @@ export default function JurnalPage() {
         const classesRes = responses[0];
         const subjectsRes = responses[1];
         const programsRes = responses[2];
-        const teachersRes = responses[3];
+        const holidaysRes = responses[3];
+        const teachersRes = responses[4];
 
         const fetchedClasses = (classesRes.data.data || classesRes.data).sort((a, b) => a.rombel.localeCompare(b.rombel));
         const fetchedSubjects = subjectsRes.data.data || subjectsRes.data;
@@ -91,6 +95,7 @@ export default function JurnalPage() {
         setClasses(fetchedClasses);
         setSubjects(fetchedSubjects);
         setPrograms(fetchedPrograms);
+        setHolidays(holidaysRes.data.data || holidaysRes.data || []);
         
         if (teachersRes) {
           setTeachers(teachersRes.data.data || teachersRes.data || []);
@@ -146,6 +151,22 @@ export default function JurnalPage() {
       }
     }
   }, [selectedClass, selectedSubject, currentDate, programs, classes, subjects, activeSemester, academicYear, editingJournalId]);
+  
+  // Check for holiday whenever date changes
+  useEffect(() => {
+    if (holidays.length > 0 && currentDate) {
+      const selected = moment(currentDate).startOf('day');
+      const found = holidays.find(h => {
+        if (h.start_date && h.end_date) {
+          const start = moment(h.start_date).startOf('day');
+          const end = moment(h.end_date).startOf('day');
+          return selected.isBetween(start, end, null, '[]');
+        }
+        return moment(h.date).isSame(selected, 'day');
+      });
+      setActiveHoliday(found || null);
+    }
+  }, [currentDate, holidays]);
 
   const fetchJournalEntries = useCallback(async (silent = false) => {
     if (!silent) setIsLoading(true);
@@ -261,6 +282,18 @@ export default function JurnalPage() {
         activeSemester={activeSemester}
         academicYear={academicYear}
       />
+
+      {activeHoliday && (
+        <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-2xl shadow-lg flex items-center gap-4 animate-fade-in">
+          <div className="bg-white/20 p-2 rounded-xl">
+            <RefreshCw size={24} className="animate-spin-slow" />
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">Agenda Sekolah Terdeteksi</h3>
+            <p className="text-sm opacity-90">Hari ini adalah <strong>{activeHoliday.name}</strong>. Anda tidak perlu mengisi jurnal mengajar rutin karena jadwal dianggap tidak aktif.</p>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
         <div className="flex flex-col lg:flex-row gap-6">

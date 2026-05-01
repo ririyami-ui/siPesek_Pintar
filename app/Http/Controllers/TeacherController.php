@@ -93,7 +93,7 @@ class TeacherController extends Controller
                 'code' => $validated['code'] ?? null,
                 'username' => $username,
                 'auth_user_id' => $authUser->id,
-                'user_id' => Auth::id(), // Admin who updated/created
+                'created_by' => Auth::id(), // Admin who updated/created
             ];
 
             if ($teacher) {
@@ -253,27 +253,57 @@ class TeacherController extends Controller
             'assignments.*.class_ids.*' => 'exists:classes,id',
         ]);
 
-        // Delete existing assignments for this teacher
-        $teacher->assignments()->delete();
+        return \Illuminate\Support\Facades\DB::transaction(function() use ($teacher, $validated) {
+            // [GHOST DATA PROTECTION] Get list of current class-subject pairs to identify what will be removed
+            $oldAssignments = $teacher->assignments()->get(['class_id', 'subject_id'])
+                ->map(fn($a) => "{$a->class_id}-{$a->subject_id}")->toArray();
 
-        // Create new assignments
-        foreach ($validated['assignments'] as $assignRow) {
-            foreach ($assignRow['class_ids'] as $classId) {
-                $teacher->assignments()->create([
-                    'subject_id' => $assignRow['subject_id'],
-                    'class_id' => $classId
-                ]);
+            // Delete existing assignments for this teacher
+            $teacher->assignments()->delete();
+
+            $newClassSubjectPairs = [];
+            // Create new assignments
+            foreach ($validated['assignments'] as $assignRow) {
+                foreach ($assignRow['class_ids'] as $classId) {
+                    $teacher->assignments()->create([
+                        'subject_id' => $assignRow['subject_id'],
+                        'class_id' => $classId
+                    ]);
+                    $newClassSubjectPairs[] = "{$classId}-{$assignRow['subject_id']}";
+                }
             }
-        }
 
-        // [CACHE INVALIDATION] Clear monitoring cache for all days
-        foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {
-            Cache::forget("monitoring_schedules_{$day}");
-        }
+            // Identify pairs that were REMOVED
+            $removedPairs = array_diff($oldAssignments, $newClassSubjectPairs);
 
-        return response()->json([
-            'message' => 'Assignments synced successfully', 
-            'data' => $teacher->load(['assignments.subject', 'assignments.schoolClass'])
-        ]);
+            // [CLEANUP] Remove schedules for assignments that no longer exist
+            foreach ($removedPairs as $pair) {
+                [$classId, $subjectId] = explode('-', $pair);
+                \App\Models\Schedule::where('teacher_id', $teacher->auth_user_id)
+                    ->where('class_id', $classId)
+                    ->where('subject_id', $subjectId)
+                    ->where('type', 'teaching')
+                    ->delete();
+            }
+
+            // [CACHE INVALIDATION] Clear monitoring cache for all days
+            foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {
+                Cache::forget("monitoring_schedules_{$day}");
+            }
+
+            return response()->json([
+                'message' => 'Assignments synced successfully and orphaned schedules cleaned.', 
+                'data' => $teacher->load(['assignments.subject', 'assignments.schoolClass'])
+            ]);
+        });
+    }
+
+    /**
+     * Get all assignments for the whole school
+     */
+    public function getAllAssignments()
+    {
+        $assignments = \App\Models\TeacherAssignment::with(['teacher', 'subject', 'schoolClass'])->get();
+        return response()->json(['data' => $assignments]);
     }
 }

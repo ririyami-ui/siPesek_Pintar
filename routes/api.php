@@ -32,6 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
+    Route::get('/assignments', [App\Http\Controllers\TeacherController::class, 'getAllAssignments']);
     Route::post('/teachers/bulk-clear', [App\Http\Controllers\TeacherController::class, 'bulkClear']);
     Route::post('/teachers/{teacher}/sync-assignments', [App\Http\Controllers\TeacherController::class, 'syncAssignments']);
 
@@ -57,18 +58,17 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Student Portal Routes (Accessible by Students)
-    Route::get('/student/realtime', [StudentDashboardController::class, 'getRealtimeLearning']);
-    Route::get('/student/schedule', [StudentDashboardController::class, 'getWeeklySchedule']);
-    Route::get('/student/grades', [StudentDashboardController::class, 'getGradeData']);
-    Route::post('/student/chat', [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1'); // Limit chat to 10 messages per minute
+    // Note: Full student routes defined below in the prefix('student') group
 
     Route::apiResource('students', StudentController::class);
     Route::get('/schedules/sync-analysis', [ScheduleController::class, 'getSyncAnalysis']);
     Route::get('/schedules/allocation-audit', [ScheduleController::class, 'getAllocationAudit']);
     Route::get('/schedules/teacher-workload', [ScheduleController::class, 'getTeacherWorkloadAudit']);
+    Route::get('/schedules/export/csv', [ScheduleController::class, 'exportCsv']);
     Route::apiResource('schedules', ScheduleController::class);
     Route::post('/schedules/sync-template', [ScheduleController::class, 'syncWithTemplate']);
     Route::post('/schedules/auto-generate', [ScheduleController::class, 'autoGenerate']);
+    Route::post('/schedules/bulk-store', [ScheduleController::class, 'bulkStore']);
 
     // Class Agreement Routes
     Route::get('/class-agreements/{classId}', [App\Http\Controllers\ClassAgreementController::class, 'show']);
@@ -76,6 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Attendance Routes
     Route::get('/attendances/missing', [App\Http\Controllers\AttendanceController::class, 'missing']);
+    Route::post('/admin/attendances/reset-missing', [App\Http\Controllers\AttendanceController::class, 'resetMissing']);
     Route::get('/attendances', [App\Http\Controllers\AttendanceController::class, 'index']);
     Route::post('/attendances/bulk', [App\Http\Controllers\AttendanceController::class, 'storeBulk']);
     Route::get('/attendances/summary', [App\Http\Controllers\AttendanceController::class, 'summary']);
@@ -132,9 +133,21 @@ Route::middleware('auth:sanctum')->group(function () {
     // ──────────────────────────────────────────────────────────────────────────
     Route::prefix('student')->group(function () {
         Route::get('/realtime',    [StudentDashboardController::class, 'getRealtimeLearning']);
+        Route::get('/schedule',    [StudentDashboardController::class, 'getWeeklySchedule']);
         Route::get('/attendance',  [StudentDashboardController::class, 'getAttendanceRecap']);
         Route::get('/grades',      [StudentDashboardController::class, 'getGrades']);
         Route::get('/tasks',       [StudentDashboardController::class, 'getMissingTasks']);
         Route::get('/infractions', [StudentDashboardController::class, 'getInfractions']);
+        Route::post('/chat',       [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1');
+    });
+
+    // Library Module
+    Route::group(['prefix' => 'library', 'middleware' => ['librarian']], function () {
+        Route::get('/books/lookup/{isbn}', [App\Http\Controllers\BookController::class, 'lookup']);
+        Route::apiResource('books', App\Http\Controllers\BookController::class);
+        
+        Route::get('/loans/stats', [App\Http\Controllers\LibraryLoanController::class, 'stats']);
+        Route::post('/loans/{loan}/return', [App\Http\Controllers\LibraryLoanController::class, 'returnBook']);
+        Route::apiResource('loans', App\Http\Controllers\LibraryLoanController::class);
     });
 });

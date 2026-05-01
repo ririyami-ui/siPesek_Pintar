@@ -147,9 +147,6 @@ class SchoolClassController extends Controller
             ->with(['wali'])
             ->first();
             
-        if (!$class) {
-            return response()->json(['message' => 'Anda bukan wali kelas.'], 404);
-        }
         
         return response()->json(['data' => $class]);
     }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/id'; // Import Indonesian locale
-import { Clock, CheckCircle, PlayCircle, Bell, CalendarOff, Calendar, Gift, Coffee, Sparkles, Smile, FileText, Book, Zap, RefreshCw, UserCheck } from 'lucide-react';
+import { Clock, CheckCircle, PlayCircle, Bell, CalendarOff, Calendar, Gift, Coffee, Sparkles, Smile, FileText, Book, Zap, RefreshCw, UserCheck, AlertCircle, BookOpen } from 'lucide-react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import Countdown from './Countdown'; // Import Countdown component
 import { getTopicForSchedule } from '../utils/topicUtils';
@@ -26,7 +26,7 @@ moment.updateLocale('id', {
   }
 });
 
-const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, classes, carryOverMap, activeSemester, academicYear }) => {
+const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, classes, carryOverMap, activeSemester, academicYear, userProfile }) => {
   const [notifiedSchedules, setNotifiedSchedules] = useState(new Set());
   const [permissionGranted, setPermissionGranted] = useState(null);
 
@@ -35,17 +35,18 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        // Assuming api is available or imported elsewhere, but for now we follow the user's logic structure
-        const response = await api.get('/attendances', {
-          params: { date: moment().format('YYYY-MM-DD') }
-        });
+        const params = { date: moment().format('YYYY-MM-DD') };
+        if (userProfile?.role === 'teacher') {
+          params.user_id = userProfile.id;
+        }
+        const response = await api.get('/attendances', { params });
         setAttendanceRecords(response.data.data || []);
       } catch (err) {
         console.error("Error fetching attendance:", err);
       }
     };
     fetchAttendance();
-  }, [currentTime.format('YYYY-MM-DD')]);
+  }, [currentTime.format('YYYY-MM-DD'), userProfile?.id]);
 
   useEffect(() => {
     const checkPerms = async () => {
@@ -202,14 +203,51 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
   const getScheduleStatus = (schedule) => {
     const now = currentTime;
     const todayStr = now.format('YYYY-MM-DD');
-    const startTime = moment(`${todayStr} ${schedule.startTime} `, 'YYYY-MM-DD HH:mm');
-    const endTime = moment(`${todayStr} ${schedule.endTime} `, 'YYYY-MM-DD HH:mm');
+    const startTimeStr = schedule.startTime || schedule.start_time;
+    const endTimeStr = schedule.endTime || schedule.end_time;
+    
+    const startTime = moment(`${todayStr} ${startTimeStr}`, 'YYYY-MM-DD HH:mm');
+    const endTime = moment(`${todayStr} ${endTimeStr}`, 'YYYY-MM-DD HH:mm');
     const fiveMinutesBefore = moment(startTime).subtract(5, 'minutes');
 
     if (endTime.isBefore(startTime)) {
       endTime.add(1, 'day');
     }
 
+    // Use backend status if available for perfect sync
+    if (schedule.status) {
+      const statusMap = {
+        'berlangsung': { status: 'ongoing', message: 'Sedang Berlangsung', icon: <PlayCircle className="mr-2" /> },
+        'menunggu_absen': { status: 'ongoing', message: 'Segera Absen!', icon: <Bell className="mr-2 animate-bounce" /> },
+        'selesai': { status: 'finished', message: 'Selesai', icon: <CheckCircle className="mr-2" /> },
+        'alfa': { status: 'ongoing', message: 'Belum Ada Jurnal', icon: <AlertCircle className="mr-2 text-rose-500" /> }, // Treat alpha as ongoing if it's currently time
+        'belum_mulai': { status: 'upcoming', message: null, icon: null },
+        'assignment': { status: 'ongoing', message: 'Penugasan', icon: <BookOpen className="mr-2" /> }
+      };
+
+      if (statusMap[schedule.status]) {
+        const mapped = statusMap[schedule.status];
+        
+        // Refine 'alfa' or 'belum_mulai' based on current time for teacher UX
+        if (schedule.status === 'alfa' && !now.isBetween(startTime, endTime, null, '[]')) {
+          mapped.status = now.isAfter(endTime) ? 'finished' : 'upcoming';
+        }
+        
+        if (schedule.status === 'belum_mulai' && now.isBetween(fiveMinutesBefore, startTime, null, '[]')) {
+          mapped.status = 'upcoming-soon';
+          mapped.message = 'Segera';
+          mapped.icon = <Bell className="mr-2 animate-pulse" />;
+        }
+
+        return {
+          ...mapped,
+          estimation: mapped.status === 'ongoing' ? <Countdown endTime={endTimeStr} /> : 
+                     (mapped.status === 'upcoming-soon' ? <Countdown endTime={startTimeStr} prefix="Dimulai dalam" /> : null)
+        };
+      }
+    }
+
+    // Fallback to purely client-side logic if backend status is missing
     if (schedule.type === 'teaching' && isAnyBreakHappening() && now.isBetween(startTime, endTime, null, '[]')) {
       return {
         status: 'paused',
@@ -224,7 +262,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
         status: 'ongoing',
         message: 'Sedang Berlangsung',
         icon: <PlayCircle className="mr-2" />,
-        estimation: <Countdown endTime={schedule.endTime} />,
+        estimation: <Countdown endTime={endTimeStr} />,
       };
     }
 
@@ -242,7 +280,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
         status: 'upcoming-soon',
         message: 'Segera',
         icon: <Bell className="mr-2 animate-pulse" />,
-        estimation: <Countdown endTime={schedule.startTime} prefix="Dimulai dalam" />,
+        estimation: <Countdown endTime={startTimeStr} prefix="Dimulai dalam" />,
       };
     }
 
@@ -250,7 +288,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
       status: 'upcoming',
       message: null,
       icon: null,
-      estimation: `Dimulai ${startTime.from(now)} `,
+      estimation: `Dimulai ${startTime.from(now)}`,
     };
   };
 
@@ -555,8 +593,8 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
                             {/* Attendance Status Badge for Students */}
                             {(() => {
                               const record = attendanceRecords.find(r => 
-                                r.subject_id == schedule.subjectId && 
-                                r.class_id == schedule.classId
+                                (r.subject_id == schedule.subject_id || r.subject_id == schedule.subjectId) && 
+                                (r.class_id == schedule.class_id || r.class_id == schedule.classId)
                               );
                               if (!record) return null;
 

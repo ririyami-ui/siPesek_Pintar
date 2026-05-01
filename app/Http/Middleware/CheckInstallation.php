@@ -30,7 +30,7 @@ class CheckInstallation
             } catch (\Exception $e) {
                 // Database missing or connection failed - remove lock to allow re-install
                 File::delete(storage_path('installed.lock'));
-                return redirect()->route('install.index');
+                return redirect()->route('install.index')->with('db_error', $e->getMessage());
             }
         }
 

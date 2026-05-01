@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout.jsx';
 import StudentLayout from './components/StudentLayout.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -29,12 +29,17 @@ import MonitoringAbsensiPage from './pages/MonitoringAbsensiPage.jsx';
 import MonitoringNilaiPage from './pages/MonitoringNilaiPage.jsx';
 import AbsensiTerlewatPage from './pages/AbsensiTerlewatPage.jsx';
 import WaliKelasPage from './pages/WaliKelasPage.jsx';
+import LibrarianLayout from './components/LibrarianLayout.jsx';
+import LibraryDashboardPage from './pages/library/LibraryDashboardPage.jsx';
+import BookCatalogPage from './pages/library/BookCatalogPage.jsx';
+import LoanManagementPage from './pages/library/LoanManagementPage.jsx';
 // Student (Parent) portal pages
 import StudentDashboard from './pages/StudentDashboard.jsx';
 import StudentAttendance from './pages/StudentAttendance.jsx';
 import StudentGrades from './pages/StudentGrades.jsx';
 import StudentTasks from './pages/StudentTasks.jsx';
 import StudentInfractions from './pages/StudentInfractions.jsx';
+import StudentLibraryPage from './pages/StudentLibraryPage.jsx';
 import StudentSchedule from './pages/StudentSchedule.jsx';
 import { ChatProvider } from './utils/ChatContext.jsx';
 import { SettingsProvider } from './utils/SettingsContext.jsx';
@@ -204,7 +209,84 @@ function App() {
   }
 
   const basename = window.Laravel?.basePath || '/';
-  console.log('App using basename:', basename);
+  
+  const LayoutWrapper = () => {
+    const location = useLocation();
+    const isLibraryPath = location.pathname.startsWith('/library');
+
+    if (user.role === 'student') {
+      return (
+        <StudentLayout user={user} student={null} onLogout={() => setUser(null)}>
+          <Routes>
+            <Route path="/siswa"           element={<StudentDashboard />} />
+            <Route path="/siswa/jadwal"    element={<StudentSchedule />} />
+            <Route path="/siswa/kehadiran" element={<StudentAttendance />} />
+            <Route path="/siswa/nilai"     element={<StudentGrades />} />
+            <Route path="/siswa/tugas"     element={<StudentTasks />} />
+            <Route path="/siswa/pelanggaran" element={<StudentInfractions />} />
+            <Route path="/siswa/perpustakaan" element={<StudentLibraryPage />} />
+            <Route path="*"                element={<Navigate to="/siswa" replace />} />
+          </Routes>
+        </StudentLayout>
+      );
+    }
+
+    if (user?.role === 'librarian' && !isLibraryPath) {
+      return <Navigate to="/library/dashboard" replace />;
+    }
+
+    if (isLibraryPath) {
+      // Role protection: Only Admins and Librarians can access the library workspace
+      if (!['admin', 'adminer', 'librarian'].includes(user?.role?.toLowerCase())) {
+        return <Navigate to="/" replace />;
+      }
+      
+      return (
+        <LibrarianLayout user={user} onLogout={() => setUser(null)}>
+          <Routes>
+            <Route path="/library/dashboard" element={<LibraryDashboardPage />} />
+            <Route path="/library/books" element={<BookCatalogPage />} />
+            <Route path="/library/loans" element={<LoanManagementPage />} />
+            <Route path="*" element={<Navigate to="/library/dashboard" replace />} />
+          </Routes>
+        </LibrarianLayout>
+      );
+    }
+
+    return (
+      <DashboardLayout user={user} onLogout={() => setUser(null)}>
+        <Routes>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/jadwal" element={<JadwalPage />} />
+          <Route path="/absensi" element={<AbsensiPage />} />
+          <Route path="/absensi-terlewat" element={<AbsensiTerlewatPage />} />
+          <Route path="/nilai" element={<NilaiPage />} />
+          <Route path="/jurnal" element={<JurnalPage />} />
+          <Route path="/rekapitulasi" element={<RekapitulasiPage />} />
+          <Route path="/rekap-individu" element={<RekapIndividuPage />} />
+          <Route path="/master-data" element={<MasterDataPage />} />
+          <Route path="/about" element={<AboutPage installPrompt={installPrompt} onInstall={handleInstall} isPwaInstalled={isPwaInstalled} />} />
+          <Route path="/analisis-kelas" element={<AnalisisKelasPage />} />
+          <Route path="/sistem-peringatan" element={<EarlyWarningPage />} />
+          <Route path="/asisten-guru" element={<AsistenGuruPage />} />
+          <Route path="/analisis-rombel/:rombel" element={<AnalisisKelasPage />} />
+          <Route path="/pelanggaran" element={<PelanggaranPage />} />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
+          <Route path="/program-mengajar" element={<ProgramMengajarPage />} />
+          <Route path="/rpp" element={<LessonPlanPage />} />
+          <Route path="/lkpd-generator" element={<LkpdGeneratorPage />} />
+          <Route path="/handout-generator" element={<HandoutGeneratorPage />} />
+          <Route path="/quiz-generator" element={<QuizGeneratorPage />} />
+          <Route path="/penugasan" element={<PenugasanPage />} />
+          <Route path="/penilaian-kktp" element={<AssessmentKktpPage />} />
+          <Route path="/monitoring-absensi" element={<MonitoringAbsensiPage />} />
+          <Route path="/monitoring-nilai" element={<MonitoringNilaiPage />} />
+          <Route path="/wali-kelas" element={<WaliKelasPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </DashboardLayout>
+    );
+  };
 
   return (
     <Router basename={basename}>
@@ -213,52 +295,7 @@ function App() {
         <ChatProvider>
           <div className="min-h-screen bg-background-light dark:bg-background-dark font-sans transition-colors duration-200">
             {user ? (
-              user.role === 'student' ? (
-                /* ── STUDENT / PARENT PORTAL ── */
-                <StudentLayout user={user} student={null} onLogout={() => setUser(null)}>
-                  <Routes>
-                    <Route path="/siswa"           element={<StudentDashboard />} />
-                    <Route path="/siswa/jadwal"    element={<StudentSchedule />} />
-                    <Route path="/siswa/kehadiran" element={<StudentAttendance />} />
-                    <Route path="/siswa/nilai"     element={<StudentGrades />} />
-                    <Route path="/siswa/tugas"     element={<StudentTasks />} />
-                    <Route path="/siswa/pelanggaran" element={<StudentInfractions />} />
-                    <Route path="*"                element={<Navigate to="/siswa" replace />} />
-                  </Routes>
-                </StudentLayout>
-              ) : (
-                /* ── TEACHER / ADMIN DASHBOARD ── */
-                <DashboardLayout user={user} onLogout={() => setUser(null)}>
-                  <Routes>
-                    <Route path="/" element={<DashboardPage />} />
-                    <Route path="/jadwal" element={<JadwalPage />} />
-                    <Route path="/absensi" element={<AbsensiPage />} />
-                    <Route path="/absensi-terlewat" element={<AbsensiTerlewatPage />} />
-                    <Route path="/nilai" element={<NilaiPage />} />
-                    <Route path="/jurnal" element={<JurnalPage />} />
-                    <Route path="/rekapitulasi" element={<RekapitulasiPage />} />
-                    <Route path="/rekap-individu" element={<RekapIndividuPage />} />
-                    <Route path="/master-data" element={<MasterDataPage />} />
-                    <Route path="/about" element={<AboutPage installPrompt={installPrompt} onInstall={handleInstall} isPwaInstalled={isPwaInstalled} />} />
-                    <Route path="/analisis-kelas" element={<AnalisisKelasPage />} />
-                    <Route path="/sistem-peringatan" element={<EarlyWarningPage />} />
-                    <Route path="/asisten-guru" element={<AsistenGuruPage />} />
-                    <Route path="/analisis-rombel/:rombel" element={<AnalisisKelasPage />} />
-                    <Route path="/pelanggaran" element={<PelanggaranPage />} />
-                    <Route path="/leaderboard" element={<LeaderboardPage />} />
-                    <Route path="/program-mengajar" element={<ProgramMengajarPage />} />
-                    <Route path="/rpp" element={<LessonPlanPage />} />
-                    <Route path="/lkpd-generator" element={<LkpdGeneratorPage />} />
-                    <Route path="/handout-generator" element={<HandoutGeneratorPage />} />
-                    <Route path="/quiz-generator" element={<QuizGeneratorPage />} />
-                    <Route path="/penugasan" element={<PenugasanPage />} />
-                    <Route path="/penilaian-kktp" element={<AssessmentKktpPage />} />
-                    <Route path="/monitoring-absensi" element={<MonitoringAbsensiPage />} />
-                    <Route path="/monitoring-nilai" element={<MonitoringNilaiPage />} />
-                    <Route path="/wali-kelas" element={<WaliKelasPage />} />
-                  </Routes>
-                </DashboardLayout>
-              )
+              <LayoutWrapper />
             ) : (
               <Routes>
                 <Route path="/login" element={<LoginPage />} />

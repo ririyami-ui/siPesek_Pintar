@@ -20,7 +20,8 @@ export default function AdminMasterData() {
         name: '',
         nip: '',
         username: '',
-        password: ''
+        password: '',
+        role: 'admin'
     });
 
     // State for edit modal
@@ -31,7 +32,8 @@ export default function AdminMasterData() {
         name: '',
         nip: '',
         username: '',
-        password: ''
+        password: '',
+        role: 'admin'
     });
 
     const [confirmModal, setConfirmModal] = useState({
@@ -68,7 +70,7 @@ export default function AdminMasterData() {
         toast.promise(promise, {
             loading: 'Menyimpan...',
             success: () => {
-                setNewAdmin({ code: '', name: '', nip: '', username: '', password: '' });
+                setNewAdmin({ code: '', name: '', nip: '', username: '', password: '', role: 'admin' });
                 getAdmins();
                 return 'Admin berhasil ditambahkan!';
             },
@@ -104,8 +106,9 @@ export default function AdminMasterData() {
             code: admin.code || '',
             name: admin.name || '',
             nip: admin.nip || '',
-            username: admin.username || '',
-            password: admin.password || ''
+            username: admin.auth_user?.username || admin.username || '',
+            password: '',
+            role: admin.auth_user?.role || 'admin'
         });
         setIsEditModalOpen(true);
     };
@@ -167,6 +170,16 @@ export default function AdminMasterData() {
                         value={newAdmin.password}
                         onChange={(e) => setNewAdmin({ ...newAdmin, password: e.target.value })}
                     />
+                    <div className="flex flex-col">
+                        <select
+                            value={newAdmin.role}
+                            onChange={(e) => setNewAdmin({ ...newAdmin, role: e.target.value })}
+                            className="h-[46px] px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all dark:text-white appearance-none cursor-pointer"
+                        >
+                            <option value="admin">Administrator (Akses Penuh)</option>
+                            <option value="librarian">Pustakawan (Akses Terbatas)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="mt-4 flex justify-end">
@@ -193,7 +206,7 @@ export default function AdminMasterData() {
                     </div>
                 ) : (
                     <div className="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 overflow-hidden">
-                        <StyledTable headers={['Kode', 'Nama', 'NIP', 'Username', 'Password', 'Aksi']}>
+                        <StyledTable headers={['Kode', 'Nama / Peran', 'NIP', 'Username', 'Password', 'Aksi']}>
                             {admins.map((admin) => {
                                 const isCurrentUser = userProfile && (
                                     admin.auth_user_id === userProfile.id ||
@@ -204,17 +217,22 @@ export default function AdminMasterData() {
                                     <tr key={admin.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600 dark:text-blue-400">{admin.code || '-'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-text-light dark:text-text-dark">
-                                            <div className="flex items-center gap-2">
-                                                {admin.name}
-                                                {isCurrentUser && (
-                                                    <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full animate-pulse">
-                                                        Aktif
-                                                    </span>
-                                                )}
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    {admin.name}
+                                                    {isCurrentUser && (
+                                                        <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full animate-pulse">
+                                                            Aktif
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider ${admin.auth_user?.role === 'librarian' ? 'text-orange-500' : 'text-blue-500'}`}>
+                                                    {admin.auth_user?.role === 'librarian' ? 'Pustakawan' : 'Administrator'}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium">{admin.nip || '-'}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium">{admin.authUser?.username || admin.username || '-'}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium">{admin.auth_user?.username || admin.username || '-'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium font-mono">********</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div className="flex gap-2">
@@ -293,6 +311,17 @@ export default function AdminMasterData() {
                                 value={editData.password}
                                 onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                             />
+                        </div>
+                        <div className="space-y-1">
+                            <label className="text-xs font-bold text-gray-500 ml-1">Peran / Hak Akses</label>
+                            <select
+                                value={editData.role}
+                                onChange={(e) => setEditData({ ...editData, role: e.target.value })}
+                                className="w-full h-[46px] px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all dark:text-white appearance-none cursor-pointer"
+                            >
+                                <option value="admin">Administrator (Akses Penuh)</option>
+                                <option value="librarian">Pustakawan (Akses Terbatas)</option>
+                            </select>
                         </div>
 
                         <div className="flex justify-end gap-3 mt-8">

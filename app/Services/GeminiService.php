@@ -8,20 +8,25 @@ use Illuminate\Support\Facades\Log;
 
 class GeminiService
 {
-    private string $apiKey;
-    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
-    private string $model = 'gemini-3.1-flash-lite-preview'; // Default fallback
+    protected string $apiKey;
+    protected string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
+    protected string $model = 'gemini-2.0-flash'; // Optimized default
 
     public function __construct()
     {
-        $this->apiKey = (string) config('services.gemini.api_key');
-        
-        // Treat placeholder/default values as empty
-        if ($this->apiKey === 'your_gemini_api_key_here' || empty($this->apiKey)) {
-            $this->apiKey = '';
-        }
+        $this->resolveSettings();
+    }
 
-        // Use user-specific API key if available
+    /**
+     * Centralized logic to resolve API Key and Model from Profile or Config
+     */
+    protected function resolveSettings(): void
+    {
+        // 1. Default from config
+        $this->apiKey = (string) config('services.gemini.api_key', '');
+        if ($this->apiKey === 'your_gemini_api_key_here') $this->apiKey = '';
+
+        // 2. Override from current user profile
         if (auth()->check()) {
             $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
             if ($profile) {
@@ -33,143 +38,118 @@ class GeminiService
                 }
             }
         }
-        
-        if (empty($this->apiKey)) {
-            // Fallback to sync from master admin profile if user doesn't have settings
-            $this->syncSettingsFromProfile();
-        }
-        
-        if (empty($this->apiKey)) {
-            throw new \Exception('Gemini API Key is not configured. Please set it in your profile or .env file.');
-        }
-    }
 
-    /**
-     * Sync settings from the shared school profile (Master Admin)
-     */
-    private function syncSettingsFromProfile()
-    {
-        try {
-            // Get the master admin ID
+        // 3. Fallback to master admin if still empty
+        if (empty($this->apiKey)) {
             $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
                 ->orderBy('id', 'asc')
                 ->value('id');
 
             if ($primaryAdminId) {
-                $profile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-                if ($profile) {
-                    if ((empty($this->apiKey) || $this->apiKey === 'your_gemini_api_key_here') && $profile->google_ai_api_key) {
-                        $this->apiKey = $profile->google_ai_api_key;
+                $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
+                if ($adminProfile) {
+                    if ($adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
+                        $this->apiKey = $adminProfile->google_ai_api_key;
                     }
-                    if ($profile->gemini_model) {
-                        $this->model = $profile->gemini_model;
+                    // Only override model if not explicitly set by user or we want global school consistency
+                    if (empty($this->model) || $this->model === 'gemini-2.0-flash') {
+                        $this->model = $adminProfile->gemini_model ?? $this->model;
                     }
                 }
             }
-        } catch (\Exception $e) {
-            Log::error('Failed to sync GeminiService settings: ' . $e->getMessage());
         }
     }
 
-    protected function getEffectiveApiKey()
+    /**
+     * Unified core method to call Gemini API with robust retry logic
+     * Supports both simple strings and structured content (history/parts)
+     */
+    public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7): ?string
     {
-        // 1. Check current logged in user profile
-        if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile && $profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                return $profile->google_ai_api_key;
-            }
-        }
+        $retries = 3;
+        $delay = 1000; // 1 second initial delay
+        $lastError = null;
+        $finalModel = $modelOverride ?: $this->model;
 
-        // 2. Check .env / config
-        $configKey = config('services.gemini.api_key');
-        if ($configKey && $configKey !== 'your_gemini_api_key_here') {
-            return $configKey;
-        }
+        for ($i = 0; $i < $retries; $i++) {
+            try {
+                if (!$this->apiKey) {
+                    throw new \Exception('Gemini API Key is not configured.');
+                }
 
-        // 3. Fallback to primary admin profile
-        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
-            
-        if ($primaryAdminId) {
-            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-            if ($adminProfile && $adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                return $adminProfile->google_ai_api_key;
+                // Fallback to flash-lite if overloaded (503) on subsequent attempts
+                if ($i > 0 && $lastError && str_contains($lastError, '503')) {
+                    $finalModel = 'gemini-2.0-flash-lite-preview-02-05'; 
+                }
+
+                $contents = is_string($promptOrContents) 
+                    ? [['role' => 'user', 'parts' => [['text' => $promptOrContents]]]]
+                    : $promptOrContents;
+
+                $response = Http::timeout(90)->post(
+                    "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$this->apiKey}",
+                    [
+                        'contents' => $contents,
+                        'generationConfig' => [
+                            'temperature' => $temperature,
+                            'maxOutputTokens' => $maxTokens,
+                        ]
+                    ]
+                );
+
+                if ($response->successful()) {
+                    $data = $response->json();
+                    return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                }
+
+                $status = $response->status();
+                $errorBody = $response->json();
+                $errorMessage = $errorBody['error']['message'] ?? 'Unknown Error';
+                $lastError = "$status: $errorMessage";
+
+                Log::warning("Gemini API Attempt " . ($i + 1) . " failed ($status): $errorMessage");
+
+                // Retry on transient errors
+                if ($status === 503 || $status === 429 || $status === 504) {
+                    if ($i < $retries - 1) {
+                        usleep($delay * 1000);
+                        $delay *= 2;
+                        continue;
+                    }
+                }
+
+                throw new \Exception("Gemini API Error ($status): $errorMessage");
+
+            } catch (\Exception $e) {
+                $lastError = $e->getMessage();
+                if ($i < $retries - 1 && (str_contains($lastError, 'timed out') || str_contains($lastError, '503') || str_contains($lastError, '429'))) {
+                    Log::warning("Retrying Gemini API after exception: $lastError");
+                    usleep($delay * 1000);
+                    $delay *= 2;
+                    continue;
+                }
+                Log::error('Gemini API Fatal Error', ['error' => $lastError]);
+                return null;
             }
         }
 
         return null;
     }
 
-    protected function getEffectiveModel()
-    {
-        // 1. Check current logged in user profile preference
-        if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile && $profile->gemini_model) {
-                return $profile->gemini_model;
-            }
-        }
-
-        // 2. Fallback to primary admin profile preference
-        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
-            
-        if ($primaryAdminId) {
-            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-            if ($adminProfile && $adminProfile->gemini_model) {
-                return $adminProfile->gemini_model;
-            }
-        }
-
-        // 3. Ultimate fallback
-        return 'gemini-3.1-flash-lite-preview';
-    }
 
     /**
-     * Generate text from a prompt
+     * Backward compatibility / Shorthand for text generation
      */
     public function generateText(string $prompt, array $options = []): ?string
     {
-        try {
-            $apiKey = $this->getEffectiveApiKey();
-            if (!$apiKey) {
-                throw new \Exception('Gemini API Key is not configured.');
-            }
-
-            $model = $this->getEffectiveModel();
-
-            $response = Http::timeout(30)->post(
-                "{$this->baseUrl}/models/{$model}:generateContent?key={$apiKey}",
-                [
-                    'contents' => [
-                        [
-                            'parts' => [
-                                ['text' => $prompt]
-                            ]
-                        ]
-                    ],
-                    'generationConfig' => [
-                        'temperature' => $options['temperature'] ?? 0.7,
-                        'maxOutputTokens' => $options['maxTokens'] ?? 2048,
-                    ]
-                ]
-            );
-
-            if ($response->successful()) {
-                $data = $response->json();
-                return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-            }
-
-            Log::error('Gemini API Error', ['response' => $response->body()]);
-            return null;
-        } catch (\Exception $e) {
-            Log::error('Gemini API Exception', ['error' => $e->getMessage()]);
-            return null;
-        }
+        return $this->callGeminiApi(
+            $prompt, 
+            $options['model'] ?? null, 
+            $options['maxTokens'] ?? 2048, 
+            $options['temperature'] ?? 0.7
+        );
     }
+
 
     /**
      * Analyze teaching journal
@@ -196,7 +176,7 @@ class GeminiService
     /**
      * Generate Lesson Plan (RPP)
      */
-    public function generateLessonPlan(array $data): ?string
+    public function generateLessonPlan(array $data)
     {
         $prompt = $this->buildLessonPlanPrompt($data);
         return $this->generateText($prompt, ['maxTokens' => 4096]);
@@ -205,7 +185,7 @@ class GeminiService
     /**
      * Generate Quiz
      */
-    public function generateQuiz(array $data): ?string
+    public function generateQuiz(array $data)
     {
         $prompt = $this->buildQuizPrompt($data);
         return $this->generateText($prompt, ['maxTokens' => 3072]);
@@ -214,7 +194,7 @@ class GeminiService
     /**
      * Generate Handout
      */
-    public function generateHandout(array $data): ?string
+    public function generateHandout(array $data)
     {
         $prompt = $this->buildHandoutPrompt($data);
         return $this->generateText($prompt, ['maxTokens' => 4096]);
@@ -223,7 +203,7 @@ class GeminiService
     /**
      * Generate Worksheet (LKPD)
      */
-    public function generateWorksheet(array $data): ?string
+    public function generateWorksheet(array $data)
     {
         $prompt = $this->buildWorksheetPrompt($data);
         return $this->generateText($prompt, ['maxTokens' => 3072]);
@@ -241,7 +221,7 @@ class GeminiService
     /**
      * Chat with AI Teaching Assistant
      */
-    public function chat(string $message, array $context = []): ?string
+    public function chat($message, $history = [], $context = [])
     {
         $systemContext = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
         

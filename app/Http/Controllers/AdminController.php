@@ -29,6 +29,7 @@ class AdminController extends Controller
             'nip' => 'nullable|string',
             'username' => 'nullable|string',
             'password' => 'nullable|string',
+            'role' => 'nullable|string|in:admin,librarian',
         ]);
 
         $authUser = null;
@@ -44,7 +45,7 @@ class AdminController extends Controller
                     'name' => $validated['name'],
                     'username' => $validated['username'],
                     'nip' => $validated['nip'],
-                    'role' => 'admin'
+                    'role' => $validated['role'] ?? 'admin'
                 ]);
                 if (!empty($validated['password'])) {
                     $authUser->update(['password' => \Illuminate\Support\Facades\Hash::make($validated['password'])]);
@@ -54,16 +55,17 @@ class AdminController extends Controller
                     'name' => $validated['name'],
                     'username' => $validated['username'],
                     'password' => \Illuminate\Support\Facades\Hash::make($validated['password'] ?? 'password123'),
-                    'role' => 'admin',
+                    'role' => $validated['role'] ?? 'admin',
                     'nip' => $validated['nip'],
                     'email' => $email,
                 ]);
             }
         }
 
-        // Remove password from the data to be saved to the admins table
+        // Remove password and role from the data to be saved to the admins table
         $adminData = $validated;
         unset($adminData['password']);
+        unset($adminData['role']);
 
         $admin = Admin::create(array_merge($adminData, [
             'user_id' => Auth::id(),
@@ -93,10 +95,12 @@ class AdminController extends Controller
             'nip' => 'nullable|string',
             'username' => 'nullable|string',
             'password' => 'nullable|string',
+            'role' => 'nullable|string|in:admin,librarian',
         ]);
 
         $adminData = $validated;
         unset($adminData['password']);
+        unset($adminData['role']);
         $admin->update($adminData);
 
         if (!empty($validated['username'])) {
@@ -111,6 +115,9 @@ class AdminController extends Controller
                     'username' => $validated['username'],
                     'nip' => $validated['nip'],
                 ];
+                if (!empty($validated['role'])) {
+                    $userData['role'] = $validated['role'];
+                }
                 if (!empty($validated['password'])) {
                     $userData['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
                 }
@@ -128,6 +135,9 @@ class AdminController extends Controller
                         'username' => $validated['username'],
                         'nip' => $validated['nip'],
                     ];
+                    if (!empty($validated['role'])) {
+                        $userData['role'] = $validated['role'];
+                    }
                     if (!empty($validated['password'])) {
                         $userData['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
                     }
@@ -137,7 +147,7 @@ class AdminController extends Controller
                         'name' => $validated['name'],
                         'username' => $validated['username'],
                         'password' => \Illuminate\Support\Facades\Hash::make($validated['password'] ?? 'password123'),
-                        'role' => 'admin',
+                        'role' => $validated['role'] ?? 'admin',
                         'nip' => $validated['nip'],
                         'email' => $email,
                     ]);

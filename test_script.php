@@ -1,1 +1,0 @@
-<?php require " vendor/autoload.php\; \ = require_once \bootstrap/app.php\; \->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap(); \ = App\Models\Grade::where(\student_id\, 161)->get(); echo \Total Grades: \ . \->count() . \\n\; 

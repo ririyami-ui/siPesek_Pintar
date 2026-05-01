@@ -16,7 +16,8 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        // [FIX] Use isAdmin() to recognize both 'admin' and 'adminer' roles consistently
+        if (Auth::check() && Auth::user()->isAdmin()) {
             return $next($request);
         }
 

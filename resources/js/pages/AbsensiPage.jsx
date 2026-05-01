@@ -20,7 +20,7 @@ const AbsensiPage = () => {
   const [attendance, setAttendance] = useState({}); // { studentId: "Hadir" }
   const [previousMaterial, setPreviousMaterial] = useState(null);
   const [previousLearningActivities, setPreviousLearningActivities] = useState(null);
-  const { activeSemester, academicYear, userProfile } = useSettings();
+  const { activeSemester, academicYear, userProfile, refreshMonitoringData } = useSettings();
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
 
   const autoSaveTimeout = useRef(null);
@@ -230,6 +230,11 @@ const AbsensiPage = () => {
       });
 
       toast.success(`Absensi untuk kelas ${scheduleToSave.class} berhasil disimpan!`);
+
+      // Refresh global monitoring cache if available (important for Admin help mode)
+      if (typeof refreshMonitoringData === 'function') {
+        refreshMonitoringData();
+      }
     } catch (error) {
       console.error('Error saving attendance:', error);
       const msg = error.response?.data?.message || 'Gagal menyimpan absensi.';

@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Schedule;
 use App\Models\Teacher;
 use App\Models\Journal;
-use App\Models\User;
+use App\Models\Attendance;
 use App\Models\TeacherAssignment;
+use App\Models\User;
 use App\Models\UserProfile;
 use App\Http\Controllers\UserProfileController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\ValidationException;
 use App\Services\AutoScheduleService;
+use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
@@ -31,22 +32,63 @@ class ScheduleController extends Controller
             $teacher = Teacher::where('auth_user_id', $user->id)->first();
             
             $query->where(function($q) use ($user, $teacher) {
-                // 1. Schedules created by this teacher
+                // 1. Schedules assigned to this teacher
                 $q->where('teacher_id', $user->id);
                 
                 // 2. School Agenda (non-teaching) - Everyone should see this
                 $q->orWhere('type', 'non-teaching');
                 
-                // 3. OR schedules matching their assignments
+                // 3. Fallback: If for some reason teacher_id is null but assignments exist,
+                // we ONLY allow it if the schedule doesn't have a different teacher_id assigned.
                 if ($teacher) {
-                    $assignments = $teacher->assignments;
-                    foreach ($assignments as $assignment) {
+                    foreach ($teacher->assignments as $assignment) {
                         $q->orWhere(function($subQ) use ($assignment) {
                             $subQ->where('subject_id', $assignment->subject_id)
-                                 ->where('class_id', $assignment->class_id);
+                                 ->where('class_id', $assignment->class_id)
+                                 ->whereNull('teacher_id');
                         });
                     }
                 }
+            });
+        }
+
+        $now = Carbon::now();
+        $todayDate = $now->format('Y-m-d');
+        $currentTime = $now->format('H:i');
+        $todayDay = $this->getDayMapping()[$now->format('l')] ?? null;
+
+        // [FEATURE] Fetch School Agenda / Holidays for today
+        $agenda = \App\Models\Holiday::where(function($query) use ($todayDate) {
+            $query->where('date', $todayDate)
+                  ->orWhere(function($q) use ($todayDate) {
+                      $q->where('start_date', '<=', $todayDate)
+                        ->where('end_date', '>=', $todayDate);
+                  });
+        })->first();
+
+        // Fetch journals and attendance for today to determine status
+        $journals = Journal::where('date', $todayDate)->get()->groupBy('schedule_id');
+        $attendance = Attendance::where('date', $todayDate)->get()->groupBy(function($a) {
+            return $a->class_id . '-' . $a->subject_id;
+        });
+
+        // [AUDIT] Add unified date/day filtering for teacher dashboard
+        if ($user->role === 'teacher' && request()->has('today_only')) {
+            $query->where(function($q) use ($todayDay, $todayDate) {
+                // Standard logic same as DashboardController
+                $q->where('day', $todayDay)
+                  ->where(function($sub) use ($todayDate) {
+                      $sub->where(function($dateRange) use ($todayDate) {
+                          $dateRange->whereNull('start_date')->whereNull('end_date');
+                      })
+                      ->orWhere(function($dateRange) use ($todayDate) {
+                          $dateRange->where('start_date', '<=', $todayDate)
+                                    ->where(function($range) use ($todayDate) {
+                                        $range->where('end_date', '>=', $todayDate)
+                                              ->orWhereNull('end_date');
+                                    });
+                      });
+                  });
             });
         }
 
@@ -55,17 +97,50 @@ class ScheduleController extends Controller
             ->orderBy('start_time')
             ->get();
         
-        // Match today's journal for each schedule to detect assignment status
-        $todayDate = Carbon::now()->format('Y-m-d');
-        $schedules->transform(function($s) use ($todayDate) {
-            $journal = Journal::where('class_id', $s->class_id)
-                ->where('subject_id', $s->subject_id)
-                ->where('date', $todayDate)
-                ->latest()
-                ->first();
-                
-            $s->is_assignment = $journal ? (bool)$journal->is_assignment : false;
+        $schedules->transform(function($s) use ($todayDate, $currentTime, $journals, $attendance, $now, $agenda) {
+            $journal = $journals->get($s->id)?->first();
             $s->journal_id = $journal ? $journal->id : null;
+            $s->is_assignment = $journal ? (bool)$journal->is_assignment : false;
+            $s->topic = $journal ? $journal->topic : null;
+
+            $startTime = Carbon::parse($s->start_time)->format('H:i');
+            $endTime = Carbon::parse($s->end_time)->format('H:i');
+            $isActive = $currentTime >= $startTime && $currentTime < $endTime;
+
+            $attKey = $s->class_id . '-' . $s->subject_id;
+            $hasAttendance = $attendance->has($attKey);
+
+            $status = 'belum_mulai';
+            if ($isActive) {
+                // [SYNC FIX] Match DashboardController logic exactly:
+                // - berlangsung: guru sudah absen/isi jurnal (kartu ungu)
+                // - menunggu_absen: jam sudah mulai tapi belum ada aktivitas guru (grace period 5 menit)
+                // - terlambat: sudah lewat grace period tapi jadwal masih berjalan
+                $startTimeMoment = Carbon::parse($s->start_time);
+                $minutesSinceStart = $now->diffInMinutes($startTimeMoment, false);
+                $isWithinGracePeriod = abs($minutesSinceStart) <= 5;
+
+                if ($hasAttendance || $journal) {
+                    $status = 'berlangsung';
+                } elseif ($isWithinGracePeriod) {
+                    $status = 'menunggu_absen';
+                } else {
+                    $status = 'terlambat';
+                }
+            } elseif ($currentTime > $endTime) {
+                $status = ($hasAttendance || $journal) ? 'selesai' : 'alfa';
+            }
+
+            if ($s->is_assignment) {
+                $status = 'assignment';
+            }
+
+            // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
+            if ($agenda) {
+                $status = $agenda->is_holiday ? 'libur' : 'agenda';
+            }
+
+            $s->status = $status;
             return $s;
         });
 
@@ -512,6 +587,8 @@ class ScheduleController extends Controller
         ]);
     }
 
+
+
     /**
      * Audit subject allocation per class
      */
@@ -645,6 +722,10 @@ class ScheduleController extends Controller
      */
     public function autoGenerate(Request $request)
     {
+        // Increase time limit and memory limit to prevent 500 errors on hosting
+        set_time_limit(300);
+        ini_set('memory_limit', '512M');
+
         /** @var User $user */
         $user = auth()->user();
         if (!$user->isAdmin()) {
@@ -673,5 +754,220 @@ class ScheduleController extends Controller
             'message' => 'Jadwal berhasil dibuat secara otomatis!',
             'count' => $result['count']
         ]);
+    }
+
+    /**
+     * Store multiple schedules at once, typically generated by the frontend
+     */
+    public function bulkStore(Request $request)
+    {
+        /** @var User $user */
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat menyimpan jadwal masal.');
+        }
+
+        $request->validate([
+            'schedules' => 'required|array',
+            'schedules.*.class_id' => 'required|exists:classes,id',
+            'schedules.*.subject_id' => 'required|exists:subjects,id',
+            'schedules.*.teacher_id' => 'required|exists:users,id',
+            'schedules.*.day' => 'required|string',
+            'schedules.*.start_period' => 'required|integer',
+            'schedules.*.end_period' => 'required|integer',
+            'schedules.*.start_time' => 'required|string',
+            'schedules.*.end_time' => 'required|string',
+        ]);
+
+        $schedulesData = $request->schedules;
+        $now = now();
+
+        DB::beginTransaction();
+        try {
+            // 1. Delete all existing teaching schedules first
+            \App\Models\Schedule::where('type', 'teaching')->delete();
+
+            // 2. Prepare data for bulk insert
+            $insertData = array_map(function($item) use ($now) {
+                return [
+                    'class_id' => $item['class_id'],
+                    'subject_id' => $item['subject_id'],
+                    'teacher_id' => $item['teacher_id'],
+                    'day' => $item['day'],
+                    'type' => 'teaching',
+                    'start_period' => $item['start_period'],
+                    'end_period' => $item['end_period'],
+                    'start_time' => $item['start_time'],
+                    'end_time' => $item['end_time'],
+                    'start_date' => $item['start_date'] ?? $now->format('Y-m-d'),
+                    'end_date' => $item['end_date'] ?? $now->endOfYear()->format('Y-m-d'),
+                    'is_recurring' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }, $schedulesData);
+
+            // 3. Perform bulk insert
+            foreach (array_chunk($insertData, 100) as $chunk) {
+                \App\Models\Schedule::insert($chunk);
+            }
+
+            DB::commit();
+
+            // [CACHE INVALIDATION]
+            Cache::flush();
+
+            return response()->json([
+                'message' => 'Jadwal berhasil disimpan!',
+                'count' => count($insertData)
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Gagal menyimpan jadwal masal: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Export schedules to CSV (Detailed Grid format)
+     */
+    public function exportCsv()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
+        $classes = \App\Models\SchoolClass::orderBy('rombel')->get();
+        $schedules = Schedule::with(['subject'])->get(); // No need to eager load user-teacher here
+        
+        // 1. Fetch Teacher Codes mapped by auth_user_id (which is what teacher_id in schedules table refers to)
+        $teacherCodes = \App\Models\Teacher::pluck('code', 'auth_user_id')->toArray();
+        
+        // 2. Fetch Active Time Slot Template from UserProfile
+        $profile = \App\Models\UserProfile::first();
+        $activeSlots = [];
+        if ($profile && $profile->teaching_time_slots && isset($profile->teaching_time_slots['profiles'])) {
+            $activeProfile = null;
+            foreach ($profile->teaching_time_slots['profiles'] as $p) {
+                if ($p['is_active'] ?? false) {
+                    $activeProfile = $p;
+                    break;
+                }
+            }
+            if ($activeProfile && isset($activeProfile['slots'])) {
+                $activeSlots = $activeProfile['slots'];
+            }
+        }
+
+        $dayMapping = [
+            'Senin' => 1, 'Selasa' => 2, 'Rabu' => 3, 'Kamis' => 4, 'Jumat' => 5, 'Sabtu' => 6, 'Minggu' => 7
+        ];
+
+        // 3. Expand all schedules into individual periods
+        $matrix = [];
+        $allSlots = [];
+
+        foreach ($schedules as $s) {
+            $start = (int)($s->start_period ?? 1);
+            $end = (int)($s->end_period ?? $start);
+            
+            for ($p = $start; $p <= $end; $p++) {
+                $slotKey = "{$s->day}|{$p}";
+                
+                if (!isset($allSlots[$slotKey])) {
+                    // Try to get time from template
+                    $timeDisplay = '';
+                    if (isset($activeSlots[$s->day])) {
+                        foreach ($activeSlots[$s->day] as $slot) {
+                            if ((int)$slot['jam_ke'] === $p) {
+                                $timeDisplay = "{$slot['mulai']}-{$slot['selesai']}";
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Fallback to schedule's own time if template lookup fails
+                    if (!$timeDisplay) {
+                        $timeDisplay = substr($s->start_time, 0, 5) . '-' . substr($s->end_time, 0, 5);
+                    }
+
+                    $allSlots[$slotKey] = [
+                        'day' => $s->day,
+                        'period' => $p,
+                        'time' => $timeDisplay,
+                        'sort_day' => $dayMapping[$s->day] ?? 99,
+                        'sort_period' => $p
+                    ];
+                }
+
+                if ($s->type === 'non-teaching') {
+                    $cellValue = $s->activity_name;
+                } else {
+                    $subCode = $s->subject->code ?? $s->subject->name ?? '?';
+                    $teaCode = $teacherCodes[$s->teacher_id] ?? '?';
+                    
+                    // Combine codes: KODEMAPEL_KODEGURU
+                    $cellValue = "{$subCode}_{$teaCode}";
+                }
+
+                $matrix[$slotKey][$s->class_id] = $cellValue;
+            }
+        }
+
+        // 4. Sort the unique slots
+        uasort($allSlots, function($a, $b) {
+            if ($a['sort_day'] !== $b['sort_day']) return $a['sort_day'] - $b['sort_day'];
+            return $a['sort_period'] - $b['sort_period'];
+        });
+
+        $filename = "jadwal_pelajaran_cetak_" . date('Y-m-d_H-i-s') . ".csv";
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        $headerRow = ['HARI', 'JAM', 'WAKTU'];
+        foreach ($classes as $class) {
+            $headerRow[] = $class->rombel;
+        }
+
+        $callback = function() use($allSlots, $classes, $matrix, $headerRow) {
+            $file = fopen('php://output', 'w');
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($file, $headerRow);
+
+            $lastDay = '';
+            foreach ($allSlots as $slotKey => $slot) {
+                // Show day name only on the first row of that day
+                $currentDay = ($slot['day'] !== $lastDay) ? $slot['day'] : '';
+                $lastDay = $slot['day'];
+
+                $row = [$currentDay, $slot['period'], $slot['time']];
+
+                foreach ($classes as $class) {
+                    $row[] = $matrix[$slotKey][$class->id] ?? "";
+                }
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Helper to map English day names to Indonesian
+     */
+    private function getDayMapping()
+    {
+        return [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
     }
 }

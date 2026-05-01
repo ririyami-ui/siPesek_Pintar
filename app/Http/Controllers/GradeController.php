@@ -110,6 +110,21 @@ class GradeController extends Controller
             $savedGrades = [];
 
             foreach ($gradesData as $g) {
+                // Get old value if exists for auditing
+                $existing = Grade::where([
+                    'user_id' => Auth::id(),
+                    'student_id' => $g['student_id'],
+                    'class_id' => $commonData['class_id'],
+                    'subject_id' => $commonData['subject_id'],
+                    'date' => $commonData['date'],
+                    'type' => $commonData['type'],
+                    'topic' => $commonData['topic'],
+                    'semester' => $commonData['semester'],
+                    'academic_year' => $commonData['academic_year']
+                ])->first();
+
+                $oldScore = $existing ? $existing->score : null;
+
                 // Update or Create
                  $grade = Grade::updateOrCreate(
                     [
@@ -128,6 +143,14 @@ class GradeController extends Controller
                         'notes' => $g['notes'] ?? null
                     ]
                 );
+
+                // Audit logging for changes
+                if (!$existing) {
+                    \App\Services\AuditService::log($grade, 'create', null, $grade->toArray());
+                } elseif ($oldScore != $g['score']) {
+                    \App\Services\AuditService::log($grade, 'update', ['score' => $oldScore], ['score' => $g['score']]);
+                }
+
                 $savedGrades[] = $grade;
             }
 

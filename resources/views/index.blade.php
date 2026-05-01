@@ -80,9 +80,9 @@
     <body class="antialiased">
         <!-- Splash Screen OVERLAY (Outside Root for better transition) -->
         <div id="pwa-shell-splash">
-            <img src="/Logo Smart Teaching Baru_.png" class="splash-logo" alt="..." onerror="this.style.display='none'">
+            <img src="{{ asset('branding_logo.png') }}" class="splash-logo" alt="Si Pesek Pintar" onerror="this.style.display='none'">
             <div class="splash-spinner"></div>
-            <div style="margin-top: 20px; font-family: sans-serif; font-size: 10px; color: #6366f1; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;">Initializing...</div>
+            <div style="margin-top: 20px; font-family: sans-serif; font-size: 11px; color: #6366f1; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;">Si Pesek Pintar</div>
         </div>
 
         <div id="root">

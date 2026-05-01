@@ -36,6 +36,10 @@ class AttendanceController extends Controller
             $query->where('student_id', $request->student_id);
         }
 
+        if ($request->has('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
         return response()->json(['data' => $query->orderBy('date', 'desc')->get()]);
     }
 
@@ -68,13 +72,39 @@ class AttendanceController extends Controller
             'attendances.*.note' => 'nullable|string',
         ]);
 
+        $date = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        
+        // [FEATURE] Prevent attendance entry on School Agenda / Holidays
+        $holiday = \App\Models\Holiday::where(function($q) use ($date) {
+            $q->where('date', $date)
+              ->orWhere(function($sub) use ($date) {
+                  $sub->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+              });
+        })->first();
+
+        if ($holiday && !auth()->user()->isAdmin()) {
+            return response()->json([
+                'message' => "Absensi tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name})."
+            ], 422);
+        }
+
         DB::beginTransaction();
         try {
             $user = auth()->user();
             $records = [];
             
             foreach ($validated['attendances'] as $item) {
-                $records[] = Attendance::updateOrCreate(
+                // Get old value for auditing
+                $existing = Attendance::where([
+                    'student_id' => $item['student_id'],
+                    'date'       => $validated['date'],
+                    'subject_id' => $validated['subject_id'],
+                ])->first();
+
+                $oldStatus = $existing ? $existing->status : null;
+
+                $record = Attendance::updateOrCreate(
                     [
                         'student_id' => $item['student_id'],
                         'date'       => $validated['date'],
@@ -87,6 +117,15 @@ class AttendanceController extends Controller
                         'user_id'  => $user->id,
                     ]
                 );
+
+                // Audit logging
+                if (!$existing) {
+                    \App\Services\AuditService::log($record, 'create', null, $record->toArray());
+                } elseif ($oldStatus != $item['status']) {
+                    \App\Services\AuditService::log($record, 'update', ['status' => $oldStatus], ['status' => $item['status']]);
+                }
+
+                $records[] = $record;
             }
 
             DB::commit();
@@ -165,8 +204,36 @@ class AttendanceController extends Controller
             // Skip weekends if not specified otherwise
             if ($dayName === 'Minggu' || $dayName === 'Sabtu') continue;
 
+            $todayDateFormatted = $date->format('Y-m-d');
+
+            // [FIX] Skip checking if this date was a Holiday or School Agenda
+            $isHoliday = \App\Models\Holiday::where(function($query) use ($todayDateFormatted) {
+                $query->where('date', $todayDateFormatted)
+                      ->orWhere(function($q) use ($todayDateFormatted) {
+                          $q->where('start_date', '<=', $todayDateFormatted)
+                            ->where('end_date', '>=', $todayDateFormatted);
+                      });
+            })->exists();
+
+            if ($isHoliday) continue;
+
             $schedules = \App\Models\Schedule::where('day', $dayName)
                 ->where('type', 'teaching')
+                ->where(function($q) use ($date) {
+                    $todayDate = $date->format('Y-m-d');
+                    // [UNIFIED LOGIC] Match if NO dates are set (assume always active for that day)
+                    // OR if that date is within the set date range
+                    $q->where(function($sub) {
+                        $sub->whereNull('start_date')->whereNull('end_date');
+                    })
+                    ->orWhere(function($sub) use ($todayDate) {
+                        $sub->where('start_date', '<=', $todayDate)
+                            ->where(function($dateRange) use ($todayDate) {
+                                $dateRange->where('end_date', '>=', $todayDate)
+                                          ->orWhereNull('end_date');
+                            });
+                    });
+                })
                 ->with(['class', 'subject', 'teacher']);
 
             if (!$isAdmin) {
@@ -201,5 +268,36 @@ class AttendanceController extends Controller
         }
 
         return response()->json(['data' => $missing]);
+    }
+
+    public function resetMissing(Request $request)
+    {
+        $user = $request->user();
+        // [FIX] Use isAdmin() to recognize both 'admin' and 'adminer' roles consistently
+        if (!$user->isAdmin()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'password' => 'required|string'
+        ]);
+
+        if (!\Illuminate\Support\Facades\Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Password salah. Reset dibatalkan demi keamanan.'], 403);
+        }
+
+        try {
+            // Set all active schedules' start_date to today so they don't look backwards
+            \App\Models\Schedule::where('type', 'teaching')
+                ->where(function($q) {
+                    $q->whereNull('start_date')
+                      ->orWhere('start_date', '<', \Carbon\Carbon::today()->format('Y-m-d'));
+                })
+                ->update(['start_date' => \Carbon\Carbon::today()->format('Y-m-d')]);
+
+            return response()->json(['message' => 'Riwayat absensi terlewat berhasil dibersihkan dan siklus disetel ulang ke hari ini.']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Gagal mereset: ' . $e->getMessage()], 500);
+        }
     }
 }

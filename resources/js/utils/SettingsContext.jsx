@@ -130,13 +130,19 @@ export const SettingsProvider = ({ children }) => {
     const normalizeForSpeech = (text) => {
         if (!text) return "";
         let t = text.toString();
+        t = t.replace(/\b1([a-zA-Z])\b/g, "Satu $1");
+        t = t.replace(/\b2([a-zA-Z])\b/g, "Dua $1");
+        t = t.replace(/\b3([a-zA-Z])\b/g, "Tiga $1");
+        t = t.replace(/\b4([a-zA-Z])\b/g, "Empat $1");
+        t = t.replace(/\b5([a-zA-Z])\b/g, "Lima $1");
+        t = t.replace(/\b6([a-zA-Z])\b/g, "Enam $1");
         t = t.replace(/\b7([a-zA-Z])\b/g, "Tujuh $1");
         t = t.replace(/\b8([a-zA-Z])\b/g, "Delapan $1");
         t = t.replace(/\b9([a-zA-Z])\b/g, "Sembilan $1");
         t = t.replace(/\b10([a-zA-Z])\b/g, "Sepuluh $1");
         t = t.replace(/\b11([a-zA-Z])\b/g, "Sebelas $1");
         t = t.replace(/\b12([a-zA-Z])\b/g, "Dua Belas $1");
-        const map = { "7": "Tujuh", "8": "Delapan", "9": "Sembilan", "10": "Sepuluh", "11": "Sebelas", "12": "Dua Belas", "KBM": "Kegiatan Belajar Mengajar" };
+        const map = { "1": "Satu", "2": "Dua", "3": "Tiga", "4": "Empat", "5": "Lima", "6": "Enam", "7": "Tujuh", "8": "Delapan", "9": "Sembilan", "10": "Sepuluh", "11": "Sebelas", "12": "Dua Belas", "KBM": "Kegiatan Belajar Mengajar" };
         Object.keys(map).forEach(k => { t = t.replace(new RegExp(`\\b${k}\\b`, 'gi'), map[k]); });
         return t;
     };
@@ -402,6 +408,44 @@ export const SettingsProvider = ({ children }) => {
                 });
             }
 
+            // [NEW] Trigger for Teacher Preparation (5 Minutes Before) - General Announcement
+            if (kbmSource) {
+                const nowMoment = moment(time, 'HH:mm:ss');
+                let hasUpcomingKBM = false;
+                let targetStartTime = "";
+                let targetPeriod = null;
+
+                kbmSource.forEach(item => {
+                    const startRaw = item.time?.split(' - ')[0] || "";
+                    if (!startRaw) return;
+                    const startFull = startRaw.length === 5 ? `${startRaw}:00` : startRaw;
+                    
+                    const startMoment = moment(startFull, 'HH:mm:ss');
+                    const diffSeconds = startMoment.diff(nowMoment, 'seconds');
+                    
+                    // Trigger exactly 5 minutes (300 seconds) before
+                    if (diffSeconds >= 295 && diffSeconds <= 300) {
+                        hasUpcomingKBM = true;
+                        targetStartTime = startFull;
+                        if (item.start_period) targetPeriod = item.start_period;
+                    }
+                });
+
+                if (hasUpcomingKBM) {
+                    const id = `kbm-prep-5min-${targetStartTime}-${date}`;
+                    if (!announcedIdsRef.current.has(id)) {
+                        announcedIdsRef.current.add(id);
+                        const periodText = targetPeriod ? `jam pelajaran ke ${normalizeForSpeech(targetPeriod)}` : 'jam pelajaran berikutnya';
+                        const texts = {
+                            'id-ID': `Mohon perhatian. ${periodText} akan dimulai dalam 5 menit lagi. Mohon Bapak dan Ibu Guru mempersiapkan diri. Terima kasih.`,
+                            'en-US': `Attention please. ${targetPeriod ? `Period ${targetPeriod}` : 'The next period'} will begin in 5 minutes. Teachers are requested to prepare themselves. Thank you.`
+                        };
+                        audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
+                        processQueue();
+                    }
+                }
+            }
+
             // [PRIORITY 2] Logic for Non-Teaching Activities (Lower Priority than Teachers)
             if (data.non_teaching_schedules) {
                 data.non_teaching_schedules.forEach(act => {
@@ -419,18 +463,19 @@ export const SettingsProvider = ({ children }) => {
                             if (!announcedIdsRef.current.has(id)) {
                                 announcedIdsRef.current.add(id);
                                 const isSholat = act.activity_name.toLowerCase().includes('sholat');
+                                const isIstirahat = act.activity_name.toLowerCase().includes('istirahat') || act.activity_name.toLowerCase().includes('break');
                                 
                                 // Check if school ends exactly when this activity ends
                                 const schoolEndsAtSameTime = i === 1 && data.max_end_time === act.end_time;
 
                                 const texts = {
                                     'id-ID': i === 0 
-                                        ? `Mohon perhatian, waktu ${normalizeForSpeech(act.activity_name)} telah tiba. ${isSholat ? 'Kepada seluruh warga sekolah beragama Islam diharap segera bersiap menuju tempat ibadah.' : 'Selamat beristirahat.'}`
+                                        ? `Mohon perhatian, waktu ${normalizeForSpeech(act.activity_name)} telah tiba. ${isSholat ? 'Kepada seluruh warga sekolah beragama Islam diharap segera bersiap menuju tempat ibadah.' : (isIstirahat ? 'Selamat beristirahat.' : '')}`
                                         : (schoolEndsAtSameTime 
                                             ? `Mohon perhatian. Waktu ${normalizeForSpeech(act.activity_name)} telah usai.`
                                             : `Mohon perhatian. Waktu ${normalizeForSpeech(act.activity_name)} telah usai. Kepada seluruh siswa diharapkan segera kembali ke kelas masing-masing untuk melanjutkan kegiatan pembelajaran.`),
                                     'en-US': i === 0
-                                        ? `Attention please, it's time for ${normalizeForSpeech(act.activity_name)}. ${isSholat ? 'All Muslim school members are requested to prepare for prayer.' : 'Enjoy your break.'}`
+                                        ? `Attention please, it's time for ${normalizeForSpeech(act.activity_name)}. ${isSholat ? 'All Muslim school members are requested to prepare for prayer.' : (isIstirahat ? 'Enjoy your break.' : '')}`
                                         : (schoolEndsAtSameTime
                                             ? `Attention please. The time for ${normalizeForSpeech(act.activity_name)} has ended.`
                                             : `Attention please. The time for ${normalizeForSpeech(act.activity_name)} has ended. All students are expected to return to their respective classes to continue learning activities.`)

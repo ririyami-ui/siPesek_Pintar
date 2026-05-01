@@ -10,16 +10,26 @@ import {
     ChevronRight, 
     Loader2,
     ClipboardCheck,
-    History
+    History,
+    Trash2,
+    X,
+    ShieldAlert,
+    Lock
 } from 'lucide-react';
 import api from '../lib/axios';
 import moment from 'moment';
+import { useSettings } from '../utils/SettingsContext';
 
 const AbsensiTerlewatPage = () => {
     const navigate = useNavigate();
+    const { userProfile } = useSettings();
+    const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
     const [loading, setLoading] = useState(true);
+    const [isResetting, setIsResetting] = useState(false);
     const [missingData, setMissingData] = useState([]);
     const [days, setDays] = useState(7);
+    const [showResetModal, setShowResetModal] = useState(false);
+    const [resetPassword, setResetPassword] = useState('');
 
     const fetchMissingAttendance = async () => {
         setLoading(true);
@@ -47,6 +57,21 @@ const AbsensiTerlewatPage = () => {
         }).toString();
         
         navigate(`/absensi?${queryParams}`);
+    };
+
+    const handleResetMissing = async () => {
+        setIsResetting(true);
+        try {
+            await api.post('/admin/attendances/reset-missing', { password: resetPassword });
+            setResetPassword('');
+            setShowResetModal(false);
+            fetchMissingAttendance(); // Reload data (will be 0)
+        } catch (error) {
+            console.error('Failed to reset missing attendance', error);
+            alert(error.response?.data?.message || 'Gagal membersihkan riwayat absensi. Pastikan kata sandi benar.');
+        } finally {
+            setIsResetting(false);
+        }
     };
 
     return (
@@ -77,17 +102,29 @@ const AbsensiTerlewatPage = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 relative z-10">
-                    <span className="text-[10px] font-black uppercase text-gray-400">Rentang:</span>
-                    <select 
-                        value={days} 
-                        onChange={(e) => setDays(parseInt(e.target.value))}
-                        className="bg-white dark:bg-gray-800 border-none rounded-xl px-4 py-2 text-xs font-bold shadow-lg outline-none focus:ring-2 focus:ring-rose-500/50 transition-all cursor-pointer dark:text-white"
-                    >
-                        <option value={7}>7 Hari Terakhir</option>
-                        <option value={14}>14 Hari Terakhir</option>
-                        <option value={30}>30 Hari Terakhir</option>
-                    </select>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 relative z-10 w-full md:w-auto mt-4 md:mt-0">
+                    {isAdmin && (
+                        <button 
+                            onClick={() => setShowResetModal(true)}
+                            disabled={isResetting}
+                            className={`flex items-center justify-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 hover:bg-rose-50 dark:hover:bg-rose-900/30 text-rose-600 border border-rose-200 dark:border-rose-800/40 rounded-xl shadow-sm hover:shadow-md transition-all text-xs font-bold w-full sm:w-auto ${isResetting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            <Trash2 size={16} />
+                            <span className="whitespace-nowrap">Reset Riwayat</span>
+                        </button>
+                    )}
+                    <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-2 py-1 shadow-sm border border-gray-100 dark:border-gray-700 w-full md:w-auto justify-between">
+                        <span className="text-[10px] font-black uppercase text-gray-400 pl-2">Rentang:</span>
+                        <select 
+                            value={days} 
+                            onChange={(e) => setDays(parseInt(e.target.value))}
+                            className="bg-transparent border-none rounded-r-xl px-3 py-1.5 text-xs font-bold outline-none focus:ring-0 cursor-pointer dark:text-white"
+                        >
+                            <option value={7}>7 Hari Terakhir</option>
+                            <option value={14}>14 Hari Terakhir</option>
+                            <option value={30}>30 Hari Terakhir</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -195,6 +232,81 @@ const AbsensiTerlewatPage = () => {
                     Data di atas dihasilkan melalui pencocokan jadwal mingguan aktif dengan rekaman absensi digital. Silakan hubungi operator jika terdapat jadwal yang seharusnya libur namun muncul di daftar ini.
                 </p>
             </div>
+
+            {/* Reset Modal */}
+            {showResetModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-gray-800 overflow-hidden animate-scale-in">
+                        <div className="p-8">
+                            <div className="flex items-center justify-between mb-8">
+                                <div className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-2xl">
+                                    <ShieldAlert size={28} />
+                                </div>
+                                <button 
+                                    onClick={() => setShowResetModal(false)}
+                                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl text-gray-400 transition-colors"
+                                >
+                                    <X size={20} />
+                                </button>
+                            </div>
+
+                            <h3 className="text-2xl font-black text-gray-800 dark:text-white leading-tight mb-2 uppercase tracking-tighter">
+                                Konfirmasi Reset Fatal
+                            </h3>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-8 leading-relaxed">
+                                Tindakan ini akan mengabaikan seluruh riwayat absen terlewat sebelumnya. Masukkan password akun untuk memvalidasi.
+                            </p>
+
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                handleResetMissing();
+                            }} className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-1">Password Admin</label>
+                                    <div className="relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-rose-500 transition-colors">
+                                            <Lock size={18} />
+                                        </div>
+                                        <input 
+                                            type="password"
+                                            value={resetPassword}
+                                            onChange={(e) => setResetPassword(e.target.value)}
+                                            required
+                                            autoFocus
+                                            placeholder="••••••••"
+                                            className="w-full bg-gray-50 dark:bg-gray-800 border-2 border-gray-100 dark:border-gray-700 focus:border-rose-500 dark:focus:border-rose-500 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold transition-all outline-none text-gray-800 dark:text-white"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-3 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowResetModal(false)}
+                                        className="flex-1 px-6 py-4 rounded-2xl border-2 border-gray-100 dark:border-gray-700 text-xs font-black uppercase tracking-widest text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isResetting || !resetPassword}
+                                        className="flex-[1.5] flex items-center justify-center gap-3 px-6 py-4 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-2xl shadow-lg shadow-rose-600/20 transition-all text-xs font-black uppercase tracking-widest"
+                                    >
+                                        {isResetting ? (
+                                            <Loader2 size={18} className="animate-spin" />
+                                        ) : (
+                                            <>
+                                                <Trash2 size={18} />
+                                                Konfirmasi
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

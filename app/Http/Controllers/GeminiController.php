@@ -177,6 +177,7 @@ class GeminiController extends Controller
 
         $response = $this->geminiService->chat(
             $validated['message'],
+            [], // history
             $validated['context'] ?? []
         );
 

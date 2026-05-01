@@ -27,7 +27,7 @@ class UserProfileController extends Controller
 
         return response()->json([
             'school_name' => $profile->school_name ?? 'Sekolah',
-            'logo_url' => ($profile && $profile->logo_path) ? asset('storage/' . $profile->logo_path) : null,
+            'logo_url' => ($profile && $profile->logo_path) ? url('storage/' . $profile->logo_path) : null,
         ]);
     }
 
@@ -40,7 +40,7 @@ class UserProfileController extends Controller
         $profile = UserProfile::where('user_id', $adminUserId)->first();
         
         $schoolName = $profile->school_name ?? 'Si Pesek Pintar';
-        $logoUrl = ($profile && $profile->logo_path) ? asset('storage/' . $profile->logo_path) : asset('logo.png');
+        $logoUrl = ($profile && $profile->logo_path) ? url('storage/' . $profile->logo_path) : url('Logo Smart Teaching Baru_.png');
 
         return response()->json([
             'name' => $schoolName . ' - Portal',
@@ -132,9 +132,20 @@ class UserProfileController extends Controller
             $mergedProfile->teaching_time_slots = $this->formatTeachingTimeSlots($mergedProfile->teaching_time_slots);
         }
 
+        // Mask API Key for security
+        if ($mergedProfile->google_ai_api_key) {
+            $key = $mergedProfile->google_ai_api_key;
+            $len = strlen($key);
+            if ($len > 8) {
+                $mergedProfile->google_ai_api_key = substr($key, 0, 4) . '****' . substr($key, -4);
+            } else {
+                $mergedProfile->google_ai_api_key = '********';
+            }
+        }
+
         return response()->json([
             'profile' => $mergedProfile,
-            'logo_url' => $mergedProfile->logo_path ? asset('storage/' . $mergedProfile->logo_path) : null,
+            'logo_url' => $mergedProfile->logo_path ? url('storage/' . $mergedProfile->logo_path) : null,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -237,6 +248,11 @@ class UserProfileController extends Controller
             $dataToSave['schedule_notifications_enabled'] = filter_var($dataToSave['schedule_notifications_enabled'], FILTER_VALIDATE_BOOLEAN);
         }
 
+        // Ignore masked API Key in update
+        if (isset($dataToSave['google_ai_api_key']) && str_contains($dataToSave['google_ai_api_key'], '****')) {
+            unset($dataToSave['google_ai_api_key']);
+        }
+
         // Handle logo upload AFTER collecting dataToSave
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -277,7 +293,7 @@ class UserProfileController extends Controller
         return response()->json([
             'message' => 'Profile updated successfully',
             'profile' => $profile,
-            'logo_url' => $profile->logo_path ? asset('storage/' . $profile->logo_path) : null,
+            'logo_url' => $profile->logo_path ? url('storage/' . $profile->logo_path) : null,
         ]);
     }
 }

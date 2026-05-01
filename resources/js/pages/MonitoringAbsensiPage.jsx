@@ -11,6 +11,7 @@ import {
     AlertCircle, 
     CheckCircle2,
     Calendar,
+    CalendarHeart,
     Radio,
     UserCheck,
     ClipboardList
@@ -23,8 +24,8 @@ import RunningText from '../components/RunningText';
 const ClassAttendanceCard = ({ rombel, schedules, currentTime }) => {
     // Find the relevant schedule to show for this rombel
     const activeSchedule = useMemo(() => {
-        // 1. Priority: Currently ongoing (Status: berlangsung)
-        const ongoing = schedules.find(s => s.status === 'berlangsung');
+        // 1. Priority: Currently active - with or without attendance
+        const ongoing = schedules.find(s => s.status === 'berlangsung' || s.status === 'menunggu_absen');
         if (ongoing) return ongoing;
 
         // 2. Priority: Next upcoming (Status: belum_mulai)
@@ -32,7 +33,7 @@ const ClassAttendanceCard = ({ rombel, schedules, currentTime }) => {
                                    .sort((a, b) => a.time.localeCompare(b.time))[0];
         if (upcoming) return upcoming;
 
-        // 3. Fallback: Last finished (Status: selesai or alfa)
+        // 4. Fallback: Last record
         return schedules[schedules.length - 1];
     }, [schedules, schedules.length]);
 
@@ -49,7 +50,7 @@ const ClassAttendanceCard = ({ rombel, schedules, currentTime }) => {
 
     const isAssignment = activeSchedule.is_assignment === true || activeSchedule.is_assignment == 1;
 
-    if (activeSchedule.status === 'berlangsung') {
+    if (activeSchedule.status === 'berlangsung' || activeSchedule.status === 'menunggu_absen') {
         const startTime = moment(activeSchedule.time.split(' - ')[0], 'HH:mm');
         const diffMinutes = currentTime.diff(startTime, 'minutes');
 
@@ -201,13 +202,15 @@ const MonitoringAbsensiPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [schoolAgenda, setSchoolAgenda] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentTime, setCurrentTime] = useState(moment());
 
     const fetchData = async () => {
         try {
-            const response = await api.get('/admin/dashboard/monitoring');
+            const response = await api.get(`/admin/dashboard/monitoring?t=${Date.now()}`);
             setData(response.data.full_data || response.data.data || []);
+            setSchoolAgenda(response.data.school_agenda || null);
             // DEBUG LOG
             console.log('Monitoring Data Feed:', (response.data.full_data || response.data.data)?.map(item => ({
                 rombel: item.rombel,
@@ -224,7 +227,7 @@ const MonitoringAbsensiPage = () => {
 
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 300000); // 5 min refresh
+        const interval = setInterval(fetchData, 30000); // 30 sec refresh for real-time accuracy
         const timer = setInterval(() => setCurrentTime(moment()), 1000);
         return () => {
             clearInterval(interval);
@@ -246,13 +249,16 @@ const MonitoringAbsensiPage = () => {
 
     const filteredRombels = useMemo(() => {
         return Object.keys(rombelGroups).filter(rombel => {
-            // Check if this rombel has any ongoing or upcoming sessions
-            const hasActiveOrUpcoming = rombelGroups[rombel].some(s => 
-                s.status === 'berlangsung' || s.status === 'belum_mulai'
+            // Check if this rombel has any active or upcoming sessions
+            // Include 'menunggu_absen' as active states, but NOT 'alfa' since 'alfa' applies to past classes
+            const shouldShow = rombelGroups[rombel].some(s => 
+                s.status === 'berlangsung' || 
+                s.status === 'menunggu_absen' || 
+                s.status === 'belum_mulai'
             );
 
             // If no active/upcoming sessions, don't show the CCTV card
-            if (!hasActiveOrUpcoming) return false;
+            if (!shouldShow) return false;
 
             // Apply search filter if any
             return rombel.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -264,34 +270,8 @@ const MonitoringAbsensiPage = () => {
     }, [rombelGroups, searchTerm]);
 
     const missingAttendanceClasses = useMemo(() => {
-        return data.filter(item => {
-            const totalAttendance = (item.attendance_summary?.hadir || 0) + 
-                                  (item.attendance_summary?.sakit?.count || 0) + 
-                                  (item.attendance_summary?.izin?.count || 0) + 
-                                  (item.attendance_summary?.alpa?.count || 0);
-            
-            // [FIX] hasActivity strictly checks for Individual Attendance Records or Journal
-            const hasActivity = (item.attendance_summary && totalAttendance > 0) || !!item.journal_id;
-            
-            const isAssignment = item.is_assignment === true || item.is_assignment == 1;
-
-            // If it's an assignment (out-of-office/manual task), Admin help is usually not needed
-            if (isAssignment) return false;
-
-            // Scenario 1: Session has ended (status 'alfa' or 'selesai' but NO activity)
-            if (item.status === 'alfa' || item.status === 'selesai') {
-                return !hasActivity;
-            }
-            
-            // Scenario 2: Session is currently ongoing (status 'berlangsung') but presensi is still 0
-            // This allows Admin to help while the class is still in progress
-            if (item.status === 'berlangsung') {
-                return !hasActivity;
-            }
-
-            return false;
-        });
-    }, [data, currentTime]);
+        return data.filter(item => item.needs_attention === true);
+    }, [data]);
 
     if (loading && data.length === 0) {
         return (
@@ -304,6 +284,23 @@ const MonitoringAbsensiPage = () => {
 
     return (
         <div className="space-y-6 p-2 lg:p-4 animate-fade-in bg-gray-50/30 dark:bg-transparent min-h-screen pb-20">
+            {/* SCHOOL AGENDA BANNER */}
+            {schoolAgenda && (
+                <div className="bg-gradient-to-br from-indigo-600 to-blue-700 dark:from-indigo-800 dark:to-blue-900 rounded-[2rem] p-8 md:p-12 text-white shadow-2xl flex flex-col items-center justify-center text-center relative overflow-hidden border border-indigo-400/30">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/20 rounded-full -translate-x-1/4 translate-y-1/4 blur-2xl pointer-events-none"></div>
+                    
+                    <CalendarHeart size={72} className="mb-6 opacity-90 drop-shadow-lg" />
+                    <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase tracking-tighter drop-shadow-md">{schoolAgenda.title}</h2>
+                    <p className="opacity-90 max-w-xl mx-auto font-medium text-sm md:text-base leading-relaxed">
+                        {schoolAgenda.description || (schoolAgenda.is_holiday ? "Hari ini adalah hari libur. Semua sesi pembelajaran reguler diliburkan." : "Ada agenda sekolah hari ini. Jadwal pemantauan kelas reguler mungkin dinonaktifkan sementara.")}
+                    </p>
+                    <div className="mt-8 px-8 py-2.5 bg-white/10 rounded-full text-xs font-black tracking-widest uppercase border border-white/20 backdrop-blur-md shadow-inner">
+                        {schoolAgenda.is_holiday ? 'Status: Libur' : 'Status: Agenda Khusus'}
+                    </div>
+                </div>
+            )}
+
             {/* Legend / Status Bar */}
             <div className="relative z-30 flex flex-wrap items-center justify-center gap-6 px-6 py-3 bg-white/40 dark:bg-black/40 backdrop-blur-md rounded-full border border-white/20 dark:border-gray-800/40 text-[9px] font-black uppercase tracking-widest text-gray-500 shadow-sm">
                 <div className="flex items-center gap-2">
@@ -376,62 +373,64 @@ const MonitoringAbsensiPage = () => {
                     </div>
 
                     <div className="bg-white/40 dark:bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-gray-800/40 shadow-2xl overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-800">
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Waktu</th>
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Kelas</th>
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Mata Pelajaran</th>
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Guru Pengampu</th>
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
-                                        <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Tindakan</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                                    {missingAttendanceClasses.map((item, idx) => (
-                                        <tr key={idx} className="group hover:bg-white/60 dark:hover:bg-gray-800/60 transition-colors">
-                                            <td className="px-6 py-4">
-                                                <span className="text-xs font-black text-gray-500">{item.time}</span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white text-[10px] font-black italic">
-                                                        {item.rombel.substring(0, 2)}
-                                                    </div>
-                                                    <span className="text-sm font-black text-gray-800 dark:text-white">{item.rombel}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{item.subject}</span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2">
-                                                    <User size={14} className="text-gray-400" />
-                                                    <span className="text-xs font-bold text-gray-500">{item.teacher}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2 px-3 py-1 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-full border border-rose-100 dark:border-rose-800/30 w-fit">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
-                                                    <span className="text-[10px] font-black uppercase tracking-tighter">
-                                                        {item.status === 'alfa' ? 'Sesi Berakhir' : 'Belum Absen'}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 text-center">
-                                                <button 
-                                                    onClick={() => navigate(`/absensi?classId=${item.class_id || item.rombel}&subjectId=${item.subject_id || item.subject}&date=${moment().format('YYYY-MM-DD')}`)}
-                                                    className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-rose-500/20"
-                                                >
-                                                    <UserCheck size={14} />
-                                                    Bantu Absen
-                                                </button>
-                                            </td>
+                        <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-800 sticky top-0 z-20 backdrop-blur-md">
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Waktu</th>
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Kelas</th>
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Mata Pelajaran</th>
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Guru Pengampu</th>
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                            <th className="px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Tindakan</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                                        {missingAttendanceClasses.map((item, idx) => (
+                                            <tr key={idx} className="group hover:bg-white/60 dark:hover:bg-gray-800/60 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <span className="text-xs font-black text-gray-500">{item.time}</span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white text-[10px] font-black italic">
+                                                            {item.rombel.substring(0, 2)}
+                                                        </div>
+                                                        <span className="text-sm font-black text-gray-800 dark:text-white">{item.rombel}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className="text-sm font-bold text-gray-600 dark:text-gray-300">{item.subject}</span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <User size={14} className="text-gray-400" />
+                                                        <span className="text-xs font-bold text-gray-500">{item.teacher}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-2 px-3 py-1 bg-rose-50 dark:bg-rose-900/20 text-rose-600 rounded-full border border-rose-100 dark:border-rose-800/30 w-fit">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-600 animate-pulse" />
+                                                        <span className="text-[10px] font-black uppercase tracking-tighter">
+                                                            {item.status === 'alfa' ? 'Sesi Berakhir' : 'Belum Absen'}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 text-center">
+                                                    <button 
+                                                        onClick={() => navigate(`/absensi?classId=${item.class_id || item.rombel}&subjectId=${item.subject_id || item.subject}&date=${moment().format('YYYY-MM-DD')}`)}
+                                                        className="inline-flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-rose-500/20"
+                                                    >
+                                                        <UserCheck size={14} />
+                                                        Bantu Absen
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

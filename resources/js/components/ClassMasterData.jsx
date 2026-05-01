@@ -43,7 +43,7 @@ export default function ClassMasterData() {
       ]);
       const classData = classRes.data.data || classRes.data || [];
       const teacherData = teacherRes.data.data || teacherRes.data || [];
-      const syncData = syncRes.data || [];
+      const syncData = syncRes.data?.data || syncRes.data || [];
       
       // Backend already filters based on role and assignments
       setClasses(classData.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
@@ -319,7 +319,7 @@ export default function ClassMasterData() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 h-[500px] overflow-y-auto p-2 scrollbar-hide">
               {classes.map((classItem) => {
-                const analysis = syncAnalysis.find(a => a.id === classItem.id);
+                const analysis = Array.isArray(syncAnalysis) ? syncAnalysis.find(a => a.class_id === classItem.id) : null;
                 return (
                   <ClassCard
                     key={classItem.id}

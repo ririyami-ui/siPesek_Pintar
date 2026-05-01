@@ -30,6 +30,10 @@ class AutoScheduleService
      */
     public function generate()
     {
+        // Increase time limit and memory limit to prevent 500 errors on hosting
+        set_time_limit(0);
+        ini_set('memory_limit', '512M');
+
         // 1. Prepare template and available slots
         if (!$this->prepareTemplate()) {
             return ['success' => false, 'message' => 'Template waktu aktif tidak ditemukan. Pastikan Anda sudah menentukan template waktu yang "Aktif" di menu Kelola Template Waktu.'];
@@ -48,6 +52,9 @@ class AutoScheduleService
             return ['success' => false, 'message' => 'Tidak ada data penugasan guru (Teacher Assignments) yang memiliki jam per pekan.'];
         }
 
+        // Pre-fetch classes for performance
+        $allClasses = SchoolClass::all()->keyBy('id');
+
         // 3. Mathematical Pre-flight Validation
         $mathCheck = $this->validateMath($assignments);
         if (!$mathCheck['success']) {
@@ -55,19 +62,10 @@ class AutoScheduleService
         }
 
         // 4. Transform assignments into Meeting Blocks
-        $initialBlocks = $this->transformAssignmentsToBlocks($assignments);
+        $initialBlocks = $this->transformAssignmentsToBlocks($assignments, $allClasses);
         Log::info("AutoSchedule: Transformed into " . count($initialBlocks) . " blocks.");
 
-        // Calculate burdens to prioritize "busy" teachers and classes in the sorting logic
-        $teacherBurdens = $assignments->groupBy('teacher.auth_user_id')->map->sum(function($as) {
-            return $as->subject->weekly_hours ?? 0;
-        })->toArray();
-
-        $classBurdens = $assignments->groupBy('class_id')->map->sum(function($as) {
-            return $as->subject->weekly_hours ?? 0;
-        })->toArray();
-
-        $maxAttempts = 500;
+        $maxAttempts = 500; // Reduced from 2000 for hosting stability
         $attempt = 0;
         $failureStats = [
             'teachers' => [],
@@ -76,53 +74,63 @@ class AutoScheduleService
         $bestErrors = [];
         $minErrorCount = PHP_INT_MAX;
 
+        // Start with a clean state - delete OUTSIDE the loop
+        DB::beginTransaction();
+        try {
+            Schedule::where('type', 'teaching')->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ['success' => false, 'message' => 'Gagal membersihkan jadwal lama: ' . $e->getMessage()];
+        }
+
         while ($attempt < $maxAttempts) {
             $attempt++;
-            Log::info("AutoSchedule: Starting attempt #{$attempt}");
+            
+            //Stage 4: Pattern-Based Prioritization
+            // Calculate "Mobility" for each block based on teacher and class constraints
+            $blocks = $this->prepareBlocksWithPriority($initialBlocks, $assignments);
+            
+            $this->occupiedTeachers = [];
+            $this->occupiedClasses = [];
+            $this->errors = [];
 
-            DB::beginTransaction();
-            try {
-                // Clear previous teaching schedules
-                Schedule::where('type', 'teaching')->delete();
+            $results = $this->solve($blocks);
 
-                // [NEW] Stage 4: Pattern-Based Prioritization
-                // Calculate "Mobility" for each block based on teacher and class constraints
-                $blocks = $this->prepareBlocksWithPriority($initialBlocks, $assignments);
-                
-                $this->occupiedTeachers = [];
-                $this->occupiedClasses = [];
-                $this->errors = [];
+            if ($results['success']) {
+                DB::beginTransaction();
+                try {
+                    // Final Database Insertion: Bulk Insert for performance
+                    $nowTimestamp = now();
+                    $insertData = array_map(function($item) use ($nowTimestamp) {
+                        return array_merge($item, [
+                            'created_at' => $nowTimestamp,
+                            'updated_at' => $nowTimestamp
+                        ]);
+                    }, $results['schedules']);
 
-                $results = $this->solve($blocks);
-
-                if ($results['success']) {
-                    // [NEW] Final Database Insertion: Only write to DB once everything is perfect.
-                    foreach ($results['schedules'] as $data) {
-                        Schedule::create($data);
-                    }
+                    Schedule::insert($insertData);
                     DB::commit();
+                    Log::info("AutoSchedule: Success at attempt #{$attempt}");
                     return ['success' => true, 'count' => count($results['schedules'])];
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error("AutoSchedule: DB Write Error: " . $e->getMessage());
+                    return ['success' => false, 'message' => 'Gagal menyimpan jadwal: ' . $e->getMessage()];
                 }
+            }
 
-                // If failed, record hotspots and rollback
-                DB::rollBack();
-                
-                $currentErrors = $results['errors'];
-                if (count($currentErrors) < $minErrorCount) {
-                    $minErrorCount  = count($currentErrors);
-                    $bestErrors     = $currentErrors;
-                }
+            $currentErrors = $results['errors'];
+            if (count($currentErrors) < $minErrorCount) {
+                $minErrorCount  = count($currentErrors);
+                $bestErrors     = $currentErrors;
+            }
 
-                foreach ($currentErrors as $err) {
-                    $tKey = $err['teacher'];
-                    $cKey = $err['class'];
-                    $failureStats['teachers'][$tKey] = ($failureStats['teachers'][$tKey] ?? 0) + 1;
-                    $failureStats['classes'][$cKey] = ($failureStats['classes'][$cKey] ?? 0) + 1;
-                }
-
-            } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error("AutoSchedule Error on attempt #{$attempt}: " . $e->getMessage());
+            foreach ($currentErrors as $err) {
+                $tKey = $err['teacher'];
+                $cKey = $err['class'];
+                $failureStats['teachers'][$tKey] = ($failureStats['teachers'][$tKey] ?? 0) + 1;
+                $failureStats['classes'][$cKey] = ($failureStats['classes'][$cKey] ?? 0) + 1;
             }
         }
 
@@ -141,11 +149,26 @@ class AutoScheduleService
         $classHours = [];
         $teacherNames = [];
         $classNames = [];
+        $availableDaysCount = count($this->teachingSlots);
 
         foreach ($assignments as $as) {
             $h = $as->subject->weekly_hours;
             $tId = $as->teacher->auth_user_id;
             $cId = $as->class_id;
+
+            // Check if subject hours are too high for the available days
+            $neededDays = 0;
+            if ($h <= 3) $neededDays = 1;
+            elseif ($h <= 6) $neededDays = 2;
+            else $neededDays = ceil($h / 3);
+
+            if ($neededDays > $availableDaysCount) {
+                $cName = SchoolClass::find($cId)->rombel ?? "Kelas ID:{$cId}";
+                return [
+                    'success' => false,
+                    'message' => "KEGAGALAN MATEMATIS: Mapel '{$as->subject->name}' di kelas '{$cName}' butuh {$neededDays} hari ({$h} JP), tapi hanya ada {$availableDaysCount} hari aktif."
+                ];
+            }
 
             $teacherHours[$tId] = ($teacherHours[$tId] ?? 0) + $h;
             $classHours[$cId] = ($classHours[$cId] ?? 0) + $h;
@@ -206,15 +229,17 @@ class AutoScheduleService
     {
         // 1. Calculate Teacher Constraints (Stage 5: Master Packer Logic)
         
-        // Count total weekly hours per teacher
-        $teacherJP = $assignments->groupBy('teacher_id')->map->sum(function($as) {
+        // Count total weekly hours per teacher, grouped by auth_user_id to match blocks
+        $teacherJP = $assignments->groupBy(function($as) {
+            return $as->teacher ? $as->teacher->auth_user_id : $as->teacher_id;
+        })->map->sum(function($as) {
             return $as->subject->weekly_hours ?? 0;
         });
 
         // [New] Teacher Connectivity: How many classes is this teacher tied to?
-        // Teachers who teach in 10 different classes are much harder to schedule 
-        // than those who teach the same hours in only 1 class.
-        $teacherConnectivity = $assignments->groupBy('teacher_id')->map(function($group) {
+        $teacherConnectivity = $assignments->groupBy(function($as) {
+            return $as->teacher ? $as->teacher->auth_user_id : $as->teacher_id;
+        })->map(function($group) {
             return $group->pluck('class_id')->unique()->count();
         });
 
@@ -224,7 +249,6 @@ class AutoScheduleService
             $tConn = $teacherConnectivity[$b['teacher_id']] ?? 0;
             
             // Formula: Size is the biggest constraint, followed by Cross-Class Connectivity, then Total JP.
-            // A 3-JP block for a teacher teaching 8 classes is top priority.
             $b['difficulty'] = ($b['size'] * 100) + ($tConn * 10) + $tJP;
             
             // Add a small random jitter to allow different paths across 500 attempts
@@ -288,7 +312,7 @@ class AutoScheduleService
         return !empty($this->teachingSlots);
     }
 
-    protected function transformAssignmentsToBlocks($assignments)
+    protected function transformAssignmentsToBlocks($assignments, $allClasses)
     {
         $blocks = [];
         foreach ($assignments as $as) {
@@ -324,7 +348,7 @@ class AutoScheduleService
                     'teacher_id' => $as->teacher->auth_user_id, // Important: use auth_user_id for schedules table
                     'teacher_name' => $as->teacher->name,
                     'subject_name' => $as->subject->name,
-                    'class_name' => SchoolClass::find($as->class_id)->rombel ?? '?',
+                    'class_name' => $allClasses[$as->class_id]->rombel ?? '?',
                     'size' => $blockSize
                 ];
             }
@@ -351,11 +375,14 @@ class AutoScheduleService
     protected function partitionAllClasses($blocks)
     {
         $grid = [];
-        $classBlocks = collect($blocks)->groupBy('class_id');
+        $classGroups = [];
+        foreach ($blocks as $b) {
+            $classGroups[$b['class_id']][] = $b;
+        }
         $days = array_keys($this->teachingSlots);
 
-        foreach ($classBlocks as $classId => $blocks) {
-            $partition = $this->partitionSingleClass($blocks->toArray(), $days);
+        foreach ($classGroups as $classId => $blocksArray) {
+            $partition = $this->partitionSingleClass($blocksArray, $days);
             if (!$partition) return false; // This shouldn't happen for 2/3 JP blocks
             $grid[$classId] = $partition;
         }
@@ -365,7 +392,7 @@ class AutoScheduleService
     protected function partitionSingleClass($blocks, $days)
     {
         // Terapkan aturan: setiap mapel hanya boleh muncul SATU kali per hari di kelas yang sama
-        $maxAttempts = 50;
+        $maxAttempts = 300;
         for ($attempt = 0; $attempt < $maxAttempts; $attempt++) {
             $plan = [];
             $remaining = $blocks;
@@ -374,9 +401,10 @@ class AutoScheduleService
 
             foreach ($days as $day) {
                 $target = count($this->teachingSlots[$day]);
-                // Pass list of subjects already placed on this day (empty at start)
+                // Pass list of subjects and teachers already placed on this day (empty at start)
                 $usedSubjectsToday = [];
-                $found = $this->findCombinationNoRepeatSubject($remaining, $target, $usedSubjectsToday);
+                $usedTeachersToday = [];
+                $found = $this->findCombinationNoRepeat($remaining, $target, $usedSubjectsToday, $usedTeachersToday);
                 if (!$found) { $failed = true; break; }
 
                 $plan[$day] = $found['blocks'];
@@ -391,7 +419,7 @@ class AutoScheduleService
 
     protected function balanceHeatmap(&$grid)
     {
-        $maxSwaps = 1000;
+        $maxSwaps = 1500; // Increase swaps but keep it efficient
         $lastOverload = null;
         $stuckCount = 0;
 
@@ -405,9 +433,9 @@ class AutoScheduleService
             $overloadKey = ($overload['teacher_id'] ?? '') . '-' . ($overload['day'] ?? '');
             if ($lastOverload === $overloadKey) {
                 $stuckCount++;
-                if ($stuckCount > 50) {
-                    // We are stuck: re-partition this class from scratch
-                    $this->repartitionOverloadedClass($grid, $overload['teacher_id'], $overload['day']);
+                if ($stuckCount > 15) { // Faster reaction to being stuck
+                    // We are stuck: Re-partition MULTIPLE random classes that involve this teacher
+                    $this->shakeUpTeacherSchedule($grid, $overload['teacher_id']);
                     $stuckCount = 0;
                 }
             } else {
@@ -416,6 +444,39 @@ class AutoScheduleService
             $lastOverload = $overloadKey;
 
             $this->performBalancedSwap($grid, $overload['teacher_id'], $overload['day']);
+        }
+    }
+
+    protected function shakeUpTeacherSchedule(&$grid, $teacherId)
+    {
+        $days = array_keys($this->teachingSlots);
+        $involvedClasses = [];
+        foreach ($grid as $classId => $classDays) {
+            foreach ($classDays as $dayBlocks) {
+                foreach ($dayBlocks as $b) {
+                    if ($b['teacher_id'] === $teacherId) {
+                        $involvedClasses[] = $classId;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if (empty($involvedClasses)) return;
+        
+        // Pick 2 random classes to re-partition completely
+        shuffle($involvedClasses);
+        $toRebuild = array_slice($involvedClasses, 0, 2);
+
+        foreach ($toRebuild as $classId) {
+            $allBlocks = [];
+            foreach ($grid[$classId] as $dayBlocks) {
+                $allBlocks = array_merge($allBlocks, $dayBlocks);
+            }
+            $newPlan = $this->partitionSingleClass($allBlocks, $days);
+            if ($newPlan) {
+                $grid[$classId] = $newPlan;
+            }
         }
     }
 
@@ -450,10 +511,19 @@ class AutoScheduleService
     {
         // Find one class-day where this teacher is overloaded
         foreach ($grid as $classId => &$days) {
-            $hasTeacherOnBadDay = collect($days[$badDay])->firstWhere('teacher_id', $teacherId);
-            if ($hasTeacherOnBadDay) {
+            $blocksOnBadDay = $days[$badDay];
+            $foundIdxA = -1;
+            foreach ($blocksOnBadDay as $idx => $b) {
+                if ($b['teacher_id'] === $teacherId) {
+                    $foundIdxA = $idx;
+                    break;
+                }
+            }
+
+            if ($foundIdxA !== -1) {
+                $blockA = $blocksOnBadDay[$foundIdxA];
+                
                 // Try to swap a block from $badDay with a block from a $goodDay in THIS same class
-                // Crucial: Must swap blocks of same size to keep the frame 100% full
                 $daysAvailable = array_keys($days);
                 shuffle($daysAvailable);
                 
@@ -462,16 +532,35 @@ class AutoScheduleService
                     
                     // Look for a block on goodDay that is NOT by this same teacher
                     foreach ($days[$goodDay] as $idxB => $blockB) {
-                        if ($blockB['teacher_id'] !== $teacherId) {
-                            // Find the teacher's block on badDay
-                            foreach ($days[$badDay] as $idxA => $blockA) {
-                                if ($blockA['teacher_id'] === $teacherId && $blockA['size'] === $blockB['size']) {
-                                    // SWAP!
-                                    $days[$badDay][$idxA] = $blockB;
-                                    $days[$goodDay][$idxB] = $blockA;
-                                    return;
+                        if ($blockB['teacher_id'] !== $teacherId && $blockA['size'] === $blockB['size']) {
+                            
+                            $tA = $blockA['teacher_id'];
+                            $tB = $blockB['teacher_id'];
+
+                            // Check if Teacher A is already on goodDay
+                            $alreadyHasAOnGood = false;
+                            foreach ($days[$goodDay] as $bCheck) {
+                                if ($bCheck['teacher_id'] === $tA) {
+                                    $alreadyHasAOnGood = true;
+                                    break;
                                 }
                             }
+                            if ($alreadyHasAOnGood) continue;
+
+                            // Check if Teacher B is already on badDay
+                            $alreadyHasBOnBad = false;
+                            foreach ($days[$badDay] as $bCheck) {
+                                if ($bCheck['teacher_id'] === $tB) {
+                                    $alreadyHasBOnBad = true;
+                                    break;
+                                }
+                            }
+                            if ($alreadyHasBOnBad) continue;
+
+                            // SWAP!
+                            $days[$badDay][$foundIdxA] = $blockB;
+                            $days[$goodDay][$idxB] = $blockA;
+                            return;
                         }
                     }
                 }
@@ -505,7 +594,7 @@ class AutoScheduleService
         $classes = array_keys($grid);
 
         // Try greedy placement with random restarts for this day
-        for ($retry = 0; $retry < 100; $retry++) {
+        for ($retry = 0; $retry < 300; $retry++) {
             $daySchedules = [];
             $occupiedInDay = []; // [period][teacher_id]
             $success = true;
@@ -520,12 +609,11 @@ class AutoScheduleService
                 // For each class, try to find a valid permutation for this day
                 // In a balanced heatmap, a random permutation usually fits quickly.
                 $placedClass = false;
-                $perms = $this->getPermutations($blocks);
-                shuffle($perms);
-                $maxPerms = min(count($perms), 10);
+                $maxPerms = 30;
 
                 for ($pIdx = 0; $pIdx < $maxPerms; $pIdx++) {
-                    $p = $perms[$pIdx];
+                    $p = $blocks;
+                    shuffle($p);
                     $currentPeriod = 1;
                     $pPossible = true;
                     $tempPlaced = [];
@@ -570,30 +658,20 @@ class AutoScheduleService
         return null;
     }
 
-    protected function getPermutations($items)
-    {
-        if (count($items) <= 1) return [$items];
-        $result = [];
-        for ($i = 0; $i < count($items); $i++) {
-            $m = array_splice($items, $i, 1);
-            foreach ($this->getPermutations($items) as $p) {
-                $result[] = array_merge($m, $p);
-            }
-            array_splice($items, $i, 0, $m);
-        }
-        return $result;
-    }
-
-    protected function findCombinationNoRepeatSubject($blocks, $target, $usedSubjects)
+    protected function findCombinationNoRepeat($blocks, $target, $usedSubjects, $usedTeachers)
     {
         $results = [];
-        $this->getCombinationsNoRepeatRecursive($blocks, $target, 0, [], [], $usedSubjects, $results);
+        $this->getCombinationsNoRepeatRecursive($blocks, $target, 0, [], [], $usedSubjects, $usedTeachers, $results);
         return empty($results) ? null : $results[0];
     }
 
-    protected function getCombinationsNoRepeatRecursive($blocks, $target, $start, $currentIndices, $currentBlocks, $usedSubjects, &$results)
+    protected function getCombinationsNoRepeatRecursive($blocks, $target, $start, $currentIndices, $currentBlocks, $usedSubjects, $usedTeachers, &$results)
     {
-        $sum = collect($currentBlocks)->sum('size');
+        $sum = 0;
+        foreach ($currentBlocks as $cb) {
+            $sum += $cb['size'];
+        }
+        
         if ($sum === $target) {
             $results[] = ['indices' => $currentIndices, 'blocks' => $currentBlocks];
             return;
@@ -602,13 +680,20 @@ class AutoScheduleService
 
         for ($i = $start; $i < count($blocks); $i++) {
             $b = $blocks[$i];
-            // CONSTRAINT: Reject if this subject is already used today
+            
+            // CONSTRAINT 1: Reject if this subject is already used today in this class
             if (in_array($b['subject_id'], $usedSubjects)) continue;
 
-            $newUsed = array_merge($usedSubjects, [$b['subject_id']]);
+            // CONSTRAINT 2: Reject if this teacher is already teaching in this class today
+            // (Standard pedagogic rule: 1 teacher should only enter 1 class once per day)
+            if (in_array($b['teacher_id'], $usedTeachers)) continue;
+
+            $newUsedSubjects = array_merge($usedSubjects, [$b['subject_id']]);
+            $newUsedTeachers = array_merge($usedTeachers, [$b['teacher_id']]);
+            
             $currentIndices[] = $i;
             $currentBlocks[] = $b;
-            $this->getCombinationsNoRepeatRecursive($blocks, $target, $i + 1, $currentIndices, $currentBlocks, $newUsed, $results);
+            $this->getCombinationsNoRepeatRecursive($blocks, $target, $i + 1, $currentIndices, $currentBlocks, $newUsedSubjects, $newUsedTeachers, $results);
             array_pop($currentIndices);
             array_pop($currentBlocks);
         }
@@ -616,23 +701,8 @@ class AutoScheduleService
 
     protected function repartitionOverloadedClass(&$grid, $teacherId, $badDay)
     {
-        // Find a class that has this teacher teaching on the bad day
-        foreach ($grid as $classId => &$days) {
-            $hasTeacher = collect($days[$badDay])->firstWhere('teacher_id', $teacherId);
-            if ($hasTeacher) {
-                // Gather ALL blocks for this class across all days
-                $allBlocks = [];
-                foreach ($days as $day => $dayBlocks) {
-                    $allBlocks = array_merge($allBlocks, $dayBlocks);
-                }
-                // Re-partition this single class from scratch with fresh shuffle
-                $newPlan = $this->partitionSingleClass($allBlocks, array_keys($days));
-                if ($newPlan) {
-                    $grid[$classId] = $newPlan;
-                }
-                return;
-            }
-        }
+        // Handled by shakeUpTeacherSchedule for better performance
+        return;
     }
 
     protected function findCombination($blocks, $target)
@@ -644,7 +714,11 @@ class AutoScheduleService
 
     protected function getCombinationsRecursive($blocks, $target, $start, $currentIndices, $currentBlocks, &$results)
     {
-        $sum = collect($currentBlocks)->sum('size');
+        $sum = 0;
+        foreach ($currentBlocks as $cb) {
+            $sum += $cb['size'];
+        }
+        
         if ($sum === $target) {
             $results[] = ['indices' => $currentIndices, 'blocks' => $currentBlocks];
             return;

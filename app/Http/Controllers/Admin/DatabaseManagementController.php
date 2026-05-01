@@ -24,6 +24,8 @@ class DatabaseManagementController extends Controller
     }
 
     protected $tablesToManage = [
+        'migrations',
+        'audit_logs',
         'admins',
         'teachers',
         'students',
@@ -48,7 +50,8 @@ class DatabaseManagementController extends Controller
         'teacher_assignments',
         'user_profiles',
         'users',
-        'personal_access_tokens'
+        'personal_access_tokens',
+        'password_reset_tokens'
     ];
 
     public function getTables()
@@ -125,10 +128,22 @@ class DatabaseManagementController extends Controller
                 if (!Schema::hasTable($table)) continue;
 
                 fwrite($handle, "-- Table: {$table}\n");
-                fwrite($handle, "TRUNCATE TABLE `{$table}`;\n");
 
-                // Use chunking to process rows efficiently
-                DB::table($table)->orderBy('id')->chunk(500, function($rows) use ($handle, $table) {
+                // Get CREATE TABLE statement for portability
+                try {
+                    $createTable = DB::select("SHOW CREATE TABLE `{$table}`");
+                    $createTableSql = ((array)$createTable[0])['Create Table'] ?? ((array)$createTable[0])['Table'];
+                    
+                    fwrite($handle, "DROP TABLE IF EXISTS `{$table}`;\n");
+                    fwrite($handle, $createTableSql . ";\n\n");
+                } catch (\Exception $e) {
+                    // Fallback to TRUNCATE if SHOW CREATE TABLE fails
+                    fwrite($handle, "TRUNCATE TABLE `{$table}`;\n");
+                }
+
+                // Use chunking to process rows efficiently for tables with 'id', 
+                // otherwise get all (safe for small systemic tables like migrations or tokens)
+                $processRows = function($rows) use ($handle, $table) {
                     foreach ($rows as $row) {
                         $rowArray = (array)$row;
                         $columns = implode("`, `", array_keys($rowArray));
@@ -140,7 +155,13 @@ class DatabaseManagementController extends Controller
                         
                         fwrite($handle, "INSERT INTO `{$table}` (`{$columns}`) VALUES ({$valuesList});\n");
                     }
-                });
+                };
+
+                if (Schema::hasColumn($table, 'id')) {
+                    DB::table($table)->orderBy('id')->chunk(500, $processRows);
+                } else {
+                    $processRows(DB::table($table)->get());
+                }
                 
                 fwrite($handle, "\n");
             }
@@ -203,39 +224,53 @@ class DatabaseManagementController extends Controller
             return response()->json(['message' => 'Password salah. Akses ditolak.'], 403);
         }
 
-        // Increase limits for large SQL files
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
+        // Increase limits significantly for production hosting
+        ini_set('memory_limit', '1024M');
+        set_time_limit(900); // 15 minutes
 
         $file = $request->file('backup_file');
-        $sql = file_get_contents($file->getRealPath());
-
-        if (!$sql) {
-            return response()->json(['message' => 'File kosong atau tidak valid.'], 400);
-        }
+        $path = $file->getRealPath();
 
         try {
-            DB::beginTransaction();
-            
-            // 1. Get existing PDO connection (safe for shared hosting)
+            // 1. Get PDO connection
             $pdo = DB::getPdo();
             
             // 2. Disable foreign key checks
             $pdo->exec("SET FOREIGN_KEY_CHECKS=0;");
 
-            // 3. Simple and robust execution of the full SQL file
-            // DB::unprepared is ideal for raw SQL that might contain multiple statements
+            // 3. Read and execute SQL in chunks/blocks if possible
+            // For most SQL files, unprepared() is fine if memory is sufficient, 
+            // but we'll wrap it in a more robust error catcher.
+            $sql = file_get_contents($path);
+            
+            if (empty($sql)) {
+                throw new \Exception("File backup kosong atau tidak dapat dibaca.");
+            }
+
+            // Remove any DEFINER statements that often cause issues on shared hosting
+            // This replaces DEFINER=`anything`@`anything` with empty string
+            $sql = preg_replace('/DEFINER\s*=\s*`[^`]+`@`[^`]+`/', '', $sql);
+            $sql = preg_replace('/DEFINER\s*=\s*[^\s@]+@[^\s@]+/', '', $sql);
+
             DB::unprepared($sql);
 
             // 4. Re-enable foreign key checks
             $pdo->exec("SET FOREIGN_KEY_CHECKS=1;");
 
-            DB::commit();
+            // 5. Clear application cache to reflect new data
+            Cache::flush();
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
 
-            return response()->json(['message' => 'Database berhasil dipulihkan dari file cadangan.']);
+            return response()->json([
+                'message' => 'Database berhasil dipulihkan dan cache telah dibersihkan.'
+            ]);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['message' => 'Gagal memulihkan database: ' . $e->getMessage()], 500);
+            \Illuminate\Support\Facades\Log::error('Database Restore Failed: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error($e->getTraceAsString());
+            
+            return response()->json([
+                'message' => 'Gagal memulihkan database: ' . $e->getMessage() . '. Cek log untuk detail teknis.'
+            ], 500);
         }
     }
 
@@ -308,6 +343,8 @@ class DatabaseManagementController extends Controller
     private function getTableLabel($table)
     {
         $labels = [
+            'migrations' => 'Sistem Migration (Versi Database)',
+            'audit_logs' => 'Log Aktivitas Sistem',
             'admins' => 'Data Admin',
             'teachers' => 'Data Guru',
             'students' => 'Data Siswa',
@@ -332,7 +369,8 @@ class DatabaseManagementController extends Controller
             'teacher_assignments' => 'Penugasan Guru',
             'user_profiles' => 'Profil Pengguna',
             'users' => 'Akun Pengguna',
-            'personal_access_tokens' => 'Token Sesi Login'
+            'personal_access_tokens' => 'Token Sesi Login',
+            'password_reset_tokens' => 'Token Reset Password'
         ];
 
         return $labels[$table] ?? $table;

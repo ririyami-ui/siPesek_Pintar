@@ -4,15 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Student extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'code', 'nis', 'nisn', 'name', 'gender',
         'birth_place', 'birth_date', 'absen',
-        'class_id', 'user_id', 'auth_user_id',
+        'class_id', 'created_by', 'auth_user_id',
     ];
 
     public function class()
@@ -36,5 +37,10 @@ class Student extends Model
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function libraryLoans()
+    {
+        return $this->hasMany(LibraryLoan::class);
     }
 }

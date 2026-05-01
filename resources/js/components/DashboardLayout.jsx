@@ -40,9 +40,12 @@ import {
   Volume2,
   VolumeX,
   History,
-  Scale
+  Scale,
+  Library,
+  BookMarked
 } from 'lucide-react';
 import useDarkMode from '../hooks/useDarkMode';
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import OfflineIndicator from './OfflineIndicator';
 import { LocalNotifications } from '@capacitor/local-notifications';
@@ -169,6 +172,8 @@ const TEACHER_NAV_CATEGORIES = [
   }
 ];
 
+
+
 export default function DashboardLayout({ children, user, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -203,7 +208,21 @@ export default function DashboardLayout({ children, user, onLogout }) {
     checkWaliStatus();
   }, [user]);
 
-  let categories = user?.role?.toLowerCase() === 'admin' ? NAV_CATEGORIES : TEACHER_NAV_CATEGORIES;
+  let categories = [];
+  const role = user?.role?.toLowerCase();
+  
+  if (role === 'admin' || role === 'adminer') {
+    categories = [...NAV_CATEGORIES];
+    // Add simple library link for admin
+    const libraryCat = {
+      title: 'Lainnya',
+      icon: <Library size={14} />,
+      items: [{ name: 'Perpustakaan', icon: <Library size={20} />, path: '/library/dashboard' }]
+    };
+    categories.push(libraryCat);
+  } else {
+    categories = TEACHER_NAV_CATEGORIES;
+  }
 
   // Inject Wali Kelas menu if applicable
   if (isWali) {

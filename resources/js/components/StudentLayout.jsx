@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { 
   MonitorPlay, BookOpen, BarChart2, ClipboardList,
   LogOut, Menu, X, School, ChevronRight, User, Loader2,
-  ShieldAlert, CalendarDays
+  ShieldAlert, CalendarDays, Library
 } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
@@ -17,6 +17,7 @@ const NAV_ITEMS = [
   { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
   { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai' },
   { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib' },
+  { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital' },
 ];
 
 export default function StudentLayout({ user, onLogout, children }) {
@@ -58,7 +59,7 @@ export default function StudentLayout({ user, onLogout, children }) {
           </div>
           <div className="flex flex-col min-w-0">
             <p className="text-[11px] font-black text-white/90 uppercase tracking-[0.2em] leading-none mb-1 truncate">{schoolName}</p>
-            <p className="font-bold text-sm leading-tight text-white/60">Portal Wali Murid</p>
+            <p className="font-bold text-sm leading-tight text-white/60">Si Pesek Pintar</p>
           </div>
         </div>
       </div>
@@ -166,7 +167,7 @@ export default function StudentLayout({ user, onLogout, children }) {
               <p className="text-[10px] font-black text-white/90 uppercase tracking-[0.15em] leading-none mb-1 truncate">
                 {userProfile?.school_name || schoolName}
               </p>
-              <p className="font-bold text-sm leading-tight">Portal Wali Murid</p>
+              <p className="font-bold text-sm leading-tight">Si Pesek Pintar</p>
               {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">Kelas {studentInfo.class}</p>}
             </div>
           </div>

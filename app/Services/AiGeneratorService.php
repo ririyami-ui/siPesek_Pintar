@@ -6,57 +6,14 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
-class AiGeneratorService
+class AiGeneratorService extends GeminiService
 {
-    protected $apiKey;
-    protected $model;
-    protected $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
     protected $bskapIntel;
     protected $bskapVerbatim;
 
     public function __construct()
     {
-        $this->apiKey = config('services.gemini.api_key');
-        
-        // Treat placeholder/default values as empty
-        if ($this->apiKey === 'your_gemini_api_key_here' || empty($this->apiKey)) {
-            $this->apiKey = null;
-        }
-
-        $this->model = 'gemini-3.1-flash-lite-preview'; // Default fallback
-        
-        // Dynamic settings from authenticated user if available
-        if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile) {
-                if ($profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                    $this->apiKey = $profile->google_ai_api_key;
-                }
-                if ($profile->gemini_model) {
-                    $this->model = $profile->gemini_model;
-                }
-            }
-        }
-
-        // Fallback to primary admin if settings are still default/empty/placeholder
-        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
-            
-        if ($primaryAdminId) {
-            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-            if ($adminProfile) {
-                if ((empty($this->apiKey) || $this->apiKey === 'your_gemini_api_key_here') && $adminProfile->google_ai_api_key) {
-                    $this->apiKey = $adminProfile->google_ai_api_key;
-                }
-                // Only override model if it wasn't specifically set by the user profile
-                // or if we want global school compliance (as requested by user)
-                if ($adminProfile->gemini_model) {
-                    $this->model = $adminProfile->gemini_model;
-                }
-            }
-        }
-
+        parent::__construct();
         $this->loadBskapData();
     }
 
@@ -81,7 +38,7 @@ class AiGeneratorService
         }
     }
 
-    public function generateLessonPlan($data)
+    public function generateLessonPlan(array $data)
     {
         // Use model from data if provided, otherwise fallback to class property (profile)
         $modelName = $data['modelName'] ?? $this->model;
@@ -112,24 +69,23 @@ class AiGeneratorService
         return $this->callGeminiApi($prompt, $modelName, 8192);
     }
 
-    public function generateQuiz($data)
+    public function generateQuiz(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
         $prompt = $this->buildQuizPrompt($data);
         $response = $this->callGeminiApi($prompt, $modelName, 8192);
         
-        // Parse JSON output
         return $this->extractJson($response);
     }
 
-    public function generateHandout($data)
+    public function generateHandout(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
         $prompt = $this->buildHandoutPrompt($data);
         return $this->callGeminiApi($prompt, $modelName, 8192);
     }
 
-    public function generateWorksheet($data)
+    public function generateWorksheet(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
         $prompt = $this->buildWorksheetPrompt($data);
@@ -1359,155 +1315,6 @@ class AiGeneratorService
         }
         
         return $decoded ?? [];
-    }
-
-    protected function getEffectiveApiKey()
-    {
-        // 1. Check current logged in user profile
-        if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile && $profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                return $profile->google_ai_api_key;
-            }
-        }
-
-        // 2. Check .env / config
-        $configKey = config('services.gemini.api_key');
-        if ($configKey && $configKey !== 'your_gemini_api_key_here') {
-            return $configKey;
-        }
-
-        // 3. Fallback to primary admin profile
-        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
-            
-        if ($primaryAdminId) {
-            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-            if ($adminProfile && $adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                return $adminProfile->google_ai_api_key;
-            }
-        }
-
-        return null;
-    }
-
-    protected function getEffectiveModel($requestedModel = null)
-    {
-        // 1. If a specific model was requested for this call, use it
-        if ($requestedModel) return $requestedModel;
-
-        // 2. Check current logged in user profile preference
-        if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile && $profile->gemini_model) {
-                return $profile->gemini_model;
-            }
-        }
-
-        // 3. Fallback to primary admin profile preference
-        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-            ->orderBy('id', 'asc')
-            ->value('id');
-            
-        if ($primaryAdminId) {
-            $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-            if ($adminProfile && $adminProfile->gemini_model) {
-                return $adminProfile->gemini_model;
-            }
-        }
-
-        // 4. Ultimate fallback
-        return 'gemini-3.1-flash-lite-preview';
-    }
-
-    protected function callGeminiApi($promptOrContent, $modelName, $maxTokens = 8192)
-    {
-        $retries = 3;
-        $delay = 1000; // 1 second initial delay
-        $lastError = null;
-
-        $apiKey = $this->getEffectiveApiKey();
-        if (!$apiKey) {
-            throw new \Exception("Gemini API Key is not configured. Please set it in your profile.");
-        }
-
-        $finalModel = $this->getEffectiveModel($modelName);
-
-        for ($i = 0; $i < $retries; $i++) {
-            try {
-                // If we are in a retry loop and it's not the first attempt, try a fallback model if it's a 503
-                if ($i > 0 && $lastError && str_contains($lastError, '503')) {
-                    $finalModel = 'gemini-3.1-flash-lite-preview'; 
-                }
-
-                // Construct contents based on input type
-                $contents = [];
-                if (is_array($promptOrContent)) {
-                    if (isset($promptOrContent[0]) && (isset($promptOrContent[0]['text']) || isset($promptOrContent[0]['inlineData']))) {
-                        $contents = [['parts' => $promptOrContent]];
-                    } else {
-                        $contents = $promptOrContent;
-                    }
-                } else {
-                    $contents = [
-                        [
-                            'parts' => [
-                                ['text' => $promptOrContent]
-                            ]
-                        ]
-                    ];
-                }
-
-                $apiUrl = "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$apiKey}";
-
-                $response = Http::withHeaders(['Content-Type' => 'application/json'])
-                    ->timeout(60) // Increase timeout for complex generations
-                    ->post($apiUrl, [
-                        'contents' => $contents,
-                        'generationConfig' => [
-                            'temperature' => 0.7,
-                            'maxOutputTokens' => $maxTokens,
-                        ]
-                    ]);
-
-                if ($response->successful()) {
-                    $json = $response->json();
-                    return $json['candidates'][0]['content']['parts'][0]['text'] ?? 'No content generated';
-                } else {
-                    $errorData = $response->json();
-                    $status = $response->status();
-                    $errorMessage = $errorData['error']['message'] ?? 'Unknown Gemini API Error';
-                    
-                    Log::warning("Gemini API Attempt " . ($i + 1) . " failed ($status): $errorMessage");
-                    
-                    $lastError = "$status: $errorMessage";
-
-                    // Only retry on 503 (Overloaded) or 429 (Quota)
-                    if ($status === 503 || $status === 429) {
-                        if ($i < $retries - 1) {
-                            usleep($delay * 1000);
-                            $delay *= 2; // Exponential backoff
-                            continue;
-                        }
-                    }
-                    
-                    throw new \Exception("Gemini API Error ($status): " . $errorMessage);
-                }
-
-            } catch (\Exception $e) {
-                if ($i < $retries - 1 && (str_contains($e->getMessage(), '503') || str_contains($e->getMessage(), '429') || str_contains($e->getMessage(), 'timed out'))) {
-                    Log::warning("Retrying Gemini API after exception: " . $e->getMessage());
-                    usleep($delay * 1000);
-                    $delay *= 2;
-                    continue;
-                }
-                Log::error("Gemini Service Exception: " . $e->getMessage());
-                throw $e;
-            }
-        }
-        
-        throw new \Exception("Gemini API failed after $retries attempts. Last error: $lastError");
     }
 
     // Helpers

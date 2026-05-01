@@ -61,7 +61,24 @@ class JournalController extends Controller
         }
 
         $validated['is_assignment'] = $validated['is_assignment'] ?? false;
-        $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        $date = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
+        $validated['date'] = $date;
+
+        // [FEATURE] Prevent journal entry on School Agenda / Holidays
+        $holiday = \App\Models\Holiday::where(function($q) use ($date) {
+            $q->where('date', $date)
+              ->orWhere(function($sub) use ($date) {
+                  $sub->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+              });
+        })->first();
+
+        if ($holiday && !auth()->user()->isAdmin()) {
+            // Check if it's a blocking holiday (exclude minor ones if needed, but per user request, assume all agendas)
+            return response()->json([
+                'message' => "Jurnal tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name}). Anda tidak perlu mengisi jurnal mengajar rutin."
+            ], 422);
+        }
 
         $journal = Journal::create($validated);
 

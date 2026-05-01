@@ -55,28 +55,35 @@ class InstallController extends Controller
             DB::purge('mysql');
             DB::reconnect('mysql');
 
-            // 4. Run migrations
-            Artisan::call('migrate:fresh', ['--force' => true]);
+            // 4. Run migrations (Update instead of Fresh)
+            Artisan::call('migrate', ['--force' => true]);
 
-            // 5. Create Admin User
-            $user = User::create([
-                'name' => $request->admin_name,
-                'email' => $request->admin_email,
-                'password' => Hash::make($request->admin_password),
-                'role' => 'admin',
-            ]);
+            // 5. Create or Update Admin User
+            $user = User::updateOrCreate(
+                ['email' => $request->admin_email],
+                [
+                    'name' => $request->admin_name,
+                    'password' => Hash::make($request->admin_password),
+                    'role' => 'admin',
+                ]
+            );
 
-            Admin::create([
-                'user_id' => $user->id,
-                'auth_user_id' => $user->id,
-                'name' => $request->admin_name,
-                'username' => $request->admin_email,
-            ]);
+            Admin::updateOrCreate(
+                ['auth_user_id' => $user->id],
+                [
+                    'created_by' => $user->id,
+                    'auth_user_id' => $user->id,
+                    'name' => $request->admin_name,
+                    'username' => $request->admin_email,
+                ]
+            );
 
-            UserProfile::create([
-                'user_id' => $user->id,
-                'full_name' => $request->admin_name,
-            ]);
+            UserProfile::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'full_name' => $request->admin_name,
+                ]
+            );
 
             // 6. Update .env file (DO THIS LAST to avoid premature server restart)
             $this->updateEnv([
@@ -98,7 +105,7 @@ class InstallController extends Controller
             // 8. Create lock file
             File::put(storage_path('installed.lock'), date('Y-m-d H:i:s'));
 
-            return response()->json(['success' => true, 'message' => 'Instalasi Berhasil!']);
+            return response()->json(['success' => true, 'message' => 'Instalasi/Pembaruan Berhasil!']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Gagal: ' . $e->getMessage()], 500);
         }
@@ -114,13 +121,22 @@ class InstallController extends Controller
         $content = File::get($path);
 
         foreach ($data as $key => $value) {
+            // Quote value and escape double quotes
+            $escapedValue = str_replace('"', '\"', $value);
+            $quotedValue = "\"{$escapedValue}\"";
+
             if (preg_match("/^{$key}=/m", $content)) {
-                $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
+                // Use a safe replacement that doesn't interpret $ or \ as backreferences
+                $content = preg_replace_callback("/^{$key}=.*/m", function() use ($key, $quotedValue) {
+                    return "{$key}={$quotedValue}";
+                }, $content);
             } else {
-                $content .= "\n{$key}={$value}";
+                $content .= "\n{$key}={$quotedValue}";
             }
         }
 
-        File::put($path, $content);
+        if (!File::put($path, $content)) {
+            throw new \Exception("Gagal menulis ke file .env. Pastikan file tersebut memiliki izin tulis.");
+        }
     }
 }

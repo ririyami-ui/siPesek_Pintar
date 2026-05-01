@@ -30,7 +30,7 @@ class StudentController extends Controller
                 return response()->json(['data' => []]);
             }
         } elseif ($user && !$user->isAdmin()) {
-            $query->where('user_id', $user->id);
+            $query->where('created_by', $user->id);
         }
 
         if (request()->has('class_id')) {
@@ -60,7 +60,7 @@ class StudentController extends Controller
             'class_id' => 'required|exists:classes,id',
         ]);
 
-        $validatedData['user_id'] = auth()->id();
+        $validatedData['created_by'] = auth()->id();
 
         if (!empty($validatedData['nis'])) {
             $request->validate(['nis' => 'unique:students,nis']);
@@ -84,10 +84,23 @@ class StudentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
-        if ($user && !$user->isAdmin() && $student->user_id !== $user->id) {
-            abort(403);
+
+        if ($user && !$user->isAdmin()) {
+            if ($user->role === 'teacher') {
+                // [FIX] Teachers can view any student in their assigned classes
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                $assignedClassIds = $teacher ? $teacher->assignments()->pluck('class_id')->unique() : collect();
+                if (!$assignedClassIds->contains($student->class_id)) {
+                    abort(403);
+                }
+            } else {
+                // Other non-admin roles can only see students they created
+                if ($student->created_by !== $user->id) {
+                    abort(403);
+                }
+            }
         }
+
         return response()->json(['data' => $student->load('class')]);
     }
 
@@ -98,9 +111,20 @@ class StudentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
-        if ($user && !$user->isAdmin() && $student->user_id !== $user->id) {
-            abort(403);
+
+        if ($user && !$user->isAdmin()) {
+            if ($user->role === 'teacher') {
+                // [FIX] Teachers can update students in their assigned classes
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                $assignedClassIds = $teacher ? $teacher->assignments()->pluck('class_id')->unique() : collect();
+                if (!$assignedClassIds->contains($student->class_id)) {
+                    abort(403);
+                }
+            } else {
+                if ($student->created_by !== $user->id) {
+                    abort(403);
+                }
+            }
         }
 
         $validatedData = $request->validate([
@@ -137,14 +161,23 @@ class StudentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
-        
-        if ($user && !$user->isAdmin() && $student->user_id !== $user->id) {
-            abort(403);
+
+        // [FIX] Only admin can delete students — teachers can view/edit but not delete
+        if ($user && !$user->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat menghapus data siswa.');
         }
 
-        $student->delete();
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($student) {
+            // 1. Delete linked user account to avoid "Ghost Users"
+            if ($student->auth_user_id) {
+                User::find($student->auth_user_id)?->delete();
+            }
 
-        return response()->noContent();
+            // 2. Delete the student record (attendances, notes etc will be deleted via DB cascade)
+            $student->delete();
+
+            return response()->noContent();
+        });
     }
 
     /**

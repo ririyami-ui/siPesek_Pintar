@@ -62,7 +62,7 @@ const WelcomeScreen = () => {
                             Si Pesek <span className="bg-gradient-to-br from-blue-600 to-indigo-700 bg-clip-text text-transparent italic">Pintar</span>
                         </h1>
                     </div>
-
+ 
                     {/* Stage 2: Entity Branding (School Name) */}
                     <div className={`transition-all duration-1000 cubic-bezier(0.16, 1, 0.3, 1) absolute w-full px-6 ${showSchoolName ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-110 translate-y-8 blur-md pointer-events-none'}`}>
                         <p className="text-indigo-600/50 dark:text-indigo-400/40 font-black tracking-[0.4em] uppercase text-[9px] mb-4">Welcome to Environment of</p>

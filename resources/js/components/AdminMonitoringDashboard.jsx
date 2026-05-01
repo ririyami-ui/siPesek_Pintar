@@ -3,7 +3,7 @@ import { Activity, Clock, User, BookOpen, CheckCircle2, AlertCircle, PlayCircle,
 import { useSettings } from '../utils/SettingsContext';
 import moment from 'moment';
 
-const AdminMonitoringDashboard = () => {
+const AdminMonitoringDashboard = ({ holiday }) => {
     const [loading, setLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [showOnlyMissing, setShowOnlyMissing] = useState(false);
@@ -52,8 +52,8 @@ const AdminMonitoringDashboard = () => {
     }, []);
 
     const data = monitoringData?.data || [];
-    const stats = monitoringData?.stats || { total: 0, berlangsung: 0, selesai: 0, alfa: 0, belum_mulai: 0 };
-    const filteredData = showOnlyMissing ? data.filter(item => item.status === 'alfa') : data;
+    const stats = monitoringData?.stats || { total: 0, berlangsung: 0, selesai: 0, alfa: 0, belum_mulai: 0, needs_attention: 0 };
+    const filteredData = showOnlyMissing ? data.filter(item => item.needs_attention === true) : data;
     
     // Improved detection: all scheduled times have passed
     const isPastSchoolDay = monitoringData?.max_end_time && 
@@ -62,14 +62,18 @@ const AdminMonitoringDashboard = () => {
     const isBeforeSchoolDay = monitoringData?.min_start_time &&
         moment(currentTime.format('HH:mm'), 'HH:mm').isBefore(moment(monitoringData.min_start_time, 'HH:mm'));
         
-    // [FIX] Learning is finished if we are past the school day OR before the school day started
-    const isAllLearningFinished = (isPastSchoolDay || isBeforeSchoolDay) && !monitoringData?.active_non_teaching;
+    // [FIX] Learning is finished ONLY if we are past the school day
+    // We remove isBeforeSchoolDay from this logic because it causes the "Selesai" message to show
+    // during the current day's morning before classes start, which is confusing.
+    const isAllLearningFinished = stats.total > 0 && isPastSchoolDay && !monitoringData?.active_non_teaching;
 
     const getStatusConfig = (status) => {
         switch (status) {
             case 'berlangsung': return { label: 'Sedang Berlangsung', icon: <PlayCircle className="animate-pulse" size={16} /> };
+            case 'menunggu_absen': return { label: 'Menunggu Absen', icon: <Clock className="animate-bounce" size={16} /> };
             case 'selesai': return { label: 'Jurnal Selesai', icon: <CheckCircle2 size={16} /> };
             case 'alfa': return { label: 'Belum Ada Jurnal', icon: <AlertCircle size={16} /> };
+            case 'terlambat': return { label: 'Terlambat Absen', icon: <AlertCircle size={16} /> };
             case 'assignment': return { label: 'Penugasan', icon: <BookOpen className="animate-pulse" size={16} /> };
             default: return { label: 'Belum Mulai', icon: <Clock size={16} /> };
         }
@@ -175,10 +179,10 @@ const AdminMonitoringDashboard = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                    { label: 'Berlangsung', count: stats.berlangsung, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20', desc: 'KBM berjalan' },
-                    { label: 'Selesai', count: stats.selesai, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/20', desc: 'Jurnal terisi' },
-                    { label: 'Alpa', count: stats.alfa, color: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-900/20', desc: 'Tanpa aktivitas' },
-                    { label: 'Total', count: stats.total, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-900/20', desc: 'Semua unit' }
+                    { label: 'Siswa Tot.', count: stats.student_stats?.total || 0, color: 'text-indigo-600', bg: 'bg-indigo-50 dark:bg-indigo-900/20', desc: `${stats.student_stats?.male || 0} L, ${stats.student_stats?.female || 0} P` },
+                    { label: 'Hadir Sel.', count: stats.attendance_summary?.hadir || 0, color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-900/20', desc: 'Siswa hadir hari ini' },
+                    { label: 'Perhatian', count: stats.needs_attention ?? stats.alfa, color: 'text-rose-600', bg: 'bg-rose-50 dark:bg-rose-900/20', desc: 'Belum absen/jurnal' },
+                    { label: 'Slot Mengajar', count: stats.total_cards || stats.total, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20', desc: 'Semua rombel' }
                 ].map((stat, i) => (
                     <div key={i} className={`p-4 rounded-3xl ${stat.bg} border border-white/20 shadow-sm flex flex-col justify-between`}>
                         <div>
@@ -214,6 +218,27 @@ const AdminMonitoringDashboard = () => {
                 </div>
             )}
 
+            {holiday && (
+                <div className="mb-6 p-6 md:p-8 rounded-[2rem] bg-gradient-to-br from-amber-500 to-orange-600 shadow-2xl text-white relative overflow-hidden">
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-5">
+                            <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md">
+                                <Zap size={40} className="text-yellow-200" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-black uppercase tracking-[0.3em] mb-1 text-amber-100">Agenda Hari Ini</p>
+                                <h3 className="text-3xl font-black">{holiday.name || holiday.title}</h3>
+                            </div>
+                        </div>
+                        <div className="px-5 py-3 bg-black/20 backdrop-blur-md rounded-2xl border border-white/20">
+                            <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Status</p>
+                            <p className="font-black text-sm uppercase">Kegiatan Khusus Sekolah</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className={`transition-all duration-1000 ${monitoringData?.active_non_teaching ? 'opacity-70 grayscale-[30%]' : 'opacity-100'}`}>
                 {isAllLearningFinished && !showOnlyMissing && (
                     <div className="p-8 rounded-[2.5rem] bg-emerald-500/10 border border-emerald-200 text-center mb-6">
@@ -231,8 +256,13 @@ const AdminMonitoringDashboard = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
                         {filteredData.length === 0 ? (
                             <div className="col-span-full py-20 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-dashed text-center opacity-50">
-                                <Clock size={48} className="mx-auto mb-4" />
-                                <p className="font-bold">Tidak ada jadwal KBM saat ini.</p>
+                                <School size={48} className="mx-auto mb-4 text-slate-300" />
+                                <p className="font-black text-slate-400 uppercase tracking-widest text-xs">
+                                    {stats.total === 0 ? 'Master Jadwal Kosong' : 'Tidak ada jadwal KBM saat ini'}
+                                </p>
+                                <p className="text-sm text-slate-400 mt-2 font-medium">
+                                    {stats.total === 0 ? 'Klik Menu Jadwal untuk mengatur jadwal mengajar.' : 'Sistem sedang menunggu jadwal berikutnya.'}
+                                </p>
                             </div>
                         ) : (
                             filteredData.map((item) => {
@@ -307,14 +337,21 @@ const AdminMonitoringDashboard = () => {
                                             </div>
                                         </div>
 
-                                        {(isLive || item.status === 'alfa') && getCountdown(item.time?.split(' - ')[1]) && (
+                                        {(isLive || item.status === 'menunggu_absen' || item.status === 'alfa' || item.status === 'terlambat' || item.status === 'assignment') && getCountdown(item.time?.split(' - ')[1]) && (
                                             <div className={`mt-auto px-4 py-3 transition-colors backdrop-blur-sm rounded-2xl text-xs font-black text-center flex items-center justify-center gap-2 border ${
                                                 isLive 
                                                     ? 'bg-white/10 hover:bg-white/20 border-white/10 text-white' 
-                                                    : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-600'
+                                                    : (item.status === 'assignment' ? 'bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/20 text-indigo-600' : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-600')
                                             }`}>
-                                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? 'bg-white' : 'bg-rose-500'}`} />
+                                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? 'bg-white' : (item.status === 'assignment' ? 'bg-indigo-500' : 'bg-rose-500')}`} />
                                                 Sisa: {getCountdown(item.time?.split(' - ')[1])}
+                                            </div>
+                                        )}
+                                        
+                                        {item.status === 'belum_mulai' && getCountdown(item.time?.split(' - ')[0]) && (
+                                            <div className="mt-auto px-4 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl text-xs font-black text-indigo-600 text-center flex items-center justify-center gap-2 transition-all hover:bg-indigo-500/20">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                                                Mulai: {getCountdown(item.time?.split(' - ')[0])}
                                             </div>
                                         )}
                                         
@@ -326,7 +363,7 @@ const AdminMonitoringDashboard = () => {
 
                                         <div className={`absolute bottom-0 left-0 h-1.5 w-full transition-all duration-1000 ${
                                             item.status === 'selesai' ? 'bg-emerald-500' : 
-                                            item.status === 'alfa' ? 'bg-rose-500 shadow-[0_-4px_10px_rgba(244,63,94,0.4)]' : 
+                                            (item.status === 'alfa' || item.status === 'terlambat') ? 'bg-rose-500 shadow-[0_-4px_10px_rgba(244,63,94,0.4)]' : 
                                             isLive ? 'bg-white/40' : 'bg-gray-100 dark:bg-gray-800'
                                         }`} />
                                     </div>

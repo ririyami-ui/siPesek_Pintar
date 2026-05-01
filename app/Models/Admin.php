@@ -10,7 +10,7 @@ class Admin extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'created_by',
         'auth_user_id',
         'code',
         'name',
@@ -28,9 +28,9 @@ class Admin extends Model
         'password',
     ];
 
-    public function user()
+    public function creator()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function authUser()

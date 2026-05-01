@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Trash2, Pencil, ChevronDown, ChevronUp, Scale } from 'lucide-react';
 import StyledButton from './StyledButton';
 
-const ClassCard = ({ classItem, onEdit, onDelete }) => {
+const ClassCard = ({ classItem, onEdit, onDelete, analysis }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -26,11 +26,11 @@ const ClassCard = ({ classItem, onEdit, onDelete }) => {
                 analysis?.status === 'overload' ? 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-400' :
                 'bg-amber-100 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400'
               }`}>
-                {analysis ? `${analysis.burdenJam}/${analysis.capacitasJam} Jam` : '-/- Jam'}
+                {analysis ? `${analysis.burden}/${analysis.capacity} Jam` : '-/- Jam'}
               </span>
-              {analysis?.delta !== 0 && (
-                <span className={`text-[9px] font-bold ${analysis?.delta > 0 ? 'text-red-500' : 'text-amber-500'}`}>
-                  ({analysis?.delta > 0 ? `+${analysis.delta}` : analysis.delta})
+              {analysis?.diff !== 0 && analysis?.diff !== undefined && (
+                <span className={`text-[9px] font-bold ${analysis?.diff < 0 ? 'text-red-500' : 'text-amber-500'}`}>
+                  ({analysis?.diff > 0 ? `+${analysis?.diff}` : analysis?.diff})
                 </span>
               )}
             </div>
