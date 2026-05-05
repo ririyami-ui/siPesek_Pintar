@@ -172,14 +172,7 @@ class AiGeneratorService extends GeminiService
             'parts' => $currentParts
         ];
 
-        // System instruction is passed via model configuration or as a preamble in Gemini API v1beta
-        // For simplicity, we can prepend it to the first user message or use it in the model config if supported by the SDK version.
-        // In our manual callGeminiApi, we'll prepend it if history is empty.
-        if (empty($history)) {
-            $contents[0]['parts'][0]['text'] = "SYSTEM INSTRUCTION:\n" . $systemInstruction . "\n\nUSER MESSAGE:\n" . $contents[0]['parts'][0]['text'];
-        }
-
-        return $this->callGeminiApi($contents, $modelName, 4096);
+        return $this->callGeminiApi($contents, $modelName, 4096, 0.7, $systemInstruction);
     }
 
     /**

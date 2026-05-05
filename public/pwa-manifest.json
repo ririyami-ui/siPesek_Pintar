@@ -1,24 +1,30 @@
 {
-  "name": "Si Pesek Pintar - Portal Wali",
+  "name": "Si Pesek Pintar",
   "short_name": "Si Pesek",
   "start_url": "/siswa",
   "display": "standalone",
   "background_color": "#065f46",
   "theme_color": "#065f46",
-  "description": "Portal Wali Murid Si Pesek Pintar - Pantau Belajar Realtime",
+  "description": "Smart School Manager - Si Pesek Pintar",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "logo.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

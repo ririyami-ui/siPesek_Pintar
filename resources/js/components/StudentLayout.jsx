@@ -15,9 +15,9 @@ const NAV_ITEMS = [
   { path: '/siswa/jadwal',        icon: CalendarDays,   label: 'Jadwal',          desc: 'Jadwal Mingguan' },
   { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Presensi',        desc: 'Rekap presensi' },
   { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
-  { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai' },
-  { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib' },
-  { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital' },
+  { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai', hideOnMobile: true },
+  { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib', hideOnMobile: true },
+  { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital', hideOnMobile: true },
 ];
 
 export default function StudentLayout({ user, onLogout, children }) {
@@ -190,7 +190,7 @@ export default function StudentLayout({ user, onLogout, children }) {
 
         {/* Mobile Bottom Navigation */}
         <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom,0px)]">
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter(item => !item.hideOnMobile).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}

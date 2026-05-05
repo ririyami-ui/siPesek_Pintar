@@ -96,8 +96,9 @@ function App() {
     checkAuth();
 
     // [PUSH NOTIFICATION] Register Service Worker for PWA
+    const swPath = (window.Laravel?.basePath || '') + '/sw.js';
     if ('serviceWorker' in navigator && 'PushManager' in window) {
-      navigator.serviceWorker.register('/sw.js')
+      navigator.serviceWorker.register(swPath)
         .then(registration => {
           console.log('Service Worker registered:', registration);
         })

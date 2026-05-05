@@ -12,7 +12,7 @@ import { X } from 'lucide-react';
  * @param {function} props.onClose - Fungsi yang dipanggil saat modal ditutup.
  * @param {string} props.size - Ukuran modal (sm, md, lg, xl, 2xl, 3xl, 4xl, 5xl, 6xl, full).
  */
-export default function Modal({ children, onClose, size = 'lg' }) {
+export default function Modal({ children, onClose, size = 'lg', zIndex = 'z-50', position = 'center' }) {
   const sizeClasses = {
     sm: 'max-w-sm',
     md: 'max-w-md',
@@ -26,9 +26,21 @@ export default function Modal({ children, onClose, size = 'lg' }) {
     'full': 'max-w-[95vw]'
   };
 
+  const positionClasses = {
+    center: 'items-end sm:items-center',
+    top: 'items-start pt-4 sm:items-center sm:pt-4',
+    bottom: 'items-end'
+  };
+
+  const animationClasses = {
+    center: 'animate-in slide-in-from-bottom sm:zoom-in',
+    top: 'animate-in slide-in-from-top sm:zoom-in',
+    bottom: 'animate-in slide-in-from-bottom'
+  };
+
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-gray-900/60 p-0 sm:p-4 font-sans backdrop-blur-sm transition-all duration-300">
-      <div className={`relative flex w-full ${sizeClasses[size] || sizeClasses.lg} flex-col rounded-t-[2.5rem] sm:rounded-3xl bg-white shadow-2xl dark:bg-gray-800 dark:text-white animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in duration-300`}>
+    <div className={`fixed inset-0 ${zIndex} flex ${positionClasses[position] || positionClasses.center} justify-center bg-gray-900/60 p-0 sm:p-4 font-sans backdrop-blur-sm transition-all duration-300`}>
+      <div className={`relative flex w-full ${sizeClasses[size] || sizeClasses.lg} flex-col ${position === 'top' ? 'rounded-b-[2.5rem] sm:rounded-3xl' : 'rounded-t-[2.5rem] sm:rounded-3xl'} bg-white shadow-2xl dark:bg-gray-800 dark:text-white ${animationClasses[position] || animationClasses.center} duration-300`}>
         <div className="flex items-center justify-end p-4">
           <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full absolute top-3 left-1/2 -translate-x-1/2 sm:hidden" />
           <button

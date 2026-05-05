@@ -208,7 +208,12 @@ export const SettingsProvider = ({ children }) => {
                 academicYear: profile.academic_year || '',
                 geminiModel: profile.gemini_model || 'gemini-3.1-flash-lite-preview',
                 scheduleNotificationsEnabled: profile.schedule_notifications_enabled ?? true,
-                userProfile: { ...user, ...profile, logoUrl: response.data.logo_url },
+                userProfile: { 
+                    ...user, 
+                    ...profile, 
+                    logoUrl: response.data.logo_url,
+                    signatureUrl: response.data.signature_url
+                },
                 loadingSettings: false
             }));
         } catch (error) {

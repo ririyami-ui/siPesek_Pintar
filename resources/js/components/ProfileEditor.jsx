@@ -29,6 +29,8 @@ export default function ProfileEditor() {
 
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [signatureFile, setSignatureFile] = useState(null);
+  const [signaturePreview, setSignaturePreview] = useState(null);
   const [saving, setSaving] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
   const [testingKey, setTestingKey] = useState(false);
@@ -55,6 +57,9 @@ export default function ProfileEditor() {
       if (userProfile.logoUrl) {
         setLogoPreview(userProfile.logoUrl);
       }
+      if (userProfile.signature_url || userProfile.signatureUrl) {
+        setSignaturePreview(userProfile.signature_url || userProfile.signatureUrl);
+      }
     }
   }, [userProfile]);
 
@@ -73,6 +78,22 @@ export default function ProfileEditor() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSignatureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Ukuran file maksimal 2MB.');
+        return;
+      }
+      setSignatureFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSignaturePreview(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -100,6 +121,9 @@ export default function ProfileEditor() {
         if (logoFile instanceof File) {
           data.append('logo', logoFile);
         }
+        if (signatureFile instanceof File) {
+          data.append('signature', signatureFile);
+        }
       }
       
       data.append('gemini_model', formData.gemini_model || 'gemini-3.1-flash-lite-preview');
@@ -114,7 +138,7 @@ export default function ProfileEditor() {
       
       // Sync with localStorage for compatibility
       localStorage.setItem('GEMINI_MODEL', formData.gemini_model);
-      if (formData.google_ai_api_key) {
+      if (formData.google_ai_api_key && !formData.google_ai_api_key.includes('****')) {
         localStorage.setItem('GEMINI_API_KEY', formData.google_ai_api_key);
       }
 
@@ -140,15 +164,28 @@ export default function ProfileEditor() {
   };
 
   const testConnection = async () => {
-    if (!formData.google_ai_api_key.trim()) {
+    let keyToTest = formData.google_ai_api_key.trim();
+    
+    if (!keyToTest) {
       toast.error('Masukkan API Key terlebih dahulu.');
       return;
+    }
+
+    if (keyToTest.includes('****')) {
+      // If the field shows the masked key, try using the real one from localStorage
+      const localKey = localStorage.getItem('GEMINI_API_KEY');
+      if (localKey && !localKey.includes('****')) {
+        keyToTest = localKey;
+      } else {
+        toast.error('API Key saat ini disamarkan demi keamanan. Silakan masukkan ulang API Key asli Anda jika ingin melakukan tes koneksi.');
+        return;
+      }
     }
 
     setTestingKey(true);
 
     try {
-      const genAI = new GoogleGenerativeAI(formData.google_ai_api_key.trim());
+      const genAI = new GoogleGenerativeAI(keyToTest);
       const model = genAI.getGenerativeModel({ model: formData.gemini_model });
       const result = await model.generateContent("test");
       await result.response;
@@ -178,34 +215,74 @@ export default function ProfileEditor() {
   return (
     <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
       <h3 className="text-xl font-bold mb-6 text-purple-800 dark:text-purple-300">Pengaturan Profil & AI</h3>
-      <form onSubmit={handleUpdateProfile} className="space-y-6">
+      <form onSubmit={handleUpdateProfile} className="space-y-8">
+        
+        {/* SECTION: INFORMASI SEKOLAH */}
         <div className="space-y-6">
           <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">Informasi Sekolah</h4>
+          
+          <div className="flex flex-col md:flex-row gap-8 items-start">
+            {/* Upload Area */}
+            <div className="w-full md:w-48 space-y-6 flex-shrink-0">
+               {/* Logo */}
+               <div className="space-y-2">
+                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">Logo Sekolah</label>
+                 <div className="relative group rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 aspect-square flex items-center justify-center bg-gray-50 dark:bg-gray-900/40 overflow-hidden shadow-sm">
+                   {logoPreview ? (
+                     <img src={logoPreview} alt="Logo" className="w-full h-full object-contain p-2" />
+                   ) : (
+                     <div className="text-center p-4">
+                       <svg className="mx-auto h-8 w-8 text-gray-300" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                       </svg>
+                     </div>
+                   )}
+                   <input 
+                     type="file" 
+                     onChange={handleLogoChange} 
+                     className="absolute inset-0 opacity-0 cursor-pointer z-10" 
+                     accept="image/*" 
+                     disabled={!isAdmin} 
+                   />
+                 </div>
+                 {isAdmin && (
+                   <button type="button" className="w-full py-2 text-[10px] font-bold bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-lg border border-emerald-100 dark:border-emerald-800/50 hover:bg-emerald-100 transition-all active:scale-95">
+                     GANTI LOGO
+                   </button>
+                 )}
+               </div>
 
-          <div className="flex flex-col md:flex-row gap-6 items-start">
-            <div className="w-full md:w-1/3 space-y-2">
-              <label className="text-xs font-semibold text-gray-500 ml-1">Logo Sekolah</label>
-              <div className="relative group overflow-hidden rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 aspect-square flex items-center justify-center bg-gray-50 dark:bg-gray-900/40">
-                {logoPreview ? (
-                  <img src={logoPreview} alt="School Logo" className="w-full h-full object-contain p-2" />
-                ) : (
-                  <div className="text-center p-4">
-                    <svg className="mx-auto h-12 w-12 text-gray-300" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                      <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <p className="mt-1 text-xs text-gray-500">Klik untuk upload logo</p>
-                  </div>
-                )}
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  accept="image/*"
-                  onChange={handleLogoChange}
-                  disabled={!isAdmin}
-                />
-              </div>
+               {/* Signature */}
+               <div className="space-y-2">
+                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider ml-1">TTD & Stempel</label>
+                 <div className="relative group rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700 aspect-square flex items-center justify-center bg-gray-50 dark:bg-gray-900/40 overflow-hidden shadow-sm">
+                   {signaturePreview ? (
+                     <img src={signaturePreview} alt="TTD" className="w-full h-full object-contain p-2" />
+                   ) : (
+                     <div className="text-center p-4">
+                        <svg className="mx-auto h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                     </div>
+                   )}
+                   <input 
+                     type="file" 
+                     onChange={handleSignatureChange} 
+                     className="absolute inset-0 opacity-0 cursor-pointer z-10" 
+                     accept="image/*" 
+                     disabled={!isAdmin} 
+                   />
+                 </div>
+                 {isAdmin && (
+                   <button type="button" className="w-full py-2 text-[10px] font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-lg border border-blue-100 dark:border-blue-800/50 hover:bg-blue-100 transition-all active:scale-95">
+                     GANTI TTD
+                   </button>
+                 )}
+                 <p className="text-[9px] text-gray-400 italic text-center">* Gunakan PNG transparan</p>
+               </div>
             </div>
 
+            {/* Inputs Area */}
             <div className="flex-1 space-y-4 w-full">
               <StyledInput
                 type="text"
@@ -255,21 +332,27 @@ export default function ProfileEditor() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-4 dark:border-gray-700">
-            <StyledInput
-              type="text"
-              placeholder="Nama Kepala Sekolah"
-              value={formData.principalName}
-              onChange={(e) => handleInputChange('principalName', e.target.value)}
-              disabled={!isAdmin}
-            />
-            <StyledInput
-              type="text"
-              placeholder="NIP Kepala Sekolah"
-              value={formData.principalNip}
-              onChange={(e) => handleInputChange('principalNip', e.target.value)}
-              disabled={!isAdmin}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t pt-6 dark:border-gray-700">
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-gray-500 ml-1">Nama Kepala Sekolah</label>
+              <StyledInput
+                type="text"
+                placeholder="Nama Kepala Sekolah"
+                value={formData.principalName}
+                onChange={(e) => handleInputChange('principalName', e.target.value)}
+                disabled={!isAdmin}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-gray-500 ml-1">NIP Kepala Sekolah</label>
+              <StyledInput
+                type="text"
+                placeholder="NIP Kepala Sekolah"
+                value={formData.principalNip}
+                onChange={(e) => handleInputChange('principalNip', e.target.value)}
+                disabled={!isAdmin}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -315,7 +398,8 @@ export default function ProfileEditor() {
           </div>
         </div>
 
-        <div className="space-y-4 pt-4 border-t dark:border-gray-700">
+        {/* SECTION: INTEGRASI GEMINI */}
+        <div className="space-y-4 pt-6 border-t dark:border-gray-700">
           <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 flex items-center gap-2">
             Integrasi Google Gemini
             <span className="text-xs font-normal bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">Personal Key</span>
@@ -376,7 +460,8 @@ export default function ProfileEditor() {
           </div>
         </div>
 
-        <div className="space-y-4 pt-4 border-t dark:border-gray-700">
+        {/* SECTION: NOTIFIKASI & AUDIO */}
+        <div className="space-y-4 pt-6 border-t dark:border-gray-700">
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900/40 rounded-2xl border border-gray-100 dark:border-gray-800">
             <div className="flex-1 pr-4">
               <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300">Notifikasi Jadwal</h4>
@@ -407,8 +492,9 @@ export default function ProfileEditor() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
-          <StyledButton type="submit" disabled={saving} className="min-w-[150px]">
+        {/* SUBMIT BUTTON */}
+        <div className="flex justify-end pt-6 border-t dark:border-gray-700">
+          <StyledButton type="submit" disabled={saving} className="min-w-[180px] shadow-lg">
             {saving ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>

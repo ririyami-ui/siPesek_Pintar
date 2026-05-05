@@ -201,7 +201,7 @@ class DashboardController extends Controller
                 // [GRACE PERIOD] Only mark as 'terlambat' (needs attention) after 5 minutes of class start
                 $startTimeMoment = Carbon::parse($schedule->start_time);
                 $minutesSinceStart = $now->diffInMinutes($startTimeMoment, false); // Negative if in the past
-                $isWithinGracePeriod = abs($minutesSinceStart) <= 5;
+                $isWithinGracePeriod = abs($minutesSinceStart) <= 15;
 
                 if ($hasTakenAttendance || $journal) {
                     $status = 'berlangsung';

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import api from '../lib/axios';
 import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
@@ -22,6 +23,7 @@ export default function StudentEditor({ studentData, onSave, onClose, rombels, c
   const [birthDate, setBirthDate] = useState('');
   const [classId, setClassId] = useState('');
   const [absen, setAbsen] = useState('');
+  const [address, setAddress] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -61,6 +63,7 @@ export default function StudentEditor({ studentData, onSave, onClose, rombels, c
 
       setClassId(studentData.classId || studentData.class_id || '');
       setAbsen(studentData.absen || '');
+      setAddress(studentData.address || '');
     }
   }, [studentData]);
 
@@ -77,7 +80,8 @@ export default function StudentEditor({ studentData, onSave, onClose, rombels, c
       birth_place: birthPlace,
       birth_date: birthDate,
       class_id: classId,
-      absen,
+      absen: absen,
+      address,
     };
 
     try {
@@ -156,6 +160,14 @@ export default function StudentEditor({ studentData, onSave, onClose, rombels, c
           <option key={c.id} value={c.id}>{c.rombel}</option>
         ))}
       </StyledSelect>
+      <div className="md:col-span-2">
+        <StyledInput
+          type="text"
+          placeholder="Alamat Lengkap"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
       <div className="md:col-span-2 flex justify-end space-x-2">
         <StyledButton type="button" variant="outline" onClick={onClose}>Batal</StyledButton>
         <StyledButton type="submit" disabled={saving}>

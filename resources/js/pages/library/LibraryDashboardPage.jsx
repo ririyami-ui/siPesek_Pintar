@@ -10,20 +10,28 @@ import {
   ChevronRight,
   BookOpen,
   CheckCircle2,
-  Clock
+  Clock,
+  Trophy,
+  Star,
+  FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import LibraryReport from '../../components/LibraryReport';
 
 const LibraryDashboardPage = () => {
   const [stats, setStats] = useState({
     total_books: 0,
+    total_physical_books: 0,
     active_loans: 0,
     total_students_borrowing: 0,
-    overdue_loans: 0
+    overdue_loans: 0,
+    popular_books: [],
+    active_students: []
   });
   const [recentLoans, setRecentLoans] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +50,15 @@ const LibraryDashboardPage = () => {
     };
     fetchData();
   }, []);
+
+  // Prepare data for the report component (100% REAL DATA)
+  const reportCirculationData = {
+    month: moment().format('MMMM YYYY'),
+    totalBorrowed: stats.monthly_loans || 0, 
+    totalReturned: stats.monthly_returns || 0,
+    pending: stats.active_loans || 0,
+    late: stats.overdue_loans || 0
+  };
 
   const StatCard = ({ title, value, icon: Icon, color, subValue, subLabel }) => (
     <div className="bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-700/50 shadow-sm hover:shadow-xl transition-all duration-500 group">
@@ -63,8 +80,17 @@ const LibraryDashboardPage = () => {
     </div>
   );
 
+  if (showReport) {
+    return (
+      <LibraryReport 
+        onBack={() => setShowReport(false)} 
+        circulationData={reportCirculationData}
+      />
+    );
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -72,6 +98,13 @@ const LibraryDashboardPage = () => {
           <p className="text-gray-500 dark:text-gray-400 font-medium">Pantau aktivitas literasi dan sirkulasi buku hari ini</p>
         </div>
         <div className="flex gap-3">
+          <button 
+            onClick={() => setShowReport(true)}
+            className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-2xl font-bold border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all flex items-center gap-2"
+          >
+            <FileText size={20} className="text-emerald-500" />
+            Cetak Laporan
+          </button>
           <Link 
             to="/library/loans" 
             className="px-6 py-3 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center gap-2"
@@ -89,8 +122,8 @@ const LibraryDashboardPage = () => {
           value={stats.total_books} 
           icon={BookIcon} 
           color="bg-blue-500" 
-          subValue="+12" 
-          subLabel="Bulan ini"
+          subValue={stats.total_physical_books} 
+          subLabel="Total Eksemplar Fisik"
         />
         <StatCard 
           title="Pinjaman Aktif" 
@@ -186,21 +219,48 @@ const LibraryDashboardPage = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700/50 shadow-sm">
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700/50 shadow-sm flex flex-col h-full">
             <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-              <TrendingUp className="text-purple-500" size={18} />
-              Tips Pustakawan
+              <Star className="text-amber-500 fill-amber-500" size={18} />
+              Buku Terpopuler
             </h3>
-            <ul className="space-y-4">
-              <li className="flex gap-3">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 shrink-0" />
-                <p className="text-xs text-gray-500 leading-relaxed">Gunakan fitur **Mode Scan** untuk mempercepat peminjaman massal di jam istirahat.</p>
-              </li>
-              <li className="flex gap-3">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-1.5 shrink-0" />
-                <p className="text-xs text-gray-500 leading-relaxed">Selalu update **Lokasi Rak** agar siswa lebih mudah mencari buku dari katalog digital mereka.</p>
-              </li>
-            </ul>
+            <div className="flex-1 space-y-4">
+              {stats.popular_books?.length > 0 ? stats.popular_books.map((item, index) => (
+                <div key={`book-${index}`} className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-[10px] font-bold text-amber-600 shrink-0">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{item.book?.title}</p>
+                    <p className="text-[10px] text-gray-500 truncate">{item.total} kali dipinjam</p>
+                  </div>
+                </div>
+              )) : (
+                <p className="text-xs text-gray-400">Belum ada data peminjaman</p>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 p-8 rounded-[2.5rem] border border-gray-100 dark:border-gray-700/50 shadow-sm flex flex-col h-full">
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+              <Trophy className="text-emerald-500" size={18} />
+              Siswa Paling Aktif
+            </h3>
+            <div className="flex-1 space-y-4">
+              {stats.active_students?.length > 0 ? stats.active_students.map((item, index) => (
+                <div key={`student-${index}`} className="flex items-center gap-3">
+                  <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-[10px] font-bold text-emerald-600 shrink-0">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-gray-800 dark:text-white truncate">{item.student?.name}</p>
+                    <p className="text-[10px] text-gray-500 truncate">{item.total} buku dipinjam</p>
+                  </div>
+                </div>
+              )) : (
+                <p className="text-xs text-gray-400">Belum ada data peminjaman</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

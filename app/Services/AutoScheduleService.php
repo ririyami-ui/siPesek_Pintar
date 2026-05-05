@@ -77,7 +77,8 @@ class AutoScheduleService
         // Start with a clean state - delete OUTSIDE the loop
         DB::beginTransaction();
         try {
-            Schedule::where('type', 'teaching')->delete();
+            // Clean up existing teaching schedules (Force Delete to prevent database bloat)
+            Schedule::where('type', 'teaching')->forceDelete();
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -104,6 +105,9 @@ class AutoScheduleService
                     $nowTimestamp = now();
                     $insertData = array_map(function($item) use ($nowTimestamp) {
                         return array_merge($item, [
+                            'start_date' => $nowTimestamp->format('Y-m-d'),
+                            'end_date' => $nowTimestamp->copy()->endOfYear()->format('Y-m-d'),
+                            'is_recurring' => 1,
                             'created_at' => $nowTimestamp,
                             'updated_at' => $nowTimestamp
                         ]);
@@ -613,13 +617,35 @@ class AutoScheduleService
 
                 for ($pIdx = 0; $pIdx < $maxPerms; $pIdx++) {
                     $p = $blocks;
+                    // Priority Shuffle: Try to put Olahraga/PJOK at the beginning to get morning slots
                     shuffle($p);
+                    usort($p, function($a, $b) use ($pIdx) {
+                        // 70% of attempts will strictly prioritize morning subjects to the front
+                        if ($pIdx < 20) {
+                            $aPrio = $this->isMorningPriority($a['subject_name']);
+                            $bPrio = $this->isMorningPriority($b['subject_name']);
+                            if ($aPrio && !$bPrio) return -1;
+                            if (!$aPrio && $bPrio) return 1;
+                        }
+                        return 0; // Maintain shuffle order for others
+                    });
+
                     $currentPeriod = 1;
                     $pPossible = true;
                     $tempPlaced = [];
 
                     foreach ($p as $block) {
                         $startIndex = $currentPeriod - 1;
+                        
+                        // Soft Constraint: Olahraga/PJOK should ideally start at Jam 1, 2, or 3 (avoiding afternoon)
+                        // Period index 0=Jam 1, 1=Jam 2, 2=Jam 3.
+                        if ($pIdx < 15 && $this->isMorningPriority($block['subject_name'])) {
+                            if ($startIndex > 2) { // Starts at Jam 4 or later
+                                $pPossible = false;
+                                break;
+                            }
+                        }
+
                         if ($startIndex + $block['size'] > count($slots)) { $pPossible = false; break; }
 
                         for ($j = 0; $j < $block['size']; $j++) {
@@ -760,6 +786,18 @@ class AutoScheduleService
             'start_time'   => $firstSlot['start_time'],
             'end_time'     => $lastSlot['end_time'],
         ];
+    }
+
+    /**
+     * Helper to identify subjects that prefer morning slots (e.g. PJOK/Sports)
+     */
+    protected function isMorningPriority($subjectName)
+    {
+        $name = strtolower($subjectName);
+        return str_contains($name, 'olahraga') || 
+               str_contains($name, 'pjok') || 
+               str_contains($name, 'penjas') ||
+               str_contains($name, 'panyas');
     }
 
 }

@@ -11,6 +11,7 @@ class LibraryLoan extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'transaction_id',
         'student_id',
         'book_id',
         'loan_date',

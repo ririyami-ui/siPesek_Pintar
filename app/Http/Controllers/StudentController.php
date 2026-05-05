@@ -16,9 +16,23 @@ class StudentController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = auth()->user();
+
+        // [BYPASS] If searching, look through ALL students (essential for library/barcode)
+        if ($search = request('search')) {
+            $students = Student::where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('nis', 'like', "%$search%")
+                  ->orWhere('nisn', 'like', "%$search%")
+                  ->orWhere('nis', $search)
+                  ->orWhere('nisn', $search);
+            })->with('class')->limit(10)->get();
+            
+            return response()->json(['data' => $students]);
+        }
+
         $query = Student::query();
         
-        if ($user && $user->role === 'teacher') {
+        if ($user && $user->role === 'teacher' && !$user->isLibrarian()) {
             // Find teacher record
             $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
             
@@ -29,7 +43,7 @@ class StudentController extends Controller
             } else {
                 return response()->json(['data' => []]);
             }
-        } elseif ($user && !$user->isAdmin()) {
+        } elseif ($user && !$user->isAdmin() && !$user->isLibrarian()) {
             $query->where('created_by', $user->id);
         }
 
@@ -37,6 +51,17 @@ class StudentController extends Controller
             $query->where('class_id', request()->class_id);
         } elseif (request()->has('rombel')) {
             $query->where('class_id', request()->rombel);
+        }
+
+        // Add Search Functionality (Support NISN, NIS, and Name)
+        if ($search = request('search')) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('nis', 'like', "%$search%")
+                  ->orWhere('nisn', 'like', "%$search%")
+                  ->orWhere('nis', $search) // Exact match for leading zeros
+                  ->orWhere('nisn', $search); // Exact match for leading zeros
+            });
         }
 
         $students = $query->with('class')->get();
@@ -56,6 +81,7 @@ class StudentController extends Controller
             'gender' => 'required|string',
             'birth_place' => 'nullable|string',
             'birth_date' => 'nullable|date',
+            'address' => 'nullable|string',
             'absen' => 'nullable|string',
             'class_id' => 'required|exists:classes,id',
         ]);
@@ -135,6 +161,7 @@ class StudentController extends Controller
             'gender' => 'required|string',
             'birth_place' => 'nullable|string',
             'birth_date' => 'nullable|date',
+            'address' => 'nullable|string',
             'absen' => 'nullable|string',
             'class_id' => 'required|exists:classes,id',
         ]);

@@ -45,3 +45,9 @@ self.addEventListener('notificationclick', function(event) {
     })
   );
 });
+
+// Added fetch event listener to satisfy PWA install criteria
+self.addEventListener('fetch', function(event) {
+  // This can be empty for basic PWA support
+  // or used for caching strategies
+});

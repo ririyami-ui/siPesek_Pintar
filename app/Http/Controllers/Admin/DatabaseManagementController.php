@@ -29,6 +29,8 @@ class DatabaseManagementController extends Controller
         'admins',
         'teachers',
         'students',
+        'books',
+        'library_loans',
         'classes',
         'schedules',
         'subjects',
@@ -370,7 +372,9 @@ class DatabaseManagementController extends Controller
             'user_profiles' => 'Profil Pengguna',
             'users' => 'Akun Pengguna',
             'personal_access_tokens' => 'Token Sesi Login',
-            'password_reset_tokens' => 'Token Reset Password'
+            'password_reset_tokens' => 'Token Reset Password',
+            'books' => 'Master Data Buku (Perpustakaan)',
+            'library_loans' => 'Riwayat Sirkulasi & Peminjaman'
         ];
 
         return $labels[$table] ?? $table;

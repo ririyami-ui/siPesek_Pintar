@@ -8,9 +8,11 @@ import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
 import StyledSelect from './StyledSelect';
 import StyledTable from './StyledTable';
-import { Plus, Upload, Download, Edit, Trash2, Sparkles, Image as ImageIcon, FileArchive, CheckCircle2, AlertCircle, Loader2, X, Smartphone } from 'lucide-react';
+import { Plus, Upload, Download, Edit, Trash2, Sparkles, Image as ImageIcon, FileArchive, CheckCircle2, AlertCircle, Loader2, X, Smartphone, Printer } from 'lucide-react';
 import Modal from './Modal';
 import StudentEditor from './StudentEditor';
+import PrintStudentCardModal from './PrintStudentCardModal';
+import { useSettings } from '../utils/SettingsContext';
 
 export default function StudentMasterData() {
   const [students, setStudents] = useState([]);
@@ -25,6 +27,7 @@ export default function StudentMasterData() {
   const [newBirthDate, setNewBirthDate] = useState('');
   const [newClassId, setNewClassId] = useState('');
   const [newAbsen, setNewAbsen] = useState('');
+  const [newAddress, setNewAddress] = useState('');
   const [file, setFile] = useState(null);
   const [rombels, setRombels] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -32,6 +35,9 @@ export default function StudentMasterData() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+  const [selectedStudentsForPrint, setSelectedStudentsForPrint] = useState([]);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const { userProfile } = useSettings();
   
   // Photo ZIP Upload States
   const [zipFile, setZipFile] = useState(null);
@@ -108,6 +114,8 @@ export default function StudentMasterData() {
       data.sort((a, b) => (a.code || '').localeCompare(b.code || ''));
 
       setStudents(data);
+      // Reset selected students when filter changes
+      setSelectedStudentsForPrint([]);
     } catch (error) {
       console.error("Error getting students: ", error);
       toast.error('Gagal memuat data siswa.');
@@ -174,6 +182,7 @@ export default function StudentMasterData() {
       birth_date: newBirthDate,
       class_id: newClassId,
       absen: newAbsen,
+      address: newAddress,
     };
 
     const promise = api.post('/students', payload);
@@ -190,6 +199,7 @@ export default function StudentMasterData() {
         setNewBirthDate('');
         setNewClassId('');
         setNewAbsen('');
+        setNewAddress('');
         getStudents();
         return 'Siswa berhasil ditambahkan!';
       },
@@ -374,6 +384,7 @@ export default function StudentMasterData() {
             gender: finalGender,
             birth_place: row['Tempat Lahir'] || null,
             birth_date: normalizeImportDate(row['Tanggal Lahir']),
+            address: row['Alamat'] || null,
             class_id: classObj.id,
           };
 
@@ -434,6 +445,27 @@ export default function StudentMasterData() {
 
   const isAdmin = user?.role === 'admin';
 
+  const toggleStudentSelection = (student) => {
+    setSelectedStudentsForPrint(prev => 
+      prev.find(s => s.id === student.id) 
+        ? prev.filter(s => s.id !== student.id)
+        : [...prev, student]
+    );
+  };
+
+  const toggleAllSelection = () => {
+    if (selectedStudentsForPrint.length === students.length) {
+      setSelectedStudentsForPrint([]);
+    } else {
+      setSelectedStudentsForPrint([...students]);
+    }
+  };
+
+  const printSingleCard = (student) => {
+    setSelectedStudentsForPrint([student]);
+    setShowPrintModal(true);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center p-12">
@@ -481,7 +513,7 @@ export default function StudentMasterData() {
             {/* Personal Data Group */}
             <div className="lg:col-span-12 space-y-4 mt-2">
               <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 border-b border-gray-100 dark:border-gray-700 pb-2">Data Pribadi & Akademik</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                 <StyledSelect label="Jenis Kelamin" value={newGender} onChange={(e) => setNewGender(e.target.value)}>
                   <option value="">Pilih Kelamin...</option>
                   <option value="L">Laki-laki (L)</option>
@@ -489,11 +521,22 @@ export default function StudentMasterData() {
                 </StyledSelect>
                 <StyledInput label="Tempat Lahir" type="text" placeholder="Kota kelahiran" value={newBirthPlace} onChange={(e) => setNewBirthPlace(e.target.value)} />
                 <StyledInput label="Tanggal Lahir" type="date" value={newBirthDate} onChange={(e) => setNewBirthDate(e.target.value)} />
+                
                 <StyledSelect label="Rombel / Kelas" value={newClassId} onChange={(e) => setNewClassId(e.target.value)}>
                   <option value="">Pilih Kelas...</option>
                   {classes.map(c => <option key={c.id} value={c.id}>{c.rombel}</option>)}
                 </StyledSelect>
                 <StyledInput label="No. Absen" type="number" placeholder="Nomor urut" value={newAbsen} onChange={(e) => setNewAbsen(e.target.value)} />
+                
+                <div className="lg:col-span-3">
+                   <StyledInput 
+                    label="Alamat Lengkap" 
+                    type="text" 
+                    placeholder="Masukkan alamat lengkap siswa..." 
+                    value={newAddress} 
+                    onChange={(e) => setNewAddress(e.target.value)} 
+                   />
+                </div>
               </div>
             </div>
           </div>
@@ -501,7 +544,7 @@ export default function StudentMasterData() {
           <div className="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700/50 relative z-10">
             <StyledButton onClick={() => {
               setNewStudentCode(''); setNewNIS(''); setNewNISN(''); setNewStudentName(''); 
-              setNewGender(''); setNewBirthPlace(''); setNewBirthDate(''); setNewClassId(''); setNewAbsen('');
+              setNewGender(''); setNewBirthPlace(''); setNewBirthDate(''); setNewClassId(''); setNewAbsen(''); setNewAddress('');
             }} variant="outline" className="!px-6">
               Reset Form
             </StyledButton>
@@ -610,6 +653,14 @@ export default function StudentMasterData() {
             {isAdmin ? 'Daftar Semua Siswa' : 'Siswa di Mata Pelajaran Anda'}
           </h3>
           <div className="flex items-center gap-2">
+            {selectedStudentsForPrint.length > 0 && (
+              <button 
+                onClick={() => setShowPrintModal(true)}
+                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/30 transition-all mr-2"
+              >
+                <Printer size={16} /> Cetak {selectedStudentsForPrint.length} Kartu
+              </button>
+            )}
             <span className="text-xs font-bold text-gray-400">Filter Rombel:</span>
             <StyledSelect
               className="!w-40"
@@ -629,16 +680,38 @@ export default function StudentMasterData() {
           </div>
         ) : (
           <StyledTable headers={[
+            { 
+              label: (
+                <div className="flex items-center justify-center">
+                  <input 
+                    type="checkbox" 
+                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 cursor-pointer" 
+                    checked={students.length > 0 && selectedStudentsForPrint.length === students.length}
+                    onChange={toggleAllSelection}
+                  />
+                </div>
+              ),
+              width: '40px'
+            },
             { label: 'No. Absen' },
             { label: 'Kode Siswa' },
             { label: 'NIS/NISN' },
             { label: 'Nama Lengkap' },
             { label: 'L/P' },
             { label: 'Rombel' },
+            { label: 'Alamat' },
             ...(isAdmin ? [{ label: 'Aksi' }] : [])
           ]}>
             {students.map((student) => (
               <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                <td className="px-3 py-4 whitespace-nowrap text-center">
+                  <input 
+                    type="checkbox" 
+                    className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600 cursor-pointer" 
+                    checked={selectedStudentsForPrint.some(s => s.id === student.id)}
+                    onChange={() => toggleStudentSelection(student)}
+                  />
+                </td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm font-medium text-text-light dark:text-text-dark">{student.absen || '-'}</td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm"><span className="font-bold text-purple-600 dark:text-purple-400">{student.code || '-'}</span></td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
@@ -648,21 +721,23 @@ export default function StudentMasterData() {
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm font-bold text-text-light dark:text-text-dark">{student.name}</td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">{student.gender}</td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm"><span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs font-bold text-text-muted-light dark:text-text-muted-dark">{student.rombel}</span></td>
+                <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark truncate max-w-[150px]" title={student.address}>{student.address || '-'}</td>
                 {isAdmin && (
-                  <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
-                    <div className="flex gap-1.5 sm:gap-2">
-                       <button onClick={() => handleEditStudent(student)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit Data"><Edit size={16} /></button>
-                       <button 
-                         onClick={() => resetDevice(student.id)} 
-                         className={`p-1.5 rounded-lg transition-colors ${student.auth_user_id ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-gray-300 opacity-50 cursor-not-allowed'}`} 
-                         title={student.auth_user_id ? "Reset Kunci Perangkat (HP)" : "Belum ada akun login"}
-                         disabled={!student.auth_user_id}
-                       >
-                         <Smartphone size={16} />
-                       </button>
-                       <button onClick={() => deleteStudent(student.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Hapus Data"><Trash2 size={16} /></button>
-                    </div>
-                  </td>
+                   <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
+                     <div className="flex gap-1.5 sm:gap-2">
+                        <button onClick={() => printSingleCard(student)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors" title="Cetak Kartu Pelajar"><Printer size={16} /></button>
+                        <button onClick={() => handleEditStudent(student)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit Data"><Edit size={16} /></button>
+                        <button 
+                          onClick={() => resetDevice(student.id)} 
+                          className={`p-1.5 rounded-lg transition-colors ${student.auth_user_id ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-gray-300 opacity-50 cursor-not-allowed'}`} 
+                          title={student.auth_user_id ? "Reset Kunci Perangkat (HP)" : "Belum ada akun login"}
+                          disabled={!student.auth_user_id}
+                        >
+                          <Smartphone size={16} />
+                        </button>
+                        <button onClick={() => deleteStudent(student.id)} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Hapus Data"><Trash2 size={16} /></button>
+                     </div>
+                   </td>
                 )}
               </tr>
             ))}
@@ -707,6 +782,15 @@ export default function StudentMasterData() {
           </div>
         </Modal>
       )}
+
+      <PrintStudentCardModal 
+        isOpen={showPrintModal} 
+        onClose={() => setShowPrintModal(false)} 
+        selectedStudents={selectedStudentsForPrint} 
+        logoUrl={userProfile?.logoUrl}
+        schoolName={userProfile?.school_name || userProfile?.schoolName}
+        userProfile={userProfile}
+      />
     </div>
   );
 }

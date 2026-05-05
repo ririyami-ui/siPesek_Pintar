@@ -138,16 +138,29 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/grades',      [StudentDashboardController::class, 'getGrades']);
         Route::get('/tasks',       [StudentDashboardController::class, 'getMissingTasks']);
         Route::get('/infractions', [StudentDashboardController::class, 'getInfractions']);
+        Route::get('/library/loans',[StudentDashboardController::class, 'myLibraryLoans']);
         Route::post('/chat',       [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1');
     });
 
     // Library Module
-    Route::group(['prefix' => 'library', 'middleware' => ['librarian']], function () {
-        Route::get('/books/lookup/{isbn}', [App\Http\Controllers\BookController::class, 'lookup']);
-        Route::apiResource('books', App\Http\Controllers\BookController::class);
+    Route::group(['prefix' => 'library'], function () {
+        // Public (Auth) routes for Library (accessible by students)
+        Route::get('/books', [App\Http\Controllers\BookController::class, 'index']);
+        Route::get('/books/{book}', [App\Http\Controllers\BookController::class, 'show']);
         
-        Route::get('/loans/stats', [App\Http\Controllers\LibraryLoanController::class, 'stats']);
-        Route::post('/loans/{loan}/return', [App\Http\Controllers\LibraryLoanController::class, 'returnBook']);
-        Route::apiResource('loans', App\Http\Controllers\LibraryLoanController::class);
+        // Admin / Librarian only
+        Route::group(['middleware' => ['librarian']], function () {
+            Route::get('/books/lookup/{isbn}', [App\Http\Controllers\BookController::class, 'lookup']);
+            Route::post('/books', [App\Http\Controllers\BookController::class, 'store']);
+            Route::put('/books/{book}', [App\Http\Controllers\BookController::class, 'update']);
+            Route::delete('/books/{book}', [App\Http\Controllers\BookController::class, 'destroy']);
+            
+            Route::get('/loans/stats', [App\Http\Controllers\LibraryLoanController::class, 'stats']);
+            Route::get('/loans/transaction/{transactionId}', [App\Http\Controllers\LibraryLoanController::class, 'getTransaction']);
+            Route::get('/reports/classification', [App\Http\Controllers\LibraryLoanController::class, 'getClassificationReport']);
+            Route::get('/reports/borrowers', [App\Http\Controllers\LibraryLoanController::class, 'borrowersReport']);
+            Route::post('/loans/{loan}/return', [App\Http\Controllers\LibraryLoanController::class, 'returnBook']);
+            Route::apiResource('loans', App\Http\Controllers\LibraryLoanController::class);
+        });
     });
 });

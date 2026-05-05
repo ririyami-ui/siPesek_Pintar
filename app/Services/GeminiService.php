@@ -64,7 +64,7 @@ class GeminiService
      * Unified core method to call Gemini API with robust retry logic
      * Supports both simple strings and structured content (history/parts)
      */
-    public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7): ?string
+    public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7, ?string $systemInstruction = null): ?string
     {
         $retries = 3;
         $delay = 1000; // 1 second initial delay
@@ -86,15 +86,24 @@ class GeminiService
                     ? [['role' => 'user', 'parts' => [['text' => $promptOrContents]]]]
                     : $promptOrContents;
 
+                $payload = [
+                    'contents' => $contents,
+                    'generationConfig' => [
+                        'temperature' => $temperature,
+                        'maxOutputTokens' => $maxTokens,
+                    ]
+                ];
+
+                if ($systemInstruction) {
+                    $payload['systemInstruction'] = [
+                        'role' => 'system',
+                        'parts' => [['text' => $systemInstruction]]
+                    ];
+                }
+
                 $response = Http::timeout(90)->post(
                     "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$this->apiKey}",
-                    [
-                        'contents' => $contents,
-                        'generationConfig' => [
-                            'temperature' => $temperature,
-                            'maxOutputTokens' => $maxTokens,
-                        ]
-                    ]
+                    $payload
                 );
 
                 if ($response->successful()) {
@@ -223,15 +232,33 @@ class GeminiService
      */
     public function chat($message, $history = [], $context = [])
     {
-        $systemContext = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
-        
-        if (!empty($context)) {
-            $systemContext .= "\n\nKonteks: " . json_encode($context, JSON_UNESCAPED_UNICODE);
+        $systemInstruction = null;
+        $realHistory = [];
+        $modelName = $this->model;
+
+        // Support options array passed as second argument (as seen in StudentChatController)
+        if (is_array($history) && isset($history['system_instruction'])) {
+            $systemInstruction = $history['system_instruction'];
+            $realHistory = $history['history'] ?? [];
+            $modelName = $history['model'] ?? $modelName;
+        } else {
+            $realHistory = $history;
+            $systemInstruction = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
+            if (!empty($context)) {
+                $systemInstruction .= "\n\nKonteks: " . json_encode($context, JSON_UNESCAPED_UNICODE);
+            }
         }
 
-        $fullPrompt = "{$systemContext}\n\nPertanyaan: {$message}";
+        // Prepare contents for callGeminiApi
+        $contents = $realHistory;
         
-        return $this->generateText($fullPrompt);
+        // Add current user message
+        $contents[] = [
+            'role' => 'user',
+            'parts' => [['text' => $message]]
+        ];
+        
+        return $this->callGeminiApi($contents, $modelName, 4096, 0.7, $systemInstruction);
     }
 
     // =================== PROMPT BUILDERS ===================

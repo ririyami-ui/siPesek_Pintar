@@ -784,8 +784,8 @@ class ScheduleController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Delete all existing teaching schedules first
-            \App\Models\Schedule::where('type', 'teaching')->delete();
+            // 1. Force delete all existing teaching schedules first to prevent database bloat
+            \App\Models\Schedule::where('type', 'teaching')->forceDelete();
 
             // 2. Prepare data for bulk insert
             $insertData = array_map(function($item) use ($now) {
@@ -800,7 +800,7 @@ class ScheduleController extends Controller
                     'start_time' => $item['start_time'],
                     'end_time' => $item['end_time'],
                     'start_date' => $item['start_date'] ?? $now->format('Y-m-d'),
-                    'end_date' => $item['end_date'] ?? $now->endOfYear()->format('Y-m-d'),
+                    'end_date' => $item['end_date'] ?? $now->copy()->endOfYear()->format('Y-m-d'),
                     'is_recurring' => 1,
                     'created_at' => $now,
                     'updated_at' => $now,

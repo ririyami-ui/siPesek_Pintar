@@ -3,7 +3,7 @@ import { Download, X, Smartphone, ArrowBigDown } from 'lucide-react';
 
 const InstallPwaCard = ({ 
     title = "Pasang Aplikasi", 
-    message = "Akses layanan sekolah lebih cepat dan mudah dari layar utama Anda.",
+    message = "Pantau belajar anak lebih mudah dari layar utama Anda.",
     role = "parent",
     onInstall,
     onDismiss
@@ -63,10 +63,10 @@ const InstallPwaCard = ({
     if (!isVisible) return null;
 
     // Customize message based on role if default is used
-    const displayMessage = message === "Akses layanan sekolah lebih cepat dan mudah dari layar utama Anda." 
+    const displayMessage = message === "Pantau belajar anak lebih mudah dari layar utama Anda." 
         ? (role === 'teacher' 
             ? "Kelola kelas dan interaksi siswa lebih praktis dari layar utama Anda." 
-            : (role === 'admin' 
+            : (role === 'admin' || role === 'adminer'
                 ? "Pantau sistem sekolah lebih mudah dari layar utama Anda." 
                 : "Pantau belajar anak lebih mudah dari layar utama Anda."))
         : message;

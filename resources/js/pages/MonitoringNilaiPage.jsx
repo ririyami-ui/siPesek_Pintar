@@ -34,13 +34,10 @@ const ClassMonitorCard = ({ item, navigate }) => {
 
     return (
         <div className="group relative bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-[420px]">
-            {/* CCTV Scanline Effect */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] z-10" />
-            
             {/* Header: Class Name & Global Score */}
-            <div className="p-6 pb-4 border-b border-gray-50 dark:border-gray-800 flex justify-between items-start bg-gray-50/50 dark:bg-black/20">
+            <div className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-gray-50 dark:bg-gray-800/50">
                 <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-purple-500/20 shrink-0">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shrink-0">
                         <span className="text-xl font-black italic tracking-tighter">{item?.rombel?.substring(0, 2) || '?'}</span>
                     </div>
                     <div>
@@ -49,34 +46,34 @@ const ClassMonitorCard = ({ item, navigate }) => {
                     </div>
                 </div>
                 <div className="text-right">
-                    <span className="text-2xl font-black text-purple-600 block leading-none">{item?.average_score || '0'}</span>
+                    <span className="text-2xl font-black text-indigo-600 block leading-none">{item?.average_score || '0'}</span>
                     <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Rerata</span>
                 </div>
             </div>
 
             {/* Main Display: Rotating Subject Info */}
-            <div className="flex-1 px-6 py-4 flex flex-col justify-center relative overflow-hidden">
+            <div className="flex-1 px-6 py-4 flex flex-col justify-center relative overflow-hidden bg-white dark:bg-gray-900">
                 <div key={activeIndex} className="animate-in fade-in slide-in-from-right-4 duration-500">
                     <div className="flex flex-col items-center text-center">
-                        <div className={`mb-3 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-sm ${activeSubject?.is_completed ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30' : 'bg-rose-100 text-rose-600 dark:bg-rose-900/30'}`}>
+                        <div className={`mb-3 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-sm ${activeSubject?.is_completed ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
                             {activeSubject?.is_completed ? 'Status: Complete' : 'Status: Incomplete'}
                         </div>
                         
                         <h4 className="text-xl font-black text-gray-800 dark:text-white tracking-tight mb-1 line-clamp-2 min-h-[3rem] flex items-center justify-center leading-tight">
                             {activeSubject?.subject_name || 'No Subjects'}
                         </h4>
-                        <p className="text-[11px] font-bold text-gray-400 mb-6 italic line-clamp-1 h-4 uppercase tracking-tighter">
+                        <p className="text-[11px] font-bold text-gray-500 dark:text-gray-400 mb-6 italic line-clamp-1 h-4 uppercase tracking-tighter">
                             {activeSubject?.teacher_name || '-'}
                         </p>
 
                         <div className="grid grid-cols-2 gap-4 w-full mb-2">
-                            <div className="text-center p-3 rounded-[1.5rem] bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 transition-all">
+                            <div className="text-center p-3 rounded-[1.5rem] bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition-all">
                                 <p className="text-[8px] font-black text-gray-400 uppercase mb-1">Rerata</p>
                                 <p className={`text-xl font-black ${activeSubject?.is_completed ? 'text-emerald-600' : 'text-rose-500'}`}>
                                     {activeSubject?.average_score || '0'}
                                 </p>
                             </div>
-                            <div className="text-center p-3 rounded-[1.5rem] bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 transition-all">
+                            <div className="text-center p-3 rounded-[1.5rem] bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 transition-all">
                                 <p className="text-[8px] font-black text-gray-400 uppercase mb-1">Progres</p>
                                 <p className="text-xl font-black text-indigo-600">
                                     {activeSubject?.total_students > 0 ? Math.round((activeSubject?.completion_count / activeSubject?.total_students) * 100) : 0}%
@@ -87,19 +84,19 @@ const ClassMonitorCard = ({ item, navigate }) => {
                 </div>
 
                 {/* Progress Bar for the 5s interval */}
-                <div className="absolute left-0 bottom-0 h-1 bg-purple-600/10 w-full overflow-hidden">
+                <div className="absolute left-0 bottom-0 h-1 bg-indigo-600/10 w-full overflow-hidden">
                     {subjects.length > 1 && (
                         <div 
                             key={activeIndex}
-                            className="h-full bg-purple-600 animate-timer-bar-cctv"
-                            style={{ width: '100%' }}
+                            className="h-full bg-indigo-600"
+                            style={{ width: '100%', animation: 'timer-bar 5s linear forwards' }}
                         />
                     )}
                 </div>
             </div>
 
-            {/* Bottom Section: CCTV Indicator Dots */}
-            <div className="p-6 bg-gray-50/50 dark:bg-black/20 border-t border-gray-50 dark:border-gray-800">
+            {/* Bottom Section: Indicators */}
+            <div className="p-6 bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700">
                 <div className="flex flex-wrap gap-2 justify-center">
                     {subjects.map((sub, idx) => (
                         <div 
@@ -107,7 +104,7 @@ const ClassMonitorCard = ({ item, navigate }) => {
                             title={`${sub.subject_name} (${sub.teacher_name})`}
                             className={`w-3.5 h-3.5 rounded-full transition-all duration-300 relative ${
                                 idx === activeIndex 
-                                    ? 'ring-4 ring-purple-500/30 scale-125 z-20 shadow-lg shadow-purple-500/50' 
+                                    ? 'ring-4 ring-indigo-500/30 scale-125 z-20 shadow-lg' 
                                     : 'opacity-50 hover:opacity-100'
                             } ${
                                 sub.is_completed 
@@ -124,7 +121,7 @@ const ClassMonitorCard = ({ item, navigate }) => {
                 <div className="mt-4 flex flex-col items-center">
                     <button 
                         onClick={() => navigate(`/rekapitulasi?classId=${item.id}`)}
-                        className="text-[10px] font-black uppercase text-purple-600 hover:text-purple-700 tracking-[0.2em] bg-purple-50 dark:bg-purple-900/20 px-4 py-2 rounded-xl transition-all active:scale-95"
+                        className="text-[10px] font-black uppercase text-indigo-600 hover:text-indigo-700 tracking-[0.2em] bg-indigo-50 dark:bg-indigo-900/40 px-4 py-2 rounded-xl transition-all active:scale-95 border border-indigo-100 dark:border-indigo-800"
                     >
                         Access Monitor Details →
                     </button>

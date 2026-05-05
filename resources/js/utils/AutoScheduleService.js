@@ -254,28 +254,30 @@ class AutoScheduleService {
     }
 
     async optimizeTeacherConflicts(schedule, days, maxIterations, onProgress) {
-        let currentConflicts = this.countAllTeacherConflicts(schedule);
-        if (currentConflicts === 0) return true;
+        let currentScore = this.countAllTeacherConflicts(schedule);
+        // If there are zero critical conflicts (score < 1000) and it's already perfect, return
+        if (currentScore === 0) return true;
 
-        // Increased iterations for 100% capacity schedules
         const iterations = 50000; 
 
         for (let i = 0; i < iterations; i++) {
-            // Yield to UI periodically to prevent freeze
             if (i % 1000 === 0) {
                 await new Promise(r => setTimeout(r, 0));
-                if (onProgress) onProgress(null, null, `Menyelesaikan ${currentConflicts} bentrok...`);
+                const clashes = Math.floor(currentScore / 1000);
+                const sportsViolations = currentScore % 1000;
+                
+                let progressMsg = `Menyelesaikan ${clashes} bentrok guru...`;
+                if (clashes === 0 && sportsViolations > 0) {
+                    progressMsg = `Mengatur ${sportsViolations} jam PJOK ke pagi hari...`;
+                }
+                if (onProgress) onProgress(null, null, progressMsg);
             }
 
-            // Pick a random class to perform a move
             const classId = this.classes[Math.floor(Math.random() * this.classes.length)].id;
             const classBlocks = schedule.filter(s => s.class_id === classId);
-            
-            // Randomly choose an optimization strategy:
             const strategy = Math.random();
             
             if (strategy < 0.7) {
-                // Strategy 1: SWAP two blocks of SAME SIZE in different days
                 const b1 = classBlocks[Math.floor(Math.random() * classBlocks.length)];
                 const b2 = classBlocks[Math.floor(Math.random() * classBlocks.length)];
                 
@@ -283,7 +285,6 @@ class AutoScheduleService {
                     const oldD1 = b1.day, oldJ1 = b1.jam_ke;
                     const oldD2 = b2.day, oldJ2 = b2.jam_ke;
                     
-                    // Check subject constraint: B1 must not exist in B2's day, and vice-versa
                     const b1SubInD2 = classBlocks.some(b => b.day === oldD2 && b.subject_id === b1.subject_id && b.id !== b2.id);
                     const b2SubInD1 = classBlocks.some(b => b.day === oldD1 && b.subject_id === b2.subject_id && b.id !== b1.id);
                     
@@ -291,12 +292,13 @@ class AutoScheduleService {
                         b1.day = oldD2; b1.jam_ke = oldJ2;
                         b2.day = oldD1; b2.jam_ke = oldJ1;
                         
-                        const newConflicts = this.countAllTeacherConflicts(schedule);
-                        if (newConflicts < currentConflicts) {
-                            currentConflicts = newConflicts;
-                            if (currentConflicts === 0) return true;
-                        } else if (newConflicts === currentConflicts && Math.random() > 0.8) {
-                            // Stochastic accept to avoid local minima
+                        const newScore = this.countAllTeacherConflicts(schedule);
+                        // Accept if score is lower, or occasionally accept same score to keep moving
+                        if (newScore < currentScore || (newScore === currentScore && Math.random() > 0.95)) {
+                            currentScore = newScore;
+                            // If we have zero critical clashes, and we've reached a good point, we can potentially finish
+                            // but we continue to try and optimize sports for the full iterations
+                            if (currentScore === 0) return true;
                         } else {
                             b1.day = oldD1; b1.jam_ke = oldJ1;
                             b2.day = oldD2; b2.jam_ke = oldJ2;
@@ -304,7 +306,6 @@ class AutoScheduleService {
                     }
                 }
             } else {
-                // Strategy 2: SWAP ENTIRE DAYS for this class
                 const d1 = days[Math.floor(Math.random() * days.length)];
                 const d2 = days[Math.floor(Math.random() * days.length)];
                 
@@ -315,97 +316,53 @@ class AutoScheduleService {
                     blocksD1.forEach(b => b.day = d2);
                     blocksD2.forEach(b => b.day = d1);
                     
-                    const newConflicts = this.countAllTeacherConflicts(schedule);
-                    if (newConflicts < currentConflicts) {
-                        currentConflicts = newConflicts;
-                        if (currentConflicts === 0) return true;
+                    const newScore = this.countAllTeacherConflicts(schedule);
+                    if (newScore < currentScore || (newScore === currentScore && Math.random() > 0.95)) {
+                        currentScore = newScore;
+                        if (currentScore === 0) return true;
                     } else {
                         blocksD1.forEach(b => b.day = d1);
                         blocksD2.forEach(b => b.day = d2);
                     }
                 }
             }
+
+            // If we have 0 teacher clashes, but some PJOK violations, 
+            // we give it some more time but can finish early if needed
+            if (currentScore < 1000 && i > 25000) {
+                 // After half iterations, if no clashes exist, we're good enough
+                 return true;
+            }
         }
-        return currentConflicts === 0;
+        return currentScore < 1000; // Success if no teacher clashes
     }
 
     countAllTeacherConflicts(schedule) {
         const teacherOccupied = {};
-        let conflicts = 0;
+        let score = 0;
         
         schedule.forEach(b => {
+            const isSports = (b.subject_name || '').toLowerCase().includes('pjok') || 
+                            (b.subject_name || '').toLowerCase().includes('olahraga');
+
             for (let i = 0; i < b.size; i++) {
-                const key = `${b.teacher_id}-${b.day}-${b.jam_ke + i}`;
+                const currentJam = parseInt(b.jam_ke) + i;
+                const key = `${b.teacher_id}-${b.day}-${currentJam}`;
+                
+                // Penalty for teacher clash (Hard)
                 if (teacherOccupied[key]) {
-                    conflicts++;
+                    score += 1000;
                 }
                 teacherOccupied[key] = true;
-            }
-        });
-        return conflicts;
-    }
 
-    getRandomConflictedBlockIndex(schedule) {
-        const teacherOccupied = {};
-        const conflictedIndices = new Set();
-        
-        schedule.forEach((b, idx) => {
-            for (let i = 0; i < b.size; i++) {
-                const key = `${b.teacher_id}-${b.day}-${b.jam_ke + i}`;
-                if (teacherOccupied[key] !== undefined) {
-                    conflictedIndices.add(idx);
-                    conflictedIndices.add(teacherOccupied[key]);
-                }
-                teacherOccupied[key] = idx;
-            }
-        });
-
-        const arr = Array.from(conflictedIndices);
-        if (arr.length === 0) return Math.floor(Math.random() * schedule.length);
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    findRandomValidPositionForBlock(block, schedule, days) {
-        const classBlocks = schedule.filter(s => s.class_id === block.class_id && s.id !== block.id);
-        const possiblePositions = [];
-
-        days.forEach(day => {
-            const daySlots = this.teachingSlots[day];
-            const isSubjectInDay = classBlocks.some(r => r.day === day && r.subject_id === block.subject_id);
-            if (isSubjectInDay) return;
-
-            for (let i = 0; i <= daySlots.length - block.size; i++) {
-                const startJam = parseInt(daySlots[i].jam_ke);
-                const periods = Array.from({ length: block.size }, (_, k) => startJam + k);
-                
-                const overlaps = classBlocks.some(cb => {
-                    if (cb.day !== day) return false;
-                    const cbPeriods = Array.from({ length: cb.size }, (_, k) => cb.jam_ke + k);
-                    return periods.some(p => cbPeriods.includes(p));
-                });
-
-                if (!overlaps) {
-                    possiblePositions.push({ day, jam_ke: startJam });
+                // Penalty for sports in afternoon (Soft)
+                // Jam ke 5, 6, 7, 8 are afternoon
+                if (isSports && currentJam > 4) {
+                    score += 1;
                 }
             }
         });
-
-        if (possiblePositions.length === 0) return null;
-
-        // --- PJOK MORNING PRIORITY LOGIC ---
-        const isPJOK = (block.subject_name || '').toLowerCase().includes('pjok') || 
-                       (block.subject_name || '').toLowerCase().includes('olahraga');
-        
-        if (isPJOK) {
-            const morningPositions = possiblePositions.filter(p => p.jam_ke <= 2); // Starts at Jam 1 or 2
-            // 80% chance to pick a morning slot if available
-            if (morningPositions.length > 0 && Math.random() > 0.2) {
-                return morningPositions[Math.floor(Math.random() * morningPositions.length)];
-            }
-        }
-        // -----------------------------------
-
-        return possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
+        return score;
     }
 
     shuffle(arr) {

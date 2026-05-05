@@ -122,6 +122,7 @@ class UserProfileController extends Controller
                 $mergedProfile->active_semester = $adminProfile->active_semester;
                 $mergedProfile->academic_year = $adminProfile->academic_year;
                 $mergedProfile->logo_path = $adminProfile->logo_path;
+                $mergedProfile->signature_path = $adminProfile->signature_path;
                 $mergedProfile->school_days = $adminProfile->school_days;
                 // Note: gemini_model and google_ai_api_key remain from $userProfile
             }
@@ -146,6 +147,7 @@ class UserProfileController extends Controller
         return response()->json([
             'profile' => $mergedProfile,
             'logo_url' => $mergedProfile->logo_path ? url('storage/' . $mergedProfile->logo_path) : null,
+            'signature_url' => $mergedProfile->signature_path ? url('storage/' . $mergedProfile->signature_path) : null,
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -212,9 +214,10 @@ class UserProfileController extends Controller
                     'npsn' => 'nullable|string|max:50',
                     'nss' => 'nullable|string|max:50',
                     'address' => 'nullable|string',
-                    'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                     'principalName' => 'nullable|string|max:255',
                     'principalNip' => 'nullable|string|max:50',
+                    'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                    'signature' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                     'academic_year' => 'nullable|string|max:20',
                     'active_semester' => 'nullable|in:Ganjil,Genap',
                     'school_days' => 'nullable|integer|in:5,6',
@@ -236,12 +239,12 @@ class UserProfileController extends Controller
         }
 
         // Use shared profile for Admins school settings
-        $targetUserId = $isAdmin ? $this->getMasterAdminId() : $user->id;
+$targetUserId = $isAdmin ? $this->getMasterAdminId() : $user->id;
 
         $profile = UserProfile::firstOrNew(['user_id' => $targetUserId]);
 
         // Use validated data instead of except() to ensure only allowed fields are saved
-        $dataToSave = collect($validated)->forget('logo')->toArray();
+        $dataToSave = collect($validated)->forget(['logo', 'signature'])->toArray();
         
         // Explicitly handle boolean string from FormData
         if (isset($dataToSave['schedule_notifications_enabled'])) {
@@ -260,16 +263,33 @@ class UserProfileController extends Controller
             
             if ($file->isValid()) {
                 // Delete old logo if exists
-                if ($profile->logo_path && \Illuminate\Support\Facades\Storage::disk('public')->exists($profile->logo_path)) {
-                    \Illuminate\Support\Facades\Storage::disk('public')->delete($profile->logo_path);
+                if ($profile->logo_path && \Illuminate\Support\Facades\Storage::disk('direct_public')->exists($profile->logo_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('direct_public')->delete($profile->logo_path);
                 }
                 
                 // Store in school_logos folder inside public disk
-                $path = $file->store('school_logos', 'public');
+                $path = $file->store('school_logos', 'direct_public');
                 $profile->logo_path = $path;
                 \Illuminate\Support\Facades\Log::info('Logo stored successfully at: ' . $path);
             } else {
                 \Illuminate\Support\Facades\Log::error('Logo file is not valid: ' . $file->getErrorMessage());
+            }
+        }
+
+        // Handle signature upload
+        if ($request->hasFile('signature')) {
+            $file = $request->file('signature');
+            
+            if ($file->isValid()) {
+                // Delete old signature if exists
+                if ($profile->signature_path && \Illuminate\Support\Facades\Storage::disk('direct_public')->exists($profile->signature_path)) {
+                    \Illuminate\Support\Facades\Storage::disk('direct_public')->delete($profile->signature_path);
+                }
+                
+                // Store in school_signatures folder
+                $path = $file->store('school_signatures', 'direct_public');
+                $profile->signature_path = $path;
+                \Illuminate\Support\Facades\Log::info('Signature stored successfully at: ' . $path);
             }
         }
 
@@ -294,6 +314,7 @@ class UserProfileController extends Controller
             'message' => 'Profile updated successfully',
             'profile' => $profile,
             'logo_url' => $profile->logo_path ? url('storage/' . $profile->logo_path) : null,
+            'signature_url' => $profile->signature_path ? url('storage/' . $profile->signature_path) : null,
         ]);
     }
 }

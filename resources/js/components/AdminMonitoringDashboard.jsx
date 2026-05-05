@@ -53,7 +53,22 @@ const AdminMonitoringDashboard = ({ holiday }) => {
 
     const data = monitoringData?.data || [];
     const stats = monitoringData?.stats || { total: 0, berlangsung: 0, selesai: 0, alfa: 0, belum_mulai: 0, needs_attention: 0 };
-    const filteredData = showOnlyMissing ? data.filter(item => item.needs_attention === true) : data;
+
+    // Hanya tampilkan kelas yang sedang aktif atau baru selesai (menunggu absen)
+    const activeData = showOnlyMissing
+        ? data.filter(item => item.needs_attention === true)
+        : data.filter(item => ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment', 'agenda'].includes(item.status));
+
+    // Antrean: jadwal belum mulai, dikelompokkan per slot waktu
+    const queueByTime = data
+        .filter(item => item.status === 'belum_mulai')
+        .reduce((acc, item) => {
+            const key = item.time || '';
+            if (!acc[key]) acc[key] = { time: item.time, count: 0 };
+            acc[key].count++;
+            return acc;
+        }, {});
+    const queuePeriods = Object.values(queueByTime).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
     
     // Improved detection: all scheduled times have passed
     const isPastSchoolDay = monitoringData?.max_end_time && 
@@ -75,6 +90,8 @@ const AdminMonitoringDashboard = ({ holiday }) => {
             case 'alfa': return { label: 'Belum Ada Jurnal', icon: <AlertCircle size={16} /> };
             case 'terlambat': return { label: 'Terlambat Absen', icon: <AlertCircle size={16} /> };
             case 'assignment': return { label: 'Penugasan', icon: <BookOpen className="animate-pulse" size={16} /> };
+            case 'libur': return { label: 'Libur Sekolah', icon: <Zap size={16} /> };
+            case 'agenda': return { label: 'Agenda Sekolah', icon: <BellRing size={16} /> };
             default: return { label: 'Belum Mulai', icon: <Clock size={16} /> };
         }
     };
@@ -253,27 +270,35 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                 )}
 
                 {(!isAllLearningFinished || showOnlyMissing) && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
-                        {filteredData.length === 0 ? (
-                            <div className="col-span-full py-20 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-dashed text-center opacity-50">
-                                <School size={48} className="mx-auto mb-4 text-slate-300" />
-                                <p className="font-black text-slate-400 uppercase tracking-widest text-xs">
-                                    {stats.total === 0 ? 'Master Jadwal Kosong' : 'Tidak ada jadwal KBM saat ini'}
-                                </p>
-                                <p className="text-sm text-slate-400 mt-2 font-medium">
-                                    {stats.total === 0 ? 'Klik Menu Jadwal untuk mengatur jadwal mengajar.' : 'Sistem sedang menunggu jadwal berikutnya.'}
-                                </p>
-                            </div>
-                        ) : (
-                            filteredData.map((item) => {
-                                const isLive = item.status === 'berlangsung';
+                    <>
+                        {/* Grid Kelas Aktif */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+                            {activeData.length === 0 ? (
+                                <div className="col-span-full py-20 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-dashed text-center opacity-50">
+                                    <School size={48} className="mx-auto mb-4 text-slate-300" />
+                                    <p className="font-black text-slate-400 uppercase tracking-widest text-xs">
+                                        {stats.total === 0 ? 'Master Jadwal Kosong' : 'Tidak ada kelas aktif saat ini'}
+                                    </p>
+                                    <p className="text-sm text-slate-400 mt-2 font-medium">
+                                        {stats.total === 0 ? 'Klik Menu Jadwal untuk mengatur jadwal mengajar.' : 'Kelas berikutnya sudah ada di antrean.'}
+                                    </p>
+                                </div>
+                            ) : (
+                                activeData.map((item) => {
+                                const hasAttendance = item.attendance_summary && (
+                                    (item.attendance_summary.hadir || 0) + 
+                                    (item.attendance_summary.sakit?.count || 0) + 
+                                    (item.attendance_summary.izin?.count || 0) + 
+                                    (item.attendance_summary.alpa?.count || 0)
+                                ) > 0;
+                                const isLive = item.status === 'berlangsung' && hasAttendance;
                                 const isAssignment = !!item.is_assignment;
                                 return (
                                     <div 
                                         key={item.id} 
                                         className={`relative group rounded-[2.5rem] border transition-all duration-500 h-full flex flex-col p-8 overflow-hidden 
                                             ${isLive 
-                                                ? 'bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 text-white shadow-[0_20px_50px_rgba(79,70,229,0.3)] scale-[1.02] z-10' 
+                                                ? 'bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-[0_20px_50px_rgba(16,185,129,0.3)] scale-[1.02] z-10' 
                                                 : 'bg-white dark:bg-gray-900 shadow-lg hover:shadow-xl hover:-translate-y-1'
                                             }`}
                                     >
@@ -292,7 +317,7 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                                             <h3 className={`text-4xl font-black tracking-tighter ${isLive ? 'text-white' : 'text-gray-800 dark:text-white'}`}>
                                                 {item.rombel}
                                             </h3>
-                                            <div className={`h-1.5 w-12 rounded-full mt-2 ${isLive ? 'bg-white/30' : 'bg-indigo-500/20'}`} />
+                                            <div className={`h-1.5 w-12 rounded-full mt-2 ${isLive ? 'bg-white/30' : 'bg-emerald-500/20'}`} />
                                         </div>
 
                                         <div className="space-y-4 mb-8 text-left">
@@ -341,16 +366,16 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                                             <div className={`mt-auto px-4 py-3 transition-colors backdrop-blur-sm rounded-2xl text-xs font-black text-center flex items-center justify-center gap-2 border ${
                                                 isLive 
                                                     ? 'bg-white/10 hover:bg-white/20 border-white/10 text-white' 
-                                                    : (item.status === 'assignment' ? 'bg-indigo-500/10 hover:bg-indigo-500/20 border-indigo-500/20 text-indigo-600' : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-600')
+                                                    : (item.status === 'assignment' ? 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 text-emerald-600' : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/20 text-rose-600')
                                             }`}>
-                                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? 'bg-white' : (item.status === 'assignment' ? 'bg-indigo-500' : 'bg-rose-500')}`} />
+                                                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isLive ? 'bg-white' : (item.status === 'assignment' ? 'bg-emerald-500' : 'bg-rose-500')}`} />
                                                 Sisa: {getCountdown(item.time?.split(' - ')[1])}
                                             </div>
                                         )}
                                         
                                         {item.status === 'belum_mulai' && getCountdown(item.time?.split(' - ')[0]) && (
-                                            <div className="mt-auto px-4 py-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl text-xs font-black text-indigo-600 text-center flex items-center justify-center gap-2 transition-all hover:bg-indigo-500/20">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+                                            <div className="mt-auto px-4 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl text-xs font-black text-emerald-600 text-center flex items-center justify-center gap-2 transition-all hover:bg-emerald-500/20">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                                                 Mulai: {getCountdown(item.time?.split(' - ')[0])}
                                             </div>
                                         )}
@@ -370,7 +395,34 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                                 );
                             })
                         )}
-                    </div>
+                        </div>
+
+                        {/* Antrean Jam Berikutnya */}
+                        {!showOnlyMissing && queuePeriods.length > 0 && (
+                            <div className="mt-6 space-y-2">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3 flex items-center gap-2">
+                                    <Clock size={12} /> Antrean Jam Berikutnya
+                                </p>
+                                {queuePeriods.map((period, i) => (
+                                    <div key={i} className="flex items-center justify-between px-5 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-emerald-200 transition-all group">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-emerald-300 group-hover:bg-emerald-500 transition-colors" />
+                                            <span className="text-sm font-black text-slate-600 dark:text-slate-300">{period.time}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs font-bold text-slate-400">{period.count} kelas</span>
+                                            {getCountdown(period.time?.split(' - ')[0]) && (
+                                                <span className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-black flex items-center gap-1.5">
+                                                    <Clock size={10} />
+                                                    {getCountdown(period.time?.split(' - ')[0])}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

@@ -7,6 +7,7 @@ use App\Models\Attendance;
 use App\Models\ClassAgreement;
 use App\Models\Grade;
 use App\Models\Infraction;
+use App\Models\LibraryLoan;
 use App\Models\Schedule;
 use App\Models\Student;
 use App\Models\StudentTask;
@@ -730,5 +731,26 @@ class StudentDashboardController extends Controller
         }
 
         return $narrative . ($isSchoolOver ? "Semoga istirahat Ananda menyenangkan. " : "") . $closings[$seed];
+    }
+
+    /**
+     * Get library loan history for the student.
+     */
+    public function myLibraryLoans(Request $request)
+    {
+        $student = $this->getStudent();
+        if (!$student) {
+            return response()->json(['message' => 'Data siswa tidak ditemukan.'], 404);
+        }
+
+        $loans = LibraryLoan::with(['book', 'librarian'])
+            ->where('student_id', $student->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json([
+            'student' => ['name' => $student->name, 'class' => $this->getClassName($student)],
+            'loans'   => $loans
+        ]);
     }
 }
