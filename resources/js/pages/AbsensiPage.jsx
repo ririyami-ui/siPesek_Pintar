@@ -45,16 +45,23 @@ const AbsensiPage = () => {
         const scheduleRes = await api.get('/schedules', {
           params: { day: targetDayIndonesian }
         });
-        const schedules = scheduleRes.data.data || scheduleRes.data;
+        const allSchedules = scheduleRes.data.data || scheduleRes.data;
+        // [FIX] Filter only schedules for the target day to prevent cross-day detection errors
+        const schedules = allSchedules.filter(s => s.day === targetDayIndonesian);
 
         let foundActiveSchedule = null;
 
         // If classId and subjectId provided via URL (Admin help mode)
         if (classIdFromUrl && subjectIdFromUrl) {
-          const matchedSchedule = schedules.find(s => 
-            (s.class_id == classIdFromUrl || s.class?.rombel == classIdFromUrl) && 
-            (s.subject_id == subjectIdFromUrl || s.subject?.name == subjectIdFromUrl)
-          );
+          const matchedSchedule = schedules.find(s => {
+            const sClassId = String(s.class_id || s.classId);
+            const sSubjectId = String(s.subject_id || s.subjectId);
+            const targetClassId = String(classIdFromUrl);
+            const targetSubjectId = String(subjectIdFromUrl);
+
+            return (sClassId === targetClassId || s.class?.rombel === classIdFromUrl) && 
+                   (sSubjectId === targetSubjectId || s.subject?.name === subjectIdFromUrl);
+          });
 
           if (matchedSchedule) {
             foundActiveSchedule = {
@@ -72,7 +79,16 @@ const AbsensiPage = () => {
 
         // Standard Real-time Mode (if no URL params or URL params didn't match)
         if (!foundActiveSchedule) {
-          for (const schedule of schedules) {
+          // Sort schedules to be deterministic: Teaching first, then by start time
+          const sortedSchedules = [...schedules].sort((a, b) => {
+            if (a.type === 'teaching' && b.type !== 'teaching') return -1;
+            if (a.type !== 'teaching' && b.type === 'teaching') return 1;
+            return moment(a.start_time || a.startTime, 'HH:mm:ss').diff(moment(b.start_time || b.startTime, 'HH:mm:ss'));
+          });
+
+          for (const schedule of sortedSchedules) {
+            if (schedule.type !== 'teaching') continue; // Skip non-teaching in auto-detection for Absensi
+
             const className = schedule.class?.rombel || schedule.className || '';
             const classId = schedule.class_id || schedule.classId || '';
             const subjectId = schedule.subject_id || schedule.subjectId || '';
@@ -85,6 +101,7 @@ const AbsensiPage = () => {
               endTime.add(1, 'day');
             }
 
+            // [REFINED] Exact match for current time
             if (now.isBetween(startTime, endTime, null, '[]')) {
               foundActiveSchedule = {
                 id: schedule.id,
@@ -97,6 +114,32 @@ const AbsensiPage = () => {
               };
               break;
             }
+          }
+
+          // Fallback: If no exact match, look for the most recently started schedule that is still "active" 
+          // [REFINED] We pick the LATEST started schedule from those that started in the last 2 hours
+          // This prevents picking 8B when we should be in 8A if they overlap or are very close.
+          if (!foundActiveSchedule) {
+             const recentlyStarted = sortedSchedules
+                .filter(s => s.type === 'teaching')
+                .reverse() // Check from the latest started session first
+                .find(s => {
+                    const sStart = moment(s.start_time || s.startTime, 'HH:mm:ss');
+                    // Look back up to 3 hours, but we check newest first due to .reverse()
+                    return now.isAfter(sStart) && now.diff(sStart, 'minutes') < 180; 
+                });
+
+             if (recentlyStarted) {
+                foundActiveSchedule = {
+                  id: recentlyStarted.id,
+                  class: recentlyStarted.class?.rombel || recentlyStarted.className || '',
+                  classId: recentlyStarted.class_id || recentlyStarted.classId,
+                  subject: recentlyStarted.subject?.name || recentlyStarted.subjectName || recentlyStarted.subject || '',
+                  subjectId: recentlyStarted.subject_id || recentlyStarted.subjectId,
+                  startTime: moment(recentlyStarted.start_time || recentlyStarted.startTime, 'HH:mm:ss').format('HH:mm'),
+                  endTime: moment(recentlyStarted.end_time || recentlyStarted.endTime, 'HH:mm:ss').format('HH:mm'),
+                };
+             }
           }
         }
 

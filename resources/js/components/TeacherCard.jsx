@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Pencil, ChevronDown, ChevronUp, User, Plus, X, GraduationCap, BookOpen, Clock } from 'lucide-react';
+import { Trash2, Pencil, ChevronDown, ChevronUp, User, Plus, X, GraduationCap, BookOpen, Clock, CalendarOff } from 'lucide-react';
 import StyledButton from './StyledButton';
 import Select from 'react-select';
 import api from '../lib/axios';
@@ -119,11 +119,16 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
                     </div>
                     <div>
                         <p className="text-lg font-bold text-text-light dark:text-text-dark leading-tight">{teacher.name}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
+                        <div className="flex flex-wrap items-center gap-2 mt-0.5">
                             <span className="text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-1.5 py-0.5 rounded-md">{teacher.code || '-'}</span>
                             <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/20 px-1.5 py-0.5 rounded-md flex items-center gap-1" title="Total Beban Mengajar per Pekan">
                                 <Clock size={12} /> {totalBurden} Jam
                             </span>
+                            {teacher.unavailable_days && teacher.unavailable_days.length > 0 && (
+                                <span className="text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded-md flex items-center gap-1" title="Hari Libur Mengajar">
+                                    <CalendarOff size={12} /> Libur: {teacher.unavailable_days.join(', ')}
+                                </span>
+                            )}
                             <span className="text-[10px] font-medium text-text-muted-light dark:text-text-muted-dark">NIP: {teacher.nip || '-'}</span>
                         </div>
                     </div>
@@ -229,6 +234,19 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
                         <span className="font-semibold">Password:</span>
                         <span className="font-bold text-text-light dark:text-text-dark">{teacher.password || '-'}</span>
                     </div>
+                    {teacher.unavailable_days && teacher.unavailable_days.length > 0 && (
+                        <div className="mt-2 p-2 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/20">
+                            <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400 mb-1">
+                                <CalendarOff size={12} />
+                                <span className="font-bold uppercase tracking-wider">Libur Mengajar:</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                                {teacher.unavailable_days.map(day => (
+                                    <span key={day} className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 px-1.5 py-0.5 rounded text-[9px] font-black">{day}</span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 

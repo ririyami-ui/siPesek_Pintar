@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Calendar, BookOpen, Award, AlertTriangle, Users, TrendingUp, FileDown, CheckCircle, XCircle, MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import moment from 'moment';
 
 import StyledInput from '../components/StyledInput';
 import StyledSelect from '../components/StyledSelect';
@@ -40,6 +41,7 @@ const RekapitulasiPage = () => {
   // Kehadiran State
   const [students, setStudents] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [attendanceData, setAttendanceData] = useState([]);
@@ -188,6 +190,7 @@ const RekapitulasiPage = () => {
       const response = await api.get('/attendances', {
         params: {
           class_id: selectedClass,
+          subject_id: selectedSubject || undefined,
           date_start: startDate,
           date_end: endDate
         }
@@ -276,7 +279,7 @@ const RekapitulasiPage = () => {
           };
         }
 
-        const student = sortedStudents.find(s => s.id === record.studentId);
+        const student = sortedStudents.find(s => String(s.id) === String(record.studentId));
         if (student) {
           dailyDataMap[record.date].total++;
           const statusMap = { 'Hadir': 'hadir', 'Sakit': 'sakit', 'Izin': 'ijin', 'Alpa': 'alpha' };
@@ -330,6 +333,10 @@ const RekapitulasiPage = () => {
       alpa: item.Alpha || 0,
     }));
     const classObj = classes.find(c => String(c.id) === String(selectedClass));
+    const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
+    const classLabel = classObj?.rombel || selectedClass;
+    const finalLabel = selectedSubject && subjectObj ? `${classLabel} - Mapel: ${subjectObj.name}` : classLabel;
+
     // Use the new Detailed Generator
     generateDetailedAttendanceRecapPDF(
       attendanceData, 
@@ -338,7 +345,7 @@ const RekapitulasiPage = () => {
       startDate, 
       endDate, 
       teacherName, 
-      classObj?.rombel || selectedClass, 
+      finalLabel, 
       { ...userProfile, academicYear, activeSemester }
     );
   };
@@ -362,7 +369,11 @@ const RekapitulasiPage = () => {
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const classObj = classes.find(c => String(c.id) === String(selectedClass));
-    saveAs(data, `Rekapitulasi_Kehadiran_${classObj?.rombel || selectedClass}_${startDate}_${endDate}.xlsx`);
+    const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
+    const classLabel = classObj?.rombel || selectedClass;
+    const finalLabel = selectedSubject && subjectObj ? `${classLabel}_${subjectObj.name}` : classLabel;
+    
+    saveAs(data, `Rekapitulasi_Kehadiran_${finalLabel}_${startDate}_${endDate}.xlsx`);
   };
 
   const handleKehadiranSesiExcelExport = () => {
@@ -394,7 +405,11 @@ const RekapitulasiPage = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Log Sesi');
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(data, `Log_Sesi_Kehadiran_${classObj?.rombel || selectedClass}_${startDate}_${endDate}.xlsx`);
+    const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
+    const classLabel = classObj?.rombel || selectedClass;
+    const finalLabel = selectedSubject && subjectObj ? `${classLabel}_${subjectObj.name}` : classLabel;
+
+    saveAs(data, `Log_Sesi_Kehadiran_${finalLabel}_${startDate}_${endDate}.xlsx`);
   };
 
   const handleShowJurnal = async () => {
@@ -850,6 +865,13 @@ const RekapitulasiPage = () => {
                       </StyledSelect>
                     </div>
                     <div className="flex-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Mata Pelajaran</label>
+                      <StyledSelect value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+                        <option value="">Semua Mata Pelajaran</option>
+                        {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      </StyledSelect>
+                    </div>
+                    <div className="flex-1">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Rentang Tanggal</label>
                       <div className="flex items-center gap-2">
                         <StyledInput type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
@@ -971,7 +993,7 @@ const RekapitulasiPage = () => {
                                           <div className="text-[8px] font-bold text-gray-400 uppercase">Hadir</div>
                                         </div>
                                         <div>
-                                          <h4 className="font-bold text-gray-900 dark:text-white">{dayData.date}</h4>
+                                          <h4 className="font-bold text-gray-900 dark:text-white">{moment(dayData.date).format('DD MMMM YYYY')}</h4>
                                           <p className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-tighter">
                                             Kelas: {dayData.className} • Total: {dayData.total} entry • Dari {students.length} siswa
                                           </p>

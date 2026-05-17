@@ -19,6 +19,7 @@ class AutoScheduleService
     protected $errors = [];
     protected $occupiedTeachers = []; // [day][period][] = teacher_id
     protected $occupiedClasses = [];  // [day][period][] = class_id
+    protected $teacherAvailability = []; // [teacher_id] = [unavailable_days]
 
     public function __construct($adminUserId)
     {
@@ -54,6 +55,12 @@ class AutoScheduleService
 
         // Pre-fetch classes for performance
         $allClasses = SchoolClass::all()->keyBy('id');
+        
+        // Pre-fetch teacher availability
+        $allTeachers = Teacher::whereNotNull('auth_user_id')->get();
+        foreach ($allTeachers as $t) {
+            $this->teacherAvailability[$t->auth_user_id] = $t->unavailable_days ?: [];
+        }
 
         // 3. Mathematical Pre-flight Validation
         $mathCheck = $this->validateMath($assignments);
@@ -65,7 +72,7 @@ class AutoScheduleService
         $initialBlocks = $this->transformAssignmentsToBlocks($assignments, $allClasses);
         Log::info("AutoSchedule: Transformed into " . count($initialBlocks) . " blocks.");
 
-        $maxAttempts = 500; // Reduced from 2000 for hosting stability
+        $maxAttempts = 150; // Reduced to 150 so worst-case failure happens in ~25 seconds
         $attempt = 0;
         $failureStats = [
             'teachers' => [],
@@ -181,19 +188,39 @@ class AutoScheduleService
         }
 
         foreach ($teacherHours as $id => $hours) {
-            if ($hours > $totalSlots) {
+            $unDays = $this->teacherAvailability[$id] ?? [];
+            
+            // NEW RULE: > 30 hours cannot have unDays
+            if ($hours > 30 && count($unDays) > 0) {
                 return [
                     'success' => false,
-                    'message' => "KEGAGALAN MATEMATIS: Guru '{$teacherNames[$id]}' memiliki total {$hours} jam/pekan, namun sekolah hanya menyediakan {$totalSlots} slot waktu/pekan. Silakan kurangi jam atau tambah slot waktu."
+                    'message' => "Jadwal Ditolak: Guru '{$teacherNames[$id]}' memiliki beban {$hours} JP (> 30 JP), namun meminta hari libur. Guru dengan beban mengajar super padat di atas 30 JP tidak diperbolehkan memiliki hari libur khusus untuk menghindari kebuntuan/bentrok jadwal."
+                ];
+            }
+
+            // Calculate personal capacity based on unavailable days
+            $personalCapacity = 0;
+            foreach ($this->teachingSlots as $dayName => $daySlots) {
+                if (!in_array($dayName, $unDays)) {
+                    $personalCapacity += count($daySlots);
+                }
+            }
+
+            if ($hours > $personalCapacity) {
+                return [
+                    'success' => false,
+                    'message' => "KEGAGALAN MATEMATIS: Guru '{$teacherNames[$id]}' memiliki total {$hours} jam/pekan, namun hanya tersedia {$personalCapacity} slot waktu karena hari libur yang dipilih. Silakan kurangi jam atau kurangi hari libur guru tersebut."
                 ];
             }
         }
 
         foreach ($classHours as $id => $hours) {
-            if ($hours > $totalSlots) {
+            if ($hours != $totalSlots) {
+                $status = $hours > $totalSlots ? "Kelebihan" : "Kekurangan";
+                $diff = abs($hours - $totalSlots);
                 return [
                     'success' => false,
-                    'message' => "KEGAGALAN MATEMATIS: Kelas '{$classNames[$id]}' memiliki total {$hours} jam/pekan, namun sekolah hanya menyediakan {$totalSlots} slot waktu/pekan. Silakan kurangi mata pelajaran di kelas ini."
+                    'message' => "JADWAL TIDAK SERASI: Kelas '{$classNames[$id]}' memiliki beban {$hours} JP, sedangkan template waktu menyediakan {$totalSlots} JP ({$status} {$diff} JP). Silakan klik tombol 'Cek Keselarasan' dan perbaiki Master Data Penugasan Guru agar beban dan kapasitas persis sama (0 selisih)."
                 ];
             }
         }
@@ -209,18 +236,21 @@ class AutoScheduleService
         $topTeacher = key($stats['teachers']);
         $topClass = key($stats['classes']);
 
-        $message = "Gagal menyusun jadwal lengkap setelah {$maxAttempts} percobaan cerdas.";
-        $message .= "\n\nKESIMPULAN ANALISIS:";
+        $message = "Sistem belum berhasil menemukan susunan yang bebas bentrok 100% pada percobaan kali ini. Ini adalah hal yang wajar pada jadwal yang padat.\n\n";
+        $message .= "💡 SOLUSI TERBAIK:\n";
+        $message .= "Cukup klik tombol 'Generate Otomatis' sekali lagi. Mengulang klik akan memberikan kombinasi acak baru yang seringkali langsung berhasil.\n\n";
+        
+        $message .= "🔍 ANALISIS TITIK SULIT:\n";
         
         if ($topTeacher) {
-            $message .= "\n- Titik macet utama ada pada Guru '{$topTeacher}'. Cek apakah beliau memiliki jadwal bentrok di sekolah lain atau jam mengajarnya terlalu padat.";
+            $message .= "- Guru yang paling sering bentrok: {$topTeacher}\n";
         }
         
         if ($topClass) {
-            $message .= "\n- Titik macet utama ada pada Kelas '{$topClass}'.";
+            $message .= "- Kelas yang paling buntu: {$topClass}\n";
         }
 
-        $message .= "\n\nSaran: Coba kurangi sedikit jam di Master Data Mata Pelajaran atau pecah jam mengajar menjadi blok yang lebih kecil.";
+        $message .= "\n(Jika Anda sudah mengklik ulang lebih dari 3 kali dan terus macet di guru yang sama, pertimbangkan untuk melonggarkan hari liburnya).";
 
         return [
             'success' => false,
@@ -255,7 +285,12 @@ class AutoScheduleService
             // Formula: Size is the biggest constraint, followed by Cross-Class Connectivity, then Total JP.
             $b['difficulty'] = ($b['size'] * 100) + ($tConn * 10) + $tJP;
             
-            // Add a small random jitter to allow different paths across 500 attempts
+            // [NEW] Extreme priority for PJOK/Sports to ensure they get morning slots
+            if ($this->isMorningPriority($b['subject_name'])) {
+                $b['difficulty'] += 5000;
+            }
+
+            // Add a small random jitter to allow different paths across attempts
             $b['difficulty'] += rand(0, 10);
             
             return $b;
@@ -286,33 +321,32 @@ class AutoScheduleService
 
         $this->template = $activeProfile;
         
-        $days    = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-        $maxDays = $profile->school_days ?? 6;
+        $teachingSlots = [];
         $rawSlots = $activeProfile['slots'] ?? [];
+        foreach ($rawSlots as $dayName => $slots) {
+            if (empty($slots)) {
+                continue;
+            }
 
-        foreach ($days as $index => $day) {
-            if ($index >= $maxDays) continue;
-
-            // Actual format: slots keyed by day name → array of {jam_ke, mulai, selesai}
-            $daySlots = $rawSlots[$day] ?? [];
-
-            if (empty($daySlots)) continue;
-
-            // Normalize to internal format used by solve()
-            $normalized = [];
-            foreach ($daySlots as $slot) {
-                $normalized[] = [
-                    'period'     => $slot['jam_ke']  ?? 0,
-                    'start_time' => $slot['mulai']   ?? '',
-                    'end_time'   => $slot['selesai'] ?? '',
+            $parsed = [];
+            foreach ($slots as $idx => $s) {
+                if (!isset($s['jam_ke']) || !isset($s['mulai']) || !isset($s['selesai'])) {
+                    continue;
+                }
+                $parsed[] = [
+                    'period'     => (int) $s['jam_ke'],
+                    'start_time' => $s['mulai'],
+                    'end_time'   => $s['selesai'],
                 ];
             }
 
-            // Sort by period number and store
-            usort($normalized, fn($a, $b) => $a['period'] <=> $b['period']);
-            $this->teachingSlots[$day] = $normalized;
+            if (!empty($parsed)) {
+                usort($parsed, fn($a, $b) => $a['period'] <=> $b['period']);
+                $teachingSlots[$dayName] = $parsed;
+            }
         }
 
+        $this->teachingSlots = $teachingSlots;
         return !empty($this->teachingSlots);
     }
 
@@ -329,19 +363,19 @@ class AutoScheduleService
             // 4h -> [2, 2]
             // 5h -> [3, 2]
             // 6h -> [3, 3]
-            if ($hours <= 3) {
-                $split = [$hours];
-            } elseif ($hours == 4) {
-                $split = [2, 2];
+            // Optimized Split per user requirements:
+            if ($hours == 6) {
+                $split = [3, 3]; 
             } elseif ($hours == 5) {
-                $split = [3, 2];
-            } elseif ($hours == 6) {
-                $split = [3, 3];
+                $split = [3, 2]; 
+            } elseif ($hours == 4) {
+                $split = [2, 2]; // Mandatory split for flexibility
+            } elseif ($hours == 3) {
+                $split = [3]; 
+            } elseif ($hours == 2) {
+                $split = [2];
             } else {
-                // Fallback for > 6 if exists
-                $split = array_fill(0, floor($hours / 3), 3);
-                if ($hours % 3 >= 2) $split[] = $hours % 3;
-                elseif ($hours % 3 == 1) $split[count($split)-1]++; // Avoid 1h sessions
+                $split = [$hours];
             }
 
             foreach ($split as $blockSize) {
@@ -403,11 +437,22 @@ class AutoScheduleService
             shuffle($remaining);
             $failed = false;
 
-            foreach ($days as $day) {
+            $shuffledDays = $days;
+            shuffle($shuffledDays);
+
+            foreach ($shuffledDays as $day) {
                 $target = count($this->teachingSlots[$day]);
                 // Pass list of subjects and teachers already placed on this day (empty at start)
                 $usedSubjectsToday = [];
                 $usedTeachersToday = [];
+                
+                // Add teachers who are unavailable on this day to usedTeachersToday
+                foreach ($this->teacherAvailability as $tId => $unDays) {
+                    if (in_array($day, $unDays)) {
+                        $usedTeachersToday[] = (int)$tId;
+                    }
+                }
+
                 $found = $this->findCombinationNoRepeat($remaining, $target, $usedSubjectsToday, $usedTeachersToday);
                 if (!$found) { $failed = true; break; }
 
@@ -423,7 +468,7 @@ class AutoScheduleService
 
     protected function balanceHeatmap(&$grid)
     {
-        $maxSwaps = 1500; // Increase swaps but keep it efficient
+        $maxSwaps = 5000; // Increased to find a zero-overload state in tight schedules
         $lastOverload = null;
         $stuckCount = 0;
 
@@ -502,7 +547,10 @@ class AutoScheduleService
     {
         foreach ($heatmap as $tId => $days) {
             foreach ($days as $day => $load) {
-                $capacity = count($this->teachingSlots[$day]);
+                // Capacity is 0 if teacher is unavailable on this day
+                $unDays = $this->teacherAvailability[$tId] ?? [];
+                $capacity = in_array($day, $unDays) ? 0 : count($this->teachingSlots[$day]);
+                
                 if ($load > $capacity) {
                     return ['teacher_id' => $tId, 'day' => $day, 'load' => $load];
                 }
@@ -596,93 +644,164 @@ class AutoScheduleService
     {
         $slots = $this->teachingSlots[$day];
         $classes = array_keys($grid);
+        $totalSlots = count($slots);
 
-        // Try greedy placement with random restarts for this day
-        for ($retry = 0; $retry < 300; $retry++) {
-            $daySchedules = [];
-            $occupiedInDay = []; // [period][teacher_id]
-            $success = true;
-
-            $shuffledClasses = $classes;
-            shuffle($shuffledClasses);
-
-            foreach ($shuffledClasses as $classId) {
-                $blocks = $grid[$classId][$day];
-                shuffle($blocks);
-                
-                // For each class, try to find a valid permutation for this day
-                // In a balanced heatmap, a random permutation usually fits quickly.
-                $placedClass = false;
-                $maxPerms = 30;
-
-                for ($pIdx = 0; $pIdx < $maxPerms; $pIdx++) {
-                    $p = $blocks;
-                    // Priority Shuffle: Try to put Olahraga/PJOK at the beginning to get morning slots
-                    shuffle($p);
-                    usort($p, function($a, $b) use ($pIdx) {
-                        // 70% of attempts will strictly prioritize morning subjects to the front
-                        if ($pIdx < 20) {
-                            $aPrio = $this->isMorningPriority($a['subject_name']);
-                            $bPrio = $this->isMorningPriority($b['subject_name']);
-                            if ($aPrio && !$bPrio) return -1;
-                            if (!$aPrio && $bPrio) return 1;
-                        }
-                        return 0; // Maintain shuffle order for others
-                    });
-
-                    $currentPeriod = 1;
-                    $pPossible = true;
-                    $tempPlaced = [];
-
-                    foreach ($p as $block) {
-                        $startIndex = $currentPeriod - 1;
-                        
-                        // Soft Constraint: Olahraga/PJOK should ideally start at Jam 1, 2, or 3 (avoiding afternoon)
-                        // Period index 0=Jam 1, 1=Jam 2, 2=Jam 3.
-                        if ($pIdx < 15 && $this->isMorningPriority($block['subject_name'])) {
-                            if ($startIndex > 2) { // Starts at Jam 4 or later
-                                $pPossible = false;
-                                break;
-                            }
-                        }
-
-                        if ($startIndex + $block['size'] > count($slots)) { $pPossible = false; break; }
-
-                        for ($j = 0; $j < $block['size']; $j++) {
-                            $period = $slots[$startIndex + $j]['period'];
-                            if (isset($occupiedInDay[$period][$block['teacher_id']])) {
-                                $pPossible = false; break;
-                            }
-                        }
-
-                        if (!$pPossible) break;
-                        $tempPlaced[] = ['block' => $block, 'periods' => array_slice($slots, $startIndex, $block['size'])];
-                        $currentPeriod += $block['size'];
-                    }
-
-                    if ($pPossible) {
-                        foreach ($tempPlaced as $tp) {
-                            foreach ($tp['periods'] as $slot) {
-                                $occupiedInDay[$slot['period']][$tp['block']['teacher_id']] = true;
-                            }
-                            $daySchedules[] = $this->createScheduleData($tp['block'], $day, $tp['periods']);
-                        }
-                        $placedClass = true;
-                        break;
-                    }
-                }
-
-                if (!$placedClass) {
-                    $success = false;
-                    break;
-                }
+        // 1. Generate all valid permutations for each class
+        $classPermutations = [];
+        foreach ($classes as $classId) {
+            $blocks = $grid[$classId][$day];
+            $perms = $this->generateAllValidPermutations($blocks, $totalSlots, $slots);
+            if (empty($perms)) {
+                return null; // Impossible to even satisfy single-class constraints (e.g. PJOK)
             }
+            // Shuffle permutations so we don't always pick the same one
+            shuffle($perms);
+            $classPermutations[$classId] = $perms;
+        }
 
-            if ($success) return $daySchedules;
+        // 2. Backtracking DFS to find a globally valid daily schedule
+        $occupiedInDay = [];
+        $resultSchedules = [];
+        
+        $success = $this->backtrackDaySchedule($classes, 0, $classPermutations, $occupiedInDay, $resultSchedules);
+        
+        if ($success) {
+            return $this->formatBacktrackSchedules($resultSchedules, $day);
         }
 
         return null;
     }
+
+    protected function generateAllValidPermutations($blocks, $totalSlots, $slots)
+    {
+        $validPerms = [];
+        $this->permuteBlocks($blocks, 0, count($blocks) - 1, $totalSlots, $slots, $validPerms);
+        return $validPerms;
+    }
+
+    protected function permuteBlocks(&$blocks, $l, $r, $totalSlots, $slots, &$validPerms)
+    {
+        if ($l == $r) {
+            $currentPos = 0;
+            $placed = [];
+            $isValid = true;
+            
+            foreach ($blocks as $b) {
+                if ($currentPos + $b['size'] > $totalSlots) {
+                    $isValid = false; break;
+                }
+                
+                // PJOK must end by Jam 6
+                if ($this->isMorningPriority($b['subject_name']) && ($currentPos + $b['size'] > 6)) {
+                    $isValid = false; break;
+                }
+                
+                $placed[] = [
+                    'block' => $b,
+                    'periods' => array_slice($slots, $currentPos, $b['size'])
+                ];
+                $currentPos += $b['size'];
+            }
+            
+            if ($isValid) {
+                // Check if this permutation is already added (blocks can have same size and teacher)
+                $sig = serialize($placed);
+                static $seen = [];
+                if (!isset($seen[$sig])) {
+                    $seen[$sig] = true;
+                    $validPerms[] = $placed;
+                }
+            }
+        } else {
+            for ($i = $l; $i <= $r; $i++) {
+                $this->swapBlocks($blocks, $l, $i);
+                $this->permuteBlocks($blocks, $l + 1, $r, $totalSlots, $slots, $validPerms);
+                $this->swapBlocks($blocks, $l, $i); // backtrack
+            }
+        }
+    }
+
+    protected function swapBlocks(&$arr, $i, $j) {
+        $temp = $arr[$i];
+        $arr[$i] = $arr[$j];
+        $arr[$j] = $temp;
+    }
+
+    protected function backtrackDaySchedule($classes, $classIndex, &$classPermutations, &$occupiedInDay, &$resultSchedules)
+    {
+        static $steps = 0;
+        if ($classIndex === 0) {
+            $steps = 0; // Reset counter at the start of a new day search
+        }
+        
+        if ($steps++ > 2000) {
+            return false; // Fail fast if search space is too large/unresolvable
+        }
+
+        if ($classIndex == count($classes)) {
+            return true; // All classes scheduled without conflict
+        }
+
+        $classId = $classes[$classIndex];
+        $perms = $classPermutations[$classId];
+
+        foreach ($perms as $perm) {
+            // Check if this permutation conflicts with occupiedInDay
+            $conflict = false;
+            foreach ($perm as $p) {
+                $tId = $p['block']['teacher_id'];
+                foreach ($p['periods'] as $s) {
+                    $period = $s['period'];
+                    if (isset($occupiedInDay[$period][$tId])) {
+                        $conflict = true;
+                        break 2;
+                    }
+                }
+            }
+
+            if (!$conflict) {
+                // Apply placement
+                foreach ($perm as $p) {
+                    $tId = $p['block']['teacher_id'];
+                    foreach ($p['periods'] as $s) {
+                        $occupiedInDay[$s['period']][$tId] = true;
+                    }
+                }
+                
+                $resultSchedules[$classId] = $perm;
+
+                // Recurse to next class
+                if ($this->backtrackDaySchedule($classes, $classIndex + 1, $classPermutations, $occupiedInDay, $resultSchedules)) {
+                    return true;
+                }
+
+                // Remove placement (Backtrack)
+                foreach ($perm as $p) {
+                    $tId = $p['block']['teacher_id'];
+                    foreach ($p['periods'] as $s) {
+                        unset($occupiedInDay[$s['period']][$tId]);
+                    }
+                }
+                unset($resultSchedules[$classId]);
+            }
+        }
+
+        return false;
+    }
+
+    protected function formatBacktrackSchedules($classSchedules, $day)
+    {
+        $daySchedules = [];
+        foreach ($classSchedules as $placed) {
+            foreach ($placed as $p) {
+                $daySchedules[] = $this->createScheduleData($p['block'], $day, $p['periods']);
+            }
+        }
+        return $daySchedules;
+    }
+
+
+
 
     protected function findCombinationNoRepeat($blocks, $target, $usedSubjects, $usedTeachers)
     {
@@ -800,4 +919,7 @@ class AutoScheduleService
                str_contains($name, 'panyas');
     }
 
+    public function getTeacherAvailability() { return $this->teacherAvailability; }
+    public function getTeachingSlots() { return $this->teachingSlots; }
+    public function getTemplate() { return $this->template; }
 }

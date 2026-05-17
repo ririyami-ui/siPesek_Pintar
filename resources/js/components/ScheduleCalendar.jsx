@@ -18,7 +18,6 @@ import SchedulingReportModal from './SchedulingReportModal';
 import SchedulingSyncModal from './SchedulingSyncModal';
 import PrintScheduleModal from './PrintScheduleModal';
 import { Calculator as CalculatorIcon, Printer, Download } from 'lucide-react';
-import AutoScheduleService from '../utils/AutoScheduleService';
 
 // Set moment locale to Indonesian
 moment.locale('id');
@@ -170,68 +169,64 @@ const ScheduleCalendar = () => {
     const confirmAutoGenerate = async () => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
         
-        // --- VALIDASI AWAL ---
-        if (!userProfile) {
-            toast.error('Profil sekolah belum dimuat.');
-            return;
-        }
-
-        if (!assignments || assignments.length === 0) {
-            setReportMessage("Data Penugasan Guru masih kosong. Silakan isi Penugasan Guru terlebih dahulu di Master Data.");
-            setShowReportModal(true);
-            return;
-        }
-
-        // Delay sedikit agar modal konfirmasi benar-benar tertutup dan UI tidak freeze
         setIsGeneratingAuto(true);
-        const toastId = toast.loading('Menyiapkan data...');
+        const toastId = toast.loading('Menyusun jadwal secara otomatis (mungkin memakan waktu beberapa menit)...');
 
-        setTimeout(async () => {
-            try {
-                console.log("AutoSchedule: Starting...");
+        try {
+            console.log("AutoSchedule: Starting Web Worker...");
 
-                const adminData = {
-                    profile: userProfile,
-                    assignments: assignments,
-                    classes: classes,
-                    subjects: subjects
-                };
+            const adminData = {
+                profile: userProfile,
+                assignments: assignments,
+                classes: classes,
+                subjects: subjects
+            };
 
-                const service = new AutoScheduleService(adminData);
-                
-                const result = await service.generate((attempt, max, customMessage) => {
-                    if (customMessage) {
-                        console.log(`[UI-Progress] ${customMessage}`);
-                        toast.loading(customMessage, { id: toastId });
+            const worker = new Worker('/workers/scheduleWorker.js');
+
+            worker.onmessage = async (e) => {
+                const { type, attempt, message, result, error } = e.data;
+
+                if (type === 'progress') {
+                    toast.loading(message, { id: toastId });
+                } else if (type === 'done') {
+                    worker.terminate();
+                    
+                    if (result.success) {
+                        toast.loading('Menyimpan jadwal ke server...', { id: toastId });
+                        try {
+                            const res = await api.post('/schedules/bulk-store', {
+                                schedules: result.schedules
+                            });
+                            toast.success(res.data.message || 'Jadwal berhasil disusun secara otomatis!', { id: toastId });
+                            await fetchSchedules(user);
+                            setIsGeneratingAuto(false);
+                        } catch (err) {
+                            toast.error('Gagal menyimpan jadwal ke server.', { id: toastId });
+                            setIsGeneratingAuto(false);
+                        }
                     } else {
-                        console.log(`[UI-Progress] Simulasi #${attempt}`);
-                        toast.loading(`Mencari solusi bentrok (Simulasi #${attempt})...`, { id: toastId });
+                        // Failed to find a solution or math failed
+                        setReportMessage(result.message);
+                        setReportErrors(result.errors || []);
+                        setShowReportModal(true);
+                        toast.dismiss(toastId);
+                        setIsGeneratingAuto(false);
                     }
-                });
-
-                if (!result.success) {
-                    setReportMessage(result.message);
-                    setReportErrors(result.errors || []);
-                    setShowReportModal(true);
-                    toast.dismiss(toastId);
+                } else if (type === 'error') {
+                    worker.terminate();
+                    toast.error('Sistem Error: ' + error, { id: toastId });
                     setIsGeneratingAuto(false);
-                    return;
                 }
+            };
 
-                toast.loading('Menyimpan jadwal ke server...', { id: toastId });
-                const res = await api.post('/schedules/bulk-store', {
-                    schedules: result.schedules
-                });
+            worker.postMessage(adminData);
 
-                toast.success(res.data.message || 'Jadwal berhasil disimpan!', { id: toastId });
-                await fetchSchedules(user);
-            } catch (error) {
-                console.error("Auto-generate error:", error);
-                toast.error('Gagal menyusun jadwal.', { id: toastId });
-            } finally {
-                setIsGeneratingAuto(false);
-            }
-        }, 300);
+        } catch (error) {
+            console.error("Auto-generate error:", error);
+            toast.error('Gagal menyusun jadwal otomatis.', { id: toastId });
+            setIsGeneratingAuto(false);
+        }
     };
 
     const fetchHolidays = async () => {

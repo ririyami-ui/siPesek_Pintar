@@ -35,6 +35,7 @@ class TeacherController extends Controller
             'nip' => 'nullable|string',
             'username' => 'nullable|string',
             'password' => 'nullable|string',
+            'unavailable_days' => 'nullable|array',
         ]);
 
         return \Illuminate\Support\Facades\DB::transaction(function () use ($validated) {
@@ -94,6 +95,7 @@ class TeacherController extends Controller
                 'username' => $username,
                 'auth_user_id' => $authUser->id,
                 'created_by' => Auth::id(), // Admin who updated/created
+                'unavailable_days' => $validated['unavailable_days'] ?? null,
             ];
 
             if ($teacher) {
@@ -131,6 +133,7 @@ class TeacherController extends Controller
             'nip' => 'nullable|string',
             'username' => 'nullable|string',
             'password' => 'nullable|string',
+            'unavailable_days' => 'nullable|array',
         ]);
 
         $teacherData = $validated;

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import 'moment/locale/id'; // Import Indonesian locale
-import { Clock, CheckCircle, PlayCircle, Bell, CalendarOff, Calendar, Gift, Coffee, Sparkles, Smile, FileText, Book, Zap, RefreshCw, UserCheck, AlertCircle, BookOpen } from 'lucide-react';
+import { Clock, CheckCircle, PlayCircle, Bell, CalendarOff, Calendar, Gift, Coffee, Sparkles, Smile, FileText, Book, Zap, RefreshCw, UserCheck, AlertCircle, BookOpen, ClipboardList, GraduationCap } from 'lucide-react';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import Countdown from './Countdown'; // Import Countdown component
 import { getTopicForSchedule } from '../utils/topicUtils';
@@ -27,6 +28,7 @@ moment.updateLocale('id', {
 });
 
 const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, classes, carryOverMap, activeSemester, academicYear, userProfile }) => {
+  const navigate = useNavigate();
   const [notifiedSchedules, setNotifiedSchedules] = useState(new Set());
   const [permissionGranted, setPermissionGranted] = useState(null);
 
@@ -584,6 +586,34 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
                           {status === 'paused' ? 'Sedang Istirahat' : message}
                         </span>
                       </div>
+
+                      {/* Action Buttons */}
+                      {(status === 'ongoing' || status === 'upcoming-soon' || isAssignment) && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => navigate(`/absensi?classId=${schedule.class_id || schedule.classId}&subjectId=${schedule.subject_id || schedule.subjectId}&date=${moment().format('YYYY-MM-DD')}`)}
+                            className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95 ${currentVariant.badge}`}
+                            title="Presensi"
+                          >
+                            <ClipboardList size={20} />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/jurnal?classId=${schedule.class_id || schedule.classId}&subjectId=${schedule.subject_id || schedule.subjectId}&date=${moment().format('YYYY-MM-DD')}`)}
+                            className="flex items-center justify-center w-10 h-10 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600"
+                            title="Jurnal"
+                          >
+                            <FileText size={20} />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/nilai?classId=${schedule.class_id || schedule.classId}&subjectId=${schedule.subject_id || schedule.subjectId}&date=${moment().format('YYYY-MM-DD')}`)}
+                            className="flex items-center justify-center w-10 h-10 rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600"
+                            title="Nilai"
+                          >
+                            <GraduationCap size={20} />
+                          </button>
+                        </div>
+                      )}
+                      
                       {(() => {
                         const carryOver = carryOverMap && carryOverMap[`${schedule.class}-${schedule.subject}`];
                         const topic = getTopicForSchedule(schedule, currentTime, programs || [], classes || [], activeSemester, academicYear);

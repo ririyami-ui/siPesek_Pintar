@@ -101,6 +101,29 @@ class GradeController extends Controller
             'semester' => 'required|string',
             'academic_year' => 'required|string',
         ]);
+
+        // [SECURITY] Ensure non-admin teachers can only input grades for classes they teach
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (!$teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'
+                ], 403);
+            }
+
+            // Check if teacher is assigned to this class and subject
+            $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                ->where('class_id', $request->class_id)
+                ->where('subject_id', $request->subject_id)
+                ->exists();
+
+            if (!$isAssigned) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses untuk memasukkan nilai di kelas/mata pelajaran ini.'
+                ], 403);
+            }
+        }
         
         try {
             DB::beginTransaction();

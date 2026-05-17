@@ -47,6 +47,7 @@ class AutoScheduleService {
             this.teachingSlots = {};
         }
         this.config = { maxAttempts: 1000 }; 
+        this.teacherAvailability = {}; // [teacher_id] = [unavailable_days]
     }
 
     async generate(onProgress) {
@@ -60,12 +61,27 @@ class AutoScheduleService {
                 return { success: false, message: "Template Waktu Kosong." };
             }
 
+            // Map teacher availability
+            this.teacherAvailability = {};
+            this.assignments.forEach(as => {
+                const tId = as.teacher?.auth_user_id || as.teacher_id;
+                if (as.teacher && !this.teacherAvailability[tId]) {
+                    this.teacherAvailability[tId] = as.teacher.unavailable_days || [];
+                }
+            });
+
             const blocks = this.prepareBlocks(this.assignments);
             if (onProgress) onProgress(1, 1, `Menyiapkan ${blocks.length} blok pelajaran...`);
             console.log(`AutoSchedule: Prepared ${blocks.length} blocks for distribution.`);
 
             if (blocks.length === 0) {
                 return { success: false, message: "Data Penugasan Guru Kosong atau JP bernilai 0." };
+            }
+
+            // 3. Mathematical Pre-flight Validation
+            const mathCheck = this.validateMath(this.assignments);
+            if (!mathCheck.success) {
+                return mathCheck;
             }
 
             // Main attempts loop
@@ -159,6 +175,38 @@ class AutoScheduleService {
         return blocks;
     }
 
+    validateMath(assignments) {
+        const teacherHours = {};
+        const teacherNames = {};
+
+        assignments.forEach(as => {
+            const tId = as.teacher?.auth_user_id || as.teacher_id;
+            const hours = Number(as.subject?.weekly_hours || 0);
+            teacherHours[tId] = (teacherHours[tId] || 0) + hours;
+            teacherNames[tId] = as.teacher?.name || 'Unknown';
+        });
+
+        for (const tId in teacherHours) {
+            const hours = teacherHours[tId];
+            const unDays = this.teacherAvailability[tId] || [];
+            let personalCapacity = 0;
+            
+            Object.keys(this.teachingSlots).forEach(day => {
+                if (!unDays.includes(day)) {
+                    personalCapacity += (this.teachingSlots[day] || []).length;
+                }
+            });
+
+            if (hours > personalCapacity) {
+                return {
+                    success: false,
+                    message: `KEGAGALAN MATEMATIS: Guru '${teacherNames[tId]}' memiliki total ${hours} jam/pekan, namun hanya tersedia ${personalCapacity} slot waktu karena hari libur yang dipilih. Silakan kurangi jam atau kurangi hari libur guru tersebut.`
+                };
+            }
+        }
+        return { success: true };
+    }
+
     async initializeValidClassSchedules(blocks, days, onProgress) {
         const schedule = [];
         const classGroups = {};
@@ -201,7 +249,8 @@ class AutoScheduleService {
             const targetJP = this.teachingSlots[day].length;
             
             // Find all possible combinations of blocks that sum up to exactly targetJP
-            const combinations = this.findExactJPCombinations(currentRemaining, targetJP);
+            // Filter combinations: Teachers must be available on this day
+            const combinations = this.findExactJPCombinations(currentRemaining, targetJP, day);
             this.shuffle(combinations); // Try different patterns (3-2-3 vs 3-3-2 etc)
 
             for (const combo of combinations) {
@@ -230,7 +279,7 @@ class AutoScheduleService {
         return null;
     }
 
-    findExactJPCombinations(blocks, target) {
+    findExactJPCombinations(blocks, target, day) {
         const results = [];
         const solve = (start, currentSum, indices, usedSubjects) => {
             if (currentSum === target) {
@@ -241,6 +290,12 @@ class AutoScheduleService {
 
             for (let i = start; i < blocks.length; i++) {
                 if (usedSubjects.has(blocks[i].subject_id)) continue;
+                
+                // Hard Constraint: Teacher Availability
+                const teacherId = blocks[i].teacher_id;
+                const unDays = this.teacherAvailability[teacherId] || [];
+                if (unDays.includes(day)) continue;
+
                 usedSubjects.add(blocks[i].subject_id);
                 indices.push(i);
                 if (solve(i + 1, currentSum + blocks[i].size, indices, usedSubjects)) return true;
@@ -355,10 +410,17 @@ class AutoScheduleService {
                 }
                 teacherOccupied[key] = true;
 
-                // Penalty for sports in afternoon (Soft)
-                // Jam ke 5, 6, 7, 8 are afternoon
-                if (isSports && currentJam > 4) {
-                    score += 1;
+                // Penalty for teacher unavailable day (Hard)
+                const unDays = this.teacherAvailability[b.teacher_id] || [];
+                if (unDays.includes(b.day)) {
+                    score += 1000;
+                }
+
+                // Penalty for sports in afternoon (Hard)
+                // Jam ke 7, 8 are afternoon
+                // New requirement: PJOK must end by Jam 6 (period index 0-5)
+                if (isSports && currentJam > 6) {
+                    score += 1000;
                 }
             }
         });

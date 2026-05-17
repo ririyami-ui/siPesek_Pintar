@@ -160,7 +160,7 @@ export const generateDetailedAttendanceRecapPDF = (data, dates, schoolName, star
     const row = {
       no: index + 1,
       name: student.name,
-      gender: student.gender === 'Laki-laki' ? 'L' : (student.gender === 'Perempuan' ? 'P' : ''),
+      gender: (student.gender === 'L' || student.gender === 'Laki-laki') ? 'L' : ((student.gender === 'P' || student.gender === 'Perempuan') ? 'P' : ''),
       Sakit: student.Sakit || '-',
       Ijin: student.Ijin || '-',
       Alpha: student.Alpha || '-',

@@ -112,41 +112,32 @@ export default function DashboardPage() {
       });
       students = Array.from(uniqueStudentsMap.values());
 
-      // [SYNC OPTIMIZATION] If admin, we can use basic stats from monitoringData for consistency
-      // but we still needed students list for ranking below.
-      if (userProfile?.role?.toLowerCase() === 'admin' && monitoringData?.stats?.student_stats) {
-          const mStats = monitoringData.stats.student_stats;
-          setStudentStats(prev => ({
-              ...prev,
-              totalStudents: mStats.total || 0,
-              maleStudents: mStats.male || 0,
-              femaleStudents: mStats.female || 0,
-          }));
-      } else {
-          let total = 0, male = 0, female = 0;
-          const byRombel = {};
+      let total = 0, male = 0, female = 0;
+      const byRombel = {};
 
-          students.forEach(student => {
-            total++;
-            const gender = student.gender?.toLowerCase() || '';
-            const isMale = gender === 'laki-laki' || gender === 'l';
-            const isFemale = gender === 'perempuan' || gender === 'p';
+      students.forEach(student => {
+        total++;
+        const gender = student.gender?.toLowerCase() || '';
+        const isMale = gender === 'laki-laki' || gender === 'l' || gender === 'pria';
+        const isFemale = gender === 'perempuan' || gender === 'p' || gender === 'wanita';
 
-            if (isMale) male++;
-            else if (isFemale) female++;
+        if (isMale) male++;
+        else if (isFemale) female++;
 
-            const rombel = student.rombel || student.class_name || student.class?.rombel || 'Tanpa Kelas';
+        const rombel = student.rombel || student.class_name || student.class?.rombel || 'Tanpa Kelas';
 
-            if (!byRombel[rombel]) {
-              byRombel[rombel] = { total: 0, male: 0, female: 0, students: [] };
-            }
-            byRombel[rombel].total++;
-            if (isMale) byRombel[rombel].male++;
-            else if (isFemale) byRombel[rombel].female++;
-            byRombel[rombel].students.push(student);
-          });
-          setStudentStats({ totalStudents: total, maleStudents: male, femaleStudents: female, studentsByRombel: byRombel });
-      }
+        if (!byRombel[rombel]) {
+          byRombel[rombel] = { total: 0, male: 0, female: 0, students: [] };
+        }
+        byRombel[rombel].total++;
+        
+        // Correct male/female count per rombel
+        if (isMale) byRombel[rombel].male++;
+        else if (isFemale) byRombel[rombel].female++;
+        
+        byRombel[rombel].students.push(student);
+      });
+      setStudentStats({ totalStudents: total, maleStudents: male, femaleStudents: female, studentsByRombel: byRombel });
 
       // Fetch Top Students (lowest infractions)
       const infractionsResponse = await api.get('/infractions', {
@@ -409,7 +400,7 @@ export default function DashboardPage() {
             <span className="bg-gradient-to-r from-blue-900 to-indigo-900 dark:from-blue-100 dark:to-indigo-200 bg-clip-text text-transparent">Rekap Siswa</span>
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"> {/* Grid for total counts */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="p-4 rounded-2xl border border-green-200/50 dark:border-green-800/50 bg-green-50/50 dark:bg-green-900/20 text-green-800 dark:text-green-200 flex flex-col items-center justify-center shadow-sm">
               <p className="text-xs font-bold uppercase tracking-widest opacity-70">Total Siswa</p>
               <p className="text-4xl font-black">{studentStats.totalStudents}</p>
@@ -424,6 +415,33 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Full Width Gender Ratio Bar for School */}
+          <div className="mb-8 px-1">
+             <div className="flex justify-between items-end mb-2 px-1">
+                <div className="flex flex-col">
+                   <span className="text-[10px] font-black uppercase tracking-widest opacity-40 leading-none mb-1">Rasio Keseluruhan</span>
+                   <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                      <span className="text-xs font-black text-blue-700 dark:text-blue-300">L: {Math.round((studentStats.maleStudents / studentStats.totalStudents) * 100)}%</span>
+                   </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                   <span className="text-xs font-black text-pink-700 dark:text-pink-300">P: {Math.round((studentStats.femaleStudents / studentStats.totalStudents) * 100)}%</span>
+                   <div className="w-2 h-2 rounded-full bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
+                </div>
+             </div>
+             <div className="w-full h-3 bg-gray-100 dark:bg-gray-800/50 rounded-full overflow-hidden flex shadow-inner border border-gray-200 dark:border-gray-800">
+                <div 
+                   className="h-full bg-gradient-to-r from-blue-600 to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-1000" 
+                   style={{ width: `${(studentStats.maleStudents / studentStats.totalStudents) * 100}%` }}
+                />
+                <div 
+                   className="h-full bg-gradient-to-r from-pink-400 to-pink-600 shadow-[0_0_15px_rgba(236,72,153,0.3)] transition-all duration-1000" 
+                   style={{ width: `${(studentStats.femaleStudents / studentStats.totalStudents) * 100}%` }}
+                />
+             </div>
+          </div>
+
           {Object.keys(studentStats.studentsByRombel).length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-3 flex items-center gap-2">
@@ -431,17 +449,53 @@ export default function DashboardPage() {
                 <span>Siswa per Rombel:</span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"> {/* Adjusted grid layout for 2/3 width */}
-                {Object.entries(studentStats.studentsByRombel).sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true })).map(([rombel, data]) => (
+                {Object.entries(studentStats.studentsByRombel).sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true })).map(([rombel, data]) => {
+                  const classInfo = classes.find(c => c.rombel === rombel);
+                  const waliName = classInfo?.wali?.name || 'Wali Belum Diatur';
+
+                  return (
                   <Link to={`/analisis-rombel/${rombel}`} key={rombel} className="block p-4 rounded-[1.5rem] border border-blue-200/30 dark:border-blue-800/30 bg-white/40 dark:bg-black/40 backdrop-blur-sm text-blue-800 dark:text-blue-200 flex items-center space-x-4 hover:bg-blue-500 hover:text-white transition-all duration-500 group shadow-sm hover:shadow-blue-500/20 md:hover:scale-[1.03]">
                     <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-900 group-hover:bg-white/20 transition-colors">
                       <Users size={20} className="flex-shrink-0" />
                     </div>
-                    <div>
-                      <p className="text-md font-black tracking-tight">{rombel}</p>
-                      <p className="text-[10px] font-bold uppercase opacity-60">Total: {data.total} (L:{data.male}, P:{data.female})</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-md font-black tracking-tight leading-none mb-1">{rombel}</p>
+                      <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 group-hover:text-white/80 transition-colors truncate mb-1.5">
+                         {waliName}
+                      </p>
+                      <p className="text-[10px] font-bold uppercase opacity-60">Siswa: {data.total}</p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <div className="flex items-center gap-1 bg-blue-500/10 dark:bg-blue-500/20 px-2 py-0.5 rounded-full border border-blue-500/20">
+                          <span className="text-[8px] font-black text-blue-600 dark:text-blue-400 uppercase">L:</span>
+                          <span className="text-[10px] font-black text-blue-700 dark:text-blue-300">{data.male}</span>
+                        </div>
+                        <div className="flex items-center gap-1 bg-pink-500/10 dark:bg-pink-500/20 px-2 py-0.5 rounded-full border border-pink-500/20">
+                          <span className="text-[8px] font-black text-pink-600 dark:text-pink-400 uppercase">P:</span>
+                          <span className="text-[10px] font-black text-pink-700 dark:text-pink-300">{data.female}</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Mini Gender Chart */}
+                    <div className="w-24 flex flex-col gap-1 items-end ml-2">
+                       <div className="flex justify-between w-full text-[8px] font-black tracking-tighter mb-0.5">
+                          <span className="text-blue-600 dark:text-blue-400">{Math.round((data.male / data.total) * 100)}%</span>
+                          <span className="text-pink-600 dark:text-pink-400">{Math.round((data.female / data.total) * 100)}%</span>
+                       </div>
+                       <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex shadow-inner border border-gray-300/20">
+                          <div 
+                            className="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
+                            style={{ width: `${(data.male / data.total) * 100}%` }}
+                          />
+                          <div 
+                            className="h-full bg-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]" 
+                            style={{ width: `${(data.female / data.total) * 100}%` }}
+                          />
+                       </div>
+                       <span className="text-[7px] font-black opacity-40 uppercase tracking-widest">Rasio Gender</span>
                     </div>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

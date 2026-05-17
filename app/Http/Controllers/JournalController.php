@@ -56,6 +56,29 @@ class JournalController extends Controller
             'user_id' => 'nullable|exists:users,id',
         ]);
 
+        // [SECURITY] Ensure non-admin teachers can only create journals for classes they teach
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (!$teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'
+                ], 403);
+            }
+
+            // Check if teacher is assigned to this class and subject
+            $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                ->where('class_id', $validated['class_id'])
+                ->where('subject_id', $validated['subject_id'])
+                ->exists();
+
+            if (!$isAssigned) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses untuk mengisi jurnal untuk kelas/mata pelajaran ini.'
+                ], 403);
+            }
+        }
+
         if (!auth()->user()->isAdmin() || !isset($validated['user_id'])) {
             $validated['user_id'] = auth()->id();
         }

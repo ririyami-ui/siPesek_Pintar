@@ -33,7 +33,7 @@ const ClassMonitorCard = ({ item, navigate }) => {
     }, [subjects.length]);
 
     return (
-        <div className="group relative bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col h-[420px]">
+        <div className="group relative bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-100 dark:border-gray-800 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden flex flex-col min-h-[420px] h-full">
             {/* Header: Class Name & Global Score */}
             <div className="p-6 pb-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-gray-50 dark:bg-gray-800/50">
                 <div className="flex items-start gap-3">

@@ -719,7 +719,7 @@ export default function StudentMasterData() {
                   <div className="text-gray-400">{student.nisn || '-'}</div>
                 </td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm font-bold text-text-light dark:text-text-dark">{student.name}</td>
-                <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">{student.gender}</td>
+                <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">{normalizeGender(student.gender)}</td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm"><span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs font-bold text-text-muted-light dark:text-text-muted-dark">{student.rombel}</span></td>
                 <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark truncate max-w-[150px]" title={student.address}>{student.address || '-'}</td>
                 {isAdmin && (

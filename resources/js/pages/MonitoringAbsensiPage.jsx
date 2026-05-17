@@ -25,7 +25,8 @@ const ClassAttendanceCard = ({ rombel, schedules, currentTime }) => {
     // Find the relevant schedule to show for this rombel
     const activeSchedule = useMemo(() => {
         // 1. Priority: Currently active - with or without attendance
-        const ongoing = schedules.find(s => s.status === 'berlangsung' || s.status === 'menunggu_absen');
+        // Now including 'terlambat' and 'assignment' to prevent skipping to upcoming
+        const ongoing = schedules.find(s => ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment'].includes(s.status));
         if (ongoing) return ongoing;
 
         // 2. Priority: Next upcoming (Status: belum_mulai)
@@ -252,8 +253,7 @@ const MonitoringAbsensiPage = () => {
             // Check if this rombel has any active or upcoming sessions
             // Include 'menunggu_absen' as active states, but NOT 'alfa' since 'alfa' applies to past classes
             const shouldShow = rombelGroups[rombel].some(s => 
-                s.status === 'berlangsung' || 
-                s.status === 'menunggu_absen' || 
+                ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment'].includes(s.status) || 
                 s.status === 'belum_mulai'
             );
 

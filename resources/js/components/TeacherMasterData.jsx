@@ -7,7 +7,9 @@ import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
 import TeacherCard from './TeacherCard';
 import Modal from './Modal';
-import { Plus, Trash2, UserPlus, Pencil, Upload, Download, UserCheck } from 'lucide-react';
+import { Plus, Trash2, UserPlus, Pencil, Upload, Download, UserCheck, CalendarOff } from 'lucide-react';
+
+const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
 export default function TeacherMasterData() {
     const [teachers, setTeachers] = useState([]);
@@ -23,7 +25,8 @@ export default function TeacherMasterData() {
         name: '',
         nip: '',
         username: '',
-        password: ''
+        password: '',
+        unavailable_days: []
     });
 
     // State for edit modal
@@ -34,7 +37,8 @@ export default function TeacherMasterData() {
         name: '',
         nip: '',
         username: '',
-        password: ''
+        password: '',
+        unavailable_days: []
     });
 
     const [confirmModal, setConfirmModal] = useState({
@@ -96,7 +100,7 @@ export default function TeacherMasterData() {
         toast.promise(promise, {
             loading: 'Menyimpan...',
             success: () => {
-                setNewTeacher({ code: '', name: '', nip: '', username: '', password: '' });
+                setNewTeacher({ code: '', name: '', nip: '', username: '', password: '', unavailable_days: [] });
                 getTeachers();
                 return 'Guru berhasil ditambahkan!';
             },
@@ -146,7 +150,8 @@ export default function TeacherMasterData() {
             name: teacher.name || '',
             nip: teacher.nip || '',
             username: teacher.username || '',
-            password: ''
+            password: '',
+            unavailable_days: teacher.unavailable_days || []
         });
         setIsEditModalOpen(true);
     };
@@ -297,6 +302,31 @@ export default function TeacherMasterData() {
                             />
                         </div>
 
+                        <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-xl border border-purple-100 dark:border-purple-800/30">
+                            <div className="flex items-center gap-2 mb-3">
+                                <CalendarOff size={16} className="text-purple-600 dark:text-purple-400" />
+                                <label className="text-sm font-bold text-purple-600 dark:text-purple-400">Hari Libur Mengajar (Guru tidak akan dijadwalkan pada hari ini)</label>
+                            </div>
+                            <div className="flex flex-wrap gap-3">
+                                {DAYS.map(day => (
+                                    <label key={day} className="flex items-center gap-2 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            className="w-4 h-4 rounded text-purple-600 focus:ring-purple-500 cursor-pointer"
+                                            checked={newTeacher.unavailable_days.includes(day)}
+                                            onChange={(e) => {
+                                                const updated = e.target.checked 
+                                                    ? [...newTeacher.unavailable_days, day]
+                                                    : newTeacher.unavailable_days.filter(d => d !== day);
+                                                setNewTeacher({ ...newTeacher, unavailable_days: updated });
+                                            }}
+                                        />
+                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-purple-600 transition-colors">{day}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+
                         <div className="mt-4 flex justify-end">
                             <StyledButton onClick={handleAddTeacher}>
                                 <Plus className="mr-2" size={16} /> Tambah Data Guru
@@ -436,6 +466,31 @@ export default function TeacherMasterData() {
                                 value={editData.password}
                                 onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                             />
+                        </div>
+
+                        <div className="space-y-2 p-3 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/20">
+                            <div className="flex items-center gap-2">
+                                <CalendarOff size={16} className="text-red-600 dark:text-red-400" />
+                                <label className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Hari Libur Mengajar</label>
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                {DAYS.map(day => (
+                                    <label key={day} className="flex items-center gap-2 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            className="w-3.5 h-3.5 rounded border-red-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                                            checked={editData.unavailable_days.includes(day)}
+                                            onChange={(e) => {
+                                                const updated = e.target.checked 
+                                                    ? [...editData.unavailable_days, day]
+                                                    : editData.unavailable_days.filter(d => d !== day);
+                                                setEditData({ ...editData, unavailable_days: updated });
+                                            }}
+                                        />
+                                        <span className="text-xs font-bold text-gray-600 dark:text-gray-400 group-hover:text-red-600 transition-colors">{day}</span>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
 
                         <div className="flex justify-end gap-3 mt-8">

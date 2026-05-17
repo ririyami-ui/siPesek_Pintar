@@ -54,12 +54,57 @@ const AdminMonitoringDashboard = ({ holiday }) => {
     const data = monitoringData?.data || [];
     const stats = monitoringData?.stats || { total: 0, berlangsung: 0, selesai: 0, alfa: 0, belum_mulai: 0, needs_attention: 0 };
 
-    // Hanya tampilkan kelas yang sedang aktif atau baru selesai (menunggu absen)
-    const activeData = showOnlyMissing
-        ? data.filter(item => item.needs_attention === true)
-        : data.filter(item => ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment', 'agenda'].includes(item.status));
+    // [FIX] Group schedules by Rombel to ensure all 10 classes are always visible
+    const rombelMap = data.reduce((acc, item) => {
+        const rombel = item.rombel;
+        if (!acc[rombel]) {
+            acc[rombel] = [];
+        }
+        acc[rombel].push(item);
+        return acc;
+    }, {});
 
-    // Antrean: jadwal belum mulai, dikelompokkan per slot waktu
+    // For each Rombel, pick the "Current Most Relevant" schedule to display
+    const activeData = Object.entries(rombelMap).map(([rombel, schedules]) => {
+        // Sort priority:
+        // 1. Berlangsung / Terlambat / Menunggu Absen / Assignment (Current)
+        // 2. Belum Mulai (Next)
+        // 3. Selesai / Alfa (Past)
+        
+        const sorted = [...schedules].sort((a, b) => {
+            const getPriority = (status) => {
+                if (['berlangsung', 'terlambat', 'menunggu_absen', 'assignment', 'agenda', 'libur'].includes(status)) return 1;
+                if (status === 'belum_mulai') return 2;
+                return 3;
+            };
+            
+            const prioA = getPriority(a.status);
+            const prioB = getPriority(b.status);
+            
+            if (prioA !== prioB) return prioA - prioB;
+            
+            // If same priority, use time
+            // For active items, show the one currently happening
+            // For future items, show the earliest one
+            return (a.time || '').localeCompare(b.time || '');
+        });
+
+        // If filtering for "Needs Attention", check if ANY schedule in this Rombel needs it
+        const needsAttention = schedules.some(s => s.needs_attention === true);
+
+        return {
+            ...sorted[0], // Pick the best one to show
+            allRombelSchedules: schedules,
+            hasNeedsAttention: needsAttention
+        };
+    }).sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '', undefined, { numeric: true }));
+
+    // Apply "Needs Attention" filter if active
+    const displayData = showOnlyMissing 
+        ? activeData.filter(item => item.hasNeedsAttention)
+        : activeData;
+
+    // Queue logic remains for secondary info if needed, but the main grid now shows all classes
     const queueByTime = data
         .filter(item => item.status === 'belum_mulai')
         .reduce((acc, item) => {
@@ -273,7 +318,7 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                     <>
                         {/* Grid Kelas Aktif */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
-                            {activeData.length === 0 ? (
+                            {displayData.length === 0 ? (
                                 <div className="col-span-full py-20 bg-gray-50 dark:bg-gray-900/40 rounded-3xl border border-dashed text-center opacity-50">
                                     <School size={48} className="mx-auto mb-4 text-slate-300" />
                                     <p className="font-black text-slate-400 uppercase tracking-widest text-xs">
@@ -284,7 +329,7 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                                     </p>
                                 </div>
                             ) : (
-                                activeData.map((item) => {
+                                displayData.map((item) => {
                                 const hasAttendance = item.attendance_summary && (
                                     (item.attendance_summary.hadir || 0) + 
                                     (item.attendance_summary.sakit?.count || 0) + 

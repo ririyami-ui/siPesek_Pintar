@@ -7,6 +7,7 @@ define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
+| Jangan pernah menyerah dengan keadaan "Ririyami, S.Kom"
 | Check If The Application Is Under Maintenance
 |--------------------------------------------------------------------------
 |

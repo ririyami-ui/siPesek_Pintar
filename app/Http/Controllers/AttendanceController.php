@@ -72,6 +72,42 @@ class AttendanceController extends Controller
             'attendances.*.note' => 'nullable|string',
         ]);
 
+        // [SECURITY] Ensure non-admin teachers can only submit attendance for classes they teach
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (!$teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'
+                ], 403);
+            }
+
+            // Check if teacher is assigned to this class
+            $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                ->where('class_id', $validated['class_id'])
+                ->exists();
+
+            if (!$isAssigned) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses untuk memasukkan absensi di kelas ini.'
+                ], 403);
+            }
+
+            // If subject_id is provided, also verify the teacher teaches that subject in this class
+            if (!empty($validated['subject_id'])) {
+                $subjectAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                    ->where('class_id', $validated['class_id'])
+                    ->where('subject_id', $validated['subject_id'])
+                    ->exists();
+
+                if (!$subjectAssigned) {
+                    return response()->json([
+                        'message' => 'Anda tidak mengajar mata pelajaran ini di kelas yang dipilih.'
+                    ], 403);
+                }
+            }
+        }
+
         $date = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
         
         // [FEATURE] Prevent attendance entry on School Agenda / Holidays
@@ -109,9 +145,9 @@ class AttendanceController extends Controller
                         'student_id' => $item['student_id'],
                         'date'       => $validated['date'],
                         'subject_id' => $validated['subject_id'],
+                        'class_id'   => $validated['class_id'], // [FIX] Ensure attendance is partitioned by class
                     ],
                     [
-                        'class_id' => $validated['class_id'],
                         'status'   => $item['status'],
                         'note'     => $item['note'] ?? null,
                         'user_id'  => $user->id,

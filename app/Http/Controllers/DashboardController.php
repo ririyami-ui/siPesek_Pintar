@@ -108,12 +108,18 @@ class DashboardController extends Controller
         });
 
         // [OPTIMIZATION] Pre-fetch attendance counts and student lists
+        // [FIX] Handle NULL subject_id values - whereIn doesn't match NULL, so we need to use orWhereNull
+        $nonNullSubjectIds = $subjectIds->filter(fn($id) => !is_null($id))->values();
         $attendanceData = Attendance::whereIn('class_id', $classIds)
-            ->whereIn('subject_id', $subjectIds)
+            ->where(function($query) use ($nonNullSubjectIds) {
+                $query->whereIn('subject_id', $nonNullSubjectIds)
+                      ->orWhereNull('subject_id');
+            })
             ->where('date', $todayDate)
             ->with('student:id,name')
             ->get()
             ->groupBy(function($item) {
+                // Ensure unique key for each class-subject pair
                 return $item->class_id . '-' . $item->subject_id;
             });
 
@@ -198,9 +204,10 @@ class DashboardController extends Controller
             // Status priority: TIME first, then attendance/journal existence
             $status = 'belum_mulai';
             if ($isActive) {
-                // [GRACE PERIOD] Only mark as 'terlambat' (needs attention) after 5 minutes of class start
+                // [GRACE PERIOD] Only mark as 'terlambat' (needs attention) after 15 minutes of class start
+                // Increased to 15m to match Admin Monitoring standard
                 $startTimeMoment = Carbon::parse($schedule->start_time);
-                $minutesSinceStart = $now->diffInMinutes($startTimeMoment, false); // Negative if in the past
+                $minutesSinceStart = $now->diffInMinutes($startTimeMoment, false); 
                 $isWithinGracePeriod = abs($minutesSinceStart) <= 15;
 
                 if ($hasTakenAttendance || $journal) {
@@ -306,15 +313,14 @@ class DashboardController extends Controller
         // [FIX] Group by class_id to ensure data isolation (previously grouped by rombel which might collide)
         $groupedMonitoringData = $monitoringData->groupBy('class_id')->map(function ($group) {
             // Priority 1: Currently active (berlangsung), waiting for attendance, OR assignment
-            // 'menunggu_absen' is also a currently-running class — teacher is expected to be there
             $active = $group->first(fn($item) => in_array($item['status'], ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment']));
             if ($active) return $active;
 
-            // Priority 2: Upcoming schedule (belum_mulai) — next scheduled class
+            // Priority 2: Upcoming schedule (belum_mulai)
             $upcoming = $group->where('status', 'belum_mulai')->sortBy('time')->first();
             if ($upcoming) return $upcoming;
 
-            // Priority 3: Needs attention (Alfa) - class time has passed with no journal/absent
+            // Priority 3: Needs attention (Alfa)
             $alfa = $group->where('status', 'alfa')->sortByDesc('time')->first();
             if ($alfa) return $alfa;
 
@@ -368,11 +374,10 @@ class DashboardController extends Controller
             ->pluck('count', 'status');
 
         $attendanceSummary = [
-            'hadir' => $schoolAttendance->get('H', 0),
-            'sakit' => $schoolAttendance->get('S', 0),
-            'izin' => $schoolAttendance->get('I', 0),
-            'alfa' => $schoolAttendance->get('A', 0),
-            'terlambat' => $schoolAttendance->get('T', 0),
+            'hadir' => $schoolAttendance->get('hadir', 0),
+            'sakit' => $schoolAttendance->get('sakit', 0),
+            'izin' => $schoolAttendance->get('izin', 0),
+            'alpa' => $schoolAttendance->get('alpa', 0),
         ];
 
         $stats = [

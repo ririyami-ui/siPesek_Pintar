@@ -18,6 +18,11 @@ class Teacher extends Model
         'nip',
         'username',
         'password',
+        'unavailable_days',
+    ];
+
+    protected $casts = [
+        'unavailable_days' => 'array',
     ];
 
     /**

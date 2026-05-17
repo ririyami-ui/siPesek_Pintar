@@ -10,7 +10,7 @@ const normalizeGender = (input) => {
   const clean = String(input).trim().toUpperCase();
   if (clean === 'L' || clean === 'LAKI-LAKI' || clean === 'LAKI' || clean === 'PRIA' || clean === 'LAKI - LAKI') return 'L';
   if (clean === 'P' || clean === 'PEREMPUAN' || clean === 'WANITA') return 'P';
-  return input === 'Laki-laki' ? 'L' : (input === 'Perempuan' ? 'P' : input);
+  return '';
 };
 
 export default function StudentEditor({ studentData, onSave, onClose, rombels, classes }) {
@@ -137,8 +137,8 @@ export default function StudentEditor({ studentData, onSave, onClose, rombels, c
       </div>
       <StyledSelect value={gender} onChange={(e) => setGender(e.target.value)} required>
         <option value="">Pilih Jenis Kelamin</option>
-        <option value="Laki-laki">Laki-laki</option>
-        <option value="Perempuan">Perempuan</option>
+        <option value="L">Laki-laki</option>
+        <option value="P">Perempuan</option>
       </StyledSelect>
       <StyledInput
         type="text"
