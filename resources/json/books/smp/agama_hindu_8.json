@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Pengertian Dharma Gita",
+                "Jenis-jenis Dharma Gita",
+                "Kidung dan Nyanyian Suci",
+                "Fungsi Dharma Gita"
+            ],
+            "key_terms": [
+                "Dharma Gita",
+                "kidung",
+                "nyanyian suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Dharma Gita"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pengertian Yoga",
+                "Jenis-jenis Yoga",
+                "Manfaat Yoga",
+                "Praktik Yoga Dasar"
+            ],
+            "key_terms": [
+                "yoga",
+                "meditasi",
+                "konsentrasi"
+            ],
+            "semester": "Ganjil",
+            "title": "Yoga"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Guru Swadyaya",
+                "Guru Rupaka",
+                "Guru Pengajian",
+                "Guru Wisesa"
+            ],
+            "key_terms": [
+                "guru",
+                "Catur Guru",
+                "teladan"
+            ],
+            "semester": "Ganjil",
+            "title": "Catur Guru"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Brahman",
+                "Atman",
+                "Karmaphala",
+                "Moksha"
+            ],
+            "key_terms": [
+                "Sradha",
+                "Brahman",
+                "Atman"
+            ],
+            "semester": "Genap",
+            "title": "Panca Sradha"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Pengertian Yajna",
+                "Macam-macam Yajna",
+                "Tujuan Yajna",
+                "Pelaksanaan Yajna"
+            ],
+            "key_terms": [
+                "yajna",
+                "korban suci",
+                "keikhlasan"
+            ],
+            "semester": "Genap",
+            "title": "Yajna"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Lingkungan dalam Hindu",
+                "Ajaran Hindu tentang Alam",
+                "Pelestarian Lingkungan",
+                "Ekosistem dan Kehidupan"
+            ],
+            "key_terms": [
+                "lingkungan",
+                "alam",
+                "pelestarian"
+            ],
+            "semester": "Genap",
+            "title": "Lingkungan Hidup"
+        }
+    ],
+    "isbn": "978-623-194-908-9"
+}

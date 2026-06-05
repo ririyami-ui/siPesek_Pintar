@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-sos-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Pengertian Konflik",
+                                            "Sebab Konflik",
+                                            "Jenis Konflik",
+                                            "Dampak Konflik",
+                                            "Resolusi Konflik"
+                                        ],
+                         "key_terms":  [
+                                           "Konflik",
+                                           "Ketegangan",
+                                           "Resolusi",
+                                           "Mediasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Konflik Sosial"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Pengertian Integrasi",
+                                            "Faktor Integrasi",
+                                            "Bentuk Integrasi",
+                                            "Asimilasi",
+                                            "Multikulturalisme"
+                                        ],
+                         "key_terms":  [
+                                           "Integrasi",
+                                           "Harmoni",
+                                           "Multikultural",
+                                           "Asimilasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Integrasi Sosial"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pengertian Mobilitas",
+                                            "Bentuk Mobilitas",
+                                            "Saluran Mobilitas",
+                                            "Faktor Pendorong",
+                                            "Dampak Mobilitas"
+                                        ],
+                         "key_terms":  [
+                                           "Mobilitas",
+                                           "Vertikal",
+                                           "Horizontal",
+                                           "Status"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Mobilitas Sosial"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Konsep Diferensiasi",
+                                            "Diferensiasi Ras",
+                                            "Diferensiasi Etnis",
+                                            "Diferensiasi Agama",
+                                            "Diferensiasi Gender"
+                                        ],
+                         "key_terms":  [
+                                           "Diferensiasi",
+                                           "Ras",
+                                           "Etnis",
+                                           "Gender"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Diferensiasi Sosial"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Kekuasaan",
+                                            "Sumber Kekuasaan",
+                                            "Tipe Otoritas",
+                                            "Legitimasi",
+                                            "Distribusi Kekuasaan"
+                                        ],
+                         "key_terms":  [
+                                           "Kekuasaan",
+                                           "Otoritas",
+                                           "Legitimasi",
+                                           "Pengaruh"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kekuasaan dan Kewenangan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Perubahan Sosial",
+                                            "Masyarakat Tradisional",
+                                            "Masyarakat Modern",
+                                            "Masyarakat Digital",
+                                            "Tantangan Global"
+                                        ],
+                         "key_terms":  [
+                                           "Dinamika",
+                                           "Modern",
+                                           "Digital",
+                                           "Global"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Dinamika Masyarakat"
+                     }
+                 ],
+    "isbn":  "978-623-194-738-4"
+}

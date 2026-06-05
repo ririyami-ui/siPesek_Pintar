@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-buddha-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Buddha",
+                "Dhamma",
+                "Sangha",
+                "Makna Perlindungan"
+            ],
+            "key_terms": [
+                "Tri Ratna",
+                "Buddha",
+                "Dhamma"
+            ],
+            "semester": "Ganjil",
+            "title": "Tri Ratna"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Kandungan Dhammapada",
+                "Syair-syair Penting",
+                "Ajaran Moral dalam Dhammapada",
+                "Relevansi Dhammapada"
+            ],
+            "key_terms": [
+                "Dhammapada",
+                "syair",
+                "sabda Buddha"
+            ],
+            "semester": "Ganjil",
+            "title": "Dhammapada"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Masuknya Buddha ke Indonesia",
+                "Kerajaan Buddha di Indonesia",
+                "Candi Borobudur",
+                "Perkembangan Buddha Masa Kini"
+            ],
+            "key_terms": [
+                "sejarah",
+                "Indonesia",
+                "Borobudur"
+            ],
+            "semester": "Ganjil",
+            "title": "Sejarah Buddhis Indonesia"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Kepemimpinan dalam Buddhisme",
+                "Ciri Pemimpin Buddhis",
+                "Raja Asoka",
+                "Teladan Pemimpin"
+            ],
+            "key_terms": [
+                "kepemimpinan",
+                "Asoka",
+                "pemimpin"
+            ],
+            "semester": "Genap",
+            "title": "Kepemimpinan Buddhis"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Ajaran Sosial Buddhis",
+                "Kedermawanan",
+                "Pelayanan Sosial",
+                "Masyarakat Harmonis"
+            ],
+            "key_terms": [
+                "sosial",
+                "dana",
+                "pelayanan"
+            ],
+            "semester": "Genap",
+            "title": "Sosial Buddhis"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Peradaban Buddhis Kuno",
+                "Warisan Budaya Buddhis",
+                "Pendidikan Buddhis",
+                "Buddhisme dan Dunia Modern"
+            ],
+            "key_terms": [
+                "peradaban",
+                "budaya",
+                "warisan"
+            ],
+            "semester": "Genap",
+            "title": "Peradaban Buddhis"
+        }
+    ],
+    "isbn": "978-623-194-912-6"
+}

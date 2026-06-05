@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-indo-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Budaya Daerah",
+                                            "Rumah Adat",
+                                            "Pakaian Adat",
+                                            "Makanan Tradisional"
+                                        ],
+                         "key_terms":  [
+                                           "budaya",
+                                           "adat",
+                                           "tradisional"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keanekaragaman Budaya"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Sumber Energi",
+                                            "Penghematan Energi",
+                                            "Energi Alternatif",
+                                            "Membaca Teks Persuasi"
+                                        ],
+                         "key_terms":  [
+                                           "energi",
+                                           "hemat",
+                                           "persuasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Hemat Energi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Legenda Daerah",
+                                            "Cerita Rakyat",
+                                            "Unsur Intrinsik Cerita",
+                                            "Menulis Kembali Cerita"
+                                        ],
+                         "key_terms":  [
+                                           "legenda",
+                                           "cerita rakyat",
+                                           "unsur intrinsik"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kisah dan Legenda"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Mengenal Wirausaha",
+                                            "Produk dan Jasa",
+                                            "Membuat Iklan Sederhana",
+                                            "Menulis Teks Iklan"
+                                        ],
+                         "key_terms":  [
+                                           "wirausaha",
+                                           "iklan",
+                                           "produk"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kewirausahaan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Ekosistem",
+                                            "Pencemaran Lingkungan",
+                                            "Pelestarian Alam",
+                                            "Menulis Teks Laporan"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "ekosistem",
+                                           "laporan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkungan Hidup"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Karya Tulis",
+                                            "Struktur Laporan",
+                                            "Menyusun Laporan",
+                                            "Presentasi Ilmiah"
+                                        ],
+                         "key_terms":  [
+                                           "karya tulis",
+                                           "laporan",
+                                           "presentasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Karya Ilmiah Sederhana"
+                     }
+                 ],
+    "isbn":  "978-623-194-141-X"
+}

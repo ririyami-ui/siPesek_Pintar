@@ -29,6 +29,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/save-push-subscription', [AuthController::class, 'savePushSubscription']);
     
+    // Verify user password securely
+    Route::post('/verify-password', function (Request $request) {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+        
+        if (\Illuminate\Support\Facades\Hash::check($request->password, $request->user()->password)) {
+            return response()->json(['success' => true]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Password yang Anda masukkan salah!'
+        ], 422);
+    });
+    
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
@@ -55,6 +71,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Device Management
         Route::post('/admin/students/{student}/reset-device', [App\Http\Controllers\StudentController::class, 'resetDevice']);
+
+        // Class Promotion
+        Route::post('/admin/students/promote', [App\Http\Controllers\StudentController::class, 'promote']);
     });
 
     // Student Portal Routes (Accessible by Students)
@@ -88,6 +107,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // User Profile
     Route::get('/profile', [App\Http\Controllers\UserProfileController::class, 'show']);
     Route::match(['PUT', 'POST'], '/profile', [App\Http\Controllers\UserProfileController::class, 'update']);
+    Route::post('/users/{user}/photo', [App\Http\Controllers\UserProfileController::class, 'uploadUserPhoto']);
 
     // Dashboard & Analytics Routes
     Route::apiResource('holidays', App\Http\Controllers\HolidayController::class);
@@ -121,6 +141,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/save-handout', [App\Http\Controllers\AiFeaturesController::class, 'saveHandout']);
         Route::get('/handout-history', [App\Http\Controllers\AiFeaturesController::class, 'getHandoutHistory']);
         Route::delete('/handout-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteHandout']);
+
+        Route::post('/generate-atp', [App\Http\Controllers\AiFeaturesController::class, 'generateAtp']);
         
         Route::post('/analyze-student', [GeminiController::class, 'analyzeStudent']);
         Route::post('/analyze-class', [App\Http\Controllers\AiFeaturesController::class, 'analyzeClass']);

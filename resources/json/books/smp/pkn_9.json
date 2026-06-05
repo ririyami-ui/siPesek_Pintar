@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-pkn-9",
+  "isbn": "978-602-244-313-1",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Pendidikan Pancasila SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Hubungan Pancasila dengan UUD NRI 1945",
+      "pages": "1-30",
+      "sub_topics": [
+        "Pancasila sebagai Sumber dari Segala Sumber Hukum",
+        "Kedudukan Pembukaan UUD NRI 1945",
+        "Keselarasan Pasal-Pasal UUD dengan Nilai Pancasila",
+        "Implementasi Konstitusi dalam Kehidupan"
+      ],
+      "key_terms": ["Pokok Pikiran", "Pembukaan", "Batang Tubuh", "Staatfundamentanorm"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menunjukkan korelasi antara sila-sila Pancasila dengan pasal-pasal strategis dalam UUD."
+    },
+    {
+      "no": 2,
+      "title": "Sistem Demokrasi di Indonesia",
+      "pages": "31-65",
+      "sub_topics": [
+        "Penerapan Demokrasi dari Masa ke Masa",
+        "Pemilihan Umum sebagai Perwujudan Kedaulatan",
+        "Pentingnya Partisipasi Politik",
+        "Tantangan Demokrasi di Era Media Sosial"
+      ],
+      "key_terms": ["LUBER JURDIL", "KPU", "Bawaslu", "Oposisi", "Koalisi"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur proses Pemilihan Umum di Indonesia."
+    },
+    {
+      "no": 3,
+      "title": "Bhinneka Tunggal Ika dalam Bingkai NKRI",
+      "pages": "67-100",
+      "sub_topics": [
+        "Harmoni dalam Keberagaman",
+        "Pencegahan Konflik SARA",
+        "Peran Pemuda dalam Mempererat Persatuan",
+        "Budaya Kerja Sama (Gotong Royong) Internasional"
+      ],
+      "key_terms": ["SARA", "Harmoni", "Integrasi Nasional", "Diplomasi", "Etnosentrisme"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan strategi menjaga kerukunan antarumat beragama."
+    },
+    {
+      "no": 4,
+      "title": "Menjaga Kedaulatan Negara",
+      "pages": "101-140",
+      "sub_topics": [
+        "Kedaulatan Teritorial (Darat, Laut, Udara)",
+        "Tantangan Globalisasi dan Ketahanan Nasional",
+        "Bela Negara di Masa Kini",
+        "Pemanfaatan Teknologi untuk Pertahanan"
+      ],
+      "key_terms": ["ZEE", "Zonasi", "Kedaulatan Digital", "Bela Negara", "Hankamrata"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan berbagai bentuk Bela Negara di era modern bagi pelajar."
+    }
+  ]
+}

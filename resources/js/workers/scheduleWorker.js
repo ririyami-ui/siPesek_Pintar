@@ -1,6 +1,10 @@
-self.onmessage = function(e) {
+/*
+ * Persembahan untuk guru hebat dari Ririyami, S.Kom
+ * Web Worker untuk proses Auto-Schedule (Penjadwalan Otomatis)
+ */
+self.onmessage = function (e) {
     const data = e.data;
-    
+
     try {
         const service = new ScheduleGenerator(data);
         const result = service.generate((attempt, max, message) => {
@@ -17,13 +21,13 @@ class ScheduleGenerator {
         this.assignments = data.assignments || [];
         this.classes = data.classes || [];
         this.subjects = data.subjects || [];
-        this.teacherAvailability = {}; // tId => [unavailable_days]
-        
-        // Parse teaching slots
-        const rawData = typeof data.profile?.teaching_time_slots === 'string' 
-            ? JSON.parse(data.profile?.teaching_time_slots) 
+        this.teacherAvailability = {}; // tId => [hari_tidak_bersedia]
+
+        // Ekstrak slot waktu mengajar
+        const rawData = typeof data.profile?.teaching_time_slots === 'string'
+            ? JSON.parse(data.profile?.teaching_time_slots)
             : data.profile?.teaching_time_slots;
-        
+
         let rawSlots = {};
         if (rawData && rawData.profiles) {
             const activeProfile = rawData.profiles.find(p => p.is_active) || rawData.profiles[0];
@@ -57,7 +61,7 @@ class ScheduleGenerator {
             return { success: false, message: "Template Waktu Kosong." };
         }
 
-        // 1. Setup teacher availability
+        // 1. Siapkan ketersediaan guru (hari libur)
         this.assignments.forEach(as => {
             const tId = as.teacher?.auth_user_id || as.teacher_id;
             if (as.teacher && !this.teacherAvailability[tId]) {
@@ -65,19 +69,19 @@ class ScheduleGenerator {
             }
         });
 
-        // 2. Validate Math and 24-hour rule
+        // 2. Validasi perhitungan matematis dan aturan 24 jam
         const mathCheck = this.validateMath();
         if (!mathCheck.success) {
             return mathCheck;
         }
 
-        // 3. Prepare Blocks
+        // 3. Siapkan Blok Jam Pelajaran
         let initialBlocks = this.transformAssignmentsToBlocks();
         if (initialBlocks.length === 0) {
             return { success: false, message: "Tidak ada data penugasan untuk di-generate." };
         }
 
-        const maxAttempts = 1500; // Increased because worker runs in background
+        const maxAttempts = 1500; // Ditingkatkan karena worker berjalan di latar belakang
         const failureStats = { teachers: {}, classes: {} };
         let bestErrors = [];
         let leastErrors = Infinity;
@@ -136,7 +140,7 @@ class ScheduleGenerator {
             teacherHours[tId] = (teacherHours[tId] || 0) + h;
             classHours[cId] = (classHours[cId] || 0) + h;
             teacherNames[tId] = as.teacher?.name || `ID:${tId}`;
-            
+
             const cls = this.classes.find(c => c.id == cId);
             classNames[cId] = cls ? cls.rombel : `Kelas ID:${cId}`;
         });
@@ -144,8 +148,8 @@ class ScheduleGenerator {
         for (const tId in teacherHours) {
             const hours = teacherHours[tId];
             const unDays = this.teacherAvailability[tId] || [];
-            
-            // NEW RULE: > 30 hours cannot have unDays
+
+            // ATURAN BARU: Beban > 30 JP tidak boleh memiliki hari libur
             if (hours > 30 && unDays.length > 0) {
                 return {
                     success: false,
@@ -212,13 +216,13 @@ class ScheduleGenerator {
     }
 
     prepareBlocksWithPriority(blocks) {
-        // Simple priority: sort by size descending
+        // Prioritas sederhana: urutkan berdasarkan ukuran blok (terbesar lebih dulu)
         blocks.sort((a, b) => b.size - a.size);
         return blocks;
     }
 
     balanceHeatmap(blocks, days, grid) {
-        // Group blocks by class
+        // Kelompokkan blok berdasarkan kelas
         const classBlocks = {};
         blocks.forEach(b => {
             if (!classBlocks[b.class_id]) classBlocks[b.class_id] = [];
@@ -228,14 +232,14 @@ class ScheduleGenerator {
         for (const cId in classBlocks) {
             let remaining = classBlocks[cId];
             let failed = false;
-            
-            // Limit shuffling for this class to 100 tries
+
+            // Batasi pengacakan untuk kelas ini sebanyak maksimal 100 percobaan
             for (let i = 0; i < 100; i++) {
                 failed = false;
                 let tempGrid = {};
                 days.forEach(d => tempGrid[d] = []);
                 let tempRemaining = [...remaining];
-                
+
                 let shuffledDays = [...days];
                 this.shuffle(shuffledDays);
 
@@ -243,7 +247,7 @@ class ScheduleGenerator {
                     const target = this.teachingSlots[day].length;
                     const usedSubjects = new Set();
                     const usedTeachers = new Set();
-                    
+
                     for (const tId in this.teacherAvailability) {
                         if (this.teacherAvailability[tId].includes(day)) {
                             usedTeachers.add(parseInt(tId));
@@ -265,10 +269,163 @@ class ScheduleGenerator {
             if (failed) return false;
         }
 
-        // Extremely simplified heatmap balancing for JS version:
-        // Since Capacity == Burden strictly, if the above combination works, it's mathematically sound.
-        // If it's stuck in teacher overload, DFS will fail fast and trigger a new attempt.
+        // PENYEIMBANGAN HEATMAP KESELURUHAN (FULL HEATMAP BALANCING)
+        const maxSwaps = 5000;
+        let lastOverload = null;
+        let stuckCount = 0;
+
+        for (let i = 0; i < maxSwaps; i++) {
+            const heatmap = this.calculateHeatmap(grid);
+            const overload = this.findOverload(heatmap);
+
+            if (!overload) break; // Sudah seimbang!
+
+            const overloadKey = `${overload.teacher_id}-${overload.day}`;
+            if (lastOverload === overloadKey) {
+                stuckCount++;
+                if (stuckCount > 15) {
+                    this.shakeUpTeacherSchedule(grid, overload.teacher_id, days);
+                    stuckCount = 0;
+                }
+            } else {
+                stuckCount = 0;
+            }
+            lastOverload = overloadKey;
+
+            this.performBalancedSwap(grid, overload.teacher_id, overload.day);
+        }
+
         return grid;
+    }
+
+    shakeUpTeacherSchedule(grid, teacherId, days) {
+        const involvedClasses = [];
+        for (const classId in grid) {
+            const classDays = grid[classId];
+            for (const day in classDays) {
+                const dayBlocks = classDays[day];
+                if (dayBlocks.some(b => parseInt(b.teacher_id) === parseInt(teacherId))) {
+                    involvedClasses.push(classId);
+                    break; // hentikan iterasi dalam, pindah ke kelas berikutnya
+                }
+            }
+        }
+
+        if (involvedClasses.length === 0) return;
+
+        this.shuffle(involvedClasses);
+        const toRebuild = involvedClasses.slice(0, 2);
+
+        for (const classId of toRebuild) {
+            let allBlocks = [];
+            for (const day in grid[classId]) {
+                allBlocks = allBlocks.concat(grid[classId][day]);
+            }
+
+            // Partisi ulang untuk satu kelas ini saja
+            let tempGrid = {};
+            days.forEach(d => tempGrid[d] = []);
+            let tempRemaining = [...allBlocks];
+            let shuffledDays = [...days];
+            this.shuffle(shuffledDays);
+
+            let failed = false;
+            for (const day of shuffledDays) {
+                const target = this.teachingSlots[day].length;
+                const usedSubjects = new Set();
+                const usedTeachers = new Set();
+
+                for (const tId in this.teacherAvailability) {
+                    if (this.teacherAvailability[tId].includes(day)) {
+                        usedTeachers.add(parseInt(tId));
+                    }
+                }
+
+                const found = this.findCombinationNoRepeat(tempRemaining, target, usedSubjects, usedTeachers);
+                if (!found) { failed = true; break; }
+
+                tempGrid[day] = found.blocks;
+                found.indices.sort((a, b) => b - a).forEach(idx => tempRemaining.splice(idx, 1));
+            }
+
+            if (!failed && tempRemaining.length === 0) {
+                grid[classId] = tempGrid;
+            }
+        }
+    }
+
+    calculateHeatmap(grid) {
+        const heatmap = {};
+        for (const classId in grid) {
+            const days = grid[classId];
+            for (const day in days) {
+                const blocks = days[day];
+                for (const b of blocks) {
+                    const tId = b.teacher_id;
+                    if (!heatmap[tId]) heatmap[tId] = {};
+                    heatmap[tId][day] = (heatmap[tId][day] || 0) + b.size;
+                }
+            }
+        }
+        return heatmap;
+    }
+
+    findOverload(heatmap) {
+        for (const tId in heatmap) {
+            const days = heatmap[tId];
+            for (const day in days) {
+                const load = days[day];
+                const unDays = this.teacherAvailability[tId] || [];
+                const capacity = unDays.includes(day) ? 0 : (this.teachingSlots[day] ? this.teachingSlots[day].length : 0);
+
+                if (load > capacity) {
+                    return { teacher_id: parseInt(tId), day: day, load: load };
+                }
+            }
+        }
+        return null;
+    }
+
+    performBalancedSwap(grid, teacherId, badDay) {
+        for (const classId in grid) {
+            const days = grid[classId];
+            const blocksOnBadDay = days[badDay] || [];
+
+            const foundIdxA = blocksOnBadDay.findIndex(b => parseInt(b.teacher_id) === parseInt(teacherId));
+
+            if (foundIdxA !== -1) {
+                const blockA = blocksOnBadDay[foundIdxA];
+
+                const daysAvailable = Object.keys(days);
+                this.shuffle(daysAvailable);
+
+                for (const goodDay of daysAvailable) {
+                    if (goodDay === badDay) continue;
+
+                    const blocksOnGoodDay = days[goodDay] || [];
+
+                    for (let idxB = 0; idxB < blocksOnGoodDay.length; idxB++) {
+                        const blockB = blocksOnGoodDay[idxB];
+                        if (parseInt(blockB.teacher_id) !== parseInt(teacherId) && blockA.size === blockB.size) {
+
+                            const tA = parseInt(blockA.teacher_id);
+                            const tB = parseInt(blockB.teacher_id);
+
+                            // Cek jika Guru A sudah mengajar di goodDay (hari baik)
+                            if (blocksOnGoodDay.some(b => parseInt(b.teacher_id) === tA)) continue;
+
+                            // Cek jika Guru B sudah mengajar di badDay (hari buruk)
+                            if (blocksOnBadDay.some(b => parseInt(b.teacher_id) === tB)) continue;
+
+                            // TUKAR POSISI!
+                            days[badDay][foundIdxA] = blockB;
+                            days[goodDay][idxB] = blockA;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     findCombinationNoRepeat(blocks, target, usedSubjects, usedTeachers) {
@@ -276,7 +433,7 @@ class ScheduleGenerator {
         const solve = (start, currentSum, indices) => {
             if (currentSum === target) {
                 results.push({ indices: [...indices], blocks: indices.map(i => blocks[i]) });
-                return results.length > 5; 
+                return results.length > 5;
             }
             if (currentSum > target || start >= blocks.length) return false;
 
@@ -299,7 +456,7 @@ class ScheduleGenerator {
 
         solve(0, 0, []);
         if (results.length > 0) {
-            // Pick a random one
+            // Pilih salah satu secara acak
             return results[Math.floor(Math.random() * results.length)];
         }
         return null;
@@ -308,11 +465,11 @@ class ScheduleGenerator {
     solve(grid, failureStats) {
         const days = Object.keys(this.teachingSlots);
         const finalGrid = {};
-        
+
         for (const day of days) {
             const daySchedules = this.solveDaySchedules(grid, day);
             if (!daySchedules) {
-                // Record failure
+                // Catat kegagalan
                 Object.keys(grid).forEach(cId => {
                     grid[cId][day].forEach(b => {
                         failureStats.teachers[b.teacher_name] = (failureStats.teachers[b.teacher_name] || 0) + 1;
@@ -342,8 +499,8 @@ class ScheduleGenerator {
 
         const occupied = {};
         const resultSchedules = {};
-        this.dfsSteps = 0; // Instance level step counter
-        
+        this.dfsSteps = 0; // Penghitung langkah level instance (pencarian berkedalaman)
+
         if (this.backtrackDaySchedule(classIds, 0, classPermutations, occupied, resultSchedules, day)) {
             return resultSchedules;
         }
@@ -356,9 +513,9 @@ class ScheduleGenerator {
             let currentIdx = 0;
             for (const b of blocks) {
                 const isSports = b.subject_name.toLowerCase().includes('pjok') || b.subject_name.toLowerCase().includes('olahraga');
-                // PJOK constraint: must end before period 6 (index 5)
+                // Batasan PJOK: harus selesai sebelum jam ke-6 (index 5)
                 if (isSports && (currentIdx + b.size - 1) > 5) return;
-                
+
                 placed.push({ ...b, start_idx: currentIdx });
                 currentIdx += b.size;
             }
@@ -381,8 +538,8 @@ class ScheduleGenerator {
 
         for (const perm of perms) {
             let conflict = false;
-            
-            // Check conflicts
+
+            // Cek bentrok (konflik)
             for (const b of perm) {
                 for (let i = 0; i < b.size; i++) {
                     const period = b.start_idx + i;
@@ -395,7 +552,7 @@ class ScheduleGenerator {
             }
 
             if (!conflict) {
-                // Place
+                // Tempatkan di jadwal
                 for (const b of perm) {
                     for (let i = 0; i < b.size; i++) {
                         const period = b.start_idx + i;
@@ -408,7 +565,7 @@ class ScheduleGenerator {
                     return true;
                 }
 
-                // Backtrack
+                // Mundur (Backtrack) jika buntu
                 for (const b of perm) {
                     for (let i = 0; i < b.size; i++) {
                         const period = b.start_idx + i;
@@ -431,7 +588,7 @@ class ScheduleGenerator {
                     const slots = this.teachingSlots[day];
                     const startSlot = slots[b.start_idx];
                     const endSlot = slots[b.start_idx + b.size - 1];
-                    
+
                     formatted.push({
                         class_id: parseInt(b.class_id),
                         subject_id: parseInt(b.subject_id),
@@ -452,7 +609,7 @@ class ScheduleGenerator {
         let topTeacher = null;
         let topClass = null;
         let maxT = 0, maxC = 0;
-        
+
         for (const t in stats.teachers) {
             if (stats.teachers[t] > maxT) { maxT = stats.teachers[t]; topTeacher = t; }
         }

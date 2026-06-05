@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-khonghucu-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Konsep Tian",
+                "Konsep Dao",
+                "Hubungan Tian dan Manusia",
+                "Jalan Suci Tian"
+            ],
+            "key_terms": [
+                "Tian",
+                "Dao",
+                "jalan suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Tian dan Dao"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pengakuan Iman Pertama",
+                "Pengakuan Iman Kedua",
+                "Delapan Pengakuan Iman",
+                "Makna Pengakuan Iman"
+            ],
+            "key_terms": [
+                "pengakuan iman",
+                "credo",
+                "keyakinan"
+            ],
+            "semester": "Ganjil",
+            "title": "Delapan Pengakuan Iman"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Pengertian Junzi",
+                "Ciri-ciri Junzi",
+                "Junzi dan Kebajikan",
+                "Menjadi Junzi"
+            ],
+            "key_terms": [
+                "Junzi",
+                "sempurna",
+                "budi luhur"
+            ],
+            "semester": "Ganjil",
+            "title": "Junzi"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Ren",
+                "Yi",
+                "Li",
+                "Zhi"
+            ],
+            "key_terms": [
+                "Wu Chang",
+                "kebajikan",
+                "moral"
+            ],
+            "semester": "Genap",
+            "title": "Wu Chang"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Zhong",
+                "Shu",
+                "Kebenaran Hati",
+                "Kejujuran"
+            ],
+            "key_terms": [
+                "Si Wei",
+                "Zhong",
+                "Shu"
+            ],
+            "semester": "Genap",
+            "title": "Si Wei"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Pengertian Zhong Yong",
+                "Jalan Tengah",
+                "Keseimbangan Hidup",
+                "Penerapan Zhong Yong"
+            ],
+            "key_terms": [
+                "Zhong Yong",
+                "jalan tengah",
+                "keseimbangan"
+            ],
+            "semester": "Genap",
+            "title": "Zhong Yong"
+        }
+    ],
+    "isbn": "978-623-194-914-0"
+}

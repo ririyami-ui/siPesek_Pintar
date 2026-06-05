@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Struktur Teks Pidato",
+                                            "Pembuka Pidato",
+                                            "Isi Pidato",
+                                            "Penutup Pidato"
+                                        ],
+                         "key_terms":  [
+                                           "pidato",
+                                           "sesorah",
+                                           "wicara"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Pidato"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-62",
+                         "sub_topics":  [
+                                            "Karya Tulis Sederhana",
+                                            "Menyusun Kerangka Karangan",
+                                            "Karya Tulis Budaya",
+                                            "Mempresentasikan Karya"
+                                        ],
+                         "key_terms":  [
+                                           "karya tulis",
+                                           "karangan",
+                                           "presentasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Karya Tulis"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "63-94",
+                         "sub_topics":  [
+                                            "Macapat dan Jenisnya",
+                                            "Gending Tradisional",
+                                            "Makna Tembang Macapat",
+                                            "Menyanyikan Macapat"
+                                        ],
+                         "key_terms":  [
+                                           "macapat",
+                                           "gending",
+                                           "tembang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gending dan Macapat"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "95-126",
+                         "sub_topics":  [
+                                            "Cerita Rakyat Nusantara",
+                                            "Legenda Daerah",
+                                            "Mite dan Folklor",
+                                            "Nilai Budaya Cerita Rakyat"
+                                        ],
+                         "key_terms":  [
+                                           "cerita rakyat",
+                                           "legenda",
+                                           "folklor"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cerita Rakyat Daerah"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "127-156",
+                         "sub_topics":  [
+                                            "Mengapresiasi Karya Sastra",
+                                            "Kritik Sastra Sederhana",
+                                            "Resensi Buku Sastra",
+                                            "Karya Sastra Unggulan"
+                                        ],
+                         "key_terms":  [
+                                           "apresiasi",
+                                           "sastra",
+                                           "resensi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Apresiasi Sastra"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "157-188",
+                         "sub_topics":  [
+                                            "Proyek Pengenalan Budaya",
+                                            "Dokumentasi Budaya",
+                                            "Pameran Budaya Daerah",
+                                            "Pelestarian Bahasa Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "proyek",
+                                           "budaya",
+                                           "pelestarian"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek Budaya"
+                     }
+                 ],
+    "isbn":  "978-623-194-836-5"
+}

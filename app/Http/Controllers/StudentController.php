@@ -50,7 +50,9 @@ class StudentController extends Controller
         if (request()->has('class_id')) {
             $query->where('class_id', request()->class_id);
         } elseif (request()->has('rombel')) {
-            $query->where('class_id', request()->rombel);
+            $query->whereHas('class', function($q) {
+                $q->where('rombel', request()->rombel);
+            });
         }
 
         // Add Search Functionality (Support NISN, NIS, and Name)
@@ -226,6 +228,50 @@ class StudentController extends Controller
         }
 
         return response()->json(['message' => 'Akun login tidak ditemukan untuk siswa ini.'], 404);
+    }
+
+    /**
+     * Promote students to a new class or graduate them.
+     */
+    public function promote(Request $request)
+    {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat memproses kenaikan kelas.');
+        }
+
+        $validatedData = $request->validate([
+            'student_ids' => 'required|array',
+            'student_ids.*' => 'exists:students,id',
+            'target_class_id' => 'nullable|exists:classes,id',
+        ]);
+
+        $studentIds = $validatedData['student_ids'];
+        $targetClassId = $validatedData['target_class_id'] ?? null;
+
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($studentIds, $targetClassId) {
+            $students = Student::whereIn('id', $studentIds)->get();
+
+            if ($targetClassId) {
+                // Promote / Move to new class
+                foreach ($students as $student) {
+                    $student->update(['class_id' => $targetClassId]);
+                }
+                return response()->json(['message' => count($studentIds) . ' siswa berhasil dipindahkan ke kelas baru.']);
+            } else {
+                // Graduate (Soft Delete)
+                $count = 0;
+                foreach ($students as $student) {
+                    // Soft delete the linked user account to prevent login
+                    if ($student->auth_user_id) {
+                        User::find($student->auth_user_id)?->delete();
+                    }
+                    // Soft delete the student
+                    $student->delete();
+                    $count++;
+                }
+                return response()->json(['message' => $count . ' siswa berhasil diluluskan dan diarsipkan.']);
+            }
+        });
     }
 
     /**

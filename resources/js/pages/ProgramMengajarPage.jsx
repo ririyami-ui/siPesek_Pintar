@@ -3391,10 +3391,20 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
                                             <textarea
                                                 value={item.profilLulusan || ''}
                                                 onChange={(e) => updateItem(index, 'profilLulusan', e.target.value)}
-                                                className="w-full bg-transparent border-none p-2 focus:ring-1 focus:ring-purple-500 rounded resize-none"
+                                                className={`w-full bg-transparent border-none p-2 focus:ring-1 focus:ring-purple-500 rounded resize-none ${(() => {
+                                                    const count = (item.profilLulusan || '').split(',').filter(p => p.trim()).length;
+                                                    return (count > 0 && (count < 2 || count > 3)) ? 'text-red-500 bg-red-50 dark:bg-red-900/10' : '';
+                                                })()}`}
                                                 rows={2}
-                                                placeholder="Dimensi..."
+                                                placeholder="Contoh: Mandiri, Kreatif (Wajib 2-3 Dimensi)"
                                             />
+                                            {(() => {
+                                                const count = (item.profilLulusan || '').split(',').filter(p => p.trim()).length;
+                                                if (count > 0 && (count < 2 || count > 3)) {
+                                                    return <div className="text-[9px] text-red-500 px-2 pb-1 font-bold animate-pulse">Min 2, Max 3 Dimensi!</div>
+                                                }
+                                                return null;
+                                            })()}
                                         </td>
                                         <td className="px-4 py-3 text-center">
                                             <button onClick={() => removeItem(index)} className="text-red-400 hover:text-red-600 transition">

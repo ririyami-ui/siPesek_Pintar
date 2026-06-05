@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ing-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Expressing Future Plans",
+                                            "Going To",
+                                            "Will and Shall",
+                                            "Making Plans and Promises"
+                                        ],
+                         "key_terms":  [
+                                           "future",
+                                           "will",
+                                           "plan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Future Plans"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Descriptive Text Structure",
+                                            "Describing Places",
+                                            "Describing Animals",
+                                            "Writing Descriptions"
+                                        ],
+                         "key_terms":  [
+                                           "descriptive",
+                                           "description",
+                                           "adjective"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Descriptive Text"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Recount Text Structure",
+                                            "Personal Recount",
+                                            "Holiday Recount",
+                                            "Writing a Recount"
+                                        ],
+                         "key_terms":  [
+                                           "recount",
+                                           "event",
+                                           "experience"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Recount Text"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Procedure Text Structure",
+                                            "Imperative Sentences",
+                                            "Sequencing Words",
+                                            "Writing Instructions"
+                                        ],
+                         "key_terms":  [
+                                           "procedure",
+                                           "step",
+                                           "instruction"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Procedure Text"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Report Text Structure",
+                                            "Classifying Information",
+                                            "General and Specific",
+                                            "Writing a Report"
+                                        ],
+                         "key_terms":  [
+                                           "report",
+                                           "fact",
+                                           "information"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Report Text"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-190",
+                         "sub_topics":  [
+                                            "Folktales from Around the World",
+                                            "Indonesian Folktales",
+                                            "Moral Lessons",
+                                            "Retelling Folktales"
+                                        ],
+                         "key_terms":  [
+                                           "folktale",
+                                           "legend",
+                                           "moral"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Folktales"
+                     }
+                 ],
+    "isbn":  "978-623-194-826-6"
+}

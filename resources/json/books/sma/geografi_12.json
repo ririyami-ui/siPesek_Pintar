@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-geo-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Konsep SIG",
+                                            "Komponen SIG",
+                                            "Data Spasial",
+                                            "Data Atribut",
+                                            "Analisis SIG"
+                                        ],
+                         "key_terms":  [
+                                           "SIG",
+                                           "Spatial",
+                                           "GIS",
+                                           "Peta"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sistem Informasi Geografis"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Wilayah Formal",
+                                            "Wilayah Fungsional",
+                                            "Perwilayahan",
+                                            "Pusat Pertumbuhan",
+                                            "Teori Tempat Pusat"
+                                        ],
+                         "key_terms":  [
+                                           "Wilayah",
+                                           "Regional",
+                                           "Fungsional",
+                                           "Pusat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Konsep Wilayah"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Tata Ruang Wilayah",
+                                            "RTRW",
+                                            "Rencana Tata Ruang",
+                                            "Pemanfaatan Lahan",
+                                            "Pengendalian Tata Ruang"
+                                        ],
+                         "key_terms":  [
+                                           "Tata Ruang",
+                                           "RTRW",
+                                           "Lahan",
+                                           "Perencanaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Perencanaan Tata Ruang"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Globalisasi dan Spasial",
+                                            "Jaringan Global",
+                                            "Kota Global",
+                                            "Pengaruh Global",
+                                            "Respon Lokal"
+                                        ],
+                         "key_terms":  [
+                                           "Globalisasi",
+                                           "Jaringan",
+                                           "Kota Global",
+                                           "Spasial"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Globalisasi dalam Geografi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "ASEAN",
+                                            "UNESCO",
+                                            "APEC",
+                                            "Regionalisme",
+                                            "Kerja Sama Selatan Selatan"
+                                        ],
+                         "key_terms":  [
+                                           "ASEAN",
+                                           "Regional",
+                                           "Global",
+                                           "Kerja Sama"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerja Sama Regional dan Global"
+                     }
+                 ],
+    "isbn":  "978-623-194-734-2"
+}

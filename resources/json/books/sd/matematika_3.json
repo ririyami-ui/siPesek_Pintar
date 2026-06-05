@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Nilai Tempat (Ratusan-Puluhan-Satuan)",
+                                            "Membaca Bilangan 1-1.000",
+                                            "Membandingkan Bilangan",
+                                            "Urutan Bilangan"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan cacah",
+                                           "nilai tempat",
+                                           "ratusan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bilangan Cacah 1-1.000"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-76",
+                         "sub_topics":  [
+                                            "Penjumlahan dan Pengurangan",
+                                            "Perkalian dan Pembagian",
+                                            "Operasi Campuran",
+                                            "Soal Cerita"
+                                        ],
+                         "key_terms":  [
+                                           "operasi hitung",
+                                           "perkalian",
+                                           "pembagian"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Operasi Hitung"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "77-108",
+                         "sub_topics":  [
+                                            "Menghitung Nilai Uang",
+                                            "Kesetaraan Uang",
+                                            "Menghitung Kembalian",
+                                            "Pengelolaan Keuangan Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "uang",
+                                           "keuangan",
+                                           "kembalian"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Uang dan Kaitannya dengan Bilangan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Unsur Bangun Datar",
+                                            "Unsur Bangun Ruang",
+                                            "Luas Bangun Datar Sederhana",
+                                            "Volume Bangun Ruang Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "bangun datar",
+                                           "bangun ruang",
+                                           "luas",
+                                           "volume"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bangun Datar dan Bangun Ruang"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Mengukur Panjang dan Berat",
+                                            "Konversi Satuan",
+                                            "Mengukur Waktu",
+                                            "Membaca Jam Digital dan Analog"
+                                        ],
+                         "key_terms":  [
+                                           "pengukuran",
+                                           "satuan",
+                                           "waktu"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengukuran"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Mengenal Pecahan",
+                                            "Pecahan Senilai",
+                                            "Membandingkan Pecahan",
+                                            "Pecahan dalam Soal Cerita"
+                                        ],
+                         "key_terms":  [
+                                           "pecahan",
+                                           "pembilang",
+                                           "penyebut"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pecahan Sederhana"
+                     }
+                 ],
+    "isbn":  "978-623-194-031-X"
+}

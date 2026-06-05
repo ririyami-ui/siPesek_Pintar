@@ -1,0 +1,119 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pai-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Ayat Al-Maidah 48",
+                                            "Nilai Kemanusiaan",
+                                            "Keadilan dalam Islam"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Maidah",
+                                           "Keadilan",
+                                           "Tafsir",
+                                           "Kemanusiaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Al-Maidah"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Yunus 40-41",
+                                            "Toleransi Beragama",
+                                            "Kebebasan Berkeyakinan"
+                                        ],
+                         "key_terms":  [
+                                           "Yunus",
+                                           "Toleransi",
+                                           "Keyakinan",
+                                           "Tafsir"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Yunus"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Rukun Iman",
+                                            "Iman kepada Allah",
+                                            "Iman kepada Malaikat",
+                                            "Iman kepada Kitab",
+                                            "Iman kepada Rasul"
+                                        ],
+                         "key_terms":  [
+                                           "Akidah",
+                                           "Iman",
+                                           "Rukun Iman",
+                                           "Tauhid"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Akidah Islam"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Jual Beli dalam Islam",
+                                            "Hukum Jual Beli",
+                                            "Pernikahan dalam Islam",
+                                            "Mahar",
+                                            "Hak dan Kewajiban Suami Istri"
+                                        ],
+                         "key_terms":  [
+                                           "Muamalah",
+                                           "Munakahat",
+                                           "Jual Beli",
+                                           "Nikah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Fiqih Muamalah dan Munakahat"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Husnuzan",
+                                            "Tawakal",
+                                            "Sabar",
+                                            "Syukur",
+                                            "Qanaah"
+                                        ],
+                         "key_terms":  [
+                                           "Akhlak",
+                                           "Husnuzan",
+                                           "Tawakal",
+                                           "Sabar"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak Terpuji"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Abu Bakar Ash-Shiddiq",
+                                            "Umar bin Khattab",
+                                            "Utsman bin Affan",
+                                            "Ali bin Abi Thalib",
+                                            "Peradaban Masa Khulafaur Rasyidin"
+                                        ],
+                         "key_terms":  [
+                                           "Khulafaur Rasyidin",
+                                           "Abu Bakar",
+                                           "Umar",
+                                           "Khalifah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sejarah Khulafaur Rasyidin"
+                     }
+                 ],
+    "isbn":  "978-623-194-718-4"
+}

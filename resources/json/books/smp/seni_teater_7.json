@@ -1,0 +1,78 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "smp-seni-teater-7",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "title":  "Dasar Pemeranan",
+                         "pages":  "1-36",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Olah Tubuh Pemeran",
+                                            "Olah Suara dan Vokal",
+                                            "Olah Rasa dan Konsentrasi",
+                                            "Teknik Blocking Panggung"
+                                        ],
+                         "key_terms":  [
+                                          "Pemeranan",
+                                          "Blocking",
+                                          "Ekspresi",
+                                          "Penghayatan"
+                                      ]
+                     },
+                     {
+                         "no":  2,
+                         "title":  "Eksplorasi Naskah dan Improvisasi",
+                         "pages":  "37-72",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Analisis Struktur Naskah",
+                                            "Karakter dan Tokoh",
+                                            "Teknik Improvisasi",
+                                            "Dialog dan Adegan"
+                                        ],
+                         "key_terms":  [
+                                          "Naskah",
+                                          "Improvisasi",
+                                          "Karakterisasi",
+                                          "Adegan"
+                                      ]
+                     },
+                     {
+                         "no":  3,
+                         "title":  "Pementasan Teater Daerah",
+                         "pages":  "73-108",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Teater Tradisional Nusantara",
+                                            "Cerita dan Lakon Daerah",
+                                            "Tata Artistik Pementasan",
+                                            "Praktik Pementasan Daerah"
+                                        ],
+                         "key_terms":  [
+                                          "Teater",
+                                          "Tradisional",
+                                          "Lakon",
+                                          "Artistika"
+                                      ]
+                     },
+                     {
+                         "no":  4,
+                         "title":  "Pertunjukan Teater Akhir Semester",
+                         "pages":  "109-140",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Perencanaan Pertunjukan",
+                                            "Manajemen Produksi Teater",
+                                            "Gladi Resik dan Pentas",
+                                            "Refleksi dan Apresiasi"
+                                        ],
+                         "key_terms":  [
+                                          "Produksi",
+                                          "Pentas",
+                                          "Apresiasi",
+                                          "Evaluasi"
+                                      ]
+                     }
+                 ]
+}

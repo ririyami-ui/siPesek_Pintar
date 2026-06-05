@@ -1,0 +1,119 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtk-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Definisi dan Sifat Eksponen",
+                                            "Persamaan Eksponen",
+                                            "Pertidaksamaan Eksponen",
+                                            "Fungsi Eksponen",
+                                            "Grafik Fungsi Eksponen"
+                                        ],
+                         "key_terms":  [
+                                           "Eksponen",
+                                           "Bilangan Berpangkat",
+                                           "Fungsi Eksponensial"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Eksponen"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Definisi dan Sifat Logaritma",
+                                            "Persamaan Logaritma",
+                                            "Pertidaksamaan Logaritma",
+                                            "Fungsi Logaritma",
+                                            "Grafik Fungsi Logaritma"
+                                        ],
+                         "key_terms":  [
+                                           "Logaritma",
+                                           "Numerus",
+                                           "Basis Logaritma"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Logaritma"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Barisan Aritmetika",
+                                            "Deret Aritmetika",
+                                            "Barisan Geometri",
+                                            "Deret Geometri",
+                                            "Deret Geometri Tak Hingga"
+                                        ],
+                         "key_terms":  [
+                                           "Aritmetika",
+                                           "Geometri",
+                                           "Rasio",
+                                           "Beda"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Barisan dan Deret"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Perbandingan Trigonometri",
+                                            "Sudut Istimewa",
+                                            "Identitas Trigonometri",
+                                            "Aturan Sinus dan Cosinus",
+                                            "Grafik Fungsi Trigonometri"
+                                        ],
+                         "key_terms":  [
+                                           "Sinus",
+                                           "Cosinus",
+                                           "Tangen",
+                                           "Radian"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Trigonometri"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "SPLDV",
+                                            "SPLTV",
+                                            "Metode Substitusi",
+                                            "Metode Eliminasi",
+                                            "Metode Campuran"
+                                        ],
+                         "key_terms":  [
+                                           "SPLDV",
+                                           "SPLTV",
+                                           "Eliminasi",
+                                           "Substitusi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sistem Persamaan Linear"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Bentuk Umum Fungsi Kuadrat",
+                                            "Grafik Fungsi Kuadrat",
+                                            "Akar-Akar Persamaan Kuadrat",
+                                            "Diskriminan",
+                                            "Menyusun Persamaan Kuadrat"
+                                        ],
+                         "key_terms":  [
+                                           "Fungsi Kuadrat",
+                                           "Parabola",
+                                           "Diskriminan",
+                                           "Akar"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Fungsi Kuadrat"
+                     }
+                 ],
+    "isbn":  "978-623-194-703-9"
+}

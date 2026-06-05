@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ipas-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Ekosistem",
+                                            "Rantai Makanan",
+                                            "Jaring-Jaring Makanan",
+                                            "Keseimbangan Ekosistem"
+                                        ],
+                         "key_terms":  [
+                                           "ekosistem",
+                                           "rantai makanan",
+                                           "keseimbangan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Makhluk Hidup dan Ekosistem"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Sistem Pencernaan",
+                                            "Makanan Bergizi",
+                                            "Gizi Seimbang",
+                                            "Gangguan Pencernaan"
+                                        ],
+                         "key_terms":  [
+                                           "pencernaan",
+                                           "gizi",
+                                           "makanan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Makanan dan Pencernaan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Wujud Benda",
+                                            "Perubahan Fisika",
+                                            "Perubahan Kimia",
+                                            "Suhu dan Kalor"
+                                        ],
+                         "key_terms":  [
+                                           "wujud",
+                                           "perubahan",
+                                           "suhu",
+                                           "kalor"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Perubahan Wujud Benda"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Energi Panas",
+                                            "Energi Cahaya",
+                                            "Energi Bunyi",
+                                            "Energi Alternatif"
+                                        ],
+                         "key_terms":  [
+                                           "energi",
+                                           "panas",
+                                           "cahaya",
+                                           "bunyi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sumber Energi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Interaksi Manusia",
+                                            "Kebutuhan Manusia",
+                                            "Kegiatan Ekonomi",
+                                            "Pencemaran Lingkungan"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "masyarakat",
+                                           "ekonomi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkungan dan Masyarakat"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Keanekaragaman Hayati",
+                                            "Flora Indonesia",
+                                            "Fauna Indonesia",
+                                            "Pelestarian Keanekaragaman"
+                                        ],
+                         "key_terms":  [
+                                           "keanekaragaman",
+                                           "flora",
+                                           "fauna"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Keragaman Hayati"
+                     }
+                 ],
+    "isbn":  "978-623-194-331-X"
+}

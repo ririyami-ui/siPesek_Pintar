@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtl-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Turunan Implisit",
+                                            "Turunan Parametrik",
+                                            "Turunan Tingkat Tinggi",
+                                            "Teorema L\u0027Hopital",
+                                            "Limit Bentuk Tak Tentu"
+                                        ],
+                         "key_terms":  [
+                                           "Turunan",
+                                           "Implisit",
+                                           "Parametrik",
+                                           "L\u0027Hopital"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kalkulus Diferensial Lanjutan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Integral Lipat",
+                                            "Integral Tentu",
+                                            "Aplikasi Integral",
+                                            "Volume Benda Putar",
+                                            "Panjang Busur"
+                                        ],
+                         "key_terms":  [
+                                           "Integral",
+                                           "Lipat",
+                                           "Volume",
+                                           "Busur"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kalkulus Integral Lanjutan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Vektor di R3",
+                                            "Operasi Vektor 3D",
+                                            "Perkalian Silang",
+                                            "Perkalian Skalar Tiga Vektor",
+                                            "Aplikasi Vektor 3D"
+                                        ],
+                         "key_terms":  [
+                                           "Vektor",
+                                           "Ruang",
+                                           "3 Dimensi",
+                                           "Perkalian Silang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Vektor dalam Ruang (3D)"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Bentuk Kartesius",
+                                            "Bentuk Polar",
+                                            "Operasi Bilangan Kompleks",
+                                            "Akar Bilangan Kompleks",
+                                            "Aplikasi Bilangan Kompleks"
+                                        ],
+                         "key_terms":  [
+                                           "Kompleks",
+                                           "Imajiner",
+                                           "Polar",
+                                           "Argument"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bilangan Kompleks"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Transformasi Linear",
+                                            "Komposisi Transformasi",
+                                            "Invers Transformasi",
+                                            "Matriks Transformasi",
+                                            "Aplikasi dalam Grafika"
+                                        ],
+                         "key_terms":  [
+                                           "Transformasi",
+                                           "Komposisi",
+                                           "Invers",
+                                           "Grafika"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Transformasi Geometri Lanjutan"
+                     }
+                 ],
+    "isbn":  "978-623-194-719-7"
+}

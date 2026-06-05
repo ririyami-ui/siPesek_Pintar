@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Menyusun Paragraf",
+                                            "Paragraf Sederhana",
+                                            "Ide Pokok",
+                                            "Kalimat Penjelas"
+                                        ],
+                         "key_terms":  [
+                                           "paragraf",
+                                           "ide pokok",
+                                           "kalimat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Paragraf Sederhana"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Tingkat Tutur Bahasa Daerah",
+                                            "Bahasa Hormat Menengah",
+                                            "Berbicara dengan Guru",
+                                            "Berbicara di Acara Resmi"
+                                        ],
+                         "key_terms":  [
+                                           "unggah-ungguh",
+                                           "tutur",
+                                           "hormat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Unggah-Ungguh Menengah"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Aksara Jawa",
+                                            "Aksara Madura",
+                                            "Aksara Bali",
+                                            "Menulis Kalimat dengan Aksara"
+                                        ],
+                         "key_terms":  [
+                                           "aksara",
+                                           "jawa",
+                                           "bali"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aksara Jawa/Madura/Bali"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Mengenal Wayang",
+                                            "Tokoh-Tokoh Wayang",
+                                            "Cerita Wayang Sederhana",
+                                            "Pandawa dan Kurawa"
+                                        ],
+                         "key_terms":  [
+                                           "wayang",
+                                           "pandawa",
+                                           "kurawa"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cerita Wayang"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Apa Itu Geguritan?",
+                                            "Menulis Geguritan",
+                                            "Membaca Geguritan",
+                                            "Geguritan Bertema Alam"
+                                        ],
+                         "key_terms":  [
+                                           "geguritan",
+                                           "puisi",
+                                           "bait"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Geguritan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-188",
+                         "sub_topics":  [
+                                            "Jenis Upacara Adat",
+                                            "Upacara Kelahiran",
+                                            "Upacara Pernikahan",
+                                            "Upacara Kematian"
+                                        ],
+                         "key_terms":  [
+                                           "upacara",
+                                           "adat",
+                                           "tradisi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Upacara Adat"
+                     }
+                 ],
+    "isbn":  "978-623-194-834-1"
+}

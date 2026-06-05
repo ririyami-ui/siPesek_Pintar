@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-pkn-7",
+  "isbn": "978-602-244-311-7",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Pendidikan Pancasila SMP Kelas VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Sejarah Kelahiran Pancasila",
+      "pages": "1-30",
+      "sub_topics": [
+        "Masa Sejarah Kelahiran Pancasila",
+        "Perumusan Pancasila dalam Sidang BPUPKI",
+        "Panitia Sembilan dan Piagam Jakarta",
+        "Penetapan Pancasila sebagai Dasar Negara"
+      ],
+      "key_terms": ["BPUPKI", "Dokuritsu Zunbi Cosakai", "Piagam Jakarta", "Gotong Royong", "PPKI"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan lini masa (timeline) perumusan Pancasila dari Juni hingga Agustus 1945."
+    },
+    {
+      "no": 2,
+      "title": "Norma dan UUD NRI Tahun 1945",
+      "pages": "31-65",
+      "sub_topics": [
+        "Norma yang Berlaku dalam Masyarakat",
+        "Hak dan Kewajiban Warga Negara",
+        "Sejarah Perumusan dan Pengesahan UUD NRI 1945",
+        "Kepatuhan terhadap Norma dan Hukum"
+      ],
+      "key_terms": ["Norma Kesopanan", "Norma Hukum", "Konstitusi", "Hak Asasi", "Kewajiban"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk membagi kategori norma (Agama, Kesopanan, Kesusilaan, Hukum)."
+    },
+    {
+      "no": 3,
+      "title": "Kesatuan Indonesia dan Karakteristik Daerah",
+      "pages": "67-95",
+      "sub_topics": [
+        "Wilayah Negara Kesatuan Republik Indonesia",
+        "Persatuan dan Kesatuan Bangsa",
+        "Karakteristik Daerah dalam NKRI",
+        "Mempertahankan Persatuan di Lingkungan Sekolah"
+      ],
+      "key_terms": ["NKRI", "Wawasan Nusantara", "Sentralisasi", "Desentralisasi", "Bhinneka Tunggal Ika"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan pilar-pilar persatuan bangsa."
+    },
+    {
+      "no": 4,
+      "title": "Keberagaman Indonesia",
+      "pages": "97-130",
+      "sub_topics": [
+        "Keberagaman Gender, Suku, dan Budaya",
+        "Keberagaman Agama dan Kepercayaan",
+        "Pentingnya Moderasi Beragama",
+        "Kerja Sama dalam Keberagaman"
+      ],
+      "key_terms": ["Gender", "Suku", "Budaya", "Moderasi", "Toleransi"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk membuat tabel inventarisasi keragaman budaya di daerah masing-masing."
+    }
+  ]
+}

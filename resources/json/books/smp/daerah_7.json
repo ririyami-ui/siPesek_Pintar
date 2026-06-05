@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-daerah-7",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Sastra Daerah Ganjil", "pages": "1-50", "semester": "Ganjil", "sub_topics": ["Puisi Tradisional", "Cerita Rakyat", "Nilai Budaya dalam Sastra"], "key_terms": ["Sastra Daerah", "Puisi Tradisional", "Cerita Rakyat", "Folklor"] },
+    { "no": 2, "title": "Aksara dan Budaya Ganjil", "pages": "51-100", "semester": "Ganjil", "sub_topics": ["Pengenalan Aksara Daerah", "Menulis Aksara Daerah", "Upacara Adat"], "key_terms": ["Aksara Daerah", "Budaya Lokal", "Tradisi", "Adat Istiadat"] },
+    { "no": 3, "title": "Sastra Daerah Genap", "pages": "101-150", "semester": "Genap", "sub_topics": ["Drama Tradisional", "Legenda dan Mitos", "Pesan Moral dalam Sastra"], "key_terms": ["Drama", "Legenda", "Mitos", "Moral"] },
+    { "no": 4, "title": "Aksara dan Budaya Genap", "pages": "151-200", "semester": "Genap", "sub_topics": ["Seni Pertunjukan Daerah", "Pakaian Adat", "Pelestarian Budaya"], "key_terms": ["Seni Pertunjukan", "Pakaian Adat", "Pelestarian", "Kearifan Lokal"] }
+  ]
+}

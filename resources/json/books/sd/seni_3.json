@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Titik, Garis, Bidang",
+                                            "Warna dan Value",
+                                            "Tekstur dan Ruang",
+                                            "Prinsip Kesatuan dan Keseimbangan"
+                                        ],
+                         "key_terms":  [
+                                           "unsur",
+                                           "prinsip",
+                                           "kesatuan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Unsur dan Prinsip Seni"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Sketsa",
+                                            "Arsiran",
+                                            "Perspektif Satu Titik",
+                                            "Menggambar Benda Mati"
+                                        ],
+                         "key_terms":  [
+                                           "sketsa",
+                                           "arsiran",
+                                           "perspektif"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Menggambar Alam Benda"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Lanskap",
+                                            "Pemandangan Alam",
+                                            "Teknik Plakat",
+                                            "Teknik Aquarel"
+                                        ],
+                         "key_terms":  [
+                                           "lanskap",
+                                           "pemandangan",
+                                           "plakat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Lukis Alam dan Pemandangan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Cetak Tinggi",
+                                            "Cetak Dalam",
+                                            "Sablon",
+                                            "Desain Grafis Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "grafis",
+                                           "cetak",
+                                           "sablon"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Seni Grafis"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Kerajinan Kertas",
+                                            "Kerajinan Bambu",
+                                            "Kerajinan Kain Flannel",
+                                            "Kerajinan Daur Ulang"
+                                        ],
+                         "key_terms":  [
+                                           "kerajinan",
+                                           "tangan",
+                                           "daur ulang"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerajinan Tangan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Menganalisis Karya",
+                                            "Ekspresi Diri",
+                                            "Galeri Seni",
+                                            "Seniman Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "apresiasi",
+                                           "ekspresi",
+                                           "seniman"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Apresiasi dan Ekspresi"
+                     }
+                 ],
+    "isbn":  "978-623-194-531-X"
+}

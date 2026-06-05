@@ -1,0 +1,115 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ing-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Social Function",
+                                            "Generic Structure",
+                                            "Language Features",
+                                            "Writing Descriptive Text"
+                                        ],
+                         "key_terms":  [
+                                           "Descriptive",
+                                           "Adjective",
+                                           "Simple Present",
+                                           "Attribute"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Descriptive Text"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Purpose of Recount",
+                                            "Types of Recount",
+                                            "Structure of Recount",
+                                            "Past Tense Usage"
+                                        ],
+                         "key_terms":  [
+                                           "Recount",
+                                           "Past Event",
+                                           "Sequence",
+                                           "Experience"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Recount Text"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Purpose of Narrative",
+                                            "Structure of Narrative",
+                                            "Language Features",
+                                            "Types of Narrative"
+                                        ],
+                         "key_terms":  [
+                                           "Narrative",
+                                           "Fable",
+                                           "Legend",
+                                           "Fairy Tale"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Narrative Text"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Purpose of Procedure",
+                                            "Structure",
+                                            "Imperative Sentences",
+                                            "Connectors"
+                                        ],
+                         "key_terms":  [
+                                           "Procedure",
+                                           "Instruction",
+                                           "Imperative",
+                                           "Steps"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Procedure Text"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Form and Function",
+                                            "Verbal Sentences",
+                                            "Nominal Sentences",
+                                            "Time Signals"
+                                        ],
+                         "key_terms":  [
+                                           "Simple Present",
+                                           "Routine",
+                                           "Habit",
+                                           "General Truth"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Simple Present Tense"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Purpose of Report",
+                                            "Structure",
+                                            "Language Features",
+                                            "Writing Report"
+                                        ],
+                         "key_terms":  [
+                                           "Report",
+                                           "Classification",
+                                           "General",
+                                           "Scientific"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Report Text"
+                     }
+                 ],
+    "isbn":  "978-623-194-709-7"
+}

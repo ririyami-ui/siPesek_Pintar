@@ -114,8 +114,12 @@ const TeacherCard = ({ teacher, allTeachers, subjects, classes, onEdit, onDelete
         <div className="bg-surface-light dark:bg-surface-dark p-4 rounded-2xl shadow-lg flex flex-col space-y-3 border border-gray-100 dark:border-gray-800">
             <div className="flex justify-between items-start">
                 <div className="flex gap-3">
-                    <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 h-fit">
-                        <User size={20} />
+                    <div className="h-11 w-11 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {teacher.auth_user?.photo_url ? (
+                            <img src={teacher.auth_user.photo_url} className="w-full h-full object-cover" alt={teacher.name} />
+                        ) : (
+                            <User size={20} />
+                        )}
                     </div>
                     <div>
                         <p className="text-lg font-bold text-text-light dark:text-text-dark leading-tight">{teacher.name}</p>

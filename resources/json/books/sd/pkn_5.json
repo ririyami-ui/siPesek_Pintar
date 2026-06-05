@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Hubungan Pancasila dan UUD 1945",
+                                            "Pembukaan UUD 1945",
+                                            "Pokok Pikiran Pembukaan",
+                                            "Implementasi Pancasila"
+                                        ],
+                         "key_terms":  [
+                                           "pancasila",
+                                           "uud 1945",
+                                           "pembukaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pancasila dan UUD 1945"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-76",
+                         "sub_topics":  [
+                                            "Presidensial",
+                                            "Pembagian Kekuasaan",
+                                            "Kementerian Negara",
+                                            "Pemerintahan Pusat dan Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "pemerintahan",
+                                           "presidensial",
+                                           "kekuasaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sistem Pemerintahan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "77-114",
+                         "sub_topics":  [
+                                            "Hak Politik",
+                                            "Hak Ekonomi",
+                                            "Hak Sosial Budaya",
+                                            "Hak Pendidikan"
+                                        ],
+                         "key_terms":  [
+                                           "hak warga",
+                                           "politik",
+                                           "ekonomi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Hak Warga Negara"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "115-152",
+                         "sub_topics":  [
+                                            "Membayar Pajak",
+                                            "Mematuhi Hukum",
+                                            "Bela Negara",
+                                            "Partisipasi Pembangunan"
+                                        ],
+                         "key_terms":  [
+                                           "kewajiban",
+                                           "pajak",
+                                           "bela negara"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kewajiban dan Tanggung Jawab"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "153-188",
+                         "sub_topics":  [
+                                            "Diplomasi",
+                                            "Perjanjian Internasional",
+                                            "PBB",
+                                            "Peran Indonesia di Dunia"
+                                        ],
+                         "key_terms":  [
+                                           "internasional",
+                                           "diplomasi",
+                                           "PBB"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hubungan Internasional"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "189-224",
+                         "sub_topics":  [
+                                            "Pembangunan Ekonomi",
+                                            "Pembangunan Pendidikan",
+                                            "Pembangunan Kesehatan",
+                                            "Pembangunan Infrastruktur"
+                                        ],
+                         "key_terms":  [
+                                           "pembangunan",
+                                           "ekonomi",
+                                           "infrastruktur"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pembangunan Nasional"
+                     }
+                 ],
+    "isbn":  "978-623-194-251-X"
+}

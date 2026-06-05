@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Surat At-Tin",
+                                            "Surat Al-Qadr",
+                                            "Surat Al-Bayyinah",
+                                            "Tajwid Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "tajwid",
+                                           "surat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surat Pendek"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Khalifah Abu Bakar",
+                                            "Khalifah Umar",
+                                            "Khalifah Utsman",
+                                            "Khalifah Ali"
+                                        ],
+                         "key_terms":  [
+                                           "khalifah",
+                                           "pemimpin",
+                                           "sahabat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Khalifah dan Pemimpin"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Kewajiban Shalat Jumat",
+                                            "Khutbah",
+                                            "Shalat Idul Fitri",
+                                            "Shalat Idul Adha"
+                                        ],
+                         "key_terms":  [
+                                           "shalat",
+                                           "Jumat",
+                                           "Idain"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Shalat Jumat dan Idain"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Puasa Ramadhan (Lanjutan)",
+                                            "Hikmah Puasa",
+                                            "Malam Lailatul Qadar",
+                                            "I\u0027tikaf"
+                                        ],
+                         "key_terms":  [
+                                           "puasa",
+                                           "Lailatul Qadar",
+                                           "i\u0027tikaf"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Puasa Wajib dan Sunnah"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Ikhlas Beribadah",
+                                            "Sabar dalam Ujian",
+                                            "Syukur Nikmat",
+                                            "Tawakal"
+                                        ],
+                         "key_terms":  [
+                                           "ikhlas",
+                                           "sabar",
+                                           "syukur",
+                                           "tawakal"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Ikhlas dan Sabar"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Rukun Haji",
+                                            "Wajib Haji",
+                                            "Tata Cara Umrah",
+                                            "Hikmah Haji"
+                                        ],
+                         "key_terms":  [
+                                           "haji",
+                                           "umrah",
+                                           "rukun"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Haji dan Umrah"
+                     }
+                 ],
+    "isbn":  "978-623-194-641-X"
+}

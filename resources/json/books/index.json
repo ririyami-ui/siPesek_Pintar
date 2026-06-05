@@ -1,0 +1,1250 @@
+﻿[
+    {
+        "id":  "sd-dae-1",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "1",
+        "title":  "Bahasa Daerah Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/daerah_1.json"
+    },
+    {
+        "id":  "sd-dae-2",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "2",
+        "title":  "Bahasa Daerah Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/daerah_2.json"
+    },
+    {
+        "id":  "sd-dae-3",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "3",
+        "title":  "Bahasa Daerah Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/daerah_3.json"
+    },
+    {
+        "id":  "sd-dae-4",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "4",
+        "title":  "Bahasa Daerah Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/daerah_4.json"
+    },
+    {
+        "id":  "sd-dae-5",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "5",
+        "title":  "Bahasa Daerah Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/daerah_5.json"
+    },
+    {
+        "id":  "sd-dae-6",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "6",
+        "title":  "Bahasa Daerah Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/daerah_6.json"
+    },
+    {
+        "id":  "sd-indo-1",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "1",
+        "title":  "Bahasa Indonesia Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/indo_1.json"
+    },
+    {
+        "id":  "sd-indo-2",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "2",
+        "title":  "Bahasa Indonesia Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/indo_2.json"
+    },
+    {
+        "id":  "sd-indo-3",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "3",
+        "title":  "Bahasa Indonesia Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/indo_3.json"
+    },
+    {
+        "id":  "sd-indo-4",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "4",
+        "title":  "Bahasa Indonesia Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/indo_4.json"
+    },
+    {
+        "id":  "sd-indo-5",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "5",
+        "title":  "Bahasa Indonesia Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/indo_5.json"
+    },
+    {
+        "id":  "sd-indo-6",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "6",
+        "title":  "Bahasa Indonesia Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/indo_6.json"
+    },
+    {
+        "id":  "sd-ing-1",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "1",
+        "title":  "Bahasa Inggris Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/inggris_1.json"
+    },
+    {
+        "id":  "sd-ing-2",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "2",
+        "title":  "Bahasa Inggris Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/inggris_2.json"
+    },
+    {
+        "id":  "sd-ing-3",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "3",
+        "title":  "Bahasa Inggris Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/inggris_3.json"
+    },
+    {
+        "id":  "sd-ing-4",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "4",
+        "title":  "Bahasa Inggris Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/inggris_4.json"
+    },
+    {
+        "id":  "sd-ing-5",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "5",
+        "title":  "Bahasa Inggris Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/inggris_5.json"
+    },
+    {
+        "id":  "sd-ing-6",
+        "jenjang":  "SD",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "6",
+        "title":  "Bahasa Inggris Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/inggris_6.json"
+    },
+    {
+        "id":  "sd-ipas-1",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "1",
+        "title":  "IPAS Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/ipas_1.json"
+    },
+    {
+        "id":  "sd-ipas-2",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "2",
+        "title":  "IPAS Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/ipas_2.json"
+    },
+    {
+        "id":  "sd-ipas-3",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "3",
+        "title":  "IPAS Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/ipas_3.json"
+    },
+    {
+        "id":  "sd-ipas-4",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "4",
+        "title":  "IPAS Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/ipas_4.json"
+    },
+    {
+        "id":  "sd-ipas-5",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "5",
+        "title":  "IPAS Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/ipas_5.json"
+    },
+    {
+        "id":  "sd-ipas-6",
+        "jenjang":  "SD",
+        "mapel":  "IPAS",
+        "kelas":  "6",
+        "title":  "IPAS Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/ipas_6.json"
+    },
+    {
+        "id":  "sd-mat-1",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "1",
+        "title":  "Matematika Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/matematika_1.json"
+    },
+    {
+        "id":  "sd-mat-2",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "2",
+        "title":  "Matematika Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/matematika_2.json"
+    },
+    {
+        "id":  "sd-mat-3",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "3",
+        "title":  "Matematika Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/matematika_3.json"
+    },
+    {
+        "id":  "sd-mat-4",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "4",
+        "title":  "Matematika Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/matematika_4.json"
+    },
+    {
+        "id":  "sd-mat-5",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "5",
+        "title":  "Matematika Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/matematika_5.json"
+    },
+    {
+        "id":  "sd-mat-6",
+        "jenjang":  "SD",
+        "mapel":  "Matematika",
+        "kelas":  "6",
+        "title":  "Matematika Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/matematika_6.json"
+    },
+    {
+        "id":  "sd-pai-1",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "1",
+        "title":  "Pendidikan Agama Islam Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/pai_1.json"
+    },
+    {
+        "id":  "sd-pai-2",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "2",
+        "title":  "Pendidikan Agama Islam Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/pai_2.json"
+    },
+    {
+        "id":  "sd-pai-3",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "3",
+        "title":  "Pendidikan Agama Islam Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/pai_3.json"
+    },
+    {
+        "id":  "sd-pai-4",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "4",
+        "title":  "Pendidikan Agama Islam Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/pai_4.json"
+    },
+    {
+        "id":  "sd-pai-5",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "5",
+        "title":  "Pendidikan Agama Islam Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/pai_5.json"
+    },
+    {
+        "id":  "sd-pai-6",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "6",
+        "title":  "Pendidikan Agama Islam Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/pai_6.json"
+    },
+    {
+        "id":  "sd-pjok-1",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "1",
+        "title":  "PJOK Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/pjok_1.json"
+    },
+    {
+        "id":  "sd-pjok-2",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "2",
+        "title":  "PJOK Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/pjok_2.json"
+    },
+    {
+        "id":  "sd-pjok-3",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "3",
+        "title":  "PJOK Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/pjok_3.json"
+    },
+    {
+        "id":  "sd-pjok-4",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "4",
+        "title":  "PJOK Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/pjok_4.json"
+    },
+    {
+        "id":  "sd-pjok-5",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "5",
+        "title":  "PJOK Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/pjok_5.json"
+    },
+    {
+        "id":  "sd-pjok-6",
+        "jenjang":  "SD",
+        "mapel":  "PJOK",
+        "kelas":  "6",
+        "title":  "PJOK Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/pjok_6.json"
+    },
+    {
+        "id":  "sd-pkn-1",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "1",
+        "title":  "Pendidikan Pancasila Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/pkn_1.json"
+    },
+    {
+        "id":  "sd-pkn-2",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "2",
+        "title":  "Pendidikan Pancasila Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/pkn_2.json"
+    },
+    {
+        "id":  "sd-pkn-3",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "3",
+        "title":  "Pendidikan Pancasila Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/pkn_3.json"
+    },
+    {
+        "id":  "sd-pkn-4",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "4",
+        "title":  "Pendidikan Pancasila Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/pkn_4.json"
+    },
+    {
+        "id":  "sd-pkn-5",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "5",
+        "title":  "Pendidikan Pancasila Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/pkn_5.json"
+    },
+    {
+        "id":  "sd-pkn-6",
+        "jenjang":  "SD",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "6",
+        "title":  "Pendidikan Pancasila Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/pkn_6.json"
+    },
+    {
+        "id":  "sd-pra-1",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "1",
+        "title":  "Prakarya Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_1.json"
+    },
+    {
+        "id":  "sd-pra-2",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "2",
+        "title":  "Prakarya Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_2.json"
+    },
+    {
+        "id":  "sd-pra-3",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "3",
+        "title":  "Prakarya Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_3.json"
+    },
+    {
+        "id":  "sd-pra-4",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "4",
+        "title":  "Prakarya Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_4.json"
+    },
+    {
+        "id":  "sd-pra-5",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "5",
+        "title":  "Prakarya Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_5.json"
+    },
+    {
+        "id":  "sd-pra-6",
+        "jenjang":  "SD",
+        "mapel":  "Prakarya",
+        "kelas":  "6",
+        "title":  "Prakarya Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/prakarya_6.json"
+    },
+    {
+        "id":  "sd-seni-1",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "1",
+        "title":  "Seni Rupa Kelas I (Kurikulum Merdeka)",
+        "path":  "sd/seni_1.json"
+    },
+    {
+        "id":  "sd-seni-2",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "2",
+        "title":  "Seni Rupa Kelas II (Kurikulum Merdeka)",
+        "path":  "sd/seni_2.json"
+    },
+    {
+        "id":  "sd-seni-3",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "3",
+        "title":  "Seni Rupa Kelas III (Kurikulum Merdeka)",
+        "path":  "sd/seni_3.json"
+    },
+    {
+        "id":  "sd-seni-4",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "4",
+        "title":  "Seni Rupa Kelas IV (Kurikulum Merdeka)",
+        "path":  "sd/seni_4.json"
+    },
+    {
+        "id":  "sd-seni-5",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "5",
+        "title":  "Seni Rupa Kelas V (Kurikulum Merdeka)",
+        "path":  "sd/seni_5.json"
+    },
+    {
+        "id":  "sd-seni-6",
+        "jenjang":  "SD",
+        "mapel":  "Seni Rupa",
+        "kelas":  "6",
+        "title":  "Seni Rupa Kelas VI (Kurikulum Merdeka)",
+        "path":  "sd/seni_6.json"
+    },
+    {
+        "id":  "sma-bio-10",
+        "jenjang":  "SMA",
+        "mapel":  "Biologi",
+        "kelas":  "10",
+        "title":  "Biologi Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/biologi_10.json"
+    },
+    {
+        "id":  "sma-bio-11",
+        "jenjang":  "SMA",
+        "mapel":  "Biologi",
+        "kelas":  "11",
+        "title":  "Biologi Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/biologi_11.json"
+    },
+    {
+        "id":  "sma-bio-12",
+        "jenjang":  "SMA",
+        "mapel":  "Biologi",
+        "kelas":  "12",
+        "title":  "Biologi Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/biologi_12.json"
+    },
+    {
+        "id":  "sma-eko-10",
+        "jenjang":  "SMA",
+        "mapel":  "Ekonomi",
+        "kelas":  "10",
+        "title":  "Ekonomi Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/ekonomi_10.json"
+    },
+    {
+        "id":  "sma-eko-11",
+        "jenjang":  "SMA",
+        "mapel":  "Ekonomi",
+        "kelas":  "11",
+        "title":  "Ekonomi Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/ekonomi_11.json"
+    },
+    {
+        "id":  "sma-eko-12",
+        "jenjang":  "SMA",
+        "mapel":  "Ekonomi",
+        "kelas":  "12",
+        "title":  "Ekonomi Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/ekonomi_12.json"
+    },
+    {
+        "id":  "sma-fis-10",
+        "jenjang":  "SMA",
+        "mapel":  "Fisika",
+        "kelas":  "10",
+        "title":  "Fisika Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/fisika_10.json"
+    },
+    {
+        "id":  "sma-fis-11",
+        "jenjang":  "SMA",
+        "mapel":  "Fisika",
+        "kelas":  "11",
+        "title":  "Fisika Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/fisika_11.json"
+    },
+    {
+        "id":  "sma-fis-12",
+        "jenjang":  "SMA",
+        "mapel":  "Fisika",
+        "kelas":  "12",
+        "title":  "Fisika Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/fisika_12.json"
+    },
+    {
+        "id":  "sma-geo-10",
+        "jenjang":  "SMA",
+        "mapel":  "Geografi",
+        "kelas":  "10",
+        "title":  "Geografi Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/geografi_10.json"
+    },
+    {
+        "id":  "sma-geo-11",
+        "jenjang":  "SMA",
+        "mapel":  "Geografi",
+        "kelas":  "11",
+        "title":  "Geografi Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/geografi_11.json"
+    },
+    {
+        "id":  "sma-geo-12",
+        "jenjang":  "SMA",
+        "mapel":  "Geografi",
+        "kelas":  "12",
+        "title":  "Geografi Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/geografi_12.json"
+    },
+    {
+        "id":  "sma-ind-10",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "10",
+        "title":  "Bahasa Indonesia Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/indo_10.json"
+    },
+    {
+        "id":  "sma-ind-11",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "11",
+        "title":  "Bahasa Indonesia Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/indo_11.json"
+    },
+    {
+        "id":  "sma-ind-12",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "12",
+        "title":  "Bahasa Indonesia Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/indo_12.json"
+    },
+    {
+        "id":  "sma-ing-10",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "10",
+        "title":  "Bahasa Inggris Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/inggris_10.json"
+    },
+    {
+        "id":  "sma-ing-11",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "11",
+        "title":  "Bahasa Inggris Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/inggris_11.json"
+    },
+    {
+        "id":  "sma-ing-12",
+        "jenjang":  "SMA",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "12",
+        "title":  "Bahasa Inggris Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/inggris_12.json"
+    },
+    {
+        "id":  "sma-kim-10",
+        "jenjang":  "SMA",
+        "mapel":  "Kimia",
+        "kelas":  "10",
+        "title":  "Kimia Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/kimia_10.json"
+    },
+    {
+        "id":  "sma-kim-11",
+        "jenjang":  "SMA",
+        "mapel":  "Kimia",
+        "kelas":  "11",
+        "title":  "Kimia Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/kimia_11.json"
+    },
+    {
+        "id":  "sma-kim-12",
+        "jenjang":  "SMA",
+        "mapel":  "Kimia",
+        "kelas":  "12",
+        "title":  "Kimia Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/kimia_12.json"
+    },
+    {
+        "id":  "sma-mtk-10",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika",
+        "kelas":  "10",
+        "title":  "Matematika Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/matematika_10.json"
+    },
+    {
+        "id":  "sma-mtk-11",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika",
+        "kelas":  "11",
+        "title":  "Matematika Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/matematika_11.json"
+    },
+    {
+        "id":  "sma-mtk-12",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika",
+        "kelas":  "12",
+        "title":  "Matematika Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/matematika_12.json"
+    },
+    {
+        "id":  "sma-mtl-10",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika Tingkat Lanjut",
+        "kelas":  "10",
+        "title":  "Matematika Tingkat Lanjut Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/mtk_lanjut_10.json"
+    },
+    {
+        "id":  "sma-mtl-11",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika Tingkat Lanjut",
+        "kelas":  "11",
+        "title":  "Matematika Tingkat Lanjut Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/mtk_lanjut_11.json"
+    },
+    {
+        "id":  "sma-mtl-12",
+        "jenjang":  "SMA",
+        "mapel":  "Matematika Tingkat Lanjut",
+        "kelas":  "12",
+        "title":  "Matematika Tingkat Lanjut Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/mtk_lanjut_12.json"
+    },
+    {
+        "id":  "sma-pai-10",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "10",
+        "title":  "Pendidikan Agama Islam Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/pai_10.json"
+    },
+    {
+        "id":  "sma-pai-11",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "11",
+        "title":  "Pendidikan Agama Islam Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/pai_11.json"
+    },
+    {
+        "id":  "sma-pai-12",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "12",
+        "title":  "Pendidikan Agama Islam Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/pai_12.json"
+    },
+    {
+        "id":  "sma-pjo-10",
+        "jenjang":  "SMA",
+        "mapel":  "PJOK",
+        "kelas":  "10",
+        "title":  "PJOK Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/pjok_10.json"
+    },
+    {
+        "id":  "sma-pjo-11",
+        "jenjang":  "SMA",
+        "mapel":  "PJOK",
+        "kelas":  "11",
+        "title":  "PJOK Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/pjok_11.json"
+    },
+    {
+        "id":  "sma-pjo-12",
+        "jenjang":  "SMA",
+        "mapel":  "PJOK",
+        "kelas":  "12",
+        "title":  "PJOK Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/pjok_12.json"
+    },
+    {
+        "id":  "sma-pkn-10",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "10",
+        "title":  "Pendidikan Pancasila Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/pkn_10.json"
+    },
+    {
+        "id":  "sma-pkn-11",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "11",
+        "title":  "Pendidikan Pancasila Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/pkn_11.json"
+    },
+    {
+        "id":  "sma-pkn-12",
+        "jenjang":  "SMA",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "12",
+        "title":  "Pendidikan Pancasila Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/pkn_12.json"
+    },
+    {
+        "id":  "sma-sos-10",
+        "jenjang":  "SMA",
+        "mapel":  "Sosiologi",
+        "kelas":  "10",
+        "title":  "Sosiologi Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/sosiologi_10.json"
+    },
+    {
+        "id":  "sma-sos-11",
+        "jenjang":  "SMA",
+        "mapel":  "Sosiologi",
+        "kelas":  "11",
+        "title":  "Sosiologi Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/sosiologi_11.json"
+    },
+    {
+        "id":  "sma-sos-12",
+        "jenjang":  "SMA",
+        "mapel":  "Sosiologi",
+        "kelas":  "12",
+        "title":  "Sosiologi Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/sosiologi_12.json"
+    },
+    {
+        "id":  "smp-daerah-7",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "7",
+        "title":  "Bahasa Daerah Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/daerah_7.json"
+    },
+    {
+        "id":  "smp-daerah-8",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "8",
+        "title":  "Bahasa Daerah Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/daerah_8.json"
+    },
+    {
+        "id":  "smp-daerah-9",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Daerah",
+        "kelas":  "9",
+        "title":  "Bahasa Daerah Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/daerah_9.json"
+    },
+    {
+        "id":  "smp-indo-7",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "7",
+        "title":  "Bahasa Indonesia Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/indo_7.json"
+    },
+    {
+        "id":  "smp-indo-8",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "8",
+        "title":  "Bahasa Indonesia Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/indo_8.json"
+    },
+    {
+        "id":  "smp-indo-9",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Indonesia",
+        "kelas":  "9",
+        "title":  "Bahasa Indonesia Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/indo_9.json"
+    },
+    {
+        "id":  "smp-inf-7",
+        "jenjang":  "SMP",
+        "mapel":  "Informatika",
+        "kelas":  "7",
+        "title":  "Informatika Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/informatika_7.json"
+    },
+    {
+        "id":  "smp-inf-8",
+        "jenjang":  "SMP",
+        "mapel":  "Informatika",
+        "kelas":  "8",
+        "title":  "Informatika Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/informatika_8.json"
+    },
+    {
+        "id":  "smp-inf-9",
+        "jenjang":  "SMP",
+        "mapel":  "Informatika",
+        "kelas":  "9",
+        "title":  "Informatika Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/informatika_9.json"
+    },
+    {
+        "id":  "smp-ing-7",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "7",
+        "title":  "Bahasa Inggris Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/inggris_7.json"
+    },
+    {
+        "id":  "smp-ing-8",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "8",
+        "title":  "Bahasa Inggris Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/inggris_8.json"
+    },
+    {
+        "id":  "smp-ing-9",
+        "jenjang":  "SMP",
+        "mapel":  "Bahasa Inggris",
+        "kelas":  "9",
+        "title":  "Bahasa Inggris Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/inggris_9.json"
+    },
+    {
+        "id":  "smp-ipa-7",
+        "jenjang":  "SMP",
+        "mapel":  "IPA",
+        "kelas":  "7",
+        "title":  "IPA Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/ipa_7.json"
+    },
+    {
+        "id":  "smp-ipa-8",
+        "jenjang":  "SMP",
+        "mapel":  "IPA",
+        "kelas":  "8",
+        "title":  "IPA Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/ipa_8.json"
+    },
+    {
+        "id":  "smp-ipa-9",
+        "jenjang":  "SMP",
+        "mapel":  "IPA",
+        "kelas":  "9",
+        "title":  "IPA Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/ipa_9.json"
+    },
+    {
+        "id":  "smp-ips-7",
+        "jenjang":  "SMP",
+        "mapel":  "IPS",
+        "kelas":  "7",
+        "title":  "IPS Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/ips_7.json"
+    },
+    {
+        "id":  "smp-ips-8",
+        "jenjang":  "SMP",
+        "mapel":  "IPS",
+        "kelas":  "8",
+        "title":  "IPS Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/ips_8.json"
+    },
+    {
+        "id":  "smp-ips-9",
+        "jenjang":  "SMP",
+        "mapel":  "IPS",
+        "kelas":  "9",
+        "title":  "IPS Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/ips_9.json"
+    },
+    {
+        "id":  "smp-mat-7",
+        "jenjang":  "SMP",
+        "mapel":  "Matematika",
+        "kelas":  "7",
+        "title":  "Matematika Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/matematika_7.json"
+    },
+    {
+        "id":  "smp-mat-8",
+        "jenjang":  "SMP",
+        "mapel":  "Matematika",
+        "kelas":  "8",
+        "title":  "Matematika Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/matematika_8.json"
+    },
+    {
+        "id":  "smp-mat-9",
+        "jenjang":  "SMP",
+        "mapel":  "Matematika",
+        "kelas":  "9",
+        "title":  "Matematika Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/matematika_9.json"
+    },
+    {
+        "id":  "smp-pai-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Islam Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/pai_7.json"
+    },
+    {
+        "id":  "smp-pai-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Islam Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/pai_8.json"
+    },
+    {
+        "id":  "smp-pai-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Islam",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Islam Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/pai_9.json"
+    },
+    {
+        "id":  "smp-pjok-7",
+        "jenjang":  "SMP",
+        "mapel":  "PJOK",
+        "kelas":  "7",
+        "title":  "PJOK Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/pjok_7.json"
+    },
+    {
+        "id":  "smp-pjok-8",
+        "jenjang":  "SMP",
+        "mapel":  "PJOK",
+        "kelas":  "8",
+        "title":  "PJOK Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/pjok_8.json"
+    },
+    {
+        "id":  "smp-pjok-9",
+        "jenjang":  "SMP",
+        "mapel":  "PJOK",
+        "kelas":  "9",
+        "title":  "PJOK Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/pjok_9.json"
+    },
+    {
+        "id":  "smp-pkn-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "7",
+        "title":  "Pendidikan Pancasila Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/pkn_7.json"
+    },
+    {
+        "id":  "smp-pkn-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "8",
+        "title":  "Pendidikan Pancasila Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/pkn_8.json"
+    },
+    {
+        "id":  "smp-pkn-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Pancasila",
+        "kelas":  "9",
+        "title":  "Pendidikan Pancasila Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/pkn_9.json"
+    },
+    {
+        "id":  "smp-prakarya-7",
+        "jenjang":  "SMP",
+        "mapel":  "Prakarya",
+        "kelas":  "7",
+        "title":  "Prakarya Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/prakarya_7.json"
+    },
+    {
+        "id":  "smp-prakarya-8",
+        "jenjang":  "SMP",
+        "mapel":  "Prakarya",
+        "kelas":  "8",
+        "title":  "Prakarya Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/prakarya_8.json"
+    },
+    {
+        "id":  "smp-prakarya-9",
+        "jenjang":  "SMP",
+        "mapel":  "Prakarya",
+        "kelas":  "9",
+        "title":  "Prakarya Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/prakarya_9.json"
+    },
+    {
+        "id":  "smp-seni-musik-7",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Musik",
+        "kelas":  "7",
+        "title":  "Seni Musik Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/seni_musik_7.json"
+    },
+    {
+        "id":  "smp-seni-rupa-7",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Rupa",
+        "kelas":  "7",
+        "title":  "Seni Rupa Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/seni_rupa_7.json"
+    },
+    {
+        "id":  "smp-seni-rupa-8",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Rupa",
+        "kelas":  "8",
+        "title":  "Seni Rupa Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/seni_rupa_8.json"
+    },
+    {
+        "id":  "smp-seni-rupa-9",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Rupa",
+        "kelas":  "9",
+        "title":  "Seni Rupa Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/seni_rupa_9.json"
+    },
+    {
+        "id":  "smp-seni-tari-7",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Tari",
+        "kelas":  "7",
+        "title":  "Seni Tari Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/seni_tari_7.json"
+    },
+    {
+        "id":  "smp-seni-teater-7",
+        "jenjang":  "SMP",
+        "mapel":  "Seni Teater",
+        "kelas":  "7",
+        "title":  "Seni Teater Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/seni_teater_7.json"
+    },
+    {
+        "id":  "smp-agama-kristen-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Kristen",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Kristen Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/agama_kristen_7.json"
+    },
+    {
+        "id":  "smp-agama-kristen-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Kristen",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Kristen Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/agama_kristen_8.json"
+    },
+    {
+        "id":  "smp-agama-kristen-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Kristen",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Kristen Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/agama_kristen_9.json"
+    },
+    {
+        "id":  "smp-agama-katolik-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Katolik",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Katolik Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/agama_katolik_7.json"
+    },
+    {
+        "id":  "smp-agama-katolik-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Katolik",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Katolik Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/agama_katolik_8.json"
+    },
+    {
+        "id":  "smp-agama-katolik-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Katolik",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Katolik Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/agama_katolik_9.json"
+    },
+    {
+        "id":  "smp-agama-hindu-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Hindu",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Hindu Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/agama_hindu_7.json"
+    },
+    {
+        "id":  "smp-agama-hindu-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Hindu",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Hindu Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/agama_hindu_8.json"
+    },
+    {
+        "id":  "smp-agama-hindu-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Hindu",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Hindu Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/agama_hindu_9.json"
+    },
+    {
+        "id":  "smp-agama-buddha-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Buddha",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Buddha Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/agama_buddha_7.json"
+    },
+    {
+        "id":  "smp-agama-buddha-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Buddha",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Buddha Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/agama_buddha_8.json"
+    },
+    {
+        "id":  "smp-agama-buddha-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Buddha",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Buddha Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/agama_buddha_9.json"
+    },
+    {
+        "id":  "smp-agama-khonghucu-7",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Khonghucu",
+        "kelas":  "7",
+        "title":  "Pendidikan Agama Khonghucu Kelas VII (Kurikulum Merdeka)",
+        "path":  "smp/agama_khonghucu_7.json"
+    },
+    {
+        "id":  "smp-agama-khonghucu-8",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Khonghucu",
+        "kelas":  "8",
+        "title":  "Pendidikan Agama Khonghucu Kelas VIII (Kurikulum Merdeka)",
+        "path":  "smp/agama_khonghucu_8.json"
+    },
+    {
+        "id":  "smp-agama-khonghucu-9",
+        "jenjang":  "SMP",
+        "mapel":  "Pendidikan Agama Khonghucu",
+        "kelas":  "9",
+        "title":  "Pendidikan Agama Khonghucu Kelas IX (Kurikulum Merdeka)",
+        "path":  "smp/agama_khonghucu_9.json"
+    },
+    {
+        "id":  "sma-sej-10",
+        "jenjang":  "SMA",
+        "mapel":  "Sejarah",
+        "kelas":  "10",
+        "title":  "Sejarah Kelas X (Kurikulum Merdeka)",
+        "path":  "sma/sejarah_10.json"
+    },
+    {
+        "id":  "sma-sej-11",
+        "jenjang":  "SMA",
+        "mapel":  "Sejarah",
+        "kelas":  "11",
+        "title":  "Sejarah Kelas XI (Kurikulum Merdeka)",
+        "path":  "sma/sejarah_11.json"
+    },
+    {
+        "id":  "sma-sej-12",
+        "jenjang":  "SMA",
+        "mapel":  "Sejarah",
+        "kelas":  "12",
+        "title":  "Sejarah Kelas XII (Kurikulum Merdeka)",
+        "path":  "sma/sejarah_12.json"
+    }
+]

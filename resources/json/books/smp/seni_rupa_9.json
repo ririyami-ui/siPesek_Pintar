@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-seni-rupa-9",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Seni Lukis", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Aliran Seni Lukis", "Teknik Melukis", "Media dan Bahan Lukis"], "key_terms": ["Seni Lukis", "Aliran", "Kuas", "Kanvas"] },
+    { "no": 2, "title": "Seni Patung", "pages": "41-70", "semester": "Ganjil", "sub_topics": ["Teknik Mematung", "Jenis Patung", "Bahan Membuat Patung"], "key_terms": ["Seni Patung", "Mematung", "Pahat", "Karya Tiga Dimensi"] },
+    { "no": 3, "title": "Seni Grafis", "pages": "71-100", "semester": "Genap", "sub_topics": ["Teknik Cetak", "Cukil Kayu", "Sablon"], "key_terms": ["Seni Grafis", "Cetak", "Sablon", "Cukil"] },
+    { "no": 4, "title": "Pameran", "pages": "101-130", "semester": "Genap", "sub_topics": ["Katalog Pameran", "Promosi Karya", "Pameran Virtual"], "key_terms": ["Pameran", "Katalog", "Promosi", "Virtual"] }
+  ]
+}

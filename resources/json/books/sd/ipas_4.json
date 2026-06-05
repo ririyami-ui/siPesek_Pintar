@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ipas-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Sistem Pernapasan",
+                                            "Sistem Peredaran Darah",
+                                            "Sistem Ekskresi",
+                                            "Gangguan Organ Tubuh"
+                                        ],
+                         "key_terms":  [
+                                           "organ",
+                                           "pernapasan",
+                                           "peredaran darah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Organ Tubuh Manusia"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-74",
+                         "sub_topics":  [
+                                            "Gaya Gravitasi",
+                                            "Gaya Gesek",
+                                            "Gaya Magnet",
+                                            "Penerapan Gaya"
+                                        ],
+                         "key_terms":  [
+                                           "gaya",
+                                           "gravitasi",
+                                           "magnet"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gaya dan Magnet"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "75-112",
+                         "sub_topics":  [
+                                            "SDA Hayati",
+                                            "SDA Non-Hayati",
+                                            "Persebaran SDA",
+                                            "Pengelolaan SDA"
+                                        ],
+                         "key_terms":  [
+                                           "sumber daya alam",
+                                           "hayati",
+                                           "pengelolaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sumber Daya Alam"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "113-148",
+                         "sub_topics":  [
+                                            "Produksi",
+                                            "Distribusi",
+                                            "Konsumsi",
+                                            "Pasar dan Uang"
+                                        ],
+                         "key_terms":  [
+                                           "ekonomi",
+                                           "produksi",
+                                           "distribusi",
+                                           "konsumsi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kegiatan Ekonomi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "149-184",
+                         "sub_topics":  [
+                                            "Kerajaan Hindu-Buddha",
+                                            "Kerajaan Islam",
+                                            "Peninggalan Sejarah",
+                                            "Museum"
+                                        ],
+                         "key_terms":  [
+                                           "sejarah",
+                                           "kerajaan",
+                                           "peninggalan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sejarah dan Peninggalan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "185-220",
+                         "sub_topics":  [
+                                            "Rotasi Bumi",
+                                            "Revolusi Bumi",
+                                            "Gerhana Matahari",
+                                            "Gerhana Bulan"
+                                        ],
+                         "key_terms":  [
+                                           "bumi",
+                                           "rotasi",
+                                           "revolusi",
+                                           "gerhana"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Planet dan Bumi"
+                     }
+                 ],
+    "isbn":  "978-623-194-341-X"
+}

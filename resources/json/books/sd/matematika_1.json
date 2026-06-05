@@ -1,0 +1,106 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Membilang 1-5",
+                                            "Membilang 6-10",
+                                            "Menulis Lambang Bilangan",
+                                            "Membandingkan Banyak Benda"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan",
+                                           "angka",
+                                           "membilang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bilangan 1-10"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Penjumlahan 1-10",
+                                            "Pengurangan 1-10",
+                                            "Soal Cerita Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "penjumlahan",
+                                           "pengurangan",
+                                           "operasi hitung"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Penjumlahan dan Pengurangan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Mengenal Bangun Datar",
+                                            "Mengenal Bangun Ruang",
+                                            "Menyusun Bangun"
+                                        ],
+                         "key_terms":  [
+                                           "bangun datar",
+                                           "bangun ruang",
+                                           "geometri"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bangun Ruang dan Bangun Datar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Membilang 11-20",
+                                            "Nilai Tempat",
+                                            "Penjumlahan 11-20",
+                                            "Pengurangan 11-20"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan",
+                                           "nilai tempat",
+                                           "operasi hitung"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bilangan 11-20"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-160",
+                         "sub_topics":  [
+                                            "Membaca Jam",
+                                            "Hari dan Bulan",
+                                            "Membandingkan Panjang",
+                                            "Mengukur dengan Satuan Tak Baku"
+                                        ],
+                         "key_terms":  [
+                                           "waktu",
+                                           "panjang",
+                                           "satuan tak baku"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Waktu dan Panjang"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "161-192",
+                         "sub_topics":  [
+                                            "Pola Bilangan Sederhana",
+                                            "Pola Gambar",
+                                            "Membuat Pola"
+                                        ],
+                         "key_terms":  [
+                                           "pola",
+                                           "bilangan",
+                                           "pola gambar"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pola Bilangan"
+                     }
+                 ],
+    "isbn":  "978-623-194-011-X"
+}

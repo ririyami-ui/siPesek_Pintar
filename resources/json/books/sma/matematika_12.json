@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtk-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Konsep Limit",
+                                            "Limit Fungsi Aljabar",
+                                            "Limit Fungsi Trigonometri",
+                                            "Limit Tak Hingga",
+                                            "Kekontinuan Fungsi"
+                                        ],
+                         "key_terms":  [
+                                           "Limit",
+                                           "Kekontinuan",
+                                           "Tak Hingga",
+                                           "Pendekatan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Limit Fungsi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Konsep Turunan",
+                                            "Aturan Turunan",
+                                            "Turunan Fungsi Trigonometri",
+                                            "Aplikasi Turunan",
+                                            "Nilai Maksimum dan Minimum"
+                                        ],
+                         "key_terms":  [
+                                           "Turunan",
+                                           "Diferensial",
+                                           "Gradien",
+                                           "Laju Perubahan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Turunan Fungsi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Integral Tak Tentu",
+                                            "Integral Tentu",
+                                            "Integral Substitusi",
+                                            "Integral Parsial",
+                                            "Aplikasi Integral"
+                                        ],
+                         "key_terms":  [
+                                           "Integral",
+                                           "Anti Turunan",
+                                           "Luas Daerah",
+                                           "Volume Benda Putar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Integral"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Kaidah Pencacahan",
+                                            "Permutasi",
+                                            "Kombinasi",
+                                            "Peluang Suatu Kejadian",
+                                            "Frekuensi Harapan"
+                                        ],
+                         "key_terms":  [
+                                           "Peluang",
+                                           "Permutasi",
+                                           "Kombinasi",
+                                           "Ruang Sampel"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Peluang"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Aturan Perkalian",
+                                            "Faktorial",
+                                            "Permutasi Siklis",
+                                            "Kombinasi Berulang",
+                                            "Peluang Kejadian Majemuk"
+                                        ],
+                         "key_terms":  [
+                                           "Faktorial",
+                                           "Permutasi",
+                                           "Kombinasi",
+                                           "Peluang Majemuk"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Aturan Pencacahan"
+                     }
+                 ],
+    "isbn":  "978-623-194-701-3"
+}

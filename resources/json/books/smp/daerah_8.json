@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-daerah-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Unggah-Ungguh Bahasa", "pages": "1-50", "semester": "Ganjil", "sub_topics": ["Tingkat Tutur Bahasa", "Etika Berbicara", "Penggunaan Bahasa Hormat"], "key_terms": ["Unggah-Ungguh", "Bahasa Hormat", "Krama", "Ngoko"] },
+    { "no": 2, "title": "Aksara Daerah", "pages": "51-100", "semester": "Ganjil", "sub_topics": ["Sejarah Aksara Daerah", "Jenis-Jenis Aksara", "Praktik Menulis Aksara"], "key_terms": ["Aksara", "Hanacaraka", "Pallawa", "Prasasti"] },
+    { "no": 3, "title": "Sastra Daerah", "pages": "101-150", "semester": "Genap", "sub_topics": ["Karya Sastra Klasik", "Karya Sastra Modern", "Analisis Sastra Daerah"], "key_terms": ["Sastra Klasik", "Sastra Modern", "Tembang", "Prosa"] },
+    { "no": 4, "title": "Pertunjukan Budaya", "pages": "151-200", "semester": "Genap", "sub_topics": ["Macam-Macam Pertunjukan", "Musik dan Tarian Daerah", "Apresiasi Seni Budaya"], "key_terms": ["Pertunjukan", "Tari Daerah", "Musik Tradisional", "Pagelaran"] }
+  ]
+}

@@ -339,9 +339,9 @@ const LessonPlanPage = () => {
             const subjectData = subjects.find(s => String(s.id) === String(selectedSubject));
             const subjectName = subjectData?.name || selectedSubject;
 
-            const response = await api.post('/ai/generate-lesson-plan', {
+            const commonPayload = {
                 kd: manualKd || selectedMaterial.kd || selectedMaterial.tp,
-                topic: manualMateri || selectedMaterial.materi, // API expects 'topic' mapped to 'materi'
+                topic: manualMateri || selectedMaterial.materi,
                 materi: manualMateri || selectedMaterial.materi,
                 gradeLevel: selectedGrade,
                 subject: subjectName,
@@ -361,11 +361,26 @@ const LessonPlanPage = () => {
                 elemen: selectedMaterial.elemen || '',
                 profilLulusan: selectedMaterial.profilLulusan || '',
                 studentCharacteristics: studentCharacteristics
-            });
+            };
 
-            const cleanResult = response.data.content.replace(/\|\|/g, '');
+            // Step 1: Generate Main RPP
+            setGenerationProgress('Menyusun struktur RPP & Langkah Pembelajaran...');
+            setGenerationStep(3); // Visual feedback
+            const mainRes = await api.post('/ai/generate-lesson-plan', { ...commonPayload, part: 'main' });
+            const mainContent = mainRes.data.content;
+
+            // Step 2: Generate Attachments
+            setGenerationProgress('Menyusun Lampiran (LKPD, KKTP, & Materi 800 kata)...');
+            setGenerationStep(5); // Visual feedback
+            const attachRes = await api.post('/ai/generate-lesson-plan', { ...commonPayload, part: 'attachments' });
+            const attachContent = attachRes.data.content;
+
+            // Step 3: Merge
+            setGenerationProgress('Finalisasi dokumen...');
+            setGenerationStep(6);
+            const cleanResult = (mainContent + "\n\n" + attachContent).replace(/\|\|/g, '');
             setGeneratedRPP(cleanResult);
-            toast.success("RPP berhasil disusun oleh AI!");
+            toast.success("RPP & Lampiran Lengkap berhasil disusun!");
         } catch (error) {
             console.error("Generation Error:", error);
             toast.error("Gagal menyusun RPP. Coba lagi.");
@@ -377,7 +392,7 @@ const LessonPlanPage = () => {
 
     // Effect to update labels based on step
     useEffect(() => {
-        if (isGenerating) {
+        if (isGenerating && typeof progressSteps[generationStep] === 'string') {
             setGenerationProgress(progressSteps[generationStep]);
         }
     }, [generationStep, isGenerating]);
@@ -762,7 +777,9 @@ const LessonPlanPage = () => {
                                             }}>
                                                 <p className="text-xs font-bold text-blue-600 dark:text-blue-400">{plan.gradeLevel} - {plan.subject}</p>
                                                 <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 line-clamp-1">{plan.topic}</p>
-                                                <p className="text-[10px] text-gray-500 mt-1">{plan.createdAt?.toDate ? new Date(plan.createdAt.toDate()).toLocaleDateString('id-ID') : 'N/A'}</p>
+                                                <p className="text-[10px] text-gray-500 mt-1">
+                                                    {plan.created_at ? new Date(plan.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}
+                                                </p>
                                             </div>
                                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button

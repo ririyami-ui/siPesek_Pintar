@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Mengenal Identitas Diri",
+                                            "Aku Bangga Menjadi Indonesia",
+                                            "Lambang Negara Garuda Pancasila",
+                                            "Menyanyikan Lagu Kebangsaan"
+                                        ],
+                         "key_terms":  [
+                                           "identitas",
+                                           "bangsa",
+                                           "pancasila"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aku Anak Indonesia"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Hak dan Kewajiban di Rumah",
+                                            "Hak dan Kewajiban di Sekolah",
+                                            "Aturan di Keluarga",
+                                            "Aturan di Sekolah"
+                                        ],
+                         "key_terms":  [
+                                           "hak",
+                                           "kewajiban",
+                                           "aturan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keluarga dan Sekolah"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Bermain Bersama Teman",
+                                            "Menghargai Perbedaan",
+                                            "Tolong-Menolong",
+                                            "Gotong Royong"
+                                        ],
+                         "key_terms":  [
+                                           "teman",
+                                           "gotong royong",
+                                           "perbedaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teman dan Pertemanan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Lingkungan Rumah",
+                                            "Lingkungan Sekolah",
+                                            "Menjaga Kebersihan",
+                                            "Mencintai Alam"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "kebersihan",
+                                           "alam"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkungan Sekitar"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Mengenal Budaya Daerah",
+                                            "Permainan Tradisional",
+                                            "Lagu Daerah",
+                                            "Makanan Khas Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "budaya",
+                                           "tradisional",
+                                           "daerah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Budaya dan Kesenian"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Pengamalan Pancasila",
+                                            "Simbol Pancasila",
+                                            "Makna Sila-Sila Pancasila",
+                                            "Pancasila dalam Kehidupan"
+                                        ],
+                         "key_terms":  [
+                                           "pancasila",
+                                           "sila",
+                                           "pengamalan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Nilai-Nilai Pancasila"
+                     }
+                 ],
+    "isbn":  "978-623-194-211-X"
+}

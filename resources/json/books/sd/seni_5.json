@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Aliran Seni Lukis",
+                                            "Seniman Indonesia",
+                                            "Ekspresionisme",
+                                            "Impresionisme"
+                                        ],
+                         "key_terms":  [
+                                           "seni lukis",
+                                           "modern",
+                                           "aliran"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Seni Lukis Modern"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Patung Figuratif",
+                                            "Patung Abstrak",
+                                            "Instalasi",
+                                            "Bahan Temuan"
+                                        ],
+                         "key_terms":  [
+                                           "patung",
+                                           "kontemporer",
+                                           "instalasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Seni Patung Kontemporer"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Komposisi Foto",
+                                            "Pencahayaan",
+                                            "Editing Foto",
+                                            "Pengenalan Video"
+                                        ],
+                         "key_terms":  [
+                                           "fotografi",
+                                           "videografi",
+                                           "komposisi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Fotografi dan Videografi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Ruang",
+                                            "Tata Ruang",
+                                            "Maket",
+                                            "Denah Bangunan"
+                                        ],
+                         "key_terms":  [
+                                           "desain interior",
+                                           "arsitektur",
+                                           "maket"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Desain Interior dan Arsitektur"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Keramik",
+                                            "Kriya Logam",
+                                            "Produk Fungsional",
+                                            "Branding Produk"
+                                        ],
+                         "key_terms":  [
+                                           "kriya",
+                                           "produk",
+                                           "keramik"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kriya dan Produk"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Desain Digital",
+                                            "Animasi Sederhana",
+                                            "3D Modeling",
+                                            "Portofolio Digital"
+                                        ],
+                         "key_terms":  [
+                                           "digital",
+                                           "animasi",
+                                           "3D"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Seni Rupa dan Teknologi"
+                     }
+                 ],
+    "isbn":  "978-623-194-551-X"
+}

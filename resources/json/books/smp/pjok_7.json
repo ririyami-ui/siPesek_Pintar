@@ -1,0 +1,14 @@
+{
+  "bookId": "smp-pjok-7",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Permainan Bola Besar", "pages": "1-32", "semester": "Ganjil", "sub_topics": ["Sepak Bola", "Bola Voli", "Bola Basket"], "key_terms": ["Sepak Bola", "Bola Voli", "Bola Basket", "Dribbling", "Smash"] },
+    { "no": 2, "title": "Permainan Bola Kecil", "pages": "33-60", "semester": "Ganjil", "sub_topics": ["Bulu Tangkis", "Tenis Meja", "Kasti"], "key_terms": ["Bulu Tangkis", "Tenis Meja", "Kasti", "Servis"] },
+    { "no": 3, "title": "Atletik", "pages": "61-88", "semester": "Ganjil", "sub_topics": ["Lari Jarak Pendek", "Lompat Jauh", "Lempar Turbo"], "key_terms": ["Atletik", "Lari", "Lompat", "Lempar"] },
+    { "no": 4, "title": "Seni Beladiri", "pages": "89-115", "semester": "Ganjil", "sub_topics": ["Pencak Silat", "Kuda-Kuda", "Pukulan dan Tendangan"], "key_terms": ["Pencak Silat", "Bela Diri", "Kuda-Kuda", "Tangkisan"] },
+    { "no": 5, "title": "Kebugaran Jasmani", "pages": "116-140", "semester": "Genap", "sub_topics": ["Latihan Kekuatan", "Latihan Kelenturan", "Latihan Daya Tahan"], "key_terms": ["Kebugaran", "Kekuatan", "Daya Tahan", "Kelenturan"] },
+    { "no": 6, "title": "Senam Lantai", "pages": "141-165", "semester": "Genap", "sub_topics": ["Gerakan Dasar Senam", "Guling Depan", "Guling Belakang", "Kayang"], "key_terms": ["Senam Lantai", "Guling", "Kayang", "Sikap Lilin"] },
+    { "no": 7, "title": "Gerak Berirama", "pages": "166-190", "semester": "Genap", "sub_topics": ["Senam Irama", "Langkah Dasar", "Aktivitas Ritmik"], "key_terms": ["Gerak Berirama", "Irama", "Senam", "Koreografi"] },
+    { "no": 8, "title": "Perkembangan Tubuh Remaja", "pages": "191-215", "semester": "Genap", "sub_topics": ["Perubahan Fisik", "Perubahan Psikologis", "Pola Hidup Sehat"], "key_terms": ["Pubertas", "Remaja", "Kesehatan", "Gizi"] }
+  ]
+}

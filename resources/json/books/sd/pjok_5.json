@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Futsal",
+                                            "Bola Tangan",
+                                            "Rugbi Mini",
+                                            "Variasi Gerak"
+                                        ],
+                         "key_terms":  [
+                                           "bola besar",
+                                           "futsal",
+                                           "variasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Bola Besar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-76",
+                         "sub_topics":  [
+                                            "Softball",
+                                            "Kasti Lanjutan",
+                                            "Golf Mini",
+                                            "Variasi Gerak"
+                                        ],
+                         "key_terms":  [
+                                           "bola kecil",
+                                           "softball",
+                                           "variasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Bola Kecil"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "77-114",
+                         "sub_topics":  [
+                                            "Senam Aerobik",
+                                            "Senam SKJ",
+                                            "Gerak Berirama",
+                                            "Koreografi Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "ritmik",
+                                           "aerobik",
+                                           "senam"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aktivitas Ritmik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "115-152",
+                         "sub_topics":  [
+                                            "Renang Gaya Punggung",
+                                            "Renang Gaya Dada",
+                                            "Pertolongan di Air",
+                                            "Lomba Renang"
+                                        ],
+                         "key_terms":  [
+                                           "air",
+                                           "renang",
+                                           "gaya"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Aktivitas Air Lanjutan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "153-188",
+                         "sub_topics":  [
+                                            "Kesehatan Reproduksi",
+                                            "Pola Asuh",
+                                            "Bahaya Narkoba",
+                                            "Perilaku Sehat"
+                                        ],
+                         "key_terms":  [
+                                           "reproduksi",
+                                           "narkoba",
+                                           "sehat"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kesehatan Reproduksi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "189-224",
+                         "sub_topics":  [
+                                            "Program Latihan",
+                                            "Periodisasi",
+                                            "FITT Principle",
+                                            "Jurnal Aktivitas"
+                                        ],
+                         "key_terms":  [
+                                           "perencanaan",
+                                           "program",
+                                           "FITT"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Perencanaan Aktivitas"
+                     }
+                 ],
+    "isbn":  "978-623-194-451-X"
+}

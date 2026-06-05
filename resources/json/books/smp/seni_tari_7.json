@@ -1,0 +1,78 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "smp-seni-tari-7",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "title":  "Gerak Dasar Tari",
+                         "pages":  "1-36",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Unsur Gerak Tari",
+                                            "Ruang, Waktu, Tenaga",
+                                            "Gerak Maknawi dan Murni",
+                                            "Ragam Gerak Dasar"
+                                        ],
+                         "key_terms":  [
+                                          "Gerak",
+                                          "Ruang",
+                                          "Tenaga",
+                                          "Iringan"
+                                      ]
+                     },
+                     {
+                         "no":  2,
+                         "title":  "Konsep Karya Tari",
+                         "pages":  "37-72",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Ide dan Tema Tari",
+                                            "Struktur Karya Tari",
+                                            "Koreografi Sederhana",
+                                            "Tata Rias dan Busana"
+                                        ],
+                         "key_terms":  [
+                                          "Koreografi",
+                                          "Tema",
+                                          "Struktur",
+                                          "Estetika"
+                                      ]
+                     },
+                     {
+                         "no":  3,
+                         "title":  "Tari Kreasi Daerah",
+                         "pages":  "73-108",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Pengertian Tari Kreasi",
+                                            "Tari Kreasi Berpasangan",
+                                            "Tari Kreasi Kelompok",
+                                            "Nilai Tradisi dalam Kreasi"
+                                        ],
+                         "key_terms":  [
+                                          "Kreasi",
+                                          "Tradisi",
+                                          "Kelompok",
+                                          "Improvisasi"
+                                      ]
+                     },
+                     {
+                         "no":  4,
+                         "title":  "Pertunjukan Tari",
+                         "pages":  "109-140",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Tahapan Pertunjukan Tari",
+                                            "Tata Panggung dan Properti",
+                                            "Latihan dan Gladi Bersih",
+                                            "Pementasan dan Evaluasi"
+                                        ],
+                         "key_terms":  [
+                                          "Pertunjukan",
+                                          "Panggung",
+                                          "Properti",
+                                          "Apreasiasi"
+                                      ]
+                     }
+                 ]
+}

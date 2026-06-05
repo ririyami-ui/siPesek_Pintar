@@ -1,0 +1,60 @@
+{
+  "bookId": "sma-kim-11",
+  "isbn": "978-602-244-378-0",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Kimia SMA Kelas XI",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Termokimia dan Laju Reaksi",
+      "pages": "1-40",
+      "sub_topics": [
+        "Perubahan Entalpi (Eksoterm vs Endoterm)",
+        "Perhitungan Hukum Hess dan Energi Ikatan",
+        "Faktor-faktor yang Mempengaruhi Laju Reaksi",
+        "Teori Tumbukan dan Energi Aktivasi"
+      ],
+      "key_terms": ["Entalpi", "Eksoterm", "Katalis", "Laju Reaksi", "Orde Reaksi"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk mendiagramkan siklus energi Hukum Hess."
+    },
+    {
+      "no": 2,
+      "title": "Kesetimbangan Kimia",
+      "pages": "41-80",
+      "sub_topics": [
+        "Konsep Kesetimbangan Dinamis",
+        "Tetapan Kesetimbangan (Kc dan Kp)",
+        "Faktor yang Mempengaruhi Kesetimbangan (Azas Le Chatelier)",
+        "Hubungan Kc dengan Derajat Disosiasi"
+      ],
+      "key_terms": ["Reversibel", "Irreversibel", "Kesetimbangan", "Pergeseran"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan pengaruh perubahan suhu, tekanan, dan konsentrasi terhadap posisi kesetimbangan (Azas Le Chatelier)."
+    },
+    {
+      "no": 3,
+      "title": "Larutan Asam-Basa",
+      "pages": "81-130",
+      "sub_topics": [
+        "Teori Asam-Basa (Arrhenius, Brønsted-Lowry, Lewis)",
+        "Kekuatan Asam Basa dan Ka/Kb",
+        "pH dan pOH",
+        "Hidrolisis Garam dan Larutan Penyangga"
+      ],
+      "key_terms": ["Indikator", "Titrasi", "Sangga", "Amfoter", "Derajat Keasaman"],
+      "visual_hints": "Wajib gunakan LaTeX untuk perhitungan pH larutan asam kuat dan basa lemah."
+    },
+    {
+      "no": 4,
+      "title": "Kelarutan dan Hasil Kali Kelarutan",
+      "pages": "131-170",
+      "sub_topics": [
+        "Konsep Ksp",
+        "Hubungan Kelarutan dengan Ksp",
+        "Pengaruh Ion Senama terhadap Kelarutan",
+        "Reaksi Pengendapan"
+      ],
+      "key_terms": ["Ksp", "Pelarutan", "Ion Senama", "Endapan", "Solubilitas"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk menghitung nilai Ksp berdasarkan data percobaan."
+    }
+  ]
+}

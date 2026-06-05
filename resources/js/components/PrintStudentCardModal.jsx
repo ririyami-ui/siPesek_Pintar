@@ -137,7 +137,7 @@ const PrintStudentCardModal = ({ isOpen, onClose, selectedStudents, logoUrl, sch
                                             borderRadius: '4px'
                                         }}>
                                             <img 
-                                                src={student.nisn ? `/storage/student_photos/${student.nisn}.jpg` : '/default_avatar.png'}
+                                                src={student.nisn ? `/student_photos/${student.nisn}.jpg` : '/default_avatar.png'}
                                                 alt="Photo"
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 onError={(e) => {

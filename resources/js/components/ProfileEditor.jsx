@@ -5,9 +5,10 @@ import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import api from '../lib/axios';
 
 export default function ProfileEditor() {
-  const { userProfile, loadingSettings, updateProfile } = useSettings();
+  const { userProfile, loadingSettings, updateProfile, refreshProfile } = useSettings();
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
 
   const [formData, setFormData] = useState({
@@ -65,6 +66,35 @@ export default function ProfileEditor() {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleProfilePhotoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 300 * 1024) {
+      toast.error('Ukuran file maksimal 300KB.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    const toastId = toast.loading('Mengunggah foto profil...');
+    try {
+      await api.post(`/users/${userProfile.id}/photo`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      toast.success('Foto profil berhasil diperbarui!', { id: toastId });
+      if (refreshProfile) {
+        await refreshProfile();
+      }
+    } catch (err) {
+      console.error('Failed to upload profile photo:', err);
+      toast.error(err.response?.data?.message || 'Gagal memperbarui foto profil.', { id: toastId });
+    }
   };
 
   const handleLogoChange = (e) => {
@@ -217,6 +247,42 @@ export default function ProfileEditor() {
       <h3 className="text-xl font-bold mb-6 text-purple-800 dark:text-purple-300">Pengaturan Profil & AI</h3>
       <form onSubmit={handleUpdateProfile} className="space-y-8">
         
+        {/* SECTION: FOTO PROFIL PENGGUNA */}
+        <div className="space-y-4 pb-6 border-b dark:border-gray-700">
+          <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 flex items-center gap-2">
+            Foto Profil Anda
+          </h4>
+          <div className="flex flex-col sm:flex-row gap-6 items-center">
+            <div className="relative group rounded-full border-2 border-dashed border-gray-200 dark:border-gray-700 h-24 w-24 flex items-center justify-center bg-gray-50 dark:bg-gray-900/40 overflow-hidden shadow-sm">
+              {userProfile?.photo_url ? (
+                <img src={userProfile.photo_url} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-center">
+                  <svg className="mx-auto h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+            <div className="flex-1 text-center sm:text-left space-y-1">
+              <p className="text-base font-bold text-text-light dark:text-text-dark">{userProfile?.name || 'User'}</p>
+              <p className="text-xs text-text-muted-light dark:text-text-muted-dark capitalize font-semibold tracking-wider">{userProfile?.role || 'Peran'}</p>
+              <div className="flex flex-wrap gap-2 justify-center sm:justify-start pt-2">
+                <label className="cursor-pointer px-4 py-2 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/40 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95">
+                  GANTI FOTO PROFIL
+                  <input 
+                    type="file" 
+                    onChange={handleProfilePhotoUpload} 
+                    className="hidden" 
+                    accept="image/*" 
+                  />
+                </label>
+              </div>
+              <p className="text-[10px] text-gray-400 italic pt-1">* Format: JPG, PNG, WEBP (Maks 300KB)</p>
+            </div>
+          </div>
+        </div>
+
         {/* SECTION: INFORMASI SEKOLAH */}
         <div className="space-y-6">
           <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">Informasi Sekolah</h4>

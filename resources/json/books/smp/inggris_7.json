@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-ing-7",
+  "isbn": "978-602-244-885-3",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "English for Nusantara SMP Class VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "About Me",
+      "pages": "1-30",
+      "sub_topics": [
+        "Introducing Myself",
+        "Hobbies and Interests",
+        "Physical Appearances",
+        "Daily Activities"
+      ],
+      "key_terms": ["Introduction", "Pronouns", "Personality", "Simple Present Tense"],
+      "visual_hints": "Use Mermaid Mindmap to categorize personal information and descriptive adjectives."
+    },
+    {
+      "no": 2,
+      "title": "Culinary and Me",
+      "pages": "31-65",
+      "sub_topics": [
+        "Favorite Food and Drinks",
+        "Texture and Taste",
+        "Cooking Tools and Actions",
+        "Procedure Text: Making a Snack"
+      ],
+      "key_terms": ["Ingredients", "Utensils", "Imperative Verbs", "Sequence Markers"],
+      "visual_hints": "Use Mermaid Flowchart to visualize the steps of a simple recipe."
+    },
+    {
+      "no": 3,
+      "title": "Home Sweet Home",
+      "pages": "67-100",
+      "sub_topics": [
+        "Rooms in the House",
+        "Furniture and Household Items",
+        "Cleanliness and Chores",
+        "Describing Your Room"
+      ],
+      "key_terms": ["Prepositions of Place", "Living Room", "Cleaning", "Furniture"],
+      "visual_hints": "Use Mermaid Mindmap to label items found in different rooms of a house."
+    },
+    {
+      "no": 4,
+      "title": "My School Activities",
+      "pages": "101-135",
+      "sub_topics": [
+        "School Subjects",
+        "Class Schedule",
+        "Online Learning Tips",
+        "Extracurricular Activities"
+      ],
+      "key_terms": ["Schedule", "Assignment", "Study Habits", "Subject"],
+      "visual_hints": "Use Spreadsheet Renderer to display a sample school timetable."
+    }
+  ]
+}

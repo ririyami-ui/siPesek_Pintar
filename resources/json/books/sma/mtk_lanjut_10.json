@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtl-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Bentuk Fungsi Rasional",
+                                            "Domain dan Range",
+                                            "Asimtot",
+                                            "Grafik Fungsi Rasional",
+                                            "Aplikasi Fungsi Rasional"
+                                        ],
+                         "key_terms":  [
+                                           "Fungsi",
+                                           "Rasional",
+                                           "Asimtot",
+                                           "Domain"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Fungsi Rasional"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Definisi dan Notasi",
+                                            "Jenis Matriks",
+                                            "Operasi Dasar",
+                                            "Sifat Operasi",
+                                            "Matriks Khusus"
+                                        ],
+                         "key_terms":  [
+                                           "Matriks",
+                                           "Ordo",
+                                           "Transpose",
+                                           "Skalar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Matriks Awal"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Vektor Posisi",
+                                            "Operasi Vektor",
+                                            "Perkalian Skalar",
+                                            "Proyeksi Vektor",
+                                            "Aplikasi Vektor"
+                                        ],
+                         "key_terms":  [
+                                           "Vektor",
+                                           "Bidang",
+                                           "Skalar",
+                                           "Proyeksi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Vektor pada Bidang Datar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Fungsi Sinus dan Cosinus",
+                                            "Fungsi Tangen",
+                                            "Identitas Trigonometri",
+                                            "Persamaan Trigonometri",
+                                            "Pertidaksamaan Trigonometri"
+                                        ],
+                         "key_terms":  [
+                                           "Trigonometri",
+                                           "Periodik",
+                                           "Identitas",
+                                           "Amplitudo"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Fungsi Trigonometri Lanjutan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Lingkaran",
+                                            "Parabola",
+                                            "Elips",
+                                            "Hiperbola",
+                                            "Persamaan Irisan Kerucut"
+                                        ],
+                         "key_terms":  [
+                                           "Kerucut",
+                                           "Lingkaran",
+                                           "Parabola",
+                                           "Elips"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Irisan Kerucut"
+                     }
+                 ],
+    "isbn":  "978-623-194-721-3"
+}

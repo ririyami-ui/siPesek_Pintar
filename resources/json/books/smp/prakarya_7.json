@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-prakarya-7",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Kerajinan Bahan Alam", "pages": "1-45", "semester": "Ganjil", "sub_topics": ["Serat Alam", "Tanah Liat dan Keramik", "Bambu dan Rotan"], "key_terms": ["Kerajinan", "Bahan Alam", "Serat", "Keramik"] },
+    { "no": 2, "title": "Rekayasa Teknologi Konstruksi", "pages": "46-85", "semester": "Ganjil", "sub_topics": ["Konstruksi Miniatur", "Alat dan Bahan Bangunan", "Keamanan Kerja"], "key_terms": ["Rekayasa", "Konstruksi", "Miniatur", "Bangunan"] },
+    { "no": 3, "title": "Budidaya Tanaman Sayuran", "pages": "86-125", "semester": "Genap", "sub_topics": ["Jenis Tanaman Sayuran", "Teknik Penanaman", "Perawatan dan Panen"], "key_terms": ["Budidaya", "Sayuran", "Hidroponik", "Media Tanam"] },
+    { "no": 4, "title": "Pengolahan Bahan Pangan Buah", "pages": "126-170", "semester": "Genap", "sub_topics": ["Teknik Pengolahan Buah", "Membuat Manisan", "Membuat Jus dan Sirup"], "key_terms": ["Pengolahan", "Buah", "Manisan", "Sirup"] }
+  ]
+}

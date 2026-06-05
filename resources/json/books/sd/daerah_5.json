@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Apa Itu Wacana?",
+                                            "Wacana Narasi",
+                                            "Wacana Deskripsi",
+                                            "Menganalisis Wacana"
+                                        ],
+                         "key_terms":  [
+                                           "wacana",
+                                           "narasi",
+                                           "deskripsi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Wacana"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Piwulang Luhur",
+                                            "Pitutur dari Leluhur",
+                                            "Pepatah dan Peribahasa",
+                                            "Makna Piwulang"
+                                        ],
+                         "key_terms":  [
+                                           "piwulang",
+                                           "pitutur",
+                                           "pepatah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Piwulang dan Pitutur"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Aksara Lengkap",
+                                            "Angka dalam Aksara",
+                                            "Menulis Wacana dengan Aksara",
+                                            "Membaca Aksara Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "aksara",
+                                           "lengkap",
+                                           "tulisan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aksara Lengkap"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Pengertian Drama Tradisi",
+                                            "Ketoprak",
+                                            "Ludruk",
+                                            "Lenong"
+                                        ],
+                         "key_terms":  [
+                                           "drama",
+                                           "tradisi",
+                                           "ketoprak"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Drama Tradisi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Apa Itu Sesorah?",
+                                            "Struktur Pidato",
+                                            "Berlatih Sesorah",
+                                            "Sesorah di Acara Sekolah"
+                                        ],
+                         "key_terms":  [
+                                           "sesorah",
+                                           "pidato",
+                                           "wicara"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sesorah"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-188",
+                         "sub_topics":  [
+                                            "Jenis Sastra Daerah",
+                                            "Novel dan Cerpen Daerah",
+                                            "Puisi Daerah",
+                                            "Apresiasi Karya Sastra"
+                                        ],
+                         "key_terms":  [
+                                           "sastra",
+                                           "apresiasi",
+                                           "karya"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengetahuan Sastra"
+                     }
+                 ],
+    "isbn":  "978-623-194-835-8"
+}

@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Garuda Pancasila",
+                                            "Bendera Merah Putih",
+                                            "Bahasa Indonesia",
+                                            "Lambang Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "lambang negara",
+                                           "garuda",
+                                           "bendera"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Arti Lambang Negara"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Suku Bangsa",
+                                            "Agama di Indonesia",
+                                            "Toleransi Beragama",
+                                            "Budaya Gotong Royong"
+                                        ],
+                         "key_terms":  [
+                                           "keberagaman",
+                                           "toleransi",
+                                           "gotong royong"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keberagaman di Sekitar"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Struktur Pemerintahan Desa",
+                                            "Struktur Pemerintahan Kelurahan",
+                                            "Tugas Perangkat Desa",
+                                            "Partisipasi Masyarakat"
+                                        ],
+                         "key_terms":  [
+                                           "pemerintahan",
+                                           "desa",
+                                           "kelurahan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pemerintahan Desa dan Kelurahan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-142",
+                         "sub_topics":  [
+                                            "Pengertian HAM",
+                                            "Jenis-Jenis HAM",
+                                            "Contoh HAM dalam Kehidupan",
+                                            "Pelanggaran HAM"
+                                        ],
+                         "key_terms":  [
+                                           "HAM",
+                                           "hak asasi",
+                                           "pelanggaran"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hak Asasi Manusia"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "143-176",
+                         "sub_topics":  [
+                                            "Kewajiban Warga Negara",
+                                            "Tanggung Jawab Sosial",
+                                            "Disiplin",
+                                            "Integritas"
+                                        ],
+                         "key_terms":  [
+                                           "kewajiban",
+                                           "tanggung jawab",
+                                           "disiplin"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kewajiban dan Tanggung Jawab"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "177-210",
+                         "sub_topics":  [
+                                            "Makna Persatuan",
+                                            "Bahaya Perpecahan",
+                                            "Memperkuat Persatuan",
+                                            "Semangat Kekeluargaan"
+                                        ],
+                         "key_terms":  [
+                                           "persatuan",
+                                           "kesatuan",
+                                           "kekeluargaan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Persatuan dan Kesatuan"
+                     }
+                 ],
+    "isbn":  "978-623-194-231-X"
+}

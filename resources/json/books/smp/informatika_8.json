@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-info-8",
+  "isbn": "978-602-244-504-3",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Informatika SMP Kelas VIII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Berpikir Komputasional",
+      "pages": "23-40",
+      "sub_topics": [
+        "Fungsi dan Representasi Data",
+        "Himpunan dan Sistem Bilangan (Biner, Desimal)",
+        "Algoritma: Struktur Data Stack (Tumpukan)",
+        "Algoritma: Struktur Data Queue (Antrean)"
+      ],
+      "key_terms": ["Stack", "Queue", "LIFO", "FIFO", "Biner"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk simulasi tumpukan piring (Stack) dan antrean bank (Queue)."
+    },
+    {
+      "no": 2,
+      "title": "Sistem Komputer & Jaringan",
+      "pages": "41-65",
+      "sub_topics": [
+        "Komponen Sistem Komputer (Von Neumann)",
+        "Sistem Operasi dan Manajemen Memori",
+        "Jaringan Lokal (LAN) dan Internet",
+        "Enkripsi Data Sederhana"
+      ],
+      "key_terms": ["Motherboard", "Multitasking", "IP Address", "Router", "Enkripsi"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan jenis-jenis jaringan komputer."
+    },
+    {
+      "no": 3,
+      "title": "Analisis Data",
+      "pages": "67-90",
+      "sub_topics": [
+        "Pencarian dan Pengolahan Data",
+        "Fungsi Statistik Dasar (SUM, AVERAGE, IF)",
+        "Visualisasi Data dengan Grafik",
+        "Prediksi Data Sederhana"
+      ],
+      "key_terms": ["Filter", "Pivot Table", "Validasi Data", "Tren"],
+      "visual_hints": "Wajib gunakan Spreadsheet Renderer untuk mendemonstrasikan rumus IF bercabang."
+    },
+    {
+      "no": 4,
+      "title": "Algoritma dan Pemrograman (Pengembangan)",
+      "pages": "91-130",
+      "sub_topics": [
+        "Pemrograman Blok (Scratch/Blockly)",
+        "Penggunaan List (Array) dalam Scratch",
+        "Modularisasi: Membuat Blok Sendiri (Custom Blocks)",
+        "Logika Perulangan Bersarang (Nested Loop)"
+      ],
+      "key_terms": ["List", "Parameter", "Nested Loop", "Modularisasi"],
+      "visual_hints": "Tampilkan contoh Scratch untuk membuat pola geometri menggunakan Nested Loop (Repeat dalam Repeat)."
+    }
+  ]
+}

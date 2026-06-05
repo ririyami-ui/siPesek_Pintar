@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-indo-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-34",
+                         "sub_topics":  [
+                                            "Kosakata Baru",
+                                            "Menyusun Kalimat",
+                                            "Bercerita tentang Kegiatan",
+                                            "Menyimak Petunjuk"
+                                        ],
+                         "key_terms":  [
+                                           "kegiatan",
+                                           "kalimat",
+                                           "petunjuk"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kegiatan Sehari-Hari"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "35-68",
+                         "sub_topics":  [
+                                            "Mengenal Tempat Umum",
+                                            "Pertanyaan dan Jawaban",
+                                            "Mendeskripsikan Tempat",
+                                            "Membaca Denah Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "tempat umum",
+                                           "deskripsi",
+                                           "denah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Tempat Umum"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "69-100",
+                         "sub_topics":  [
+                                            "Benda Hidup dan Tak Hidup",
+                                            "Sifat Benda",
+                                            "Kegunaan Benda",
+                                            "Mengelompokkan Benda"
+                                        ],
+                         "key_terms":  [
+                                           "benda",
+                                           "sifat",
+                                           "kelompok"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Benda di Sekitar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "101-134",
+                         "sub_topics":  [
+                                            "Menceritakan Pengalaman",
+                                            "Menulis Cerita Sederhana",
+                                            "Membaca Cerita Rakyat",
+                                            "Nilai Moral dalam Cerita"
+                                        ],
+                         "key_terms":  [
+                                           "pengalaman",
+                                           "cerita",
+                                           "moral"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengalaman Pribadi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "135-168",
+                         "sub_topics":  [
+                                            "Mengenal Budaya Daerah",
+                                            "Lagu Daerah",
+                                            "Tarian Daerah",
+                                            "Membaca Cerita Budaya"
+                                        ],
+                         "key_terms":  [
+                                           "budaya",
+                                           "kesenian",
+                                           "daerah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Budaya dan Kesenian"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "169-200",
+                         "sub_topics":  [
+                                            "Menjaga Lingkungan",
+                                            "Membaca Teks Informasi",
+                                            "Menulis Laporan Sederhana",
+                                            "Presentasi"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "laporan",
+                                           "presentasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkungan dan Alam"
+                     }
+                 ],
+    "isbn":  "978-623-194-121-X"
+}

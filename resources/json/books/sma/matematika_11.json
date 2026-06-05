@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtk-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Definisi dan Ordo Matriks",
+                                            "Operasi Matriks",
+                                            "Determinan Matriks",
+                                            "Invers Matriks",
+                                            "Penyelesaian SPL dengan Matriks"
+                                        ],
+                         "key_terms":  [
+                                           "Matriks",
+                                           "Determinan",
+                                           "Invers",
+                                           "Ordo"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Matriks"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Definisi dan Notasi Vektor",
+                                            "Operasi Vektor",
+                                            "Vektor Posisi",
+                                            "Vektor dalam Bidang Datar",
+                                            "Perkalian Skalar Dua Vektor"
+                                        ],
+                         "key_terms":  [
+                                           "Vektor",
+                                           "Skalar",
+                                           "Vektor Posisi",
+                                           "Resultan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Vektor"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Translasi",
+                                            "Refleksi",
+                                            "Rotasi",
+                                            "Dilatasi",
+                                            "Komposisi Transformasi"
+                                        ],
+                         "key_terms":  [
+                                           "Translasi",
+                                           "Refleksi",
+                                           "Rotasi",
+                                           "Dilatasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Transformasi Geometri"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Relasi dan Fungsi",
+                                            "Sifat Fungsi",
+                                            "Fungsi Komposisi",
+                                            "Fungsi Invers",
+                                            "Fungsi Invers dari Komposisi"
+                                        ],
+                         "key_terms":  [
+                                           "Fungsi",
+                                           "Komposisi",
+                                           "Invers",
+                                           "Bijektif"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Fungsi Komposisi dan Invers"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Bentuk Umum Polinomial",
+                                            "Operasi Aljabar Polinomial",
+                                            "Kesamaan Polinomial",
+                                            "Pembagian Polinomial",
+                                            "Teorema Sisa dan Faktor"
+                                        ],
+                         "key_terms":  [
+                                           "Polinomial",
+                                           "Derajat",
+                                           "Koefisien",
+                                           "Teorema Sisa"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Polinomial"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Penyajian Data",
+                                            "Ukuran Pemusatan",
+                                            "Ukuran Letak",
+                                            "Ukuran Penyebaran",
+                                            "Distribusi Frekuensi"
+                                        ],
+                         "key_terms":  [
+                                           "Mean",
+                                           "Median",
+                                           "Modus",
+                                           "Kuartil"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Statistika"
+                     }
+                 ],
+    "isbn":  "978-623-194-702-6"
+}

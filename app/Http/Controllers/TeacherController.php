@@ -17,7 +17,7 @@ class TeacherController extends Controller
             $query->where('auth_user_id', Auth::id());
         }
 
-        $teachers = $query->with(['assignments.subject', 'assignments.schoolClass'])
+        $teachers = $query->with(['assignments.subject', 'assignments.schoolClass', 'authUser'])
             ->orderByRaw('LENGTH(code) ASC, code ASC')
             ->get();
         return response()->json(['data' => $teachers]);

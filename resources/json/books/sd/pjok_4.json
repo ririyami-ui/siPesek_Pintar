@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Sepak Bola Lanjutan",
+                                            "Bola Basket Lanjutan",
+                                            "Strategi Serangan",
+                                            "Strategi Pertahanan"
+                                        ],
+                         "key_terms":  [
+                                           "permainan",
+                                           "invasi",
+                                           "strategi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Invasi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Bola Voli Mini",
+                                            "Bulu Tangkis Lanjutan",
+                                            "Servis",
+                                            "Smash"
+                                        ],
+                         "key_terms":  [
+                                           "net",
+                                           "voli",
+                                           "bulu tangkis"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Net"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Lompat Kangkang",
+                                            "Lompat Jongkok",
+                                            "Meroda",
+                                            "Handstand"
+                                        ],
+                         "key_terms":  [
+                                           "senam",
+                                           "artistik",
+                                           "lompat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Senam Artistik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Jelajah Alam",
+                                            "Perkemahan",
+                                            "Orientasi Lapangan",
+                                            "Konservasi Alam"
+                                        ],
+                         "key_terms":  [
+                                           "luar kelas",
+                                           "alam",
+                                           "perkemahan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Aktivitas Luar Kelas"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Indeks Massa Tubuh",
+                                            "VO2 Max",
+                                            "Tes Kekuatan",
+                                            "Evaluasi Kebugaran"
+                                        ],
+                         "key_terms":  [
+                                           "pengukuran",
+                                           "kebugaran",
+                                           "IMT"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengukuran Kebugaran"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Kerja Sama Tim",
+                                            "Kompetisi Sehat",
+                                            "Fair Play",
+                                            "Kepemimpinan"
+                                        ],
+                         "key_terms":  [
+                                           "nilai",
+                                           "kerja sama",
+                                           "fair play"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Nilai-Nilai Olahraga"
+                     }
+                 ],
+    "isbn":  "978-623-194-441-X"
+}

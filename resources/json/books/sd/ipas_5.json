@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ipas-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Sistem Saraf",
+                                            "Sistem Hormon",
+                                            "Sistem Imun",
+                                            "Pola Hidup Sehat"
+                                        ],
+                         "key_terms":  [
+                                           "sistem tubuh",
+                                           "saraf",
+                                           "imun",
+                                           "sehat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sistem dalam Tubuh"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-76",
+                         "sub_topics":  [
+                                            "Sifat Cahaya",
+                                            "Optik",
+                                            "Sifat Bunyi",
+                                            "Frekuensi dan Amplitudo"
+                                        ],
+                         "key_terms":  [
+                                           "cahaya",
+                                           "bunyi",
+                                           "optik",
+                                           "frekuensi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Cahaya dan Bunyi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "77-114",
+                         "sub_topics":  [
+                                            "Peta",
+                                            "Kenampakan Alam",
+                                            "Kenampakan Buatan",
+                                            "Iklim dan Cuaca"
+                                        ],
+                         "key_terms":  [
+                                           "peta",
+                                           "geografi",
+                                           "iklim"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Peta dan Geografi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "115-152",
+                         "sub_topics":  [
+                                            "Penjajahan",
+                                            "Kebangkitan Nasional",
+                                            "Proklamasi",
+                                            "Tokoh Perjuangan"
+                                        ],
+                         "key_terms":  [
+                                           "perjuangan",
+                                           "proklamasi",
+                                           "pahlawan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Perjuangan Bangsa Indonesia"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "153-188",
+                         "sub_topics":  [
+                                            "Listrik Statis",
+                                            "Listrik Dinamis",
+                                            "Rangkaian Listrik",
+                                            "Teknologi Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "listrik",
+                                           "teknologi",
+                                           "rangkaian"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Listrik dan Teknologi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "189-224",
+                         "sub_topics":  [
+                                            "Daur Ulang",
+                                            "Konservasi",
+                                            "Ekowisata",
+                                            "Pembangunan Berkelanjutan"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "daur ulang",
+                                           "konservasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pelestarian Lingkungan"
+                     }
+                 ],
+    "isbn":  "978-623-194-351-X"
+}

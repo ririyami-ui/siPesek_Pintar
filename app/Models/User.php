@@ -76,4 +76,31 @@ class User extends Authenticatable
     {
         return $this->hasMany(LibraryLoan::class, 'librarian_id');
     }
+
+    protected $appends = ['photo_url'];
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        $filename = "profile_photos/{$this->id}.jpg";
+        if (file_exists(public_path($filename))) {
+            return asset($filename);
+        }
+        
+        $filenamePng = "profile_photos/{$this->id}.png";
+        if (file_exists(public_path($filenamePng))) {
+            return asset($filenamePng);
+        }
+
+        $filenameJpeg = "profile_photos/{$this->id}.jpeg";
+        if (file_exists(public_path($filenameJpeg))) {
+            return asset($filenameJpeg);
+        }
+
+        $filenameWebp = "profile_photos/{$this->id}.webp";
+        if (file_exists(public_path($filenameWebp))) {
+            return asset($filenameWebp);
+        }
+        
+        return null;
+    }
 }

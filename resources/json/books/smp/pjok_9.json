@@ -1,0 +1,11 @@
+{
+  "bookId": "smp-pjok-9",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Permainan Bola Besar", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Sepak Bola Lanjutan", "Pola Penyerangan", "Pola Pertahanan"], "key_terms": ["Penyerangan", "Pertahanan", "Formasi", "Taknik"] },
+    { "no": 2, "title": "Permainan Bola Kecil", "pages": "41-80", "semester": "Ganjil", "sub_topics": ["Baseball", "Sofbol Lanjutan", "Strategi Permainan"], "key_terms": ["Baseball", "Sofbol", "Strategi", "Base"] },
+    { "no": 3, "title": "Atletik", "pages": "81-110", "semester": "Ganjil", "sub_topics": ["Lari Jarak Menengah", "Lompat Jangkit", "Lempar Cakram"], "key_terms": ["Lari Jarak Menengah", "Lompat Jangkit", "Lempar Cakram", "Awalan"] },
+    { "no": 4, "title": "Bela Diri", "pages": "111-140", "semester": "Genap", "sub_topics": ["Pencak Silat Kompetisi", "Teknik Bantingan", "Pertandingan Silat"], "key_terms": ["Kompetisi", "Bantingan", "Pertandingan", "Wasit"] },
+    { "no": 5, "title": "Kebugaran Jasmani", "pages": "141-170", "semester": "Genap", "sub_topics": ["Kebugaran Terkait Kesehatan", "Kebugaran Terkait Keterampilan", "Latihan Interval"], "key_terms": ["Kebugaran", "Kesehatan", "Keterampilan", "Interval"] }
+  ]
+}

@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Unsur 2D",
+                                            "Prinsip 2D",
+                                            "Teknik 2D Lanjutan",
+                                            "Medium 2D"
+                                        ],
+                         "key_terms":  [
+                                           "dua dimensi",
+                                           "2D",
+                                           "medium"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Seni Rupa Dua Dimensi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Unsur 3D",
+                                            "Teknik 3D",
+                                            "Bahan 3D",
+                                            "Pameran 3D"
+                                        ],
+                         "key_terms":  [
+                                           "tiga dimensi",
+                                           "3D",
+                                           "teknik"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Seni Rupa Tiga Dimensi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Ilustrasi Cerita",
+                                            "Komik Strip",
+                                            "Manga Sederhana",
+                                            "Layout dan Balon Kata"
+                                        ],
+                         "key_terms":  [
+                                           "ilustrasi",
+                                           "komik",
+                                           "layout"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ilustrasi dan Komik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Motif Batik",
+                                            "Motif Ukir",
+                                            "Ornamen Daerah",
+                                            "Penerapan Ragam Hias"
+                                        ],
+                         "key_terms":  [
+                                           "ragam hias",
+                                           "batik",
+                                           "ornamen"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Ragam Hias Nusantara"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Tipografi",
+                                            "Layout",
+                                            "Logo",
+                                            "Poster"
+                                        ],
+                         "key_terms":  [
+                                           "DKV",
+                                           "tipografi",
+                                           "logo",
+                                           "poster"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Desain Komunikasi Visual"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Perencanaan Proyek",
+                                            "Proses Kreatif",
+                                            "Pameran Akhir",
+                                            "Portofolio Digital"
+                                        ],
+                         "key_terms":  [
+                                           "proyek",
+                                           "kreatif",
+                                           "portofolio"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek Seni Rupa"
+                     }
+                 ],
+    "isbn":  "978-623-194-541-X"
+}

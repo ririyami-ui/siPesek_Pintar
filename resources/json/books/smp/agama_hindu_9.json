@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Pengertian Upaveda",
+                "Ayurveda",
+                "Dhanurveda",
+                "Gandharvaveda"
+            ],
+            "key_terms": [
+                "Upaveda",
+                "Ayurveda",
+                "Dhanurveda"
+            ],
+            "semester": "Ganjil",
+            "title": "Upaveda"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Siksha",
+                "Vyakarana",
+                "Nirukta",
+                "Chanda"
+            ],
+            "key_terms": [
+                "Wedangga",
+                "Siksha",
+                "Vyakarana"
+            ],
+            "semester": "Ganjil",
+            "title": "Wedangga"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Aliran Filsafat Hindu",
+                "Darshana",
+                "Konsep Ketuhanan",
+                "Filsafat dan Kehidupan"
+            ],
+            "key_terms": [
+                "filsafat",
+                "Darshana",
+                "ketuhanan"
+            ],
+            "semester": "Ganjil",
+            "title": "Filsafat Hindu"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Kepemimpinan dalam Hindu",
+                "Ciri Pemimpin Bijak",
+                "Contoh Pemimpin Hindu",
+                "Nilai Kepemimpinan"
+            ],
+            "key_terms": [
+                "kepemimpinan",
+                "pemimpin",
+                "bijaksana"
+            ],
+            "semester": "Genap",
+            "title": "Kepemimpinan Hindu"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Seni dalam Agama Hindu",
+                "Seni Tari dan Musik",
+                "Seni Ukir dan Patung",
+                "Religi dan Kreativitas"
+            ],
+            "key_terms": [
+                "seni",
+                "religi",
+                "budaya"
+            ],
+            "semester": "Genap",
+            "title": "Seni Religi"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Etika Hindu",
+                "Ajaran Susila",
+                "Catur Warna dan Catur Asrama",
+                "Hidup Beretika"
+            ],
+            "key_terms": [
+                "etika",
+                "susila",
+                "dharma"
+            ],
+            "semester": "Genap",
+            "title": "Etika Hindu"
+        }
+    ],
+    "isbn": "978-623-194-909-6"
+}

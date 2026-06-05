@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Ideologi Terbuka",
+                                            "Pancasila vs Ideologi Lain",
+                                            "Relevansi Pancasila",
+                                            "Pancasila di Era Digital"
+                                        ],
+                         "key_terms":  [
+                                           "ideologi",
+                                           "pancasila",
+                                           "era digital"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pancasila sebagai Ideologi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "TNI dan POLRI",
+                                            "Sistem Pertahanan",
+                                            "Keamanan Nasional",
+                                            "Wawasan Kebangsaan"
+                                        ],
+                         "key_terms":  [
+                                           "pertahanan",
+                                           "keamanan",
+                                           "TNI",
+                                           "POLRI"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pertahanan dan Keamanan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Agama di Indonesia",
+                                            "Kebebasan Beribadah",
+                                            "Toleransi Antar Umat",
+                                            "Kerukunan Beragama"
+                                        ],
+                         "key_terms":  [
+                                           "agama",
+                                           "toleransi",
+                                           "kerukunan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kemerdekaan Beragama"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Desentralisasi",
+                                            "Dana Desa",
+                                            "Perda",
+                                            "Pembangunan Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "otonomi",
+                                           "desentralisasi",
+                                           "daerah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Otonomi Daerah"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Ciri Masyarakat Madani",
+                                            "Organisasi Masyarakat",
+                                            "Partisipasi Warga",
+                                            "Kontrol Sosial"
+                                        ],
+                         "key_terms":  [
+                                           "masyarakat madani",
+                                           "organisasi",
+                                           "partisipasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Masyarakat Madani"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Penelitian Sosial Sederhana",
+                                            "Pengamatan Lingkungan",
+                                            "Laporan Kewarganegaraan",
+                                            "Presentasi dan Diskusi"
+                                        ],
+                         "key_terms":  [
+                                           "proyek",
+                                           "kewarganegaraan",
+                                           "penelitian"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek Kewarganegaraan"
+                     }
+                 ],
+    "isbn":  "978-623-194-261-X"
+}

@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-buddha-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Kehidupan Pangeran Siddhartha",
+                "Pertapaan dan Pencerahan",
+                "Ajaran Buddha di India",
+                "Wafatnya Buddha"
+            ],
+            "key_terms": [
+                "Buddha",
+                "Siddhartha",
+                "pencerahan"
+            ],
+            "semester": "Ganjil",
+            "title": "Riwayat Buddha"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pengertian Tipitaka",
+                "Vinaya Pitaka",
+                "Sutta Pitaka",
+                "Abhidhamma Pitaka"
+            ],
+            "key_terms": [
+                "Tipitaka",
+                "Vinaya",
+                "Sutta"
+            ],
+            "semester": "Ganjil",
+            "title": "Tipitaka"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Kebenaran Mulia Pertama",
+                "Kebenaran Mulia Kedua",
+                "Kebenaran Mulia Ketiga",
+                "Kebenaran Mulia Keempat"
+            ],
+            "key_terms": [
+                "Ariya Sacca",
+                "dukkha",
+                "nibbana"
+            ],
+            "semester": "Ganjil",
+            "title": "Catur Ariya Sacca"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Pengertian Jalan Mulia",
+                "Pandangan Benar dan Pikiran Benar",
+                "Kata Benar dan Perbuatan Benar",
+                "Konsentrasi Benar"
+            ],
+            "key_terms": [
+                "Astangika Marga",
+                "jalan tengah",
+                "kesadaran"
+            ],
+            "semester": "Genap",
+            "title": "Astangika Marga"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Hukum Karma",
+                "Punarbhava",
+                "Hubungan Karma dan Kelahiran Kembali",
+                "Pembebasan dari Samsara"
+            ],
+            "key_terms": [
+                "karma",
+                "punarbhava",
+                "samsara"
+            ],
+            "semester": "Genap",
+            "title": "Karma dan Punarbhava"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Pengertian Meditasi",
+                "Samatha Bhavana",
+                "Vipassana Bhavana",
+                "Manfaat Meditasi"
+            ],
+            "key_terms": [
+                "meditasi",
+                "bhavana",
+                "sati"
+            ],
+            "semester": "Genap",
+            "title": "Meditasi"
+        }
+    ],
+    "isbn": "978-623-194-910-2"
+}

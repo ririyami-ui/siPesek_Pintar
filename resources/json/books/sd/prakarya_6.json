@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pra-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Prinsip Desain Produk",
+                                            "Sketsa Produk",
+                                            "Membuat Gambar Kerja",
+                                            "Memilih Bahan Produk"
+                                        ],
+                         "key_terms":  [
+                                           "desain",
+                                           "sketsa",
+                                           "produk"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Desain Produk"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Apa Itu Prototipe?",
+                                            "Membuat Prototipe Sederhana",
+                                            "Menguji Prototipe",
+                                            "Memperbaiki Prototipe"
+                                        ],
+                         "key_terms":  [
+                                           "prototipe",
+                                           "uji coba",
+                                           "perbaikan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Prototipe"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Fungsi Kemasan",
+                                            "Jenis Bahan Kemasan",
+                                            "Desain Kemasan Menarik",
+                                            "Label dan Informasi Produk"
+                                        ],
+                         "key_terms":  [
+                                           "kemasan",
+                                           "label",
+                                           "desain"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kemasan Produk"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Media Sosial untuk Bisnis",
+                                            "Membuat Konten Promosi",
+                                            "Marketplace untuk Produk",
+                                            "Strategi Pemasaran Digital"
+                                        ],
+                         "key_terms":  [
+                                           "pemasaran",
+                                           "digital",
+                                           "promosi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pemasaran Digital"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Perencanaan Proyek",
+                                            "Produksi Massal",
+                                            "Manajemen Usaha",
+                                            "Laporan Keuangan Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "kewirausahaan",
+                                           "proyek",
+                                           "manajemen"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek Kewirausahaan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-190",
+                         "sub_topics":  [
+                                            "Perencanaan Pameran",
+                                            "Menata Produk Pameran",
+                                            "Mempromosikan Pameran",
+                                            "Evaluasi Pameran"
+                                        ],
+                         "key_terms":  [
+                                           "pameran",
+                                           "karya",
+                                           "promosi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pameran Karya"
+                     }
+                 ],
+    "isbn":  "978-623-194-846-4"
+}

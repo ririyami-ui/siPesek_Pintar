@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pjo-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Sepak Bola",
+                                            "Bola Voli",
+                                            "Bola Basket",
+                                            "Teknik Dasar",
+                                            "Peraturan Permainan"
+                                        ],
+                         "key_terms":  [
+                                           "Sepak Bola",
+                                           "Bola Voli",
+                                           "Bola Basket",
+                                           "Tim"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Bola Besar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Bulu Tangkis",
+                                            "Tenis Meja",
+                                            "Softball",
+                                            "Rounders",
+                                            "Teknik Dasar"
+                                        ],
+                         "key_terms":  [
+                                           "Bulu Tangkis",
+                                           "Tenis Meja",
+                                           "Softball",
+                                           "Pukulan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permainan Bola Kecil"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Lari Jarak Pendek",
+                                            "Lari Jarak Menengah",
+                                            "Lompat Jauh",
+                                            "Lempar Peluru",
+                                            "Lempar Lembing"
+                                        ],
+                         "key_terms":  [
+                                           "Atletik",
+                                           "Lari",
+                                           "Lompat",
+                                           "Lempar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Atletik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pencak Silat",
+                                            "Kuda-Kuda",
+                                            "Pukulan dan Tendangan",
+                                            "Tangkisan",
+                                            "Elakan"
+                                        ],
+                         "key_terms":  [
+                                           "Pencak Silat",
+                                           "Beladiri",
+                                           "Pukulan",
+                                           "Tangkisan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Beladiri"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Komposisi",
+                                            "Kekuatan",
+                                            "Kelentukan",
+                                            "Daya Tahan",
+                                            "Kecepatan"
+                                        ],
+                         "key_terms":  [
+                                           "Kebugaran",
+                                           "Kekuatan",
+                                           "Daya Tahan",
+                                           "Fleksibilitas"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kebugaran Jasmani"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Senam Lantai",
+                                            "Senam Irama",
+                                            "Roll Depan",
+                                            "Roll Belakang",
+                                            "Kayang"
+                                        ],
+                         "key_terms":  [
+                                           "Senam",
+                                           "Lantai",
+                                           "Irama",
+                                           "Roll"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Senam"
+                     }
+                 ],
+    "isbn":  "978-623-194-715-5"
+}

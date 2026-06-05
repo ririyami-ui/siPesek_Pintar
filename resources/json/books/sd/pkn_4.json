@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Pancasila sebagai Dasar Negara",
+                                            "Implementasi Sila 1-5",
+                                            "Pancasila dalam Kehidupan Sehari-Hari",
+                                            "Pancasila sebagai Pandangan Hidup"
+                                        ],
+                         "key_terms":  [
+                                           "pancasila",
+                                           "dasar negara",
+                                           "pandangan hidup"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Nilai-Nilai Pancasila"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "UUD 1945",
+                                            "Hukum dan Peraturan",
+                                            "Hak dan Kewajiban Warga Negara",
+                                            "Lembaga Negara"
+                                        ],
+                         "key_terms":  [
+                                           "konstitusi",
+                                           "uud 1945",
+                                           "hukum"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Konstitusi dan Hukum"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Pemerintah Provinsi",
+                                            "Pemerintah Kabupaten/Kota",
+                                            "Pemilihan Kepala Daerah",
+                                            "Peran Masyarakat"
+                                        ],
+                         "key_terms":  [
+                                           "pemerintahan",
+                                           "daerah",
+                                           "pilkada"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pemerintahan Daerah"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Lembaga Legislatif",
+                                            "Lembaga Eksekutif",
+                                            "Lembaga Yudikatif",
+                                            "Lembaga Independen"
+                                        ],
+                         "key_terms":  [
+                                           "lembaga negara",
+                                           "legislatif",
+                                           "eksekutif",
+                                           "yudikatif"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lembaga-Lembaga Negara"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Prinsip Demokrasi",
+                                            "Pemilu",
+                                            "Kebebasan Berpendapat",
+                                            "Demokrasi di Sekolah"
+                                        ],
+                         "key_terms":  [
+                                           "demokrasi",
+                                           "pemilu",
+                                           "kebebasan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Budaya Demokrasi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Dampak Globalisasi",
+                                            "Mempertahankan Identitas",
+                                            "Budaya Asing",
+                                            "Filter Budaya"
+                                        ],
+                         "key_terms":  [
+                                           "globalisasi",
+                                           "identitas",
+                                           "budaya"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Globalisasi dan Identitas Bangsa"
+                     }
+                 ],
+    "isbn":  "978-623-194-241-X"
+}

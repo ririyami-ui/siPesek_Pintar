@@ -1,0 +1,107 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Membilang Loncat",
+                                            "Nilai Tempat (Satuan-Puluhan)",
+                                            "Perbandingan Bilangan",
+                                            "Urutan Bilangan"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan cacah",
+                                           "nilai tempat",
+                                           "membilang loncat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bilangan Cacah 1-100"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-70",
+                         "sub_topics":  [
+                                            "Penjumlahan dengan Teknik Menyimpan",
+                                            "Pengurangan dengan Teknik Meminjam",
+                                            "Operasi Hitung Campuran"
+                                        ],
+                         "key_terms":  [
+                                           "penjumlahan",
+                                           "pengurangan",
+                                           "teknik menyimpan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Penjumlahan dan Pengurangan Lanjutan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "71-106",
+                         "sub_topics":  [
+                                            "Konsep Perkalian",
+                                            "Konsep Pembagian",
+                                            "Perkalian dengan Bilangan 1-5"
+                                        ],
+                         "key_terms":  [
+                                           "perkalian",
+                                           "pembagian",
+                                           "operasi hitung"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Perkalian dan Pembagian Dasar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "107-138",
+                         "sub_topics":  [
+                                            "Sifat Bangun Datar",
+                                            "Simetri Lipat",
+                                            "Simetri Putar",
+                                            "Menggambar Bangun Datar"
+                                        ],
+                         "key_terms":  [
+                                           "bangun datar",
+                                           "simetri",
+                                           "geometri"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bangun Datar dan Simetri"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "139-170",
+                         "sub_topics":  [
+                                            "Mengukur Berat",
+                                            "Mengukur Panjang",
+                                            "Satuan Baku",
+                                            "Konversi Satuan Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "berat",
+                                           "panjang",
+                                           "satuan baku"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengukuran Berat dan Panjang"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "171-200",
+                         "sub_topics":  [
+                                            "Mengenal Uang Rupiah",
+                                            "Nilai Uang",
+                                            "Kesetaraan Nilai Uang",
+                                            "Berbelanja"
+                                        ],
+                         "key_terms":  [
+                                           "uang",
+                                           "rupiah",
+                                           "belanja"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Uang"
+                     }
+                 ],
+    "isbn":  "978-623-194-021-X"
+}

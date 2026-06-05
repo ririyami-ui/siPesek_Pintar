@@ -1,0 +1,99 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pai-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Luqman 13-14",
+                                            "Pendidikan Anak",
+                                            "Bersyukur"
+                                        ],
+                         "key_terms":  [
+                                           "Luqman",
+                                           "Pendidikan",
+                                           "Syukur",
+                                           "Nasihat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Luqman"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Ibrahim 32-34",
+                                            "Nikmat Allah",
+                                            "Bersyukur atas Nikmat"
+                                        ],
+                         "key_terms":  [
+                                           "Ibrahim",
+                                           "Nikmat",
+                                           "Syukur",
+                                           "Tafsir"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Ibrahim"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Politik dalam Islam",
+                                            "Pemerintahan Islam",
+                                            "Kepemimpinan",
+                                            "Keadilan Sosial",
+                                            "Musyawarah"
+                                        ],
+                         "key_terms":  [
+                                           "Siasah",
+                                           "Politik",
+                                           "Pemerintahan",
+                                           "Musyawarah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Fiqih Siasah Syar\u0027iyah"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Etika Pergaulan",
+                                            "Etika Bermedia Sosial",
+                                            "Akhlak Lingkungan",
+                                            "Akhlak Kewarganegaraan"
+                                        ],
+                         "key_terms":  [
+                                           "Etika",
+                                           "Media Sosial",
+                                           "Lingkungan",
+                                           "Pergaulan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak dan Etika"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Kebangkitan Islam",
+                                            "Pembaruan Islam",
+                                            "Organisasi Islam Modern",
+                                            "Islam di Indonesia",
+                                            "Tokoh Pembaruan"
+                                        ],
+                         "key_terms":  [
+                                           "Modern",
+                                           "Pembaruan",
+                                           "Organisasi",
+                                           "Indonesia"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sejarah Islam Modern"
+                     }
+                 ],
+    "isbn":  "978-623-194-716-8"
+}

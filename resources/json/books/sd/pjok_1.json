@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Jalan",
+                                            "Lari",
+                                            "Lompat",
+                                            "Lempar"
+                                        ],
+                         "key_terms":  [
+                                           "gerak",
+                                           "jalan",
+                                           "lari",
+                                           "lompat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gerak Dasar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Permainan Tradisional",
+                                            "Permainan Bola",
+                                            "Estafet",
+                                            "Kucing-Tikusan"
+                                        ],
+                         "key_terms":  [
+                                           "permainan",
+                                           "tradisional",
+                                           "bola"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aktivitas Permainan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Gerak Tepuk Tangan",
+                                            "Gerak Iringan Musik",
+                                            "Tarian Sederhana",
+                                            "Senam Irama"
+                                        ],
+                         "key_terms":  [
+                                           "ritmik",
+                                           "irama",
+                                           "senam"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gerak Ritmik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Latihan Kekuatan",
+                                            "Latihan Kelenturan",
+                                            "Latihan Keseimbangan",
+                                            "Latihan Kelincahan"
+                                        ],
+                         "key_terms":  [
+                                           "kebugaran",
+                                           "kekuatan",
+                                           "kelenturan",
+                                           "keseimbangan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kebugaran Jasmani"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Bermain Air",
+                                            "Mengapung",
+                                            "Meluncur",
+                                            "Gerakan Dasar Renang"
+                                        ],
+                         "key_terms":  [
+                                           "air",
+                                           "renang",
+                                           "mengapung"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Aktivitas Air"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Makanan Bergizi",
+                                            "Kebersihan Diri",
+                                            "Istirahat",
+                                            "Olahraga Teratur"
+                                        ],
+                         "key_terms":  [
+                                           "sehat",
+                                           "gizi",
+                                           "kebersihan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pola Hidup Sehat"
+                     }
+                 ],
+    "isbn":  "978-623-194-411-X"
+}

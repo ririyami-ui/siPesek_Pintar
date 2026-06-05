@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('library:notify-due-tomorrow')->dailyAt('07:00');
+        // Run schedule reminders every minute to catch sessions starting soon
+        $schedule->command('reminders:send')->everyMinute();
     }
 
     /**

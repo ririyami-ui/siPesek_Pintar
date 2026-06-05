@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-kristen-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Allah Bapa",
+                "Allah Putra",
+                "Allah Roh Kudus",
+                "Misteri Tritunggal"
+            ],
+            "key_terms": [
+                "Tritunggal",
+                "Allah Bapa",
+                "Allah Putra"
+            ],
+            "semester": "Ganjil",
+            "title": "Allah Tritunggal"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Perjanjian Lama",
+                "Perjanjian Baru",
+                "Inspirasi Alkitab",
+                "Tafsir Alkitab"
+            ],
+            "key_terms": [
+                "Alkitab",
+                "firman",
+                "kitab suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Alkitab"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Iman Sejati",
+                "Iman dan Perbuatan",
+                "Kasih sebagai Dasar",
+                "Buah Iman"
+            ],
+            "key_terms": [
+                "iman",
+                "perbuatan",
+                "kasih"
+            ],
+            "semester": "Ganjil",
+            "title": "Iman dan Perbuatan"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Keluarga sebagai Lembaga Allah",
+                "Peran Anggota Keluarga",
+                "Pendidikan Iman dalam Keluarga",
+                "Keluarga Bahagia"
+            ],
+            "key_terms": [
+                "keluarga",
+                "orang tua",
+                "anak"
+            ],
+            "semester": "Genap",
+            "title": "Keluarga Kristen"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Etika dan Moral Kristen",
+                "Nilai-nilai Kristiani",
+                "Pengambilan Keputusan Etis",
+                "Hidup Berdampak"
+            ],
+            "key_terms": [
+                "etika",
+                "moral",
+                "nilai"
+            ],
+            "semester": "Genap",
+            "title": "Etika Kristen"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Panggilan Melayani",
+                "Karunia dan Bakat",
+                "Pelayanan di Gereja",
+                "Pelayanan di Masyarakat"
+            ],
+            "key_terms": [
+                "pelayanan",
+                "panggilan",
+                "karunia"
+            ],
+            "semester": "Genap",
+            "title": "Pelayanan"
+        }
+    ],
+    "isbn": "978-623-194-902-7"
+}

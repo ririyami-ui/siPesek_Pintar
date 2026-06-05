@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-eko-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Jurnal Penyesuaian",
+                                            "Neraca Lajur",
+                                            "Laporan Keuangan Perusahaan Dagang",
+                                            "Jurnal Penutup",
+                                            "Akuntansi Persekutuan"
+                                        ],
+                         "key_terms":  [
+                                           "Penyesuaian",
+                                           "Neraca Lajur",
+                                           "Penutup",
+                                           "Persekutuan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Akuntansi Lanjutan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Globalisasi Ekonomi",
+                                            "Integrasi Ekonomi",
+                                            "Organisasi Ekonomi",
+                                            "WTO",
+                                            "MEA"
+                                        ],
+                         "key_terms":  [
+                                           "Internasional",
+                                           "Globalisasi",
+                                           "WTO",
+                                           "MEA"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ekonomi Internasional"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Konsep Pembangunan",
+                                            "Strategi Pembangunan",
+                                            "SDGs",
+                                            "Kemiskinan",
+                                            "Kesenjangan"
+                                        ],
+                         "key_terms":  [
+                                           "Pembangunan",
+                                           "SDGs",
+                                           "Kemiskinan",
+                                           "Kesenjangan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pembangunan Ekonomi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Pasar Modal",
+                                            "Instrumen Pasar Modal",
+                                            "Bursa Efek",
+                                            "Saham dan Obligasi",
+                                            "Indeks Harga Saham"
+                                        ],
+                         "key_terms":  [
+                                           "Pasar Modal",
+                                           "Saham",
+                                           "Obligasi",
+                                           "Bursa Efek"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pasar Modal"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian BUMN",
+                                            "Badan Usaha Milik Negara",
+                                            "BUMD",
+                                            "Peran BUMN",
+                                            "Privatisasi"
+                                        ],
+                         "key_terms":  [
+                                           "BUMN",
+                                           "BUMD",
+                                           "Perusahaan Negara",
+                                           "Privatisasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "BUMN dan BUMD"
+                     }
+                 ],
+    "isbn":  "978-623-194-731-3"
+}

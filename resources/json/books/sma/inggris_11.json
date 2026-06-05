@@ -1,0 +1,115 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ing-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Purpose of Explanation",
+                                            "Generic Structure",
+                                            "Passive Voice Usage",
+                                            "Cause and Effect"
+                                        ],
+                         "key_terms":  [
+                                           "Explanation",
+                                           "Process",
+                                           "Scientific",
+                                           "Phenomenon"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Explanation Text"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Purpose of Exposition",
+                                            "Thesis Argument Reiteration",
+                                            "Connecting Words",
+                                            "Developing Arguments"
+                                        ],
+                         "key_terms":  [
+                                           "Exposition",
+                                           "Argument",
+                                           "Thesis",
+                                           "Persuasive"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Analytical Exposition"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Purpose of News",
+                                            "Newsworthy Events",
+                                            "Background Sources",
+                                            "Headline Language"
+                                        ],
+                         "key_terms":  [
+                                           "News Item",
+                                           "Headline",
+                                           "Source",
+                                           "Event"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "News Item"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Form of Passive",
+                                            "Passive in Tenses",
+                                            "Passive Modals",
+                                            "When to Use Passive"
+                                        ],
+                         "key_terms":  [
+                                           "Passive Voice",
+                                           "Agent",
+                                           "Action",
+                                           "Subject Focus"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Passive Voice"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Type 0 and 1",
+                                            "Type 2",
+                                            "Type 3",
+                                            "Mixed Conditionals"
+                                        ],
+                         "key_terms":  [
+                                           "Conditional",
+                                           "If Clause",
+                                           "Hypothetical",
+                                           "Imaginary"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Conditional Sentences"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Cause Effect Connectors",
+                                            "Signal Words",
+                                            "Compound Sentences",
+                                            "Complex Sentences"
+                                        ],
+                         "key_terms":  [
+                                           "Cause",
+                                           "Effect",
+                                           "Result",
+                                           "Because"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cause and Effect"
+                     }
+                 ],
+    "isbn":  "978-623-194-708-4"
+}

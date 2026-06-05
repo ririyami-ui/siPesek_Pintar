@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pra-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Mengenal Tanah Liat",
+                                            "Teknik Pilin",
+                                            "Teknik Pijat",
+                                            "Membuat Guci Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "tanah liat",
+                                           "gerabah",
+                                           "pilin"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kerajinan Tanah Liat"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Limbah Kertas Bekas",
+                                            "Bubur Kertas",
+                                            "Membentuk dengan Bubur Kertas",
+                                            "Kerajinan dari Limbah Kertas"
+                                        ],
+                         "key_terms":  [
+                                           "limbah",
+                                           "kertas",
+                                           "daur ulang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Limbah Kertas"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Alat dan Bahan Sulam",
+                                            "Tusuk Dasar Sulaman",
+                                            "Menyulam di Kain Strimin",
+                                            "Membuat Taplak Sulam"
+                                        ],
+                         "key_terms":  [
+                                           "sulam",
+                                           "tusuk",
+                                           "benang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sulam Sederhana"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Mengenal Kulit Jagung",
+                                            "Mengeringkan dan Mewarnai",
+                                            "Kerajinan Bunga Kulit Jagung",
+                                            "Kerajinan Boneka Kulit Jagung"
+                                        ],
+                         "key_terms":  [
+                                           "kulit jagung",
+                                           "bahan alam",
+                                           "kerajinan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerajinan Kulit Jagung"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Dampak Sampah Plastik",
+                                            "Mengenal Jenis Plastik",
+                                            "Daur Ulang Plastik",
+                                            "Kerajinan dari Plastik Bekas"
+                                        ],
+                         "key_terms":  [
+                                           "plastik",
+                                           "daur ulang",
+                                           "limbah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Daur Ulang Plastik"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Mengenal Kain Flanel",
+                                            "Teknik Menjahit Flanel",
+                                            "Membuat Boneka Flanel",
+                                            "Membuat Gantungan Kunci Flanel"
+                                        ],
+                         "key_terms":  [
+                                           "flanel",
+                                           "kain",
+                                           "jahit"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Flanel"
+                     }
+                 ],
+    "isbn":  "978-623-194-843-3"
+}

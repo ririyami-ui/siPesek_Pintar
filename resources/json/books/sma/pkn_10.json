@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pkn-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Sejarah Pancasila",
+                                            "Pancasila sebagai Dasar Negara",
+                                            "Nilai-Nilai Pancasila",
+                                            "Pancasila dalam Kehidupan",
+                                            "Implementasi Pancasila"
+                                        ],
+                         "key_terms":  [
+                                           "Pancasila",
+                                           "Dasar Negara",
+                                           "Ideologi",
+                                           "Nilai"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pancasila"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Sejarah UUD 1945",
+                                            "Pembukaan UUD 1945",
+                                            "Batang Tubuh",
+                                            "Amandemen UUD 1945",
+                                            "Pokok Pikiran"
+                                        ],
+                         "key_terms":  [
+                                           "UUD 1945",
+                                           "Konstitusi",
+                                           "Amandemen",
+                                           "Pembukaan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Undang-Undang Dasar 1945"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Konsep NKRI",
+                                            "Wilayah NKRI",
+                                            "Pemerintahan Daerah",
+                                            "Otonomi Daerah",
+                                            "Integrasi Nasional"
+                                        ],
+                         "key_terms":  [
+                                           "NKRI",
+                                           "Unitaris",
+                                           "Otonomi",
+                                           "Integrasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "NKRI"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian HAM",
+                                            "Sejarah HAM",
+                                            "Instrumen HAM",
+                                            "Pelanggaran HAM",
+                                            "Pengadilan HAM"
+                                        ],
+                         "key_terms":  [
+                                           "HAM",
+                                           "Hak",
+                                           "Kewajiban",
+                                           "Pelanggaran"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hak Asasi Manusia"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Demokrasi",
+                                            "Jenis Demokrasi",
+                                            "Demokrasi Pancasila",
+                                            "Pemilu",
+                                            "Partisipasi Politik"
+                                        ],
+                         "key_terms":  [
+                                           "Demokrasi",
+                                           "Pemilu",
+                                           "Partisipasi",
+                                           "Kedaulatan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Demokrasi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Konsep Ketahanan",
+                                            "Unsur Ketahanan",
+                                            "Wawasan Nusantara",
+                                            "Ancaman Nasional",
+                                            "Bela Negara"
+                                        ],
+                         "key_terms":  [
+                                           "Ketahanan",
+                                           "Ancaman",
+                                           "Bela Negara",
+                                           "Nasional"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Ketahanan Nasional"
+                     }
+                 ],
+    "isbn":  "978-623-194-712-6"
+}

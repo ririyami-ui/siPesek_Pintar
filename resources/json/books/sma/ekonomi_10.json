@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-eko-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Definisi Ekonomi",
+                                            "Kebutuhan dan Kelangkaan",
+                                            "Pilihan dan Skala Prioritas",
+                                            "Biaya Peluang",
+                                            "Prinsip Ekonomi"
+                                        ],
+                         "key_terms":  [
+                                           "Ekonomi",
+                                           "Kelangkaan",
+                                           "Kebutuhan",
+                                           "Peluang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Konsep Dasar Ekonomi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Hukum Permintaan",
+                                            "Hukum Penawaran",
+                                            "Kurva Permintaan",
+                                            "Kurva Penawaran",
+                                            "Keseimbangan Pasar"
+                                        ],
+                         "key_terms":  [
+                                           "Permintaan",
+                                           "Penawaran",
+                                           "Keseimbangan",
+                                           "Harga"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Permintaan dan Penawaran"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pasar Barang",
+                                            "Pasar Input",
+                                            "Pasar Persaingan",
+                                            "Pasar Monopoli",
+                                            "Struktur Pasar"
+                                        ],
+                         "key_terms":  [
+                                           "Pasar",
+                                           "Persaingan",
+                                           "Monopoli",
+                                           "Struktur"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pasar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Bank",
+                                            "Jenis Bank",
+                                            "Fungsi Bank",
+                                            "Bank Sentral",
+                                            "OJK"
+                                        ],
+                         "key_terms":  [
+                                           "Bank",
+                                           "Lembaga Keuangan",
+                                           "OJK",
+                                           "Kredit"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bank dan Lembaga Keuangan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Koperasi",
+                                            "Prinsip Koperasi",
+                                            "Jenis Koperasi",
+                                            "SHU",
+                                            "Peran Koperasi"
+                                        ],
+                         "key_terms":  [
+                                           "Koperasi",
+                                           "SHU",
+                                           "Anggota",
+                                           "Gotong Royong"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Koperasi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Pengertian APBN",
+                                            "Fungsi APBN",
+                                            "Sumber Penerimaan",
+                                            "Belanja Negara",
+                                            "APBD"
+                                        ],
+                         "key_terms":  [
+                                           "APBN",
+                                           "APBD",
+                                           "Pajak",
+                                           "Belanja"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "APBN dan APBD"
+                     }
+                 ],
+    "isbn":  "978-623-194-733-9"
+}

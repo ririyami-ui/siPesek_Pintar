@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "sma-sej-10",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-34",
+            "sub_topics": [
+                "Pengertian Sejarah",
+                "Ruang Lingkup Sejarah",
+                "Kegunaan Sejarah",
+                "Sejarah sebagai Ilmu"
+            ],
+            "key_terms": [
+                "sejarah",
+                "ilmu",
+                "kronologi"
+            ],
+            "semester": "Ganjil",
+            "title": "Konsep Sejarah"
+        },
+        {
+            "no": 2,
+            "pages": "35-66",
+            "sub_topics": [
+                "Periodisasi dalam Sejarah",
+                "Pembabakan Waktu",
+                "Kronologi dan Periodisasi",
+                "Periodisasi Sejarah Indonesia"
+            ],
+            "key_terms": [
+                "periodisasi",
+                "kronologi",
+                "babakan"
+            ],
+            "semester": "Ganjil",
+            "title": "Periodisasi"
+        },
+        {
+            "no": 3,
+            "pages": "67-98",
+            "sub_topics": [
+                "Masa Praaksara",
+                "Zaman Batu dan Logan",
+                "Kehidupan Masyarakat Prasejarah",
+                "Peninggalan Prasejarah"
+            ],
+            "key_terms": [
+                "prasejarah",
+                "praaksara",
+                "megalitikum"
+            ],
+            "semester": "Ganjil",
+            "title": "Prasejarah"
+        },
+        {
+            "no": 4,
+            "pages": "99-130",
+            "sub_topics": [
+                "Pengaruh Hindu-Buddha",
+                "Kerajaan Hindu-Buddha",
+                "Akulturasi Budaya",
+                "Peninggalan Hindu-Buddha"
+            ],
+            "key_terms": [
+                "Hindu",
+                "Buddha",
+                "akulturasi"
+            ],
+            "semester": "Genap",
+            "title": "Hindu-Buddha"
+        },
+        {
+            "no": 5,
+            "pages": "131-162",
+            "sub_topics": [
+                "Masuknya Islam ke Indonesia",
+                "Kerajaan Islam",
+                "Penyebaran Islam",
+                "Akulturasi Islam dan Budaya Lokal"
+            ],
+            "key_terms": [
+                "Islam",
+                "kerajaan",
+                "wali songo"
+            ],
+            "semester": "Genap",
+            "title": "Islam"
+        },
+        {
+            "no": 6,
+            "pages": "163-194",
+            "sub_topics": [
+                "Kedatangan Bangsa Eropa",
+                "VOC dan Penjajahan",
+                "Sistem Tanam Paksa",
+                "Politik Etis"
+            ],
+            "key_terms": [
+                "kolonialisme",
+                "imperialisme",
+                "VOC"
+            ],
+            "semester": "Genap",
+            "title": "Kolonialisme"
+        }
+    ],
+    "isbn": "978-623-194-916-4"
+}

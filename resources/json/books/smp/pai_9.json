@@ -1,0 +1,12 @@
+{
+  "bookId": "smp-pai-9",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Al-Qur'an dan Hadis tentang Hukum", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Ayat-Ayat tentang Hukum", "Hadis-Hadis Hukum", "Ijtihad sebagai Sumber Hukum"], "key_terms": ["Al-Qur'an", "Hadis", "Ijtihad", "Hukum Islam"] },
+    { "no": 2, "title": "Aqidah Akhlak", "pages": "41-78", "semester": "Ganjil", "sub_topics": ["Prinsip-Prinsip Aqidah", "Akhlak Mulia", "Hubungan Aqidah dan Akhlak"], "key_terms": ["Aqidah", "Akhlak", "Iman", "Tauhid"] },
+    { "no": 3, "title": "Zakat dan Sedekah", "pages": "79-114", "semester": "Ganjil", "sub_topics": ["Pengertian Zakat", "Macam-macam Zakat", "Keutamaan Sedekah"], "key_terms": ["Zakat", "Sedekah", "Zakat Fitrah", "Zakat Mal", "Mustahik"] },
+    { "no": 4, "title": "Haji dan Umrah", "pages": "115-150", "semester": "Genap", "sub_topics": ["Rukun Haji", "Wajib Haji", "Tata Cara Umrah"], "key_terms": ["Haji", "Umrah", "Ka'bah", "Miqat", "Ihram"] },
+    { "no": 5, "title": "Sejarah Peradaban Islam Masa Daulah Abbasiyah", "pages": "151-186", "semester": "Genap", "sub_topics": ["Berdirinya Daulah Abbasiyah", "Masa Keemasan Islam", "Kemajuan Ilmu Pengetahuan"], "key_terms": ["Daulah Abbasiyah", "Baghdad", "Baitul Hikmah", "Masa Keemasan"] },
+    { "no": 6, "title": "Membiasakan Akhlak Mulia", "pages": "187-220", "semester": "Genap", "sub_topics": ["Macam-macam Akhlak Mulia", "Cara Membiasakan Akhlak Baik", "Manfaat Akhlak Mulia"], "key_terms": ["Akhlak Karimah", "Jujur", "Dermawan", "Pemaaf"] }
+  ]
+}

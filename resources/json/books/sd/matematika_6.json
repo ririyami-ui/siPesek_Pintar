@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Mengenal Bilangan Bulat",
+                                            "Operasi Bilangan Bulat",
+                                            "Garis Bilangan",
+                                            "Soal Cerita Bilangan Bulat"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan bulat",
+                                           "positif",
+                                           "negatif"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bilangan Bulat"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-74",
+                         "sub_topics":  [
+                                            "Perpangkatan dan Akar",
+                                            "Operasi Campuran",
+                                            "Pembulatan dan Taksiran",
+                                            "Kelipatan dan Faktor"
+                                        ],
+                         "key_terms":  [
+                                           "operasi hitung",
+                                           "perpangkatan",
+                                           "akar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Operasi Hitung Lanjutan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "75-112",
+                         "sub_topics":  [
+                                            "Prisma dan Limas",
+                                            "Tabung dan Kerucut",
+                                            "Luas Permukaan",
+                                            "Volume Bangun Ruang"
+                                        ],
+                         "key_terms":  [
+                                           "bangun ruang",
+                                           "luas permukaan",
+                                           "volume",
+                                           "prisma"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bangun Ruang dan Luas Permukaan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "113-148",
+                         "sub_topics":  [
+                                            "Rata-Rata Hitung",
+                                            "Median",
+                                            "Modus",
+                                            "Peluang Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "rata-rata",
+                                           "median",
+                                           "modus",
+                                           "peluang"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Statistika dan Peluang"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "149-182",
+                         "sub_topics":  [
+                                            "Bidang Koordinat",
+                                            "Titik Koordinat",
+                                            "Menggambar Bangun pada Koordinat",
+                                            "Pencerminan"
+                                        ],
+                         "key_terms":  [
+                                           "koordinat",
+                                           "sumbu x",
+                                           "sumbu y"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sistem Koordinat"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "183-220",
+                         "sub_topics":  [
+                                            "Mengumpulkan dan Mengolah Data",
+                                            "Menyajikan Data",
+                                            "Menafsirkan Data",
+                                            "Membuat Kesimpulan"
+                                        ],
+                         "key_terms":  [
+                                           "data",
+                                           "diagram",
+                                           "pengolahan data"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengolahan Data"
+                     }
+                 ],
+    "isbn":  "978-623-194-061-X"
+}

@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-katolik-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Yesus Kristus Manusia Sejati",
+                "Yesus Kristus Allah Sejati",
+                "Misteri Inkarnasi",
+                "Karya Keselamatan Yesus"
+            ],
+            "key_terms": [
+                "Yesus",
+                "inkarnasi",
+                "Kristus"
+            ],
+            "semester": "Ganjil",
+            "title": "Yesus Kristus"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Gereja sebagai Tubuh Kristus",
+                "Hierarki dan Umat",
+                "Perkembangan Gereja",
+                "Gereja dan Dunia"
+            ],
+            "key_terms": [
+                "gereja",
+                "hierarki",
+                "Tubuh Kristus"
+            ],
+            "semester": "Ganjil",
+            "title": "Gereja"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Sakramen Baptis",
+                "Sakramen Ekaristi",
+                "Sakramen Krisma",
+                "Sakramen Tobat"
+            ],
+            "key_terms": [
+                "sakramen",
+                "baptis",
+                "ekaristi"
+            ],
+            "semester": "Ganjil",
+            "title": "Sakramen"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Perayaan Liturgi",
+                "Tahun Liturgi",
+                "Hari Raya Gereja",
+                "Makna Perayaan Iman"
+            ],
+            "key_terms": [
+                "liturgi",
+                "perayaan",
+                "tahun liturgi"
+            ],
+            "semester": "Genap",
+            "title": "Perayaan Iman"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Ajaran Moral Katolik",
+                "Sepuluh Perintah Allah",
+                "Hukum Kasih",
+                "Hati Nurani"
+            ],
+            "key_terms": [
+                "moral",
+                "perintah Allah",
+                "hati nurani"
+            ],
+            "semester": "Genap",
+            "title": "Moral Katolik"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Keadilan Menurut Injil",
+                "Keadilan Sosial",
+                "Solidaritas dengan Kaum Miskin",
+                "Perdamaian dan Rekonsiliasi"
+            ],
+            "key_terms": [
+                "keadilan",
+                "solidaritas",
+                "perdamaian"
+            ],
+            "semester": "Genap",
+            "title": "Keadilan"
+        }
+    ],
+    "isbn": "978-623-194-905-8"
+}

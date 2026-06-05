@@ -155,6 +155,7 @@ class UserProfileController extends Controller
                 'username' => $user->username,
                 'role' => $user->role,
                 'nip' => $user->nip,
+                'photo_url' => $user->photo_url,
             ]
         ]);
     }
@@ -316,5 +317,59 @@ $targetUserId = $isAdmin ? $this->getMasterAdminId() : $user->id;
             'logo_url' => $profile->logo_path ? url('storage/' . $profile->logo_path) : null,
             'signature_url' => $profile->signature_path ? url('storage/' . $profile->signature_path) : null,
         ]);
+    }
+
+    /**
+     * Upload a profile photo for a user.
+     */
+    public function uploadUserPhoto(Request $request, \App\Models\User $user)
+    {
+        $currentUser = $request->user();
+
+        // Check authorization
+        if (!$currentUser->isAdmin() && $currentUser->id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized. Anda hanya dapat mengubah foto profil Anda sendiri.'], 403);
+        }
+
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:300', // Max 300KB
+        ]);
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+
+            if ($file->isValid()) {
+                // Ensure the public/profile_photos directory exists
+                $targetDir = public_path('profile_photos');
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0755, true);
+                }
+
+                // Delete old photo files if they exist to avoid conflicts (check jpg, png, jpeg, webp)
+                $extensions = ['jpg', 'png', 'jpeg', 'webp'];
+                foreach ($extensions as $ext) {
+                    $oldFile = public_path("profile_photos/{$user->id}.{$ext}");
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
+                }
+
+                // Store with standard filename {id}.extension
+                $ext = $file->getClientOriginalExtension();
+                $filename = "{$user->id}.{$ext}";
+                
+                // Move the file directly to the public/profile_photos folder
+                $file->move($targetDir, $filename);
+
+                $photoUrl = asset("profile_photos/{$filename}");
+
+                return response()->json([
+                    'message' => 'Foto profil berhasil diperbarui.',
+                    'photo_url' => $photoUrl
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Gagal mengunggah foto profil.'], 400);
     }
 }

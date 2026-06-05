@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-info-9",
+  "isbn": "978-602-244-505-0",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Informatika SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Berpikir Komputasional Tingkat Lanjut",
+      "pages": "20-45",
+      "sub_topics": [
+        "Pencarian (Searching)",
+        "Pengurutan (Sorting): Bubble Sort & Insertion Sort",
+        "Logika Proposisi dan Gerbang Logika",
+        "Analisis Strategi Pemecahan Masalah"
+      ],
+      "key_terms": ["Searching", "Sorting", "AND/OR/NOT", "Optimasi"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur algoritma Bubble Sort step-by-step."
+    },
+    {
+      "no": 2,
+      "title": "Teknologi Informasi & Analisis Data",
+      "pages": "47-75",
+      "sub_topics": [
+        "Integrasi Aplikasi Perkantoran (Object Linking & Embedding)",
+        "Blog dan Vlog sebagai Media Komunikasi",
+        "Keamanan Data dan Enkripsi Lanjut",
+        "Analisis Data Historis untuk Prediksi"
+      ],
+      "key_terms": ["Cyber Security", "OLE", "Phishing", "Metadata"],
+      "visual_hints": "Tampilkan tabel Spreadsheet untuk simulasi perhitungan bunga majemuk atau pertumbuhan populasi."
+    },
+    {
+      "no": 3,
+      "title": "Algoritma dan Pemrograman (Prosedural)",
+      "pages": "77-120",
+      "sub_topics": [
+        "Struktur Program Prosedural",
+        "Input, Output, dan Variabel dalam Bahasa Teks",
+        "Ekspresi Logika dan Aritmatika",
+        "Proyek: Membuat Aplikasi Sederhana"
+      ],
+      "key_terms": ["Variabel", "Tipe Data", "Input/Output", "Compiler"],
+      "visual_hints": "Gunakan blok Scratch untuk memodelkan logika pemrograman teks sebelum diimplementasikan."
+    },
+    {
+      "no": 4,
+      "title": "Dampak Sosial Informatika & Robotika",
+      "pages": "121-150",
+      "sub_topics": [
+        "Kolaborasi di Dunia Digital",
+        "Kekayaan Intelektual dan Lisensi",
+        "Pengenalan Robotika dan Sensor",
+        "Etika Penggunaan Kecerdasan Buatan (AI)"
+      ],
+      "key_terms": ["Hak Cipta", "Sensor", "Aktuator", "Artificial Intelligence"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan ekosistem masyarakat digital."
+    }
+  ]
+}

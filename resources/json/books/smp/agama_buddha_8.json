@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-buddha-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Anicca",
+                "Dukkha",
+                "Anatta",
+                "Implikasi Tilakhana"
+            ],
+            "key_terms": [
+                "Tilakhana",
+                "anicca",
+                "anatta"
+            ],
+            "semester": "Ganjil",
+            "title": "Tilakhana"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Hukum Sebab Akibat",
+                "Dua Belas Nidana",
+                "Proses Terjadinya Dukkha",
+                "Pemutusan Samsara"
+            ],
+            "key_terms": [
+                "paticcasamuppada",
+                "nidana",
+                "sebab akibat"
+            ],
+            "semester": "Ganjil",
+            "title": "Paticcasamuppada"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Metta Karuna",
+                "Mudita",
+                "Upekkha",
+                "Penerapan dalam Kehidupan"
+            ],
+            "key_terms": [
+                "Brahmavihara",
+                "cinta kasih",
+                "belas kasih"
+            ],
+            "semester": "Ganjil",
+            "title": "Brahmavihara"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Pancasila Buddhis",
+                "Larangan dan Penerapan",
+                "Silabuddhis",
+                "Sila dalam Kehidupan"
+            ],
+            "key_terms": [
+                "Pancasila",
+                "sila",
+                "etika Buddhis"
+            ],
+            "semester": "Genap",
+            "title": "Pancasila Buddhis"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Vihara",
+                "Cetiya",
+                "Candi Buddhis",
+                "Makna Tempat Ibadah"
+            ],
+            "key_terms": [
+                "vihara",
+                "candi",
+                "tempat ibadah"
+            ],
+            "semester": "Genap",
+            "title": "Tempat Ibadah"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Hari Raya Waisak",
+                "Hari Raya Asadha",
+                "Hari Raya Kathina",
+                "Makna Perayaan"
+            ],
+            "key_terms": [
+                "hari raya",
+                "Waisak",
+                "Asadha"
+            ],
+            "semester": "Genap",
+            "title": "Hari Raya Buddhis"
+        }
+    ],
+    "isbn": "978-623-194-911-9"
+}

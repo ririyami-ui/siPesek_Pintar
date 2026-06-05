@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-34",
+                         "sub_topics":  [
+                                            "Memutar",
+                                            "Mengayun",
+                                            "Membungkuk",
+                                            "Menekuk"
+                                        ],
+                         "key_terms":  [
+                                           "gerak",
+                                           "non-lokomotor",
+                                           "memutar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gerak Non-Lokomotor"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "35-68",
+                         "sub_topics":  [
+                                            "Melempar",
+                                            "Menangkap",
+                                            "Menendang",
+                                            "Memukul"
+                                        ],
+                         "key_terms":  [
+                                           "manipulasi",
+                                           "melempar",
+                                           "menendang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Manipulasi Gerak"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "69-102",
+                         "sub_topics":  [
+                                            "Sepak Bola",
+                                            "Bola Voli",
+                                            "Bola Basket",
+                                            "Modifikasi Permainan"
+                                        ],
+                         "key_terms":  [
+                                           "bola besar",
+                                           "sepak bola",
+                                           "voli"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Olahraga Bola Besar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "103-136",
+                         "sub_topics":  [
+                                            "Kasti",
+                                            "Rounders",
+                                            "Bulu Tangkis",
+                                            "Tenis Meja"
+                                        ],
+                         "key_terms":  [
+                                           "bola kecil",
+                                           "kasti",
+                                           "bulu tangkis"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Olahraga Bola Kecil"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "137-170",
+                         "sub_topics":  [
+                                            "Guling Depan",
+                                            "Guling Belakang",
+                                            "Kayang",
+                                            "Sikap Lilin"
+                                        ],
+                         "key_terms":  [
+                                           "senam",
+                                           "lantai",
+                                           "guling"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Senam Lantai"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "171-204",
+                         "sub_topics":  [
+                                            "Etika Olahraga",
+                                            "Keselamatan Aktivitas",
+                                            "P3K",
+                                            "Sportivitas"
+                                        ],
+                         "key_terms":  [
+                                           "etika",
+                                           "keselamatan",
+                                           "P3K"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Etika dan Keselamatan"
+                     }
+                 ],
+    "isbn":  "978-623-194-421-X"
+}

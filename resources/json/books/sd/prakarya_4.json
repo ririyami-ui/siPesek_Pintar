@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pra-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Mengenal Kayu",
+                                            "Alat Kerja Kayu Sederhana",
+                                            "Membuat Rak Buku Sederhana",
+                                            "Hiasan dari Kayu"
+                                        ],
+                         "key_terms":  [
+                                           "kayu",
+                                           "rak",
+                                           "hiasan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kerajinan Kayu Sederhana"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Apa Itu Sablon?",
+                                            "Teknik Sablon Sederhana",
+                                            "Membuat Sablon di Kaos",
+                                            "Sablon dengan Kertas Stensil"
+                                        ],
+                         "key_terms":  [
+                                           "sablon",
+                                           "kaos",
+                                           "stensil"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sablon"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Mengenal Tanah Keramik",
+                                            "Teknik Dasar Keramik",
+                                            "Membentuk Vas Keramik",
+                                            "Membakar Keramik Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "keramik",
+                                           "tanah liat",
+                                           "bakar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keramik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Serat Alam Sekitar",
+                                            "Serat Pelepas Pisang",
+                                            "Serat Daun Pandan",
+                                            "Anyaman Serat Alam"
+                                        ],
+                         "key_terms":  [
+                                           "serat",
+                                           "alam",
+                                           "anyaman"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerajinan Serat Alam"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Konsep Daur Ulang",
+                                            "Produk dari Botol Bekas",
+                                            "Produk dari Kain Perca",
+                                            "Produk Bernilai Ekonomis"
+                                        ],
+                         "key_terms":  [
+                                           "daur ulang",
+                                           "produk",
+                                           "ekonomis"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Produk Daur Ulang"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Jenis Tanaman Hias",
+                                            "Media Tanam",
+                                            "Perawatan Tanaman Hias",
+                                            "Budidaya dalam Pot"
+                                        ],
+                         "key_terms":  [
+                                           "tanaman hias",
+                                           "budidaya",
+                                           "pot"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Budidaya Tanaman Hias"
+                     }
+                 ],
+    "isbn":  "978-623-194-844-0"
+}

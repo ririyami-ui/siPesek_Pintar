@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-kristen-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Allah Sumber Keselamatan",
+                "Rencana Keselamatan",
+                "Keselamatan dalam Yesus",
+                "Hidup dalam Keselamatan"
+            ],
+            "key_terms": [
+                "keselamatan",
+                "penyelamat",
+                "tebusan"
+            ],
+            "semester": "Ganjil",
+            "title": "Allah Penyelamat"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Hidup Baru dalam Kristus",
+                "Pertobatan Sejati",
+                "Pembaruan Hidup",
+                "Identitas Baru"
+            ],
+            "key_terms": [
+                "hidup baru",
+                "pertobatan",
+                "pembaruan"
+            ],
+            "semester": "Ganjil",
+            "title": "Hidup Baru"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Konsep Kerajaan Allah",
+                "Nilai-nilai Kerajaan Allah",
+                "Menjadi Warga Kerajaan",
+                "Misi Kerajaan Allah"
+            ],
+            "key_terms": [
+                "Kerajaan Allah",
+                "misi",
+                "warga"
+            ],
+            "semester": "Ganjil",
+            "title": "Kerajaan Allah"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Panggilan Khusus",
+                "Panggilan Umum",
+                "Mengenal Panggilan Hidup",
+                "Komitmen Panggilan"
+            ],
+            "key_terms": [
+                "panggilan",
+                "komitmen",
+                "vokasi"
+            ],
+            "semester": "Genap",
+            "title": "Panggilan Kristen"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Tanggung Jawab kepada Allah",
+                "Tanggung Jawab kepada Sesama",
+                "Tanggung Jawab terhadap Alam",
+                "Hidup Bertanggung Jawab"
+            ],
+            "key_terms": [
+                "tanggung jawab",
+                "pengelolaan",
+                "stewardship"
+            ],
+            "semester": "Genap",
+            "title": "Tanggung Jawab"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Harapan Kristen",
+                "Masa Depan dalam Kristus",
+                "Menyongsong Masa Depan",
+                "Kemenangan Iman"
+            ],
+            "key_terms": [
+                "masa depan",
+                "harapan",
+                "kemenangan"
+            ],
+            "semester": "Genap",
+            "title": "Masa Depan"
+        }
+    ],
+    "isbn": "978-623-194-903-4"
+}

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\InstallController;
 
@@ -21,7 +22,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         try {
             Artisan::call('migrate', ['--force' => true]);
             return "Database berhasil diupdate ke versi terbaru!";
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return "Gagal mengupdate database: " . $e->getMessage();
         }
     });
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
             Artisan::call('view:clear');
             Artisan::call('route:clear');
             return "Semua Cache Berhasil Dibersihkan! Aplikasi sekarang menggunakan path server.";
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return "Gagal membersihkan cache: " . $e->getMessage();
         }
     });
@@ -109,7 +110,7 @@ Route::get('/', function () {
 
 Route::get('/login', function () {
     return view('index');
-});
+})->name('login');
 
 Route::get('/{any?}', function () {
     return view('index');

@@ -1,0 +1,59 @@
+{
+  "bookId": "smp-mat-7",
+  "isbn": "978-602-244-514-2",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Matematika SMP Kelas VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bilangan Bulat",
+      "pages": "1-40",
+      "sub_topics": [
+        "Garis Bilangan",
+        "Operasi Penjumlahan dan Pengurangan",
+        "Operasi Perkalian dan Pembagian",
+        "Faktor Bilangan Bulat (KPK dan FPB)"
+      ],
+      "key_terms": ["Bilangan Positif", "Bilangan Negatif", "Distributif", "KPK", "FPB"],
+      "visual_hints": "Gunakan tabel Spreadsheet untuk mendemonstrasikan pola bilangan."
+    },
+    {
+      "no": 2,
+      "title": "Aljabar",
+      "pages": "41-80",
+      "sub_topics": [
+        "Unsur-unsur Aljabar",
+        "Operasi Penjumlahan dan Pengurangan Aljabar",
+        "Operasi Perkalian dan Pembagian Aljabar",
+        "Pemodelan Matematika"
+      ],
+      "key_terms": ["Variabel", "Koefisien", "Konstanta", "Suku", "Penyederhanaan"],
+      "visual_hints": "Wajib gunakan LaTeX untuk penulisan variabel dan pangkat."
+    },
+    {
+      "no": 3,
+      "title": "Persamaan dan Pertidaksamaan Linear Satu Variabel",
+      "pages": "81-110",
+      "sub_topics": [
+        "Persamaan Linear",
+        "Penyelesaian Masalah Persamaan Linear",
+        "Pertidaksamaan Linear Satu Variabel"
+      ],
+      "key_terms": ["Ekuivalen", "Himpunan Penyelesaian", "Linear", "Variabel"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk langkah-langkah isolasi variabel (pindah ruas)."
+    },
+    {
+      "no": 4,
+      "title": "Perbandingan",
+      "pages": "111-145",
+      "sub_topics": [
+        "Rasio dan Proporsi",
+        "Perbandingan Senilai",
+        "Perbandingan Berbalik Nilai",
+        "Skala dan Peta"
+      ],
+      "key_terms": ["Rasio", "Proporsi", "Skala", "Faktor Pengali"],
+      "visual_hints": "Gunakan Spreadsheet untuk tabel perbandingan harga dan waktu."
+    }
+  ]
+}

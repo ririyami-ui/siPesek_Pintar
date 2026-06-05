@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pkn-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Pengertian Globalisasi",
+                                            "Dampak Globalisasi",
+                                            "Globalisasi Politik",
+                                            "Globalisasi Ekonomi",
+                                            "Globalisasi Budaya"
+                                        ],
+                         "key_terms":  [
+                                           "Globalisasi",
+                                           "Modernisasi",
+                                           "Era Digital",
+                                           "Budaya Global"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Globalisasi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Demokrasi Pancasila",
+                                            "Pemilu di Indonesia",
+                                            "Sistem Kepartaian",
+                                            "Kebebasan Berpendapat",
+                                            "Pendidikan Demokrasi"
+                                        ],
+                         "key_terms":  [
+                                           "Demokrasi",
+                                           "Pemilu",
+                                           "Partai",
+                                           "Pendapat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Demokrasi Indonesia"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Perekonomian Indonesia",
+                                            "Demokrasi Ekonomi",
+                                            "UMKM",
+                                            "BUMN BUMD",
+                                            "Koperasi"
+                                        ],
+                         "key_terms":  [
+                                           "Ekonomi",
+                                           "Demokrasi Ekonomi",
+                                           "UMKM",
+                                           "Koperasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sistem Ekonomi Indonesia"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Konsep Wawasan Nusantara",
+                                            "Geopolitik Indonesia",
+                                            "Ketahanan Wilayah",
+                                            "Kekayaan Alam",
+                                            "Pertahanan Keamanan"
+                                        ],
+                         "key_terms":  [
+                                           "Wawasan",
+                                           "Nusantara",
+                                           "Geopolitik",
+                                           "Ketahanan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Wawasan Nusantara"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Konsep Revolusi Mental",
+                                            "Nilai Integritas",
+                                            "Etos Kerja",
+                                            "Gotong Royong",
+                                            "Implementasi Revolusi Mental"
+                                        ],
+                         "key_terms":  [
+                                           "Revolusi",
+                                           "Mental",
+                                           "Integritas",
+                                           "Gotong Royong"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Revolusi Mental"
+                     }
+                 ],
+    "isbn":  "978-623-194-710-0"
+}

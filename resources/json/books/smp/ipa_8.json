@@ -1,0 +1,59 @@
+{
+  "bookId": "smp-ipa-8",
+  "isbn": "978-602-244-385-8",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPA SMP Kelas VIII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Sel",
+      "pages": "1-25",
+      "sub_topics": [
+        "Pengenalan Sel",
+        "Mikroskop: Jendela Menuju Dunia Mikroskopis",
+        "Struktur Sel Hewan dan Tumbuhan",
+        "Spesialisasi Sel dan Organisme Multiseluler"
+      ],
+      "key_terms": ["Membran Sel", "Sitoplasma", "Nukleus", "Kloroplas", "Dinding Sel"],
+      "visual_hints": "Tampilkan tabel perbandingan antara Sel Hewan dan Sel Tumbuhan menggunakan Spreadsheet Renderer."
+    },
+    {
+      "no": 2,
+      "title": "Struktur dan Fungsi Tubuh Makhluk Hidup",
+      "pages": "27-70",
+      "sub_topics": [
+        "Makanan dan Sistem Pencernaan",
+        "Sistem Peredaran Darah",
+        "Sistem Pernapasan",
+        "Sistem Ekskresi"
+      ],
+      "key_terms": ["Karbohidrat", "Arteri", "Alveolus", "Nefron", "Metabolisme"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur Peredaran Darah Besar dan Kecil secara sistematis."
+    },
+    {
+      "no": 3,
+      "title": "Usaha, Energi, dan Pesawat Sederhana",
+      "pages": "71-100",
+      "sub_topics": [
+        "Konsep Usaha dan Daya",
+        "Energi Potensial dan Kinetik",
+        "Pesawat Sederhana (Tuas, Katrol, Bidang Miring)",
+        "Prinsip Kerja Pesawat Sederhana pada Otot"
+      ],
+      "key_terms": ["Joule", "Watt", "Keuntungan Mekanis", "Fulcrum", "Katrol"],
+      "visual_hints": "Tampilkan contoh soal perhitungan usaha menggunakan format LaTeX."
+    },
+    {
+      "no": 4,
+      "title": "Getaran, Gelombang, dan Cahaya",
+      "pages": "101-140",
+      "sub_topics": [
+        "Getaran dan Gelombang",
+        "Alat Optik (Cermin dan Lensa)",
+        "Mekanisme Penglihatan dan Indera Pendengaran"
+      ],
+      "key_terms": ["Amplitudo", "Frekuensi", "Refraksi", "Retina", "Rumus Cermin"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi jenis-jenis gelombang (Mekanik vs Elektromagnetik)."
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-kristen-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Citra Allah dalam Manusia",
+                "Martabat Manusia",
+                "Hubungan Manusia dengan Allah",
+                "Tanggung Jawab Manusia"
+            ],
+            "key_terms": [
+                "gambar Allah",
+                "martabat",
+                "tanggung jawab"
+            ],
+            "semester": "Ganjil",
+            "title": "Manusia dan Gambar Allah"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Asal-usul Dosa",
+                "Akibat Dosa",
+                "Keselamatan dalam Kristus",
+                "Anugerah Keselamatan"
+            ],
+            "key_terms": [
+                "dosa",
+                "keselamatan",
+                "anugerah"
+            ],
+            "semester": "Ganjil",
+            "title": "Dosa dan Keselamatan"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Pribadi Yesus Kristus",
+                "Karya Yesus Kristus",
+                "Teladan Hidup Yesus",
+                "Makna Keselamatan"
+            ],
+            "key_terms": [
+                "Yesus",
+                "Mesias",
+                "penebusan"
+            ],
+            "semester": "Ganjil",
+            "title": "Yesus Kristus"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Pribadi Roh Kudus",
+                "Karya Roh Kudus",
+                "Karunia Roh Kudus",
+                "Buah Roh"
+            ],
+            "key_terms": [
+                "Roh Kudus",
+                "karunia",
+                "buah Roh"
+            ],
+            "semester": "Genap",
+            "title": "Roh Kudus"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Pengertian Gereja",
+                "Tugas Panggilan Gereja",
+                "Persekutuan Umat",
+                "Pelayanan Gereja"
+            ],
+            "key_terms": [
+                "gereja",
+                "persekutuan",
+                "pelayanan"
+            ],
+            "semester": "Genap",
+            "title": "Gereja"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Hidup Kristen Sehari-hari",
+                "Doa dan Ibadah",
+                "Keluarga Kristen",
+                "Kesaksian Hidup"
+            ],
+            "key_terms": [
+                "kehidupan Kristen",
+                "doa",
+                "kesaksian"
+            ],
+            "semester": "Genap",
+            "title": "Kehidupan Kristen"
+        }
+    ],
+    "isbn": "978-623-194-901-0"
+}

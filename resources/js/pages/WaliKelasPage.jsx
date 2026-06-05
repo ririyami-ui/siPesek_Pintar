@@ -29,6 +29,7 @@ export default function WaliKelasPage() {
   const [students, setStudents] = useState([]);
   const [attendanceStats, setAttendanceStats] = useState(null);
   const [dailyRecap, setDailyRecap] = useState([]);
+  const [todaySessions, setTodaySessions] = useState([]);
   const [rawAttendanceLogs, setRawAttendanceLogs] = useState([]);
   const [infractions, setInfractions] = useState([]);
   const [grades, setGrades] = useState([]);
@@ -111,7 +112,7 @@ export default function WaliKelasPage() {
       Object.values(day.students).forEach(studentRecords => {
         // Logic: if present in the first recorded session of the day
         const sortedSessions = studentRecords.sort((a, b) => a.id - b.id);
-        if (sortedSessions[0].status === 'Hadir') presentCount++;
+        if (sortedSessions[0].status.toLowerCase() === 'hadir') presentCount++;
       });
       
       return {
@@ -126,10 +127,36 @@ export default function WaliKelasPage() {
 
     // Subject Summary (All sessions)
     rawDocs.forEach(record => {
-      const status = record.status === 'Izin' ? 'Ijin' : (record.status === 'Alpa' ? 'Alpha' : record.status);
+      const s = record.status.toLowerCase();
+      const status = (s === 'izin' || s === 'ijin') ? 'Ijin' : ((s === 'alpa' || s === 'alpha') ? 'Alpha' : (s === 'hadir' ? 'Hadir' : (s === 'sakit' ? 'Sakit' : record.status)));
       if (summary[status] !== undefined) summary[status]++;
     });
     setAttendanceStats(summary);
+
+    // Group Today's (or latest date) sessions
+    const dates = Object.keys(dailyMap).sort((a, b) => b.localeCompare(a));
+    if (dates.length > 0) {
+      const latestDate = dates[0];
+      const sessionsMap = {};
+      rawDocs.filter(r => r.date === latestDate).forEach(record => {
+        const timeKey = record.time || 'Waktu Tidak Diketahui';
+        const subjectName = record.subject?.name || 'Mata Pelajaran';
+        const sessionKey = `${timeKey} - ${subjectName}`;
+        if (!sessionsMap[sessionKey]) {
+          sessionsMap[sessionKey] = {
+             time: timeKey,
+             subject: subjectName,
+             teacher: record.teacher,
+             students: []
+          };
+        }
+        sessionsMap[sessionKey].students.push(record);
+      });
+      const sessionsArray = Object.values(sessionsMap).sort((a,b) => a.time.localeCompare(b.time));
+      setTodaySessions(sessionsArray);
+    } else {
+      setTodaySessions([]);
+    }
   };
 
   const handleExportDailyExcel = () => {
@@ -162,7 +189,7 @@ export default function WaliKelasPage() {
     const worksheet = XLSX.utils.json_to_sheet(sortedLogs.map(item => ({
        'Tanggal': item.date || '',
        'Jam Sesi': item.time ? item.time.split(' - ')[0] : '',
-       'Mata Pelajaran': item.subject || '',
+       'Mata Pelajaran': item.subject?.name || '',
        'NIS': item.student?.nis || '',
        'Nama Siswa': item.student?.name || 'Unknown',
        'Status': item.status || '',
@@ -282,6 +309,85 @@ export default function WaliKelasPage() {
 
         {/* Right Column: Detailed Recap */}
         <div className="lg:col-span-2 space-y-6">
+          
+          {/* Today's Sessions Monitoring */}
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-800">
+            <h3 className="text-lg font-bold flex items-center gap-2 mb-6">
+              <CheckCircle size={20} className="text-purple-600" /> Monitoring Sesi Hari Ini
+            </h3>
+            {todaySessions.length > 0 ? (
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500 mb-2">Menampilkan data presensi per sesi pada <b className="text-purple-600 dark:text-purple-400">{new Date(todaySessions[0]?.students[0]?.date || new Date()).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</b></p>
+                {todaySessions.map((session, idx) => {
+                  const absentStudents = session.students.filter(s => s.status.toLowerCase() !== 'hadir');
+                  const presentStudents = session.students.filter(s => s.status.toLowerCase() === 'hadir');
+                  
+                  return (
+                  <div key={idx} className="border border-gray-100 dark:border-gray-800 rounded-2xl p-4 bg-gray-50/50 dark:bg-gray-800/30">
+                    <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200/60 dark:border-gray-700/60">
+                      <div>
+                        <h4 className="font-bold text-gray-800 dark:text-gray-200">{session.subject}</h4>
+                        <p className="text-xs text-gray-500">{session.time} • Guru: <span className="font-medium">{session.teacher}</span></p>
+                      </div>
+                      <span className="text-xs font-bold px-3 py-1 bg-purple-100 text-purple-700 rounded-full dark:bg-purple-900/30 dark:text-purple-400">
+                        {presentStudents.length}/{session.students.length} Hadir
+                      </span>
+                    </div>
+                    
+                    {/* Absent Students Section */}
+                    {absentStudents.length > 0 && (
+                      <div className="space-y-2 mb-4">
+                        <p className="text-[11px] font-bold text-red-500 uppercase tracking-wider flex items-center gap-1.5">
+                          <AlertTriangle size={12} /> Tidak Hadir ({absentStudents.length})
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {absentStudents.map((student, sIdx) => {
+                            const status = student.status.toLowerCase();
+                            let colorClass = "bg-red-50 border-red-200 text-red-700 dark:bg-red-900/30 dark:border-red-800 dark:text-red-400";
+                            let label = "Alpa";
+                            
+                            if (status === 'sakit') {
+                              colorClass = "bg-blue-50 border-blue-200 text-blue-700 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-400";
+                              label = "Sakit";
+                            } else if (status === 'izin' || status === 'ijin') {
+                              colorClass = "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-400";
+                              label = "Izin";
+                            }
+
+                            return (
+                              <span key={sIdx} className={`text-[11px] font-medium border px-2 py-1 rounded-md shadow-sm flex items-center gap-1 ${colorClass}`}>
+                                {student.student?.name || 'Siswa'} <span className="opacity-70 text-[9px] font-black uppercase">({label})</span>
+                              </span>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Present Students Section */}
+                    <div className="space-y-2">
+                      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                         <CheckCircle size={12} /> Hadir ({presentStudents.length})
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {presentStudents.map((student, sIdx) => (
+                          <span key={sIdx} className="text-[11px] font-medium bg-white border border-gray-200 dark:bg-gray-700 dark:border-gray-600 px-2 py-1 rounded-md text-gray-600 dark:text-gray-300 shadow-sm">
+                            {student.student?.name || 'Siswa'}
+                          </span>
+                        ))}
+                        {presentStudents.length === 0 && (
+                          <span className="text-xs text-gray-400 italic">Tidak ada siswa hadir.</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )})}
+              </div>
+            ) : (
+              <div className="py-8 text-center text-gray-400 italic">Belum ada sesi tercatat hari ini.</div>
+            )}
+          </div>
+
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-800">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h3 className="text-lg font-bold flex items-center gap-2">

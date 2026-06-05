@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-geo-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Konsep Geografi",
+                                            "Prinsip Geografi",
+                                            "Pendekatan Geografi",
+                                            "Aspek Geografi",
+                                            "Objek Geografi"
+                                        ],
+                         "key_terms":  [
+                                           "Geografi",
+                                           "Spasial",
+                                           "Wilayah",
+                                           "Lingkungan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Dasar-Dasar Geografi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Teori Terbentuknya",
+                                            "Matahari",
+                                            "Planet",
+                                            "Bumi",
+                                            "Bulan"
+                                        ],
+                         "key_terms":  [
+                                           "Tata Surya",
+                                           "Planet",
+                                           "Bumi",
+                                           "Matahari"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Tata Surya"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Lapisan Atmosfer",
+                                            "Cuaca dan Iklim",
+                                            "Suhu Udara",
+                                            "Tekanan Udara",
+                                            "Angin"
+                                        ],
+                         "key_terms":  [
+                                           "Atmosfer",
+                                           "Cuaca",
+                                           "Iklim",
+                                           "Angin"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Atmosfer"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Batuan Pembentuk Bumi",
+                                            "Tektonik Lempeng",
+                                            "Gempa Bumi",
+                                            "Gunung Api",
+                                            "Tenaga Eksogen"
+                                        ],
+                         "key_terms":  [
+                                           "Litosfer",
+                                           "Tektonik",
+                                           "Gempa",
+                                           "Batuan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Litosfer"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Siklus Air",
+                                            "Air Tanah",
+                                            "Sungai",
+                                            "Danau",
+                                            "Laut"
+                                        ],
+                         "key_terms":  [
+                                           "Hidrosfer",
+                                           "Air",
+                                           "Sungai",
+                                           "Laut"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hidrosfer"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Persebaran Flora",
+                                            "Persebaran Fauna",
+                                            "Bioma",
+                                            "Faktor Persebaran",
+                                            "Konservasi"
+                                        ],
+                         "key_terms":  [
+                                           "Biosfer",
+                                           "Flora",
+                                           "Fauna",
+                                           "Bioma"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Biosfer"
+                     }
+                 ],
+    "isbn":  "978-623-194-736-8"
+}

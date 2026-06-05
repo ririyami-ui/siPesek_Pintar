@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-ips-7",
+  "isbn": "978-602-244-307-0",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPS SMP Kelas VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Keluarga Awal Kehidupan",
+      "pages": "1-40",
+      "sub_topics": [
+        "Silsilah Keluarga",
+        "Mengenal Lokasi Tempat Tinggal",
+        "Sosialisasi dalam Masyarakat",
+        "Aktivitas Memenuhi Kebutuhan"
+      ],
+      "key_terms": ["Silsilah", "Peta", "Sosialisasi", "Kebutuhan", "Keinginan"],
+      "visual_hints": "Gunakan Mermaid Flowchart (Tree) untuk menjelaskan struktur silsilah keluarga."
+    },
+    {
+      "no": 2,
+      "title": "Pembiasaan Diri untuk Melestarikan Lingkungan",
+      "pages": "41-85",
+      "sub_topics": [
+        "Berkenalan dengan Alam",
+        "Pencemaran Lingkungan",
+        "Pembangunan Berkelanjutan",
+        "Kelangkaan dan Kebutuhan Manusia"
+      ],
+      "key_terms": ["Ekosistem", "Polusi", "Sustainabilitas", "Kelangkaan", "Biaya Peluang"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan data perbandingan jenis limbah dan dampaknya."
+    },
+    {
+      "no": 3,
+      "title": "Potensi Ekonomi Lingkungan",
+      "pages": "87-130",
+      "sub_topics": [
+        "Perubahan Potensi Sumber Daya Alam",
+        "Aktivitas Ekonomi Masyarakat",
+        "Peranan Masyarakat dalam Rantai Ekonomi",
+        "Status dan Peran Sosial"
+      ],
+      "key_terms": ["Produksi", "Distribusi", "Konsumsi", "Pasar", "Harga"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur Rantai Distribusi Barang."
+    },
+    {
+      "no": 4,
+      "title": "Pemberdayaan Masyarakat",
+      "pages": "131-170",
+      "sub_topics": [
+        "Keragaman Masyarakat Indonesia",
+        "Permasalahan Sosial Budaya",
+        "Literasi Keuangan",
+        "Peranan Komunitas"
+      ],
+      "key_terms": ["Pluralitas", "Kearifan Lokal", "Investasi", "Pengelolaan Uang"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi perencanaan anggaran keuangan keluarga."
+    }
+  ]
+}

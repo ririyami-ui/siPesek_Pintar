@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pjo-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Prinsip Kepelatihan",
+                                            "Metode Latihan",
+                                            "Program Latihan",
+                                            "Evaluasi Latihan",
+                                            "Peran Pelatih"
+                                        ],
+                         "key_terms":  [
+                                           "Pelatih",
+                                           "Latihan",
+                                           "Program",
+                                           "Evaluasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kepelatihan Olahraga"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Organisasi Olahraga",
+                                            "Event Olahraga",
+                                            "Pendanaan Olahraga",
+                                            "Pemasaran Olahraga",
+                                            "Prestasi Nasional"
+                                        ],
+                         "key_terms":  [
+                                           "Manajemen",
+                                           "Organisasi",
+                                           "Event",
+                                           "Prestasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Manajemen Olahraga"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Kebutuhan Gizi Atlet",
+                                            "Makronutrien",
+                                            "Mikronutrien",
+                                            "Hidrasi",
+                                            "Suplemen Olahraga"
+                                        ],
+                         "key_terms":  [
+                                           "Gizi",
+                                           "Nutrisi",
+                                           "Karbohidrat",
+                                           "Protein"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Gizi Olahraga"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Jenis Cedera",
+                                            "Pertolongan Pertama",
+                                            "RICE",
+                                            "Rehabilitasi",
+                                            "Pencegahan Cedera"
+                                        ],
+                         "key_terms":  [
+                                           "Cedera",
+                                           "RICE",
+                                           "Rehabilitasi",
+                                           "Pencegahan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Penanganan Cedera Olahraga"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pembinaan Atlet",
+                                            "Puslatnas",
+                                            "PON",
+                                            "Olimpiade",
+                                            "Sport Science"
+                                        ],
+                         "key_terms":  [
+                                           "Prestasi",
+                                           "Pembinaan",
+                                           "Olimpiade",
+                                           "Sport Science"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Olahraga Prestasi"
+                     }
+                 ],
+    "isbn":  "978-623-194-713-9"
+}

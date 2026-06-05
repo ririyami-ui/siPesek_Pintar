@@ -2153,9 +2153,10 @@ export async function generateATP(data) {
     5. **CHRONOLOGICAL TIMELINE ENFORCER (LINEARITY)**:
        - Penempatan 'Elemen' dan 'Lingkup Materi' **WAJIB** mengikuti urutan logis/linier sesuai alur buku teks atau urutan yang diberikan pada parameter input.
        - DILARANG melompat-lompat elemen (Elemen harus berkelompok secara berurutan).
-    6. **STRICT PROFIL LULUSAN (8 DIMENSI)**: 
-       - Gunakan HANYA list resmi: ${BSKAP_DATA.standards.profile_lulusan_2025.map(p => p.dimensi).join(', ')}.
-    7. **TP DESCRIPTIVE**: Narasi Tujuan Pembelajaran (TP) harus unik dan mencerminkan sub-topik yang ditulis di kolom materi.
+     6. **STRICT PROFIL LULUSAN (8 DIMENSI - MIN 2, MAX 3)**: 
+        - Gunakan HANYA list resmi: ${BSKAP_DATA.standards.profile_lulusan_2025.map(p => p.dimensi).join(', ')}.
+        - Setiap baris WAJIB memiliki MINIMAL 2 dan MAKSIMAL 3 dimensi. Kurang dari 2 atau lebih dari 3 = GAGAL VALIDASI.
+     7. **TP DESCRIPTIVE**: Narasi Tujuan Pembelajaran (TP) harus unik dan mencerminkan sub-topik yang ditulis di kolom materi.
     
     **PARAMETER OPERASIONAL:**
     - Target Total: **${data.totalJP} JP**
@@ -2173,9 +2174,10 @@ export async function generateATP(data) {
     - Tetap gunakan Bahasa Indonesia untuk field JSON dan label elemen.
     ` : ''}
 
-    **PEMETAAN PROFIL LULUSAN (8 DIMENSI 2025):**
-    Setiap TP HARUS dipetakan ke salah satu atau beberapa dimensi Profil Lulusan berikut:
+    **PEMETAAN PROFIL LULUSAN (8 DIMENSI 2025 - WAJIB 2-3 PER BARIS):**
+    Setiap TP HARUS dipetakan ke MINIMAL 2 dan MAKSIMAL 3 dimensi Profil Lulusan berikut:
     ${BSKAP_DATA.standards.profile_lulusan_2025.map(p => `- ${p.dimensi}${p.dimensi === 'Keimanan & Ketakwaan' ? ' (Gunakan jika TP mengandung unsur: Integritas/kejujuran, etika profesi/digital, rasa syukur atas keteraturan ilmu/alam, atau tanggung jawab moral/sosial).' : ''}`).join('\n    ')}
+    🚨 Setiap baris WAJIB memiliki antara 2 hingga 3 dimensi. Kurang dari 2 atau lebih dari 3 dianggap GAGAL VALIDASI.
     
     **KOMPETENSI INDUSTRI (STRATEGIS 2026):**
     Perkaya narasi TP (Tujuan Pembelajaran) jika relevan dengan nilai kompetensi industri berikut:
@@ -2187,7 +2189,7 @@ export async function generateATP(data) {
     ⚠️ PENTING: Field 'elemen' harus HANYA dari list: ${JSON.stringify(subjectData?.[getSemesterKey(semester)]?.elemen || [])}
     ⚠️ PENTING: Field 'materi' harus MERUJUK materi dalam list: ${JSON.stringify(subjectData?.[getSemesterKey(semester)]?.materi_inti || [])}
     [
-      { "no": 1, "elemen": "ELEMEN_TUNGGAL", "materi": "JUDUL_UNIK_SPESIFIK", "tp": "TP_DESKRIPTIF_PROYEK/TEORI", "jp": ${data.jpPerWeek}, "profilLulusan": "DIMENSI_8" }
+      { "no": 1, "elemen": "ELEMEN_TUNGGAL", "materi": "JUDUL_UNIK_SPESIFIK", "tp": "TP_DESKRIPTIF_PROYEK/TEORI", "jp": ${data.jpPerWeek}, "profilLulusan": "DIMENSI_1, DIMENSI_2" }
     ]
 
     **VERIFIKASI AKHIR AUDITOR (WAJIB DICEK SEBELUM OUTPUT):**
@@ -2199,6 +2201,7 @@ export async function generateATP(data) {
     - "📚 CRITICAL: Apakah SETIAP materi yang saya pilih SESUAI dengan urutan topik/bab di Buku Teks ${data.subject} Kelas ${data.gradeLevel} Kemendikdasmen / Kemendikbudristek?"
     - "📚 CRITICAL: Apakah saya TIDAK mengambil topik yang seharusnya ada di Buku Kelas ${parseInt(data.gradeLevel) - 1} atau Kelas ${parseInt(data.gradeLevel) + 1}?"
     - "UNIQUE TITLES: Apakah setiap materi memiliki judul yang unik dan mendalam (Deep Learning)?"
+    - "🚨 PROFIL LULUSAN: Apakah SETIAP baris memiliki MIN 2 dan MAX 3 dimensi Profil Lulusan?"
     
     **FINAL OUTPUT INSTRUCTION:**
     - **OUTPUT ONLY RAW JSON**.
@@ -2219,6 +2222,29 @@ export async function generateATP(data) {
     const output = extractJSON(response.text());
 
     if (output && Array.isArray(output)) {
+      onProgress({ stage: 'finalizing', message: 'Validasi dimensi Profil Lulusan (wajib 2-3 per baris)...', percentage: 90 });
+
+      const validDimensions = BSKAP_DATA.standards.profile_lulusan_2025.map(p => p.dimensi);
+
+      output.forEach(item => {
+        if (!item.profilLulusan) item.profilLulusan = '';
+        let dims = item.profilLulusan.split(',').map(d => d.trim()).filter(Boolean);
+        dims = dims.filter(d => validDimensions.includes(d));
+
+        if (dims.length < 2) {
+          const available = validDimensions.filter(d => !dims.includes(d));
+          while (dims.length < 2 && available.length > 0) {
+            const pick = available.splice(Math.floor(Math.random() * available.length), 1)[0];
+            dims.push(pick);
+          }
+        }
+        if (dims.length > 3) {
+          dims = dims.slice(0, 3);
+        }
+
+        item.profilLulusan = dims.join(', ');
+      });
+
       onProgress({ stage: 'completed', message: 'ATP berhasil disusun!', percentage: 100 });
       return output;
     } else {

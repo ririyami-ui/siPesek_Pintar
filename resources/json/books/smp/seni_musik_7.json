@@ -1,0 +1,78 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "smp-seni-musik-7",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "title":  "Bernyanyi Solo dan Vokal Grup",
+                         "pages":  "1-36",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Teknik Vokal untuk Solo",
+                                            "Teknik Vokal untuk Grup",
+                                            "Pembagian Suara",
+                                            "Dinamika dan Ekspresi"
+                                        ],
+                         "key_terms":  [
+                                          "Vokal",
+                                          "Nada",
+                                          "Timbre",
+                                          "Harmoni"
+                                      ]
+                     },
+                     {
+                         "no":  2,
+                         "title":  "Bermain Ansambel Musik",
+                         "pages":  "37-72",
+                         "semester":  "Ganjil",
+                         "sub_topics":  [
+                                            "Jenis Ansambel Musik",
+                                            "Alat Musik Ansambel",
+                                            "Partitur Ansambel Sederhana",
+                                            "Praktik Bermain Ansambel"
+                                        ],
+                         "key_terms":  [
+                                          "Ansambel",
+                                          "Partitur",
+                                          "Dirigen",
+                                          "Akompanimen"
+                                      ]
+                     },
+                     {
+                         "no":  3,
+                         "title":  "Karya Musik Nusantara",
+                         "pages":  "73-108",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Lagu Daerah Nusantara",
+                                            "Alat Musik Tradisional",
+                                            "Tangga Nada dan Laras",
+                                            "Nilai Budaya dalam Musik"
+                                        ],
+                         "key_terms":  [
+                                          "Nusantara",
+                                          "Laras",
+                                          "Gamelan",
+                                          "Etnis"
+                                      ]
+                     },
+                     {
+                         "no":  4,
+                         "title":  "Karya Musik Mancanegara",
+                         "pages":  "109-140",
+                         "semester":  "Genap",
+                         "sub_topics":  [
+                                            "Musik Klasik Barat",
+                                            "Musik Pop dan Jazz",
+                                            "Alat Musik Mancanegara",
+                                            "Apresiasi Musik Global"
+                                        ],
+                         "key_terms":  [
+                                          "Mancanegara",
+                                          "Klasik",
+                                          "Modern",
+                                          "Global"
+                                      ]
+                     }
+                 ]
+}

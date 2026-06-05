@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-28",
+                         "sub_topics":  [
+                                            "Apa Itu Bahasa Daerah?",
+                                            "Bahasa Daerah di Sekitarku",
+                                            "Mengenal Bahasa Ibu",
+                                            "Bangga Berbahasa Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "bahasa daerah",
+                                           "bahasa ibu",
+                                           "bangga"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pengenalan Bahasa Daerah"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "29-56",
+                         "sub_topics":  [
+                                            "Kata Sapaan",
+                                            "Angka dalam Bahasa Daerah",
+                                            "Nama-Nama Warna",
+                                            "Kata Sehari-Hari"
+                                        ],
+                         "key_terms":  [
+                                           "kosakata",
+                                           "sapaan",
+                                           "angka"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kosakata Dasar"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "57-84",
+                         "sub_topics":  [
+                                            "Anggota Keluarga",
+                                            "Silsilah Keluarga",
+                                            "Sebutan dalam Keluarga",
+                                            "Menyapa Keluarga"
+                                        ],
+                         "key_terms":  [
+                                           "keluarga",
+                                           "bapak",
+                                           "ibu"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keluarga"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "85-112",
+                         "sub_topics":  [
+                                            "Lingkungan Rumah",
+                                            "Lingkungan Sekolah",
+                                            "Lingkungan Desa",
+                                            "Menjaga Lingkungan"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "rumah",
+                                           "desa"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkungan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "113-140",
+                         "sub_topics":  [
+                                            "Dolanan Tradisional",
+                                            "Go Bagong",
+                                            "Cublak-Cublak Suweng",
+                                            "Jamuran"
+                                        ],
+                         "key_terms":  [
+                                           "dolanan",
+                                           "tradisional",
+                                           "permainan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Dolanan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "141-168",
+                         "sub_topics":  [
+                                            "Apa Itu Tembang?",
+                                            "Tembang Dolanan",
+                                            "Syair dan Makna",
+                                            "Menyanyi Bersama"
+                                        ],
+                         "key_terms":  [
+                                           "tembang",
+                                           "lagu",
+                                           "syair"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Tembang"
+                     }
+                 ],
+    "isbn":  "978-623-194-831-0"
+}

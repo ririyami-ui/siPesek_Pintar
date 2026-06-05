@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-khonghucu-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Riwayat Nabi Kongzi",
+                "Ajaran Nabi Kongzi",
+                "Perjalanan Hidup Nabi",
+                "Pengaruh Nabi Kongzi"
+            ],
+            "key_terms": [
+                "Kongzi",
+                "Konfusius",
+                "nabi"
+            ],
+            "semester": "Ganjil",
+            "title": "Nabi Kongzi"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pengertian Si Shu",
+                "Ta Xue",
+                "Zhong Yong",
+                "Lun Yu"
+            ],
+            "key_terms": [
+                "Si Shu",
+                "Lun Yu",
+                "kitab suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Si Shu"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Pengertian Wu Jing",
+                "Kitab Sanjak",
+                "Kitab Sejarah",
+                "Kitab Perubahan"
+            ],
+            "key_terms": [
+                "Wu Jing",
+                "kitab klasik",
+                "Yijing"
+            ],
+            "semester": "Ganjil",
+            "title": "Wu Jing"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Pengertian Li Ji",
+                "Aturan Kesusilaan",
+                "Ritual dan Tradisi",
+                "Makna Li"
+            ],
+            "key_terms": [
+                "Li Ji",
+                "kesusilaan",
+                "ritual"
+            ],
+            "semester": "Genap",
+            "title": "Li Ji"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Pengertian Xiao Jing",
+                "Bakti kepada Orang Tua",
+                "Bakti kepada Negara",
+                "Makna Kebaktian"
+            ],
+            "key_terms": [
+                "Xiao Jing",
+                "bakti",
+                "xiao"
+            ],
+            "semester": "Genap",
+            "title": "Xiao Jing"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Isi Kitab Lun Yu",
+                "Ajaran Moral Lun Yu",
+                "Dialog Nabi Kongzi",
+                "Lun Yu dalam Kehidupan"
+            ],
+            "key_terms": [
+                "Lun Yu",
+                "sabda",
+                "ajaran"
+            ],
+            "semester": "Genap",
+            "title": "Lun Yu"
+        }
+    ],
+    "isbn": "978-623-194-913-3"
+}

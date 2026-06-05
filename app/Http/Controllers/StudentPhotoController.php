@@ -50,9 +50,14 @@ class StudentPhotoController extends Controller
                     continue;
                 }
 
-                // Save to public storage
+                // Save to public/student_photos folder directly
+                $targetDir = public_path('student_photos');
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0755, true);
+                }
+                
                 $newFilename = $fileInfo['basename']; // Keep original name (nisn.ext)
-                Storage::disk('public')->put('student_photos/' . $newFilename, $content);
+                file_put_contents($targetDir . DIRECTORY_SEPARATOR . $newFilename, $content);
                 $extractedCount++;
             }
 

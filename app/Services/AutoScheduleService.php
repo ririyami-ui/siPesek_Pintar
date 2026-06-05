@@ -27,22 +27,22 @@ class AutoScheduleService
     }
 
     /**
-     * Main entry point for auto generation
+     * Titik masuk utama untuk pembuatan jadwal otomatis
      */
     public function generate()
     {
-        // Increase time limit and memory limit to prevent 500 errors on hosting
+        // Tingkatkan batas waktu dan memori untuk mencegah error 500 di hosting
         set_time_limit(0);
         ini_set('memory_limit', '512M');
 
-        // 1. Prepare template and available slots
+        // 1. Siapkan template dan slot waktu yang tersedia
         if (!$this->prepareTemplate()) {
             return ['success' => false, 'message' => 'Template waktu aktif tidak ditemukan. Pastikan Anda sudah menentukan template waktu yang "Aktif" di menu Kelola Template Waktu.'];
         }
 
         Log::info("AutoSchedule: Template found. Day slots: " . count($this->teachingSlots));
 
-        // 2. Get all assignments
+        // 2. Ambil semua data penugasan guru
         $assignments = TeacherAssignment::with(['subject', 'teacher'])
             ->whereHas('subject', function($q) {
                 $q->where('weekly_hours', '>', 0);
@@ -53,26 +53,26 @@ class AutoScheduleService
             return ['success' => false, 'message' => 'Tidak ada data penugasan guru (Teacher Assignments) yang memiliki jam per pekan.'];
         }
 
-        // Pre-fetch classes for performance
+        // Ambil data kelas terlebih dahulu untuk performa (Pre-fetch)
         $allClasses = SchoolClass::all()->keyBy('id');
         
-        // Pre-fetch teacher availability
+        // Ambil data ketersediaan guru terlebih dahulu (Pre-fetch)
         $allTeachers = Teacher::whereNotNull('auth_user_id')->get();
         foreach ($allTeachers as $t) {
             $this->teacherAvailability[$t->auth_user_id] = $t->unavailable_days ?: [];
         }
 
-        // 3. Mathematical Pre-flight Validation
+        // 3. Validasi Matematis Awal (Pre-flight Validation)
         $mathCheck = $this->validateMath($assignments);
         if (!$mathCheck['success']) {
             return $mathCheck;
         }
 
-        // 4. Transform assignments into Meeting Blocks
+        // 4. Ubah penugasan menjadi Blok Pertemuan
         $initialBlocks = $this->transformAssignmentsToBlocks($assignments, $allClasses);
         Log::info("AutoSchedule: Transformed into " . count($initialBlocks) . " blocks.");
 
-        $maxAttempts = 150; // Reduced to 150 so worst-case failure happens in ~25 seconds
+        $maxAttempts = 150; // Dikurangi menjadi 150 agar skenario terburuk gagal hanya memakan waktu ~25 detik
         $attempt = 0;
         $failureStats = [
             'teachers' => [],
@@ -81,10 +81,10 @@ class AutoScheduleService
         $bestErrors = [];
         $minErrorCount = PHP_INT_MAX;
 
-        // Start with a clean state - delete OUTSIDE the loop
+        // Mulai dari awal (bersih) - hapus DI LUAR perulangan
         DB::beginTransaction();
         try {
-            // Clean up existing teaching schedules (Force Delete to prevent database bloat)
+            // Bersihkan jadwal mengajar yang sudah ada (Force Delete untuk mencegah database membengkak)
             Schedule::where('type', 'teaching')->forceDelete();
             DB::commit();
         } catch (\Exception $e) {
@@ -95,8 +95,8 @@ class AutoScheduleService
         while ($attempt < $maxAttempts) {
             $attempt++;
             
-            //Stage 4: Pattern-Based Prioritization
-            // Calculate "Mobility" for each block based on teacher and class constraints
+            //Tahap 4: Prioritas Berbasis Pola (Pattern-Based Prioritization)
+            // Hitung "Mobilitas" untuk setiap blok berdasarkan batasan guru dan kelas
             $blocks = $this->prepareBlocksWithPriority($initialBlocks, $assignments);
             
             $this->occupiedTeachers = [];
@@ -108,7 +108,7 @@ class AutoScheduleService
             if ($results['success']) {
                 DB::beginTransaction();
                 try {
-                    // Final Database Insertion: Bulk Insert for performance
+                    // Penyisipan Database Akhir: Penyisipan Massal (Bulk Insert) untuk performa
                     $nowTimestamp = now();
                     $insertData = array_map(function($item) use ($nowTimestamp) {
                         return array_merge($item, [
@@ -150,7 +150,7 @@ class AutoScheduleService
 
     protected function validateMath($assignments)
     {
-        // Calculate total available slots for ONE class or ONE teacher
+        // Hitung total slot yang tersedia untuk SATU kelas atau SATU guru
         $totalSlots = 0;
         foreach ($this->teachingSlots as $daySlots) {
             $totalSlots += count($daySlots);
@@ -167,7 +167,7 @@ class AutoScheduleService
             $tId = $as->teacher->auth_user_id;
             $cId = $as->class_id;
 
-            // Check if subject hours are too high for the available days
+            // Periksa apakah jam pelajaran terlalu tinggi untuk hari-hari yang tersedia
             $neededDays = 0;
             if ($h <= 3) $neededDays = 1;
             elseif ($h <= 6) $neededDays = 2;
@@ -198,7 +198,7 @@ class AutoScheduleService
                 ];
             }
 
-            // Calculate personal capacity based on unavailable days
+            // Hitung kapasitas pribadi berdasarkan hari yang tidak bersedia (hari libur)
             $personalCapacity = 0;
             foreach ($this->teachingSlots as $dayName => $daySlots) {
                 if (!in_array($dayName, $unDays)) {
@@ -261,51 +261,51 @@ class AutoScheduleService
 
     protected function prepareBlocksWithPriority($blocks, $assignments)
     {
-        // 1. Calculate Teacher Constraints (Stage 5: Master Packer Logic)
+        // 1. Hitung Batasan Guru (Tahap 5: Logika Master Packer)
         
-        // Count total weekly hours per teacher, grouped by auth_user_id to match blocks
+        // Hitung total jam per pekan untuk setiap guru, dikelompokkan berdasarkan auth_user_id agar cocok dengan blok
         $teacherJP = $assignments->groupBy(function($as) {
             return $as->teacher ? $as->teacher->auth_user_id : $as->teacher_id;
         })->map->sum(function($as) {
             return $as->subject->weekly_hours ?? 0;
         });
 
-        // [New] Teacher Connectivity: How many classes is this teacher tied to?
+        // [Baru] Konektivitas Guru: Ke berapa banyak kelas guru ini terikat?
         $teacherConnectivity = $assignments->groupBy(function($as) {
             return $as->teacher ? $as->teacher->auth_user_id : $as->teacher_id;
         })->map(function($group) {
             return $group->pluck('class_id')->unique()->count();
         });
 
-        // 2. Map blocks with a "Master Packer Difficulty Score"
+        // 2. Petakan blok dengan "Skor Kesulitan Master Packer"
         $scored = collect($blocks)->map(function($b) use ($teacherJP, $teacherConnectivity) {
             $tJP = $teacherJP[$b['teacher_id']] ?? 0;
             $tConn = $teacherConnectivity[$b['teacher_id']] ?? 0;
             
-            // Formula: Size is the biggest constraint, followed by Cross-Class Connectivity, then Total JP.
+            // Rumus: Ukuran (Size) adalah batasan terbesar, diikuti oleh Konektivitas Lintas Kelas, lalu Total JP.
             $b['difficulty'] = ($b['size'] * 100) + ($tConn * 10) + $tJP;
             
-            // [NEW] Extreme priority for PJOK/Sports to ensure they get morning slots
+            // [BARU] Prioritas ekstrem untuk PJOK/Olahraga untuk memastikan mereka mendapat slot pagi
             if ($this->isMorningPriority($b['subject_name'])) {
                 $b['difficulty'] += 5000;
             }
 
-            // Add a small random jitter to allow different paths across attempts
+            // Tambahkan sedikit pengacakan agar mendapat jalur yang berbeda setiap percobaan
             $b['difficulty'] += rand(0, 10);
             
             return $b;
         });
 
-        // 3. Sort by Difficulty DESC
+        // 3. Urutkan berdasarkan Kesulitan MENURUN (DESC)
         return $scored->sortByDesc('difficulty')->values()->toArray();
     }
 
     protected function prepareTemplate()
     {
-        // First try the specific admin
+        // Pertama, coba cari khusus untuk admin spesifik ini
         $profile = UserProfile::where('user_id', $this->adminUserId)->whereNotNull('teaching_time_slots')->first();
         
-        // If not found, find ANY profile that has slots
+        // Jika tidak ditemukan, temukan profil MANAPUN yang memiliki slot
         if (!$profile) {
             $profile = UserProfile::whereNotNull('teaching_time_slots')->first();
         }
@@ -357,19 +357,19 @@ class AutoScheduleService
             $hours = $as->subject->weekly_hours;
             $split = [];
 
-            // Logic Split per user requirements:
+            // Logika Pemisahan Blok (Split) berdasarkan aturan penggunaan:
             // 2h -> [2]
             // 3h -> [3]
             // 4h -> [2, 2]
             // 5h -> [3, 2]
             // 6h -> [3, 3]
-            // Optimized Split per user requirements:
+            // Pemisahan Optimal:
             if ($hours == 6) {
                 $split = [3, 3]; 
             } elseif ($hours == 5) {
                 $split = [3, 2]; 
             } elseif ($hours == 4) {
-                $split = [2, 2]; // Mandatory split for flexibility
+                $split = [2, 2]; // Pemisahan wajib untuk fleksibilitas jadwal
             } elseif ($hours == 3) {
                 $split = [3]; 
             } elseif ($hours == 2) {
@@ -383,7 +383,7 @@ class AutoScheduleService
                     'assignment_id' => $as->id,
                     'class_id' => $as->class_id,
                     'subject_id' => $as->subject_id,
-                    'teacher_id' => $as->teacher->auth_user_id, // Important: use auth_user_id for schedules table
+                    'teacher_id' => $as->teacher->auth_user_id, // Penting: gunakan auth_user_id untuk tabel schedules
                     'teacher_name' => $as->teacher->name,
                     'subject_name' => $as->subject->name,
                     'class_name' => $allClasses[$as->class_id]->rombel ?? '?',
@@ -396,17 +396,17 @@ class AutoScheduleService
 
     protected function solve($blocks)
     {
-        // Phase 1: Mathematical Partitioning (The Frame)
-        // Group blocks by class into a guaranteed 100% full 5-day week
+        // Fase 1: Partisi Matematis (Kerangka)
+        // Kelompokkan blok berdasarkan kelas menjadi minggu 5-hari yang 100% penuh
         $grid = $this->partitionAllClasses($blocks);
         if (!$grid) return ['success' => false, 'errors' => [['teacher'=>'System','subject'=>'Partitioning','class'=>'All','size'=>'Gagal menyusun bingkai awal.']]];
 
-        // Phase 2: Global Heatmap Balancing (The Load Balancer)
-        // Ensure no teacher teaches more than the daily capacity across all classes
+        // Fase 2: Penyeimbangan Heatmap Global (Penyeimbang Beban)
+        // Pastikan tidak ada guru yang mengajar lebih dari kapasitas hariannya di semua kelas
         $this->balanceHeatmap($grid);
 
-        // Phase 3: Intra-day Slotting (The Placement)
-        // Now that load is balanced, arranging pieces into periods is much easier
+        // Fase 3: Penempatan Intra-hari (Penempatan Slot)
+        // Setelah beban seimbang, menyusun potongan ke dalam jam pelajaran menjadi jauh lebih mudah
         return $this->slotFinalGrid($grid);
     }
 
@@ -421,7 +421,7 @@ class AutoScheduleService
 
         foreach ($classGroups as $classId => $blocksArray) {
             $partition = $this->partitionSingleClass($blocksArray, $days);
-            if (!$partition) return false; // This shouldn't happen for 2/3 JP blocks
+            if (!$partition) return false; // Ini seharusnya tidak terjadi untuk blok 2/3 JP
             $grid[$classId] = $partition;
         }
         return $grid;
@@ -442,11 +442,11 @@ class AutoScheduleService
 
             foreach ($shuffledDays as $day) {
                 $target = count($this->teachingSlots[$day]);
-                // Pass list of subjects and teachers already placed on this day (empty at start)
+                // Operkan daftar mapel dan guru yang sudah ditempatkan pada hari ini (kosong pada awalnya)
                 $usedSubjectsToday = [];
                 $usedTeachersToday = [];
                 
-                // Add teachers who are unavailable on this day to usedTeachersToday
+                // Tambahkan guru yang tidak tersedia (libur) pada hari ini ke usedTeachersToday
                 foreach ($this->teacherAvailability as $tId => $unDays) {
                     if (in_array($day, $unDays)) {
                         $usedTeachersToday[] = (int)$tId;
@@ -463,12 +463,12 @@ class AutoScheduleService
             if (!$failed && empty($remaining)) return $plan;
         }
 
-        return false; // Cannot partition with the given constraints
+        return false; // Tidak dapat mempartisi dengan batasan yang diberikan
     }
 
     protected function balanceHeatmap(&$grid)
     {
-        $maxSwaps = 5000; // Increased to find a zero-overload state in tight schedules
+        $maxSwaps = 5000; // Ditingkatkan untuk menemukan keadaan tanpa beban berlebih (zero-overload) pada jadwal yang padat
         $lastOverload = null;
         $stuckCount = 0;
 
@@ -476,14 +476,14 @@ class AutoScheduleService
             $heatmap = $this->calculateHeatmap($grid);
             $overload = $this->findOverload($heatmap);
 
-            if (!$overload) break; // Balanced!
+            if (!$overload) break; // Sudah seimbang!
 
-            // Detect if we're stuck on the same overload (no progress)
+            // Deteksi jika kita terjebak pada beban berlebih yang sama (tidak ada kemajuan)
             $overloadKey = ($overload['teacher_id'] ?? '') . '-' . ($overload['day'] ?? '');
             if ($lastOverload === $overloadKey) {
                 $stuckCount++;
-                if ($stuckCount > 15) { // Faster reaction to being stuck
-                    // We are stuck: Re-partition MULTIPLE random classes that involve this teacher
+                if ($stuckCount > 15) { // Reaksi lebih cepat saat terjebak
+                    // Kita terjebak: Partisi ulang BEBERAPA kelas acak yang melibatkan guru ini
                     $this->shakeUpTeacherSchedule($grid, $overload['teacher_id']);
                     $stuckCount = 0;
                 }
@@ -513,7 +513,7 @@ class AutoScheduleService
 
         if (empty($involvedClasses)) return;
         
-        // Pick 2 random classes to re-partition completely
+        // Pilih 2 kelas secara acak untuk dipartisi ulang sepenuhnya
         shuffle($involvedClasses);
         $toRebuild = array_slice($involvedClasses, 0, 2);
 
@@ -547,7 +547,7 @@ class AutoScheduleService
     {
         foreach ($heatmap as $tId => $days) {
             foreach ($days as $day => $load) {
-                // Capacity is 0 if teacher is unavailable on this day
+                // Kapasitas adalah 0 jika guru tidak tersedia pada hari ini
                 $unDays = $this->teacherAvailability[$tId] ?? [];
                 $capacity = in_array($day, $unDays) ? 0 : count($this->teachingSlots[$day]);
                 
@@ -561,7 +561,7 @@ class AutoScheduleService
 
     protected function performBalancedSwap(&$grid, $teacherId, $badDay)
     {
-        // Find one class-day where this teacher is overloaded
+        // Temukan satu kelas-hari di mana guru ini mengalami beban berlebih
         foreach ($grid as $classId => &$days) {
             $blocksOnBadDay = $days[$badDay];
             $foundIdxA = -1;
@@ -575,21 +575,21 @@ class AutoScheduleService
             if ($foundIdxA !== -1) {
                 $blockA = $blocksOnBadDay[$foundIdxA];
                 
-                // Try to swap a block from $badDay with a block from a $goodDay in THIS same class
+                // Coba tukar sebuah blok dari $badDay dengan blok dari $goodDay di kelas yang SAMA ini
                 $daysAvailable = array_keys($days);
                 shuffle($daysAvailable);
                 
                 foreach ($daysAvailable as $goodDay) {
                     if ($goodDay === $badDay) continue;
                     
-                    // Look for a block on goodDay that is NOT by this same teacher
+                    // Cari blok di goodDay yang BUKAN diajar oleh guru yang sama ini
                     foreach ($days[$goodDay] as $idxB => $blockB) {
                         if ($blockB['teacher_id'] !== $teacherId && $blockA['size'] === $blockB['size']) {
                             
                             $tA = $blockA['teacher_id'];
                             $tB = $blockB['teacher_id'];
 
-                            // Check if Teacher A is already on goodDay
+                            // Cek apakah Guru A sudah mengajar di goodDay
                             $alreadyHasAOnGood = false;
                             foreach ($days[$goodDay] as $bCheck) {
                                 if ($bCheck['teacher_id'] === $tA) {
@@ -599,7 +599,7 @@ class AutoScheduleService
                             }
                             if ($alreadyHasAOnGood) continue;
 
-                            // Check if Teacher B is already on badDay
+                            // Cek apakah Guru B sudah mengajar di badDay
                             $alreadyHasBOnBad = false;
                             foreach ($days[$badDay] as $bCheck) {
                                 if ($bCheck['teacher_id'] === $tB) {
@@ -609,7 +609,7 @@ class AutoScheduleService
                             }
                             if ($alreadyHasBOnBad) continue;
 
-                            // SWAP!
+                            // TUKAR POSISI!
                             $days[$badDay][$foundIdxA] = $blockB;
                             $days[$goodDay][$idxB] = $blockA;
                             return;
@@ -646,20 +646,20 @@ class AutoScheduleService
         $classes = array_keys($grid);
         $totalSlots = count($slots);
 
-        // 1. Generate all valid permutations for each class
+        // 1. Hasilkan semua permutasi yang valid untuk setiap kelas
         $classPermutations = [];
         foreach ($classes as $classId) {
             $blocks = $grid[$classId][$day];
             $perms = $this->generateAllValidPermutations($blocks, $totalSlots, $slots);
             if (empty($perms)) {
-                return null; // Impossible to even satisfy single-class constraints (e.g. PJOK)
+                return null; // Sangat tidak mungkin untuk memenuhi batasan kelas-tunggal sekalipun (misal: PJOK)
             }
-            // Shuffle permutations so we don't always pick the same one
+            // Acak permutasi agar kita tidak selalu memilih pola yang sama
             shuffle($perms);
             $classPermutations[$classId] = $perms;
         }
 
-        // 2. Backtracking DFS to find a globally valid daily schedule
+        // 2. Pencarian Mundur Berkedalaman (Backtracking DFS) untuk menemukan jadwal harian yang valid secara global
         $occupiedInDay = [];
         $resultSchedules = [];
         
@@ -691,7 +691,7 @@ class AutoScheduleService
                     $isValid = false; break;
                 }
                 
-                // PJOK must end by Jam 6
+                // PJOK harus selesai sebelum jam ke-6
                 if ($this->isMorningPriority($b['subject_name']) && ($currentPos + $b['size'] > 6)) {
                     $isValid = false; break;
                 }
@@ -704,7 +704,7 @@ class AutoScheduleService
             }
             
             if ($isValid) {
-                // Check if this permutation is already added (blocks can have same size and teacher)
+                // Periksa apakah permutasi ini sudah ditambahkan (blok bisa memiliki ukuran dan guru yang sama)
                 $sig = serialize($placed);
                 static $seen = [];
                 if (!isset($seen[$sig])) {
@@ -716,7 +716,7 @@ class AutoScheduleService
             for ($i = $l; $i <= $r; $i++) {
                 $this->swapBlocks($blocks, $l, $i);
                 $this->permuteBlocks($blocks, $l + 1, $r, $totalSlots, $slots, $validPerms);
-                $this->swapBlocks($blocks, $l, $i); // backtrack
+                $this->swapBlocks($blocks, $l, $i); // kembali ke keadaan semula (backtrack)
             }
         }
     }
@@ -731,22 +731,22 @@ class AutoScheduleService
     {
         static $steps = 0;
         if ($classIndex === 0) {
-            $steps = 0; // Reset counter at the start of a new day search
+            $steps = 0; // Atur ulang penghitung pada awal pencarian hari baru
         }
         
         if ($steps++ > 2000) {
-            return false; // Fail fast if search space is too large/unresolvable
+            return false; // Gagal cepat jika ruang pencarian terlalu besar/tidak dapat diselesaikan
         }
 
         if ($classIndex == count($classes)) {
-            return true; // All classes scheduled without conflict
+            return true; // Semua kelas dijadwalkan tanpa bentrok
         }
 
         $classId = $classes[$classIndex];
         $perms = $classPermutations[$classId];
 
         foreach ($perms as $perm) {
-            // Check if this permutation conflicts with occupiedInDay
+            // Periksa apakah permutasi ini bentrok dengan jadwal yang sudah terisi (occupiedInDay)
             $conflict = false;
             foreach ($perm as $p) {
                 $tId = $p['block']['teacher_id'];
@@ -760,7 +760,7 @@ class AutoScheduleService
             }
 
             if (!$conflict) {
-                // Apply placement
+                // Terapkan penempatan
                 foreach ($perm as $p) {
                     $tId = $p['block']['teacher_id'];
                     foreach ($p['periods'] as $s) {
@@ -770,12 +770,12 @@ class AutoScheduleService
                 
                 $resultSchedules[$classId] = $perm;
 
-                // Recurse to next class
+                // Lanjutkan ke kelas berikutnya (Rekursif)
                 if ($this->backtrackDaySchedule($classes, $classIndex + 1, $classPermutations, $occupiedInDay, $resultSchedules)) {
                     return true;
                 }
 
-                // Remove placement (Backtrack)
+                // Hapus penempatan (Mundur / Backtrack)
                 foreach ($perm as $p) {
                     $tId = $p['block']['teacher_id'];
                     foreach ($p['periods'] as $s) {
@@ -821,16 +821,16 @@ class AutoScheduleService
             $results[] = ['indices' => $currentIndices, 'blocks' => $currentBlocks];
             return;
         }
-        if ($sum > $target || count($results) > 5) return; // Fast stop
+        if ($sum > $target || count($results) > 5) return; // Berhenti cepat (Fast stop)
 
         for ($i = $start; $i < count($blocks); $i++) {
             $b = $blocks[$i];
             
-            // CONSTRAINT 1: Reject if this subject is already used today in this class
+            // BATASAN 1: Tolak jika mapel ini sudah digunakan hari ini di kelas yang sama
             if (in_array($b['subject_id'], $usedSubjects)) continue;
 
-            // CONSTRAINT 2: Reject if this teacher is already teaching in this class today
-            // (Standard pedagogic rule: 1 teacher should only enter 1 class once per day)
+            // BATASAN 2: Tolak jika guru ini sudah mengajar di kelas ini hari ini
+            // (Aturan pedagogik standar: 1 guru hanya boleh masuk 1 kelas sekali dalam sehari)
             if (in_array($b['teacher_id'], $usedTeachers)) continue;
 
             $newUsedSubjects = array_merge($usedSubjects, [$b['subject_id']]);
@@ -846,7 +846,7 @@ class AutoScheduleService
 
     protected function repartitionOverloadedClass(&$grid, $teacherId, $badDay)
     {
-        // Handled by shakeUpTeacherSchedule for better performance
+        // Ditangani oleh shakeUpTeacherSchedule untuk performa yang lebih baik
         return;
     }
 
@@ -868,7 +868,7 @@ class AutoScheduleService
             $results[] = ['indices' => $currentIndices, 'blocks' => $currentBlocks];
             return;
         }
-        if ($sum > $target || count($results) > 20) return; // limit search
+        if ($sum > $target || count($results) > 20) return; // batasi pencarian
 
         for ($i = $start; $i < count($blocks); $i++) {
             $currentIndices[] = $i;
@@ -908,7 +908,7 @@ class AutoScheduleService
     }
 
     /**
-     * Helper to identify subjects that prefer morning slots (e.g. PJOK/Sports)
+     * Fungsi pembantu untuk mengidentifikasi mapel yang memprioritaskan slot pagi (misal: PJOK/Olahraga)
      */
     protected function isMorningPriority($subjectName)
     {

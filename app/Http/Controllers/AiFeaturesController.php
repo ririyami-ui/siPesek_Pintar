@@ -107,16 +107,34 @@ class AiFeaturesController extends Controller
 
     public function getRppHistory(Request $request)
     {
-        $limit = $request->input('limit', 50);
-        $query = LessonPlan::query();
-        if (!Auth::user()->isAdmin()) {
-            $query->where('user_id', Auth::id());
+        try {
+            $limit = $request->input('limit', 50);
+            $gradeLevel = $request->input('grade_level');
+            $subjectId = $request->input('subject_id');
+            
+            $query = LessonPlan::query();
+            
+            if (!Auth::user()->isAdmin()) {
+                $query->where('user_id', Auth::id());
+            }
+
+            if ($gradeLevel) {
+                $query->where('grade_level', $gradeLevel);
+            }
+
+            if ($subjectId) {
+                $query->where('subject_id', $subjectId);
+            }
+            
+            $plans = $query->orderBy('created_at', 'desc')
+                        ->limit($limit)
+                        ->get();
+            
+            return response()->json($plans);
+        } catch (\Exception $e) {
+            Log::error("Error fetching RPP history: " . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-        $plans = $query->orderBy('created_at', 'desc')
-                    ->limit($limit)
-                    ->get();
-        
-        return response()->json($plans);
     }
     
     public function deleteRpp($id) 
@@ -380,6 +398,25 @@ class AiFeaturesController extends Controller
              Log::error("Error generating Worksheet: " . $e->getMessage());
              return response()->json(['error' => 'Gagal membuat LKPD: ' . $e->getMessage()], 500);
          }
+    }
+
+    public function generateAtp(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'gradeLevel' => 'required',
+            'totalJP' => 'required|numeric',
+            'jpPerWeek' => 'required|numeric',
+        ]);
+
+        try {
+            $data = $request->all();
+            $result = $this->aiService->generateATP($data);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            Log::error("Error generating ATP: " . $e->getMessage());
+            return response()->json(['error' => 'Gagal menyusun ATP: ' . $e->getMessage()], 500);
+        }
     }
 
     public function saveWorksheet(Request $request)

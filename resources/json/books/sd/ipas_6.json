@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ipas-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Pertumbuhan Manusia",
+                                            "Perkembangan Manusia",
+                                            "Puberitas",
+                                            "Pertumbuhan pada Tumbuhan dan Hewan"
+                                        ],
+                         "key_terms":  [
+                                           "pertumbuhan",
+                                           "perkembangan",
+                                           "pubertas"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Perkembangan Makhluk Hidup"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Medan Magnet",
+                                            "Elektromagnet",
+                                            "Generator",
+                                            "Teknologi Kelistrikan"
+                                        ],
+                         "key_terms":  [
+                                           "magnet",
+                                           "listrik",
+                                           "elektromagnet"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Magnet dan Listrik"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Globalisasi",
+                                            "Perubahan Sosial",
+                                            "Modernisasi",
+                                            "Akulturasi Budaya"
+                                        ],
+                         "key_terms":  [
+                                           "globalisasi",
+                                           "perubahan sosial",
+                                           "modernisasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Globalisasi dan Perubahan Sosial"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Sistem Tata Surya",
+                                            "Eksplorasi Luar Angkasa",
+                                            "Satelit",
+                                            "Misi ke Bulan dan Mars"
+                                        ],
+                         "key_terms":  [
+                                           "tata surya",
+                                           "luar angkasa",
+                                           "satelit"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Tata Surya dan Luar Angkasa"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "ASEAN",
+                                            "PBB",
+                                            "Kerja Sama Bilateral",
+                                            "Kerja Sama Multilateral"
+                                        ],
+                         "key_terms":  [
+                                           "ASEAN",
+                                           "PBB",
+                                           "kerja sama"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerja Sama dan Organisasi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-218",
+                         "sub_topics":  [
+                                            "Metode Ilmiah",
+                                            "Percobaan Sains",
+                                            "Laporan Penelitian",
+                                            "Presentasi"
+                                        ],
+                         "key_terms":  [
+                                           "proyek",
+                                           "ilmiah",
+                                           "penelitian"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek IPAS Terpadu"
+                     }
+                 ],
+    "isbn":  "978-623-194-361-X"
+}

@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "sma-sej-11",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-34",
+            "sub_topics": [
+                "Lahirnya Pergerakan Nasional",
+                "Organisasi Pergerakan Awal",
+                "Sumpah Pemuda",
+                "Tokoh Pergerakan Nasional"
+            ],
+            "key_terms": [
+                "pergerakan",
+                "nasionalisme",
+                "Budi Utomo"
+            ],
+            "semester": "Ganjil",
+            "title": "Pergerakan Nasional"
+        },
+        {
+            "no": 2,
+            "pages": "35-66",
+            "sub_topics": [
+                "Kedatangan Jepang",
+                "Pemerintahan Militer Jepang",
+                "Dampak Pendudukan Jepang",
+                "Perlawanan terhadap Jepang"
+            ],
+            "key_terms": [
+                "Jepang",
+                "pendudukan",
+                "romusha"
+            ],
+            "semester": "Ganjil",
+            "title": "Pendudukan Jepang"
+        },
+        {
+            "no": 3,
+            "pages": "67-98",
+            "sub_topics": [
+                "Peristiwa Rengasdengklok",
+                "Proklamasi Kemerdekaan",
+                "Makna Proklamasi",
+                "Reaksi Dunia atas Proklamasi"
+            ],
+            "key_terms": [
+                "proklamasi",
+                "kemerdekaan",
+                "Soekarno"
+            ],
+            "semester": "Ganjil",
+            "title": "Proklamasi"
+        },
+        {
+            "no": 4,
+            "pages": "99-130",
+            "sub_topics": [
+                "Perjuangan Mempertahankan Kemerdekaan",
+                "Pertempuran Surabaya",
+                "Perjanjian Linggarjati",
+                "Pengakuan Kedaulatan"
+            ],
+            "key_terms": [
+                "revolusi",
+                "diplomasi",
+                "kedaulatan"
+            ],
+            "semester": "Genap",
+            "title": "Revolusi"
+        },
+        {
+            "no": 5,
+            "pages": "131-162",
+            "sub_topics": [
+                "Demokrasi Liberal",
+                "Kabinet dan Parlemen",
+                "Pemilu 1955",
+                "Kegagalan Demokrasi Liberal"
+            ],
+            "key_terms": [
+                "demokrasi",
+                "liberal",
+                "parlemen"
+            ],
+            "semester": "Genap",
+            "title": "Demokrasi Liberal"
+        },
+        {
+            "no": 6,
+            "pages": "163-194",
+            "sub_topics": [
+                "Lahirnya Demokrasi Terpimpin",
+                "Kebijakan Demokrasi Terpimpin",
+                "Konfrontasi dan Konflik",
+                "Akhir Demokrasi Terpimpin"
+            ],
+            "key_terms": [
+                "terpimpin",
+                "Dekrit Presiden",
+                "Nasakom"
+            ],
+            "semester": "Genap",
+            "title": "Demokrasi Terpimpin"
+        }
+    ],
+    "isbn": "978-623-194-917-1"
+}

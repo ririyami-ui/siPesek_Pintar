@@ -1,0 +1,119 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pai-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Al-Baqarah 83",
+                                            "Perintah Berbuat Baik",
+                                            "Larangan Kerusakan"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Baqarah",
+                                           "Tafsir",
+                                           "Perbuatan Baik",
+                                           "Kerusakan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Al-Baqarah"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Teks dan Terjemahan",
+                                            "Tafsir Ali Imran 190-191",
+                                            "Tanda Kekuasaan Allah",
+                                            "Ulul Albab"
+                                        ],
+                         "key_terms":  [
+                                           "Ali Imran",
+                                           "Ulul Albab",
+                                           "Berpikir",
+                                           "Tanda"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surah Ali Imran"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Hukum Waris Islam",
+                                            "Ahli Waris",
+                                            "Bagian Waris",
+                                            "Hijab",
+                                            "Wasiat"
+                                        ],
+                         "key_terms":  [
+                                           "Mawaris",
+                                           "Waris",
+                                           "Hijab",
+                                           "Wasiat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Fiqih Mawaris"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Hudud",
+                                            "Hukuman dalam Islam",
+                                            "Tujuan Hukuman",
+                                            "Tobat Nasuha",
+                                            "Hak Asasi dalam Islam"
+                                        ],
+                         "key_terms":  [
+                                           "Hudud",
+                                           "Hukuman",
+                                           "Tobat",
+                                           "Sanksi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Fiqih Hudud"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Akhlak kepada Allah",
+                                            "Akhlak kepada Nabi",
+                                            "Akhlak kepada Orang Tua",
+                                            "Akhlak kepada Guru",
+                                            "Akhlak kepada Sesama"
+                                        ],
+                         "key_terms":  [
+                                           "Akhlak",
+                                           "Ihsan",
+                                           "Birrul Walidain",
+                                           "Adab"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak dalam Kehidupan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Dinasti Umayyah",
+                                            "Dinasti Abbasiyah",
+                                            "Peradaban Umayyah",
+                                            "Peradaban Abbasiyah",
+                                            "Puncak Kejayaan Islam"
+                                        ],
+                         "key_terms":  [
+                                           "Dinasti",
+                                           "Umayyah",
+                                           "Abbasiyah",
+                                           "Peradaban"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sejarah Dinasti Islam"
+                     }
+                 ],
+    "isbn":  "978-623-194-717-1"
+}

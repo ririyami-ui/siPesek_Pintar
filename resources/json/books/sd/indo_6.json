@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-indo-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Sejarah Kemerdekaan",
+                                            "Pahlawan Nasional",
+                                            "Membaca Teks Sejarah",
+                                            "Menulis Teks Narasi Sejarah"
+                                        ],
+                         "key_terms":  [
+                                           "kemerdekaan",
+                                           "pahlawan",
+                                           "narasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kemerdekaan dan Perjuangan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Dampak Globalisasi",
+                                            "Globalisasi Budaya",
+                                            "Membaca Teks Eksposisi",
+                                            "Berdebat dan Berargumen"
+                                        ],
+                         "key_terms":  [
+                                           "globalisasi",
+                                           "eksposisi",
+                                           "debat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Globalisasi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Hak dan Kewajiban",
+                                            "Keadilan Sosial",
+                                            "Membaca UUD 1945",
+                                            "Menulis Opini"
+                                        ],
+                         "key_terms":  [
+                                           "hak",
+                                           "keadilan",
+                                           "opini"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keadilan dan Hak Asasi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Hidup Sehat",
+                                            "Olahraga dan Prestasi",
+                                            "Membaca Artikel Kesehatan",
+                                            "Menulis Resensi Buku"
+                                        ],
+                         "key_terms":  [
+                                           "kesehatan",
+                                           "olahraga",
+                                           "resensi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kesehatan dan Olahraga"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Metode Penelitian",
+                                            "Menulis Laporan Penelitian",
+                                            "Karya Ilmiah",
+                                            "Presentasi"
+                                        ],
+                         "key_terms":  [
+                                           "penelitian",
+                                           "laporan",
+                                           "karya ilmiah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Laporan dan Penelitian"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-218",
+                         "sub_topics":  [
+                                            "Novel Anak",
+                                            "Drama",
+                                            "Penghargaan Sastra",
+                                            "Membaca dan Mengapresiasi Sastra"
+                                        ],
+                         "key_terms":  [
+                                           "sastra",
+                                           "novel",
+                                           "drama"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Apresiasi Sastra"
+                     }
+                 ],
+    "isbn":  "978-623-194-161-X"
+}

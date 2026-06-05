@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ipas-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Mengenal Anggota Tubuh",
+                                            "Panca Indra",
+                                            "Merawat Tubuh",
+                                            "Makanan Sehat"
+                                        ],
+                         "key_terms":  [
+                                           "tubuh",
+                                           "panca indra",
+                                           "sehat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Tubuhku"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Hewan di Sekitar",
+                                            "Tumbuhan di Sekitar",
+                                            "Ciri Makhluk Hidup",
+                                            "Perkembangbiakan"
+                                        ],
+                         "key_terms":  [
+                                           "hewan",
+                                           "tumbuhan",
+                                           "makhluk hidup"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Hewan dan Tumbuhan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Benda Hidup dan Tak Hidup",
+                                            "Sifat Benda",
+                                            "Kegunaan Benda",
+                                            "Perubahan Benda"
+                                        ],
+                         "key_terms":  [
+                                           "benda",
+                                           "sifat",
+                                           "perubahan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Benda di Sekitar"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Lingkungan Alam",
+                                            "Lingkungan Buatan",
+                                            "Menjaga Lingkungan",
+                                            "Bencana Alam"
+                                        ],
+                         "key_terms":  [
+                                           "lingkungan",
+                                           "alam",
+                                           "bencana"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Lingkunganku"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Cuaca",
+                                            "Musim",
+                                            "Pengaruh Cuaca",
+                                            "Adaptasi Makhluk Hidup"
+                                        ],
+                         "key_terms":  [
+                                           "cuaca",
+                                           "musim",
+                                           "adaptasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cuaca dan Musim"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Matahari",
+                                            "Bulan",
+                                            "Bintang",
+                                            "Siang dan Malam"
+                                        ],
+                         "key_terms":  [
+                                           "bumi",
+                                           "matahari",
+                                           "bulan",
+                                           "bintang"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bumi dan Alam Semesta"
+                     }
+                 ],
+    "isbn":  "978-623-194-311-X"
+}

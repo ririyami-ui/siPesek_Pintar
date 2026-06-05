@@ -1,0 +1,81 @@
+{
+  "bookId": "smp-ips-9",
+  "isbn": "978-602-244-309-4",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPS SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Perubahan Sosial Budaya dan Globalisasi",
+      "pages": "1-45",
+      "sub_topics": [
+        "Bentuk-bentuk Perubahan Sosial",
+        "Dampak Perubahan Sosial Budaya",
+        "Globalisasi: Tantangan dan Peluang",
+        "Menyikapi Dampak Globalisasi"
+      ],
+      "key_terms": [
+        "Modernisasi",
+        "Globalisasi",
+        "Akulturasi",
+        "Gaya Hidup Digital"
+      ],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan dampak positif dan negatif globalisasi di berbagai bidang."
+    },
+    {
+      "no": 2,
+      "title": "Pengembangan Ekonomi Kreatif dan Kerjasama Internasional",
+      "pages": "47-90",
+      "sub_topics": [
+        "Potensi Ekonomi Kreatif",
+        "Pusat-pusat Keunggulan Ekonomi",
+        "Pasar Bebas dan Kerjasama Internasional",
+        "Perdagangan Luar Negeri"
+      ],
+      "key_terms": [
+        "Ekspor",
+        "Impor",
+        "Proteksi",
+        "Dumping",
+        "MEA"
+      ],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk membandingkan neraca perdagangan antarnegara."
+    },
+    {
+      "no": 3,
+      "title": "Ketergantungan Antarruang dan Pengaruhnya terhadap Kesejahteraan",
+      "pages": "91-135",
+      "sub_topics": [
+        "Migrasi Penduduk",
+        "Urbanisasi dan Dampaknya",
+        "Perubahan Ruang dan Interaksi Antarruang",
+        "Ketahanan Pangan dan Energi"
+      ],
+      "key_terms": [
+        "Migrasi",
+        "Remitansi",
+        "Interaksi Spasial",
+        "Ketahanan Pangan"
+      ],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur perpindahan penduduk dan pengaruhnya bagi desa-kota."
+    },
+    {
+      "no": 4,
+      "title": "Indonesia dari Masa Kemerdekaan hingga Masa Reformasi",
+      "pages": "137-180",
+      "sub_topics": [
+        "Masa Demokrasi Parlementer",
+        "Masa Orde Baru",
+        "Masa Reformasi",
+        "Capaian Pembangunan Nasional"
+      ],
+      "key_terms": [
+        "Supersemar",
+        "Otonomi Daerah",
+        "Demokratisasi",
+        "Pembangunan Berkelanjutan"
+      ],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk memetakan transisi kekuasaan dan kebijakan strategis setiap era pemerintahan."
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ind-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Ciri dan Struktur",
+                                            "Kebahasaan",
+                                            "Menyusun Prosedur",
+                                            "Menyunting Teks Prosedur"
+                                        ],
+                         "key_terms":  [
+                                           "Prosedur",
+                                           "Instruksi",
+                                           "Langkah",
+                                           "Syarat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Prosedur"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Pengertian dan Struktur",
+                                            "Hubungan Kausal",
+                                            "Proses Terjadinya",
+                                            "Menyusun Eksplanasi"
+                                        ],
+                         "key_terms":  [
+                                           "Eksplanasi",
+                                           "Kausal",
+                                           "Proses",
+                                           "Fenomena"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Eksplanasi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Unsur Intrinsik",
+                                            "Unsur Ekstrinsik",
+                                            "Menganalisis Cerpen",
+                                            "Menulis Cerpen"
+                                        ],
+                         "key_terms":  [
+                                           "Cerpen",
+                                           "Alur",
+                                           "Tokoh",
+                                           "Latar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Cerpen"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Struktur Drama",
+                                            "Dialog Drama",
+                                            "Mementaskan Drama",
+                                            "Menganalisis Naskah Drama"
+                                        ],
+                         "key_terms":  [
+                                           "Drama",
+                                           "Dialog",
+                                           "Babak",
+                                           "Monolog"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Drama"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Jenis Karya Ilmiah",
+                                            "Sistematika Penulisan",
+                                            "Kutipan dan Daftar Pustaka",
+                                            "Etika Penulisan"
+                                        ],
+                         "key_terms":  [
+                                           "Karya Ilmiah",
+                                           "Sitasi",
+                                           "Abstrak",
+                                           "Metodologi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Karya Ilmiah"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Pengertian Resensi",
+                                            "Struktur Resensi",
+                                            "Menganalisis Resensi",
+                                            "Menulis Resensi"
+                                        ],
+                         "key_terms":  [
+                                           "Resensi",
+                                           "Review",
+                                           "Buku",
+                                           "Sinopsis"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Resensi"
+                     }
+                 ],
+    "isbn":  "978-623-194-705-5"
+}

@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pra-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-28",
+                         "sub_topics":  [
+                                            "Mengenal Gunting",
+                                            "Teknik Melipat Kertas",
+                                            "Membuat Bentuk Sederhana",
+                                            "Proyek Lipatan"
+                                        ],
+                         "key_terms":  [
+                                           "gunting",
+                                           "lipat",
+                                           "kertas"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Menggunting dan Melipat"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "29-56",
+                         "sub_topics":  [
+                                            "Apa Itu Meronce?",
+                                            "Meronce dengan Manik",
+                                            "Meronce dengan Bahan Alam",
+                                            "Membuat Gelang Meronce"
+                                        ],
+                         "key_terms":  [
+                                           "meronce",
+                                           "manik",
+                                           "bahan alam"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Meronce"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "57-84",
+                         "sub_topics":  [
+                                            "Pengertian Mozaik",
+                                            "Mozaik Kertas",
+                                            "Mozaik Biji-Bijian",
+                                            "Mozaik Daun Kering"
+                                        ],
+                         "key_terms":  [
+                                           "mozaik",
+                                           "tempel",
+                                           "biji"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Mozaik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "85-112",
+                         "sub_topics":  [
+                                            "Apa Itu Kolase?",
+                                            "Kolase Kertas Warna",
+                                            "Kolase Bahan Bekas",
+                                            "Membuat Kolase Hewan"
+                                        ],
+                         "key_terms":  [
+                                           "kolase",
+                                           "tempel",
+                                           "kertas"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kolase"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "113-140",
+                         "sub_topics":  [
+                                            "Anyaman Kertas",
+                                            "Teknik Dasar Anyam",
+                                            "Pola Anyaman Sederhana",
+                                            "Tikar Kertas Anyam"
+                                        ],
+                         "key_terms":  [
+                                           "anyaman",
+                                           "anyam",
+                                           "pola"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Anyaman Sederhana"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "141-168",
+                         "sub_topics":  [
+                                            "Mengenal Plastisin",
+                                            "Membentuk Bola dan Silinder",
+                                            "Membentuk Hewan",
+                                            "Membentuk Buah"
+                                        ],
+                         "key_terms":  [
+                                           "plastisin",
+                                           "bentuk",
+                                           "lilin"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Membentuk Plastisin"
+                     }
+                 ],
+    "isbn":  "978-623-194-841-9"
+}

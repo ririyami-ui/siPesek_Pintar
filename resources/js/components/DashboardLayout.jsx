@@ -440,20 +440,36 @@ export default function DashboardLayout({ children, user, onLogout }) {
             );
           })}
         </nav>
-        <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
-              <User size={20} className="text-primary dark:text-primary-300" />
+        <div className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 overflow-hidden">
+                {userProfile?.photo_url ? (
+                  <img src={userProfile.photo_url} className="h-full w-full object-cover" alt="Profile" />
+                ) : (
+                  <User size={16} className="text-primary dark:text-primary-300" />
+                )}
+              </div>
+              <p className="truncate text-sm font-medium text-text-light dark:text-text-dark">{userProfile?.name || user?.email}</p>
             </div>
-            <p className="truncate text-sm font-medium text-text-light dark:text-text-dark">{userProfile?.name || user?.email}</p>
+            <button
+              onClick={handleLogout}
+              className="p-2 text-red-500 transition-colors duration-200 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-lg dark:hover:text-white"
+              title="Keluar"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-lg p-3 text-red-500 transition-colors duration-200 hover:bg-red-100 dark:hover:bg-red-900/50 dark:hover:text-white"
-          >
-            <LogOut size={20} />
-            <span className="font-medium">Keluar</span>
-          </button>
+
+          {/* Copyright Footer */}
+          <div className="mt-3 text-center border-t border-gray-100 dark:border-gray-800/50 pt-2">
+            <p className="text-[9px] text-gray-400 dark:text-gray-500 font-bold tracking-wider uppercase">
+              &copy; {new Date().getFullYear()} Ririyami, S.Kom
+            </p>
+            <p className="text-[8px] text-gray-400/60 dark:text-gray-600 mt-0.5">
+              SiPesek Pintar v2.1e - All Rights Reserved
+            </p>
+          </div>
         </div>
       </aside>
 
@@ -558,8 +574,12 @@ export default function DashboardLayout({ children, user, onLogout }) {
               className="flex items-center gap-3 focus:outline-none"
             >
               <p className="hidden sm:block truncate text-sm font-semibold text-text-light dark:text-text-dark">{userProfile?.name || user?.email}</p>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
-                <User size={20} className="text-primary dark:text-primary-300" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900 overflow-hidden">
+                {userProfile?.photo_url ? (
+                  <img src={userProfile.photo_url} className="h-full w-full object-cover" alt="Profile" />
+                ) : (
+                  <User size={20} className="text-primary dark:text-primary-300" />
+                )}
               </div>
             </button>
 
@@ -707,6 +727,16 @@ export default function DashboardLayout({ children, user, onLogout }) {
             );
           })}
         </nav>
+
+        {/* Mobile Copyright Footer */}
+        <div className="mt-auto pt-3 pb-2 text-center border-t border-gray-100 dark:border-gray-800/50">
+          <p className="text-[9px] text-gray-400 dark:text-gray-500 font-bold tracking-wider uppercase">
+            &copy; {new Date().getFullYear()} Ririyami, S.Kom
+          </p>
+          <p className="text-[8px] text-gray-400/60 dark:text-gray-600 mt-0.5">
+            SiPesek Pintar v2.1e - All Rights Reserved
+          </p>
+        </div>
       </div>
         <OfflineIndicator />
       </div>

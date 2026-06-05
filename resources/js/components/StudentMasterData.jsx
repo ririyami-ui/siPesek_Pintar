@@ -12,6 +12,7 @@ import { Plus, Upload, Download, Edit, Trash2, Sparkles, Image as ImageIcon, Fil
 import Modal from './Modal';
 import StudentEditor from './StudentEditor';
 import PrintStudentCardModal from './PrintStudentCardModal';
+import PromoteClassModal from './PromoteClassModal';
 import { useSettings } from '../utils/SettingsContext';
 
 export default function StudentMasterData() {
@@ -37,6 +38,7 @@ export default function StudentMasterData() {
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
   const [selectedStudentsForPrint, setSelectedStudentsForPrint] = useState([]);
   const [showPrintModal, setShowPrintModal] = useState(false);
+  const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
   const { userProfile } = useSettings();
   
   // Photo ZIP Upload States
@@ -653,6 +655,14 @@ export default function StudentMasterData() {
             {isAdmin ? 'Daftar Semua Siswa' : 'Siswa di Mata Pelajaran Anda'}
           </h3>
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <button 
+                onClick={() => setIsPromoteModalOpen(true)}
+                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/30 transition-all"
+              >
+                🚀 Proses Kenaikan Kelas
+              </button>
+            )}
             {selectedStudentsForPrint.length > 0 && (
               <button 
                 onClick={() => setShowPrintModal(true)}
@@ -791,6 +801,16 @@ export default function StudentMasterData() {
         schoolName={userProfile?.school_name || userProfile?.schoolName}
         userProfile={userProfile}
       />
+
+      {isAdmin && (
+        <PromoteClassModal
+          isOpen={isPromoteModalOpen}
+          onClose={() => setIsPromoteModalOpen(false)}
+          classes={classes}
+          students={students}
+          onSuccess={getStudents}
+        />
+      )}
     </div>
   );
 }

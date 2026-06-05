@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-34",
+                         "sub_topics":  [
+                                            "Surat Al-Ikhlas",
+                                            "Surat Al-Kautsar",
+                                            "Surat An-Nashr",
+                                            "Huruf Hijaiyah dan Harakat"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "surat",
+                                           "hijaiyah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Pedoman Hidupku"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "35-68",
+                         "sub_topics":  [
+                                            "Syahadat",
+                                            "Shalat",
+                                            "Puasa",
+                                            "Zakat",
+                                            "Haji"
+                                        ],
+                         "key_terms":  [
+                                           "rukun Islam",
+                                           "syahadat",
+                                           "shalat",
+                                           "puasa"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Rukun Islam"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "69-102",
+                         "sub_topics":  [
+                                            "Keutamaan Shalat Berjamaah",
+                                            "Makmum dan Imam",
+                                            "Shalat Sunnah",
+                                            "Dzikir dan Doa"
+                                        ],
+                         "key_terms":  [
+                                           "shalat",
+                                           "berjamaah",
+                                           "dzikir"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Shalat Berjamaah"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "103-136",
+                         "sub_topics":  [
+                                            "Berbakti kepada Ibu",
+                                            "Berbakti kepada Ayah",
+                                            "Guru",
+                                            "Adab kepada Orang Tua"
+                                        ],
+                         "key_terms":  [
+                                           "akhlak",
+                                           "orang tua",
+                                           "guru"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak kepada Orang Tua"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "137-170",
+                         "sub_topics":  [
+                                            "Kisah Luqman",
+                                            "Kisah Nabi Yusuf",
+                                            "Kisah Nabi Musa",
+                                            "Teladan dari Kisah"
+                                        ],
+                         "key_terms":  [
+                                           "kisah",
+                                           "teladan",
+                                           "nabi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kisah Teladan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "171-204",
+                         "sub_topics":  [
+                                            "Puasa Ramadhan",
+                                            "Kewajiban Zakat",
+                                            "Zakat Fitrah",
+                                            "Hikmah Puasa"
+                                        ],
+                         "key_terms":  [
+                                           "puasa",
+                                           "zakat",
+                                           "ramadhan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Puasa dan Zakat"
+                     }
+                 ],
+    "isbn":  "978-623-194-621-X"
+}

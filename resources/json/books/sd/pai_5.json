@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-38",
+                         "sub_topics":  [
+                                            "Surat Al-Maidah Ayat 1-3",
+                                            "Surat Al-Maidah Ayat 8",
+                                            "Surat Al-Hujurat Ayat 12",
+                                            "Makharijul Huruf"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "makharijul",
+                                           "hijaiyah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an Surat Panjang"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "39-76",
+                         "sub_topics":  [
+                                            "Nabi Nuh AS",
+                                            "Nabi Ibrahim AS",
+                                            "Nabi Musa AS",
+                                            "Nabi Isa AS",
+                                            "Nabi Muhammad SAW"
+                                        ],
+                         "key_terms":  [
+                                           "rasul",
+                                           "ulul azmi",
+                                           "nabi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Rasul Ulul Azmi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "77-114",
+                         "sub_topics":  [
+                                            "Zakat Mal",
+                                            "Zakat Fitrah",
+                                            "Sedekah",
+                                            "Infak"
+                                        ],
+                         "key_terms":  [
+                                           "zakat",
+                                           "sedekah",
+                                           "infak"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Zakat dan Sedekah"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "115-152",
+                         "sub_topics":  [
+                                            "Bilal bin Rabah",
+                                            "Umar bin Khattab",
+                                            "Aisyah RA",
+                                            "Ali bin Abi Thalib"
+                                        ],
+                         "key_terms":  [
+                                           "sahabat",
+                                           "teladan",
+                                           "Bilal",
+                                           "Umar"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Meneladani Sahabat"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "153-188",
+                         "sub_topics":  [
+                                            "Qanaah",
+                                            "Hidup Sederhana",
+                                            "Menjauhi Sifat Boros",
+                                            "Menabung"
+                                        ],
+                         "key_terms":  [
+                                           "sederhana",
+                                           "qanaah",
+                                           "boros"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hidup Sederhana"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "189-224",
+                         "sub_topics":  [
+                                            "Jual Beli",
+                                            "Utang Piutang",
+                                            "Sewa Menyewa",
+                                            "Larangan Riba"
+                                        ],
+                         "key_terms":  [
+                                           "muamalah",
+                                           "jual beli",
+                                           "riba"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Muamalah dalam Islam"
+                     }
+                 ],
+    "isbn":  "978-623-194-651-X"
+}

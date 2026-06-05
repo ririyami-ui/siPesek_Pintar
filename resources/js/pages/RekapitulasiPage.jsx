@@ -16,7 +16,8 @@ import BarChart from '../components/BarChart';
 import EmptyState from '../components/EmptyState';
 import QuickDateFilter from '../components/QuickDateFilter';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { generateAttendanceRecapPDF, generateDetailedAttendanceRecapPDF, generateJurnalRecapPDF, generateNilaiRecapPDF, generateViolationRecapPDF } from '../utils/pdfGenerator';
+import { generateJurnalRecapPDF, generateNilaiRecapPDF, generateViolationRecapPDF } from '../utils/pdfGenerator';
+import { exportAttendanceMatrixExcel, exportAttendanceMatrixPDF } from '../utils/ExportAttendanceUtils';
 import { getAllGrades, getAllAttendance, getAllInfractions } from '../utils/analysis';
 import { useSettings } from '../utils/SettingsContext';
 
@@ -88,7 +89,7 @@ const RekapitulasiPage = () => {
         ]);
 
         const { profile, user } = profileRes.data;
-        setUserProfile({ ...user, ...profile });
+        setUserProfile({ ...profile, ...user });
         setSchoolName(profile.school_name || '');
         setTeacherName(user.name || '');
 
@@ -216,28 +217,62 @@ const RekapitulasiPage = () => {
       }));
 
       let summary = {};
-      students.forEach(student => {
-        summary[student.id] = { absen: student.absen, nis: student.nis, name: student.name, gender: student.gender, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
+      sortedStudents.forEach(student => {
+        summary[student.id] = { absen: student.absen, nis: student.nisn || student.nis, name: student.name, gender: student.gender, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
       });
 
-      rawDocs.forEach(record => {
-        if (summary[record.studentId] && record.status) {
-          const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
-          const mappedStatus = statusMap[record.status] || record.status;
-          if (summary[record.studentId][mappedStatus] !== undefined) {
-            summary[record.studentId][mappedStatus]++;
+      let finalRawDocs = [];
+      
+      if (!selectedSubject) {
+        // Kehadiran Harian Siswa (Mengambil Sesi 1 / Paling Awal)
+        const dailyMap = {};
+        rawDocs.forEach(record => {
+          if (!dailyMap[record.date]) dailyMap[record.date] = { students: {} };
+          if (!dailyMap[record.date].students[record.studentId]) {
+            dailyMap[record.date].students[record.studentId] = [];
           }
-          // Store daily status for detailed report
-          summary[record.studentId][record.date] = mappedStatus;
-        }
-      });
+          dailyMap[record.date].students[record.studentId].push(record);
+        });
 
-      // Calculate unique active school days from data
-      const uniqueDates = Array.from(new Set(rawDocs.map(doc => doc.date))).sort();
+        Object.values(dailyMap).forEach(day => {
+          Object.entries(day.students).forEach(([studentId, records]) => {
+            if (summary[studentId]) {
+              const sortedSessions = records.sort((a, b) => a.id - b.id);
+              const firstRecord = sortedSessions[0];
+              const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
+              const mappedStatus = statusMap[firstRecord.status] || firstRecord.status;
+              
+              if (summary[studentId][mappedStatus] !== undefined) {
+                summary[studentId][mappedStatus]++;
+              }
+              // Simpan status harian berdasarkan sesi pertama
+              summary[studentId][firstRecord.date] = mappedStatus;
+              finalRawDocs.push({...firstRecord, status: mappedStatus});
+            }
+          });
+        });
+
+      } else {
+        // Mapel Spesifik (Menjumlahkan semua sesi dari mata pelajaran tersebut)
+        rawDocs.forEach(record => {
+          if (summary[record.studentId] && record.status) {
+            const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
+            const mappedStatus = statusMap[record.status] || record.status;
+            if (summary[record.studentId][mappedStatus] !== undefined) {
+              summary[record.studentId][mappedStatus]++;
+            }
+            // Store daily status for detailed report
+            summary[record.studentId][record.date] = mappedStatus;
+            finalRawDocs.push({...record, status: mappedStatus});
+          }
+        });
+      }
+
+      const uniqueDates = Array.from(new Set(finalRawDocs.map(doc => doc.date))).sort();
       const realSchoolDays = uniqueDates.length > 0 ? uniqueDates.length : dayDiff;
       setNumDays(realSchoolDays);
-      setAttendanceDates(uniqueDates); // Save dates for PDF export
-      setRawAttendanceLogs(rawDocs); // Save raw logs for session export
+      setAttendanceDates(uniqueDates); 
+      setRawAttendanceLogs(finalRawDocs);
 
       const tableData = Object.values(summary);
       const totalSummary = tableData.reduce((acc, curr) => {
@@ -322,32 +357,29 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data kehadiran untuk diekspor ke PDF.');
       return;
     }
-    const pdfData = attendanceData.map(item => ({
-      absen: item.absen ? String(item.absen) : '',
-      nis: item.nis || '',
-      namaSiswa: item.name || '',
-      gender: item.gender || '',
-      hadir: item.Hadir || 0,
-      sakit: item.Sakit || 0,
-      ijin: item.Ijin || 0,
-      alpa: item.Alpha || 0,
-    }));
     const classObj = classes.find(c => String(c.id) === String(selectedClass));
     const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
     const classLabel = classObj?.rombel || selectedClass;
     const finalLabel = selectedSubject && subjectObj ? `${classLabel} - Mapel: ${subjectObj.name}` : classLabel;
 
-    // Use the new Detailed Generator
-    generateDetailedAttendanceRecapPDF(
-      attendanceData, 
-      attendanceDates, 
-      schoolName, 
-      startDate, 
-      endDate, 
-      teacherName, 
-      finalLabel, 
-      { ...userProfile, academicYear, activeSemester }
-    );
+    const formatIndoDate = (dateStr) => {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const [year, month, day] = parts;
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
+    };
+    const periodLabel = `${formatIndoDate(startDate)} s.d. ${formatIndoDate(endDate)}`;
+
+    exportAttendanceMatrixPDF(attendanceData, attendanceDates, {
+      schoolName: schoolName,
+      subjectName: selectedSubject && subjectObj ? subjectObj.name : '',
+      academicYear: academicYear,
+      className: classObj?.rombel || '',
+      period: periodLabel,
+      fileName: `Rekapitulasi_Kehadiran_${finalLabel}_${startDate}_${endDate}.pdf`
+    });
   };
 
   const handleKehadiranExcelExport = () => {
@@ -355,25 +387,29 @@ const RekapitulasiPage = () => {
       alert('Tidak ada data kehadiran untuk diekspor ke Excel.');
       return;
     }
-    const worksheet = XLSX.utils.json_to_sheet(attendanceData.map(item => ({
-      'No. Absen': item.absen || '',
-      'NIS': item.nis || '',
-      'Nama Siswa': item.name || '',
-      'Hadir': item.Hadir || 0,
-      'Sakit': item.Sakit || 0,
-      'Ijin': item.Ijin || 0,
-      'Alpha': item.Alpha || 0,
-    })));
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Kehadiran');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const classObj = classes.find(c => String(c.id) === String(selectedClass));
     const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
     const classLabel = classObj?.rombel || selectedClass;
     const finalLabel = selectedSubject && subjectObj ? `${classLabel}_${subjectObj.name}` : classLabel;
     
-    saveAs(data, `Rekapitulasi_Kehadiran_${finalLabel}_${startDate}_${endDate}.xlsx`);
+    const formatIndoDate = (dateStr) => {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const [year, month, day] = parts;
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      return `${parseInt(day)} ${months[parseInt(month) - 1]} ${year}`;
+    };
+    const periodLabel = `${formatIndoDate(startDate)} s.d. ${formatIndoDate(endDate)}`;
+
+    exportAttendanceMatrixExcel(attendanceData, attendanceDates, {
+      schoolName: schoolName,
+      subjectName: selectedSubject && subjectObj ? subjectObj.name : '',
+      academicYear: academicYear,
+      className: classObj?.rombel || '',
+      period: periodLabel,
+      fileName: `Rekapitulasi_Kehadiran_${finalLabel}_${startDate}_${endDate}.xlsx`
+    });
   };
 
   const handleKehadiranSesiExcelExport = () => {
@@ -513,7 +549,7 @@ const RekapitulasiPage = () => {
       fetchedStudents.forEach(student => {
         recapitulation[student.id] = {
           absen: student.absen,
-          nis: student.nis,
+          nis: student.nisn || student.nis,
           name: student.name,
           NH: [],
           Formatif: [],
@@ -676,7 +712,7 @@ const RekapitulasiPage = () => {
       fetchedStudents.forEach(student => {
         studentViolationSummary[student.id] = {
           absen: student.absen,
-          nis: student.nis,
+          nis: student.nisn || student.nis,
           name: student.name,
           gender: student.gender,
           violationCount: 0,
@@ -732,7 +768,7 @@ const RekapitulasiPage = () => {
     const classObj = classes.find(c => String(c.id) === String(selectedViolationClass));
     const worksheet = XLSX.utils.json_to_sheet(violationData.map(item => ({
       'No. Absen': item.absen || '',
-      'NIS': item.nis || '',
+      'NISN': item.nis || '',
       'Nama Siswa': item.name || '',
       'Jenis Kelamin': item.gender || '',
       'Total Poin Pelanggaran': item.totalPointsDeducted || 0,
@@ -783,7 +819,7 @@ const RekapitulasiPage = () => {
 
   const nilaiColumns = [
     { header: { label: 'No. Absen' }, accessor: 'absen' },
-    { header: { label: 'NIS' }, accessor: 'nis' },
+    { header: { label: 'NISN' }, accessor: 'nis' },
     { header: { label: 'Nama Siswa' }, accessor: 'name' },
     { header: { label: 'Rata-rata NH' }, accessor: 'NH_avg' },
     { header: { label: 'Formatif' }, accessor: 'Formatif_avg' },
@@ -801,7 +837,7 @@ const RekapitulasiPage = () => {
 
   const pelanggaranColumns = [
     { header: { label: 'No. Absen' }, accessor: 'absen' },
-    { header: { label: 'NIS' }, accessor: 'nis' },
+    { header: { label: 'NISN' }, accessor: 'nis' },
     { header: { label: 'Nama Siswa' }, accessor: 'name' },
     { header: { label: 'Jenis Kelamin' }, accessor: 'gender' },
     { header: { label: 'Total Poin Pelanggaran' }, accessor: 'totalPointsDeducted' },
@@ -867,7 +903,7 @@ const RekapitulasiPage = () => {
                     <div className="flex-1">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Mata Pelajaran</label>
                       <StyledSelect value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
-                        <option value="">Semua Mata Pelajaran</option>
+                        <option value="">-- Kehadiran Harian Siswa --</option>
                         {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                       </StyledSelect>
                     </div>

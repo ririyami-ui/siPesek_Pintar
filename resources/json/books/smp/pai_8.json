@@ -1,0 +1,12 @@
+{
+  "bookId": "smp-pai-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Meyakini Kitab-Kitab Allah", "pages": "1-34", "semester": "Ganjil", "sub_topics": ["Pengertian Iman kepada Kitab Allah", "Kitab-Kitab Allah", "Fungsi Beriman kepada Kitab Allah"], "key_terms": ["Kitab Allah", "Taurat", "Zabur", "Injil", "Al-Qur'an"] },
+    { "no": 2, "title": "Toleransi dan Menghindari Kekerasan", "pages": "35-68", "semester": "Ganjil", "sub_topics": ["Konsep Toleransi dalam Islam", "Menghindari Kekerasan", "Kerukunan Antarumat Beragama"], "key_terms": ["Toleransi", "Tasamuh", "Rahmatan Lil Alamin", "Ukhuwah"] },
+    { "no": 3, "title": "Makanan dan Minuman Halal", "pages": "69-100", "semester": "Ganjil", "sub_topics": ["Kriteria Makanan Halal", "Makanan Haram dalam Islam", "Manfaat Makanan Halal"], "key_terms": ["Halal", "Haram", "Tayyib", "Makanan"] },
+    { "no": 4, "title": "Ibadah Puasa", "pages": "101-132", "semester": "Genap", "sub_topics": ["Pengertian Puasa", "Macam-macam Puasa", "Hikmah Puasa"], "key_terms": ["Puasa", "Syahru Ramadan", "Sahur", "Taqwa"] },
+    { "no": 5, "title": "Sejarah Peradaban Islam Masa Daulah Umayyah", "pages": "133-166", "semester": "Genap", "sub_topics": ["Berdirinya Daulah Umayyah", "Khalifah-Khalifah Umayyah", "Kemajuan Peradaban Islam"], "key_terms": ["Daulah Umayyah", "Khalifah", "Damaskus", "Peradaban Islam"] },
+    { "no": 6, "title": "Meneladani Sifat Mulia Rasul", "pages": "167-200", "semester": "Genap", "sub_topics": ["Sifat-Sifat Rasul", "Rasul Ulul Azmi", "Meneladani Akhlak Rasul"], "key_terms": ["Rasul", "Siddiq", "Amanah", "Tablig", "Fatanah"] }
+  ]
+}

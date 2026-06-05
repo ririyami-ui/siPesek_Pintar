@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-sos-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Konsep Modernisasi",
+                                            "Syarat Modernisasi",
+                                            "Dampak Modernisasi",
+                                            "Globalisasi Budaya",
+                                            "Globalisasi Ekonomi"
+                                        ],
+                         "key_terms":  [
+                                           "Modernisasi",
+                                           "Globalisasi",
+                                           "Industrialisasi",
+                                           "Modern"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Modernisasi dan Globalisasi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Konsep Ketimpangan",
+                                            "Kemiskinan",
+                                            "Kesenjangan Ekonomi",
+                                            "Ketimpangan Pendidikan",
+                                            "Solusi Ketimpangan"
+                                        ],
+                         "key_terms":  [
+                                           "Ketimpangan",
+                                           "Kemiskinan",
+                                           "Kesenjangan",
+                                           "Eksklusi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ketimpangan Sosial"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pengertian Kearifan Lokal",
+                                            "Bentuk Kearifan",
+                                            "Fungsi Kearifan",
+                                            "Pelestarian",
+                                            "Pemberdayaan"
+                                        ],
+                         "key_terms":  [
+                                           "Kearifan",
+                                           "Lokal",
+                                           "Tradisi",
+                                           "Adat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kearifan Lokal"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Teori Perubahan",
+                                            "Faktor Perubahan",
+                                            "Bentuk Perubahan",
+                                            "Dampak Perubahan",
+                                            "Penolakan Perubahan"
+                                        ],
+                         "key_terms":  [
+                                           "Perubahan",
+                                           "Evolusi",
+                                           "Revolusi",
+                                           "Dampak"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Perubahan Sosial"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Metode Penelitian",
+                                            "Jenis Penelitian",
+                                            "Teknik Pengumpulan Data",
+                                            "Analisis Data",
+                                            "Laporan Penelitian"
+                                        ],
+                         "key_terms":  [
+                                           "Penelitian",
+                                           "Metode",
+                                           "Data",
+                                           "Analisis"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Penelitian Sosial"
+                     }
+                 ],
+    "isbn":  "978-623-194-737-1"
+}

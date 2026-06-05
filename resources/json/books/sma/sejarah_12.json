@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "sma-sej-12",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-34",
+            "sub_topics": [
+                "Lahirnya Orde Baru",
+                "Pembangunan Orde Baru",
+                "Dampak Positif dan Negatif",
+                "Keruntuhan Orde Baru"
+            ],
+            "key_terms": [
+                "Orde Baru",
+                "pembangunan",
+                "reformasi"
+            ],
+            "semester": "Ganjil",
+            "title": "Orde Baru"
+        },
+        {
+            "no": 2,
+            "pages": "35-66",
+            "sub_topics": [
+                "Gerakan Reformasi 1998",
+                "Perubahan Politik Pasca Reformasi",
+                "Amandemen UUD 1945",
+                "Perkembangan Demokrasi"
+            ],
+            "key_terms": [
+                "reformasi",
+                "demokrasi",
+                "amandemen"
+            ],
+            "semester": "Ganjil",
+            "title": "Reformasi"
+        },
+        {
+            "no": 3,
+            "pages": "67-98",
+            "sub_topics": [
+                "Politik Luar Negeri Indonesia",
+                "ASEAN",
+                "Perserikatan Bangsa-Bangsa",
+                "Peran Indonesia di Dunia"
+            ],
+            "key_terms": [
+                "internasional",
+                "ASEAN",
+                "PBB"
+            ],
+            "semester": "Ganjil",
+            "title": "Hubungan Internasional"
+        },
+        {
+            "no": 4,
+            "pages": "99-130",
+            "sub_topics": [
+                "Pengertian Globalisasi",
+                "Dampak Globalisasi",
+                "Globalisasi dan Budaya",
+                "Indonesia di Era Global"
+            ],
+            "key_terms": [
+                "globalisasi",
+                "modernisasi",
+                "budaya global"
+            ],
+            "semester": "Genap",
+            "title": "Globalisasi"
+        },
+        {
+            "no": 5,
+            "pages": "131-162",
+            "sub_topics": [
+                "Peristiwa Kontemporer Dunia",
+                "Peristiwa Kontemporer Indonesia",
+                "Isu-isu Global Masa Kini",
+                "Sejarah Abad 21"
+            ],
+            "key_terms": [
+                "kontemporer",
+                "terkini",
+                "global"
+            ],
+            "semester": "Genap",
+            "title": "Sejarah Kontemporer"
+        },
+        {
+            "no": 6,
+            "pages": "163-194",
+            "sub_topics": [
+                "Pengertian Historiografi",
+                "Historiografi Tradisional",
+                "Historiografi Kolonial",
+                "Historiografi Modern"
+            ],
+            "key_terms": [
+                "historiografi",
+                "penulisan sejarah",
+                "metodologi"
+            ],
+            "semester": "Genap",
+            "title": "Historiografi"
+        }
+    ],
+    "isbn": "978-623-194-918-8"
+}

@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-indo-9",
+  "isbn": "978-602-244-300-1",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Bahasa Indonesia SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Demi Keluarga (Teks Laporan Percobaan)",
+      "pages": "1-35",
+      "sub_topics": [
+        "Ciri-ciri Teks Laporan Percobaan",
+        "Struktur Laporan Percobaan",
+        "Kebahasaan Teks Laporan Percobaan",
+        "Menyusun Laporan Percobaan"
+      ],
+      "key_terms": ["Eksperimen", "Prosedur", "Simpulan", "Variabel", "Kata Teknis"],
+      "visual_hints": "Wajib gunakan Mermaid Flowchart untuk menjelaskan tahapan percobaan ilmiah."
+    },
+    {
+      "no": 2,
+      "title": "Menyampaikan Pidato Persuasif",
+      "pages": "37-70",
+      "sub_topics": [
+        "Tujuan dan Karakteristik Pidato",
+        "Struktur Pidato Persuasif",
+        "Etika Berpidato",
+        "Menyusun Teks Pidato"
+      ],
+      "key_terms": ["Retorika", "Argumen", "Persuasi", "Etika", "Emosi"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk merancang kerangka argumen dalam naskah pidato."
+    },
+    {
+      "no": 3,
+      "title": "Menyusun Cerita Pendek",
+      "pages": "71-105",
+      "sub_topics": [
+        "Struktur Cerpen",
+        "Sudut Pandang (Point of View)",
+        "Gaya Bahasa (Majas)",
+        "Menulis Cerpen Berbasis Pengalaman"
+      ],
+      "key_terms": ["Klimaks", "Resolusi", "Sudut Pandang", "Majas", "Simbolik"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk merancang grafik tensi cerita (Plot Arc)."
+    },
+    {
+      "no": 4,
+      "title": "Memberi Tanggapan dengan Santun",
+      "pages": "107-140",
+      "sub_topics": [
+        "Jenis-jenis Teks Tanggapan",
+        "Struktur Teks Tanggapan (Kritik/Pujian)",
+        "Bahasa yang Santun dan Efektif",
+        "Menyusun Teks Tanggapan"
+      ],
+      "key_terms": ["Tanggapan", "Kontekstual", "Kritik", "Pujian", "Santun"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk membandingkan argumen pro dan kontra dalam sebuah isu."
+    }
+  ]
+}

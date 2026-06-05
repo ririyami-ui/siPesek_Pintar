@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-34",
+                         "sub_topics":  [
+                                            "Macam Garis",
+                                            "Tekstur",
+                                            "Bidang",
+                                            "Ruang"
+                                        ],
+                         "key_terms":  [
+                                           "garis",
+                                           "bidang",
+                                           "tekstur"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Garis dan Bidang"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "35-68",
+                         "sub_topics":  [
+                                            "Menggambar Observasi",
+                                            "Menggambar Perspektif",
+                                            "Proporsi",
+                                            "Komposisi"
+                                        ],
+                         "key_terms":  [
+                                           "teknik",
+                                           "observasi",
+                                           "perspektif"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teknik Menggambar"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "69-102",
+                         "sub_topics":  [
+                                            "Teknik Melukis",
+                                            "Cat Air",
+                                            "Cat Akrilik",
+                                            "Mozaik dari Bahan Alam"
+                                        ],
+                         "key_terms":  [
+                                           "lukisan",
+                                           "mozaik",
+                                           "cat air"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Lukisan dan Mozaik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "103-136",
+                         "sub_topics":  [
+                                            "Patung Bentuk Manusia",
+                                            "Patung Bentuk Hewan",
+                                            "Relief Sederhana",
+                                            "Alat Membuat Patung"
+                                        ],
+                         "key_terms":  [
+                                           "patung",
+                                           "relief",
+                                           "bentuk"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Patung dan Relief"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "137-170",
+                         "sub_topics":  [
+                                            "Ragam Hias",
+                                            "Pola Batik Sederhana",
+                                            "Desain Produk",
+                                            "Menggambar Fashion"
+                                        ],
+                         "key_terms":  [
+                                           "desain",
+                                           "pola",
+                                           "batik"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Desain dan Pola"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "171-204",
+                         "sub_topics":  [
+                                            "Menyelenggarakan Pameran",
+                                            "Katalog Sederhana",
+                                            "Kritik Karya",
+                                            "Portofolio"
+                                        ],
+                         "key_terms":  [
+                                           "pameran",
+                                           "kritik",
+                                           "portofolio"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pameran dan Kritik"
+                     }
+                 ],
+    "isbn":  "978-623-194-521-X"
+}

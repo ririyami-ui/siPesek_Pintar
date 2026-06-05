@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-prakarya-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Kerajinan Lunak", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Kerajinan Tekstil", "Kerajinan Kertas", "Teknik Anyaman"], "key_terms": ["Kerajinan Lunak", "Tekstil", "Anyaman", "Fiber"] },
+    { "no": 2, "title": "Teknologi Informasi dan Komunikasi", "pages": "41-80", "semester": "Ganjil", "sub_topics": ["Perangkat Keras Komputer", "Jaringan Dasar", "Aplikasi Perkantoran"], "key_terms": ["Teknologi", "Informasi", "Komunikasi", "Jaringan"] },
+    { "no": 3, "title": "Budidaya Satwa Harapan", "pages": "81-120", "semester": "Genap", "sub_topics": ["Jenis Satwa Harapan", "Teknik Pemeliharaan", "Pakan dan Kesehatan"], "key_terms": ["Budidaya", "Satwa Harapan", "Ternak", "Pakan"] },
+    { "no": 4, "title": "Pengolahan Bahan Serealia", "pages": "121-160", "semester": "Genap", "sub_topics": ["Jenis Serealia", "Teknik Pengolahan Tepung", "Membuat Kue Tradisional"], "key_terms": ["Serealia", "Tepung", "Kue Tradisional", "Fermentasi"] }
+  ]
+}

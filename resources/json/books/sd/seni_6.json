@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Peran Kurator",
+                                            "Menulis Resensi",
+                                            "Teori Estetika",
+                                            "Fungsi Seni"
+                                        ],
+                         "key_terms":  [
+                                           "kurator",
+                                           "apresiasi",
+                                           "estetika"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kurator dan Apresiator"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Seni Publik",
+                                            "Seni Jalanan",
+                                            "Komunitas Seni",
+                                            "Seni dan Ekonomi"
+                                        ],
+                         "key_terms":  [
+                                           "masyarakat",
+                                           "publik",
+                                           "komunitas"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Seni Rupa dan Masyarakat"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Stop Motion",
+                                            "Animasi 2D",
+                                            "Storyboard",
+                                            "Audio Visual"
+                                        ],
+                         "key_terms":  [
+                                           "multimedia",
+                                           "animasi",
+                                           "storyboard"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Multimedia dan Animasi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Bisnis Karya Seni",
+                                            "Harga Karya",
+                                            "Platform Jual Beli",
+                                            "Galeri Online"
+                                        ],
+                         "key_terms":  [
+                                           "wirausaha",
+                                           "bisnis",
+                                           "galeri"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kewirausahaan Seni"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Konsep Proyek",
+                                            "Eksekusi",
+                                            "Pameran Akhir",
+                                            "Evaluasi"
+                                        ],
+                         "key_terms":  [
+                                           "proyek akhir",
+                                           "pameran",
+                                           "evaluasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Proyek Akhir Seni Rupa"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Seni Rupa Tradisional",
+                                            "Seni Rupa Kontemporer",
+                                            "Warisan Budaya",
+                                            "Pelestarian"
+                                        ],
+                         "key_terms":  [
+                                           "nusantara",
+                                           "tradisional",
+                                           "warisan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Seni Rupa Nusantara"
+                     }
+                 ],
+    "isbn":  "978-623-194-561-X"
+}

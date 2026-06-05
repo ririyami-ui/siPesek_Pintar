@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ing-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "My Hobby",
+                                            "Sports and Games",
+                                            "Singing and Drawing",
+                                            "Talking about Hobbies"
+                                        ],
+                         "key_terms":  [
+                                           "hobby",
+                                           "like",
+                                           "enjoy"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Hobbies"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Sunny and Rainy",
+                                            "Hot and Cold",
+                                            "Cloudy and Windy",
+                                            "Seasons in Indonesia"
+                                        ],
+                         "key_terms":  [
+                                           "weather",
+                                           "sunny",
+                                           "rainy"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Weather"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Jobs and Occupations",
+                                            "Doctor and Nurse",
+                                            "Teacher and Farmer",
+                                            "What Do You Want to Be?"
+                                        ],
+                         "key_terms":  [
+                                           "profession",
+                                           "job",
+                                           "occupation"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Profession"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Asking for Directions",
+                                            "Giving Directions",
+                                            "Left and Right",
+                                            "Places in Town"
+                                        ],
+                         "key_terms":  [
+                                           "direction",
+                                           "left",
+                                           "right"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Direction"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Shopping List",
+                                            "At the Store",
+                                            "How Much Is It?",
+                                            "Buying and Selling"
+                                        ],
+                         "key_terms":  [
+                                           "shopping",
+                                           "price",
+                                           "money"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Shopping"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-188",
+                         "sub_topics":  [
+                                            "Types of Holiday",
+                                            "Holiday Activities",
+                                            "My Holiday Plan",
+                                            "Telling Holiday Stories"
+                                        ],
+                         "key_terms":  [
+                                           "holiday",
+                                           "vacation",
+                                           "celebrate"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Holiday"
+                     }
+                 ],
+    "isbn":  "978-623-194-823-5"
+}

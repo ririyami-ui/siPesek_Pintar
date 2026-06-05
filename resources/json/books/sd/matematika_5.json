@@ -1,0 +1,111 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-40",
+                         "sub_topics":  [
+                                            "Penjumlahan Pecahan Berbeda Penyebut",
+                                            "Pengurangan Pecahan",
+                                            "Perkalian Pecahan",
+                                            "Pembagian Pecahan"
+                                        ],
+                         "key_terms":  [
+                                           "pecahan",
+                                           "operasi hitung",
+                                           "penyebut"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Operasi Hitung Pecahan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "41-78",
+                         "sub_topics":  [
+                                            "Konsep Kecepatan",
+                                            "Menghitung Kecepatan",
+                                            "Konsep Debit",
+                                            "Menghitung Debit"
+                                        ],
+                         "key_terms":  [
+                                           "kecepatan",
+                                           "debit",
+                                           "jarak",
+                                           "waktu"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kecepatan dan Debit"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "79-118",
+                         "sub_topics":  [
+                                            "Volume Kubus",
+                                            "Volume Balok",
+                                            "Jaring-Jaring Bangun Ruang",
+                                            "Luas Permukaan"
+                                        ],
+                         "key_terms":  [
+                                           "bangun ruang",
+                                           "volume",
+                                           "kubus",
+                                           "balok"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bangun Ruang dan Volume"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "119-154",
+                         "sub_topics":  [
+                                            "Mengumpulkan Data",
+                                            "Menyajikan Data dalam Tabel",
+                                            "Diagram Batang",
+                                            "Diagram Lingkaran"
+                                        ],
+                         "key_terms":  [
+                                           "data",
+                                           "diagram",
+                                           "statistika"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Statistika Sederhana"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "155-188",
+                         "sub_topics":  [
+                                            "Bilangan Berpangkat",
+                                            "Akar Pangkat Dua",
+                                            "Akar Pangkat Tiga",
+                                            "Operasi Bilangan Berpangkat"
+                                        ],
+                         "key_terms":  [
+                                           "pangkat",
+                                           "akar",
+                                           "bilangan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bilangan Berpangkat dan Akar"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "189-220",
+                         "sub_topics":  [
+                                            "Konsep Skala",
+                                            "Membaca Denah",
+                                            "Membuat Denah",
+                                            "Perbandingan Skala"
+                                        ],
+                         "key_terms":  [
+                                           "skala",
+                                           "denah",
+                                           "perbandingan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Skala dan Denah"
+                     }
+                 ],
+    "isbn":  "978-623-194-051-X"
+}

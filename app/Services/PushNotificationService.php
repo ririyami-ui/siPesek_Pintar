@@ -70,4 +70,59 @@ class PushNotificationService
             return false;
         }
     }
+
+    /**
+     * Send a Web Push notification to a specific user (teacher or any user)
+     * Expects the user record to have a `push_subscription` JSON column similar to parents.
+     *
+     * @param \App\Models\User|int $user
+     * @param string $title
+     * @param string $body
+     * @param string $url
+     * @return bool
+     */
+    public static function sendToUser($user, string $title, string $body, string $url = '/')
+    {
+        try {
+            if (!($user instanceof \App\Models\User)) {
+                $user = \App\Models\User::find($user);
+            }
+
+            if (!$user || empty($user->push_subscription)) {
+                return false;
+            }
+
+            $subscriptionData = json_decode($user->push_subscription, true);
+            if (!is_array($subscriptionData) || !isset($subscriptionData['endpoint'])) {
+                return false;
+            }
+
+            $auth = [
+                'VAPID' => [
+                    'subject' => env('VAPID_SUBJECT'),
+                    'publicKey' => env('VAPID_PUBLIC_KEY'),
+                    'privateKey' => env('VAPID_PRIVATE_KEY'),
+                ],
+            ];
+
+            $webPush = new WebPush($auth);
+            $subscription = Subscription::create([
+                'endpoint' => $subscriptionData['endpoint'],
+                'publicKey' => $subscriptionData['keys']['p256dh'] ?? null,
+                'authToken' => $subscriptionData['keys']['auth'] ?? null,
+            ]);
+
+            $payload = json_encode([
+                'title' => $title,
+                'body' => $body,
+                'url' => $url,
+            ]);
+
+            $report = $webPush->sendOneNotification($subscription, $payload);
+            return $report->isSuccess();
+        } catch (\Exception $e) {
+            Log::error('Failed to send Push Notification to user: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

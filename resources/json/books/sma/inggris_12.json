@@ -1,0 +1,97 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ing-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Making Offers",
+                                            "Making Suggestions",
+                                            "Accepting and Declining",
+                                            "Polite Expressions"
+                                        ],
+                         "key_terms":  [
+                                           "Offer",
+                                           "Suggestion",
+                                           "Polite",
+                                           "Response"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Offers and Suggestions"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Making Requests",
+                                            "Making Invitations",
+                                            "Accepting Declining",
+                                            "Modal Verbs"
+                                        ],
+                         "key_terms":  [
+                                           "Request",
+                                           "Invitation",
+                                           "Modal",
+                                           "Response"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Requests and Invitations"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Purpose of Caption",
+                                            "Types of Caption",
+                                            "Writing Captions",
+                                            "Visual Media"
+                                        ],
+                         "key_terms":  [
+                                           "Caption",
+                                           "Description",
+                                           "Image",
+                                           "Context"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Caption Text"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Main Events",
+                                            "Background Sources",
+                                            "Structure Review",
+                                            "Writing News"
+                                        ],
+                         "key_terms":  [
+                                           "News",
+                                           "Sources",
+                                           "Event",
+                                           "Summary"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "News Item Text"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Structure of Letter",
+                                            "Language Features",
+                                            "Writing Application Letter",
+                                            "Resume and CV"
+                                        ],
+                         "key_terms":  [
+                                           "Application",
+                                           "Letter",
+                                           "CV",
+                                           "Qualification"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Application Letter"
+                     }
+                 ],
+    "isbn":  "978-623-194-707-1"
+}

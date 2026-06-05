@@ -6,7 +6,7 @@ import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
 import StyledTable from './StyledTable';
 import Modal from './Modal';
-import { Plus, Trash2, ShieldCheck, Pencil, CheckCircle } from 'lucide-react';
+import { Plus, Trash2, ShieldCheck, Pencil, CheckCircle, User } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 
 export default function AdminMasterData() {
@@ -40,6 +40,9 @@ export default function AdminMasterData() {
         isOpen: false,
         id: null
     });
+
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
 
     const getAdmins = useCallback(async () => {
         setLoading(true);
@@ -110,6 +113,8 @@ export default function AdminMasterData() {
             password: '',
             role: admin.auth_user?.role || 'admin'
         });
+        setPhotoFile(null);
+        setPhotoPreview(admin.auth_user?.photo_url || null);
         setIsEditModalOpen(true);
     };
 
@@ -117,12 +122,27 @@ export default function AdminMasterData() {
         e.preventDefault();
         if (!currentAdmin) return;
 
-        const promise = api.put(`/admins/${currentAdmin.id}`, editData);
+        const promise = (async () => {
+            // 1. Update details
+            const res = await api.put(`/admins/${currentAdmin.id}`, editData);
+
+            // 2. If photo is selected and linked user exists
+            if (photoFile && currentAdmin.auth_user_id) {
+                const formData = new FormData();
+                formData.append('photo', photoFile);
+                await api.post(`/users/${currentAdmin.auth_user_id}/photo`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+            }
+            return res;
+        })();
 
         toast.promise(promise, {
             loading: 'Memperbarui...',
             success: () => {
                 setIsEditModalOpen(false);
+                setPhotoFile(null);
+                setPhotoPreview(null);
                 getAdmins();
                 return 'Data admin berhasil diperbarui!';
             },
@@ -217,18 +237,27 @@ export default function AdminMasterData() {
                                     <tr key={admin.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600 dark:text-blue-400">{admin.code || '-'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-text-light dark:text-text-dark">
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center gap-2">
-                                                    {admin.name}
-                                                    {isCurrentUser && (
-                                                        <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full animate-pulse">
-                                                            Aktif
-                                                        </span>
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                                    {admin.auth_user?.photo_url ? (
+                                                        <img src={admin.auth_user.photo_url} className="w-full h-full object-cover" alt={admin.name} />
+                                                    ) : (
+                                                        <User size={16} />
                                                     )}
                                                 </div>
-                                                <span className={`text-[10px] font-bold uppercase tracking-wider ${admin.auth_user?.role === 'librarian' ? 'text-orange-500' : 'text-blue-500'}`}>
-                                                    {admin.auth_user?.role === 'librarian' ? 'Pustakawan' : 'Administrator'}
-                                                </span>
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-2">
+                                                        {admin.name}
+                                                        {isCurrentUser && (
+                                                            <span className="text-[10px] bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full animate-pulse">
+                                                                Aktif
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${admin.auth_user?.role === 'librarian' ? 'text-orange-500' : 'text-blue-500'}`}>
+                                                        {admin.auth_user?.role === 'librarian' ? 'Pustakawan' : 'Administrator'}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted-light dark:text-text-muted-dark font-medium">{admin.nip || '-'}</td>
@@ -323,6 +352,44 @@ export default function AdminMasterData() {
                                 <option value="librarian">Pustakawan (Akses Terbatas)</option>
                             </select>
                         </div>
+
+                        {/* PROFILE PHOTO SECTION */}
+                        {currentAdmin?.auth_user_id && (
+                            <div className="space-y-2 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/20">
+                                <label className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">Foto Profil Admin</label>
+                                <div className="flex items-center gap-4 mt-2">
+                                    <div className="h-16 w-16 rounded-full border border-blue-200 dark:border-blue-800 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                        {photoPreview ? (
+                                            <img src={photoPreview} className="w-full h-full object-cover" alt="Preview" />
+                                        ) : (
+                                            <User size={32} className="text-blue-300" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 space-y-1">
+                                        <label className="cursor-pointer inline-block px-3 py-1.5 bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/40 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95">
+                                            PILIH FOTO
+                                            <input 
+                                                type="file" 
+                                                onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        if (file.size > 300 * 1024) {
+                                                            toast.error('Ukuran file maksimal 300KB.');
+                                                            return;
+                                                        }
+                                                        setPhotoFile(file);
+                                                        setPhotoPreview(URL.createObjectURL(file));
+                                                    }
+                                                }} 
+                                                className="hidden" 
+                                                accept="image/*" 
+                                            />
+                                        </label>
+                                        <p className="text-[9px] text-gray-400 italic">* Format: JPG, PNG, WEBP (Maks 300KB)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="flex justify-end gap-3 mt-8">
                             <StyledButton type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>Batal</StyledButton>

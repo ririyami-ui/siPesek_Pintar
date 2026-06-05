@@ -1,0 +1,115 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ind-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Ciri dan Struktur Teks LHO",
+                                            "Kebahasaan Teks LHO",
+                                            "Menyusun Teks LHO",
+                                            "Menyunting Teks LHO"
+                                        ],
+                         "key_terms":  [
+                                           "Observasi",
+                                           "Laporan",
+                                           "Deskripsi",
+                                           "Fakta"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Laporan Hasil Observasi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Pengertian dan Struktur",
+                                            "Jenis Teks Eksposisi",
+                                            "Kebahasaan Teks Eksposisi",
+                                            "Menyusun Teks Eksposisi"
+                                        ],
+                         "key_terms":  [
+                                           "Eksposisi",
+                                           "Argumentasi",
+                                           "Tesis",
+                                           "Penegasan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Eksposisi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Ciri dan Struktur",
+                                            "Kebahasaan Anekdot",
+                                            "Menyusun Anekdot",
+                                            "Menganalisis Anekdot"
+                                        ],
+                         "key_terms":  [
+                                           "Anekdot",
+                                           "Kritik",
+                                           "Humor",
+                                           "Satire"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Anekdot"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Cerita Rakyat",
+                                            "Jenis Cerita Rakyat",
+                                            "Nilai dalam Cerita Rakyat",
+                                            "Menceritakan Kembali"
+                                        ],
+                         "key_terms":  [
+                                           "Cerita Rakyat",
+                                           "Legenda",
+                                           "Mite",
+                                           "Fabel"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cerita Rakyat"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Unsur Fisik Puisi",
+                                            "Unsur Batin Puisi",
+                                            "Menganalisis Puisi",
+                                            "Menulis Puisi"
+                                        ],
+                         "key_terms":  [
+                                           "Puisi",
+                                           "Diksi",
+                                           "Majas",
+                                           "Rima"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Puisi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Pengertian Biografi",
+                                            "Struktur Biografi",
+                                            "Menulis Biografi",
+                                            "Keteladanan Tokoh"
+                                        ],
+                         "key_terms":  [
+                                           "Biografi",
+                                           "Otobiografi",
+                                           "Tokoh",
+                                           "Keteladanan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Biografi"
+                     }
+                 ],
+    "isbn":  "978-623-194-706-8"
+}

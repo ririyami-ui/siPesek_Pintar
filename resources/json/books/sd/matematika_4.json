@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-mat-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Nilai Tempat hingga Jutaan",
+                                            "Membaca Bilangan Besar",
+                                            "Pembulatan",
+                                            "Taksiran"
+                                        ],
+                         "key_terms":  [
+                                           "bilangan cacah",
+                                           "pembulatan",
+                                           "taksiran"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bilangan Cacah Besar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Faktor Bilangan",
+                                            "Kelipatan Bilangan",
+                                            "FPB",
+                                            "KPK"
+                                        ],
+                         "key_terms":  [
+                                           "faktor",
+                                           "kelipatan",
+                                           "FPB",
+                                           "KPK"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Faktor dan Kelipatan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-110",
+                         "sub_topics":  [
+                                            "Perkalian Ratusan",
+                                            "Pembagian dengan Hasil Dua Angka",
+                                            "Operasi Hitung Campuran",
+                                            "Soal Cerita"
+                                        ],
+                         "key_terms":  [
+                                           "perkalian",
+                                           "pembagian",
+                                           "operasi hitung"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Perkalian dan Pembagian Lanjutan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "111-148",
+                         "sub_topics":  [
+                                            "Keliling Bangun Datar",
+                                            "Luas Bangun Datar",
+                                            "Segitiga dan Segiempat",
+                                            "Hubungan Antar Bangun"
+                                        ],
+                         "key_terms":  [
+                                           "bangun datar",
+                                           "keliling",
+                                           "luas"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bangun Datar dan Luas"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "149-184",
+                         "sub_topics":  [
+                                            "Pecahan Biasa dan Campuran",
+                                            "Desimal",
+                                            "Penjumlahan Pecahan",
+                                            "Pengurangan Pecahan"
+                                        ],
+                         "key_terms":  [
+                                           "pecahan",
+                                           "desimal",
+                                           "operasi pecahan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pecahan dan Desimal"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "185-216",
+                         "sub_topics":  [
+                                            "Mengenal Sudut",
+                                            "Mengukur Sudut",
+                                            "Jenis Sudut",
+                                            "Menggambar Sudut"
+                                        ],
+                         "key_terms":  [
+                                           "sudut",
+                                           "busur",
+                                           "derajat"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pengukuran Sudut"
+                     }
+                 ],
+    "isbn":  "978-623-194-041-X"
+}

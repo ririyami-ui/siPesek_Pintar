@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Pengertian Veda",
+                "Bagian-bagian Veda",
+                "Isi Pokok Veda",
+                "Veda sebagai Sumber Hukum"
+            ],
+            "key_terms": [
+                "Veda",
+                "Sruti",
+                "Smerti"
+            ],
+            "semester": "Ganjil",
+            "title": "Veda"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pratyaksha Pramana",
+                "Anumana Pramana",
+                "Sabda Pramana",
+                "Cara Memperoleh Pengetahuan"
+            ],
+            "key_terms": [
+                "pramana",
+                "pengetahuan",
+                "pembuktian"
+            ],
+            "semester": "Ganjil",
+            "title": "Tri Pramana"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Maitri Karuna",
+                "Mudita",
+                "Upeksha",
+                "Penerapan dalam Hidup"
+            ],
+            "key_terms": [
+                "paramita",
+                "cinta kasih",
+                "kebajikan"
+            ],
+            "semester": "Ganjil",
+            "title": "Catur Paramita"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Dewa Yadnya",
+                "Pitra Yadnya",
+                "Rsi Yadnya",
+                "Manusa Yadnya"
+            ],
+            "key_terms": [
+                "yadnya",
+                "persembahan",
+                "korban suci"
+            ],
+            "semester": "Genap",
+            "title": "Panca Yadnya"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Parahyangan",
+                "Pawongan",
+                "Palemahan",
+                "Harmoni Alam dan Manusia"
+            ],
+            "key_terms": [
+                "Tri Hita Karana",
+                "harmoni",
+                "keseimbangan"
+            ],
+            "semester": "Genap",
+            "title": "Tri Hita Karana"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Pengertian Pura",
+                "Jenis-jenis Pura",
+                "Arsitektur Pura",
+                "Nilai Keindahan Pura"
+            ],
+            "key_terms": [
+                "pura",
+                "tempat suci",
+                "arsitektur"
+            ],
+            "semester": "Genap",
+            "title": "Pura dan Keindahan"
+        }
+    ],
+    "isbn": "978-623-194-907-2"
+}

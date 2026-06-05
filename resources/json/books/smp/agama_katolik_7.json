@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-katolik-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Siapa Aku sebagai Pribadi",
+                "Bakat dan Minat",
+                "Pertumbuhan Fisik dan Spiritual",
+                "Harga Diri"
+            ],
+            "key_terms": [
+                "pribadi",
+                "bakat",
+                "harga diri"
+            ],
+            "semester": "Ganjil",
+            "title": "Pribadi Peserta Didik"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Keluarga sebagai Komunitas Cinta",
+                "Peran Orang Tua dan Anak",
+                "Nilai-nilai Keluarga",
+                "Keluarga Gereja Rumah Tangga"
+            ],
+            "key_terms": [
+                "keluarga",
+                "cinta",
+                "komunitas"
+            ],
+            "semester": "Ganjil",
+            "title": "Keluarga"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Hidup dalam Masyarakat",
+                "Sikap Sosial",
+                "Keadilan dan Solidaritas",
+                "Partisipasi Sosial"
+            ],
+            "key_terms": [
+                "masyarakat",
+                "solidaritas",
+                "keadilan"
+            ],
+            "semester": "Ganjil",
+            "title": "Masyarakat"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Gereja sebagai Umat Allah",
+                "Sakramen dalam Gereja",
+                "Tugas dan Panggilan Umat",
+                "Persekutuan Umat"
+            ],
+            "key_terms": [
+                "gereja",
+                "umat Allah",
+                "sakramen"
+            ],
+            "semester": "Genap",
+            "title": "Gereja"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Pokok-pokok Iman Katolik",
+                "Credo dan Pengakuan Iman",
+                "Penghayatan Iman",
+                "Pertumbuhan Iman"
+            ],
+            "key_terms": [
+                "iman",
+                "credo",
+                "katolik"
+            ],
+            "semester": "Genap",
+            "title": "Iman Katolik"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Doa sebagai Napas Hidup",
+                "Macam-macam Doa",
+                "Doa Pribadi dan Bersama",
+                "Doa Bapa Kami"
+            ],
+            "key_terms": [
+                "doa",
+                "meditasi",
+                "kontemplasi"
+            ],
+            "semester": "Genap",
+            "title": "Doa"
+        }
+    ],
+    "isbn": "978-623-194-904-1"
+}

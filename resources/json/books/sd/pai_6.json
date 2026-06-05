@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Surat Ali Imran Ayat 190-191",
+                                            "Surat Al-Baqarah Ayat 177",
+                                            "Hadits tentang Ilmu",
+                                            "Hadits tentang Niat"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "hadits",
+                                           "ilmu",
+                                           "niat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an dan Hadits Lanjutan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Qada dan Qadar",
+                                            "Takdir Mubram",
+                                            "Takdir Mu\u0027allaq",
+                                            "Ikhlas Menerima Takdir"
+                                        ],
+                         "key_terms":  [
+                                           "takdir",
+                                           "qada",
+                                           "qadar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Takdir dan Qada"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Hukum Nikah",
+                                            "Rukun Nikah",
+                                            "Keluarga Sakinah",
+                                            "Hak dan Kewajiban Suami Istri"
+                                        ],
+                         "key_terms":  [
+                                           "nikah",
+                                           "keluarga",
+                                           "sakinah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pernikahan dalam Islam"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Hukum Waris",
+                                            "Ahli Waris",
+                                            "Bagian Waris",
+                                            "Hikmah Waris"
+                                        ],
+                         "key_terms":  [
+                                           "waris",
+                                           "faraidh",
+                                           "ahli waris"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Warisan dalam Islam"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Dakwah di Nusantara",
+                                            "Wali Songo",
+                                            "Kerajaan Islam",
+                                            "Kesenian Islam"
+                                        ],
+                         "key_terms":  [
+                                           "dakwah",
+                                           "Wali Songo",
+                                           "peradaban"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Dakwah dan Peradaban"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Menuntut Ilmu",
+                                            "Etos Kerja Islam",
+                                            "Karier dan Profesi",
+                                            "Berorganisasi"
+                                        ],
+                         "key_terms":  [
+                                           "masa depan",
+                                           "ilmu",
+                                           "karier"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Mempersiapkan Masa Depan"
+                     }
+                 ],
+    "isbn":  "978-623-194-661-X"
+}

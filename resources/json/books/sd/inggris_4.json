@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ing-4",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Daily Routines",
+                                            "Present Simple Tense",
+                                            "Adverbs of Frequency",
+                                            "My Daily Schedule"
+                                        ],
+                         "key_terms":  [
+                                           "daily",
+                                           "routine",
+                                           "always"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Daily Activities"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Physical Appearance",
+                                            "Personality Traits",
+                                            "Describing Friends",
+                                            "Describing Family"
+                                        ],
+                         "key_terms":  [
+                                           "describe",
+                                           "appearance",
+                                           "personality"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Describing People"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Describing Objects",
+                                            "Size and Shape",
+                                            "Color and Material",
+                                            "This and That"
+                                        ],
+                         "key_terms":  [
+                                           "object",
+                                           "size",
+                                           "shape"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Describing Things"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Simple Past Tense",
+                                            "Regular Verbs",
+                                            "Irregular Verbs",
+                                            "Telling Past Events"
+                                        ],
+                         "key_terms":  [
+                                           "past",
+                                           "yesterday",
+                                           "verb"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Simple Past"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Comparative Adjectives",
+                                            "Superlative Adjectives",
+                                            "Comparing Things",
+                                            "Comparing People"
+                                        ],
+                         "key_terms":  [
+                                           "comparative",
+                                           "than",
+                                           "superlative"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Comparatives"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-188",
+                         "sub_topics":  [
+                                            "Asking and Giving Directions",
+                                            "Prepositions of Place",
+                                            "Maps and Locations",
+                                            "Finding Places"
+                                        ],
+                         "key_terms":  [
+                                           "direction",
+                                           "between",
+                                           "next to"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Directions"
+                     }
+                 ],
+    "isbn":  "978-623-194-824-2"
+}

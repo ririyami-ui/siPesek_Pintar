@@ -1,0 +1,59 @@
+{
+  "bookId": "smp-mat-9",
+  "isbn": "978-602-244-516-6",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Matematika SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Sistem Persamaan Linear Dua Variabel (SPLDV)",
+      "pages": "1-35",
+      "sub_topics": [
+        "Metode Grafik",
+        "Metode Substitusi",
+        "Metode Eliminasi",
+        "Penerapan SPLDV dalam Kehidupan Sehari-hari"
+      ],
+      "key_terms": ["Variabel", "Koefisien", "Titik Potong", "Sistem Persamaan"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan algoritma langkah-langkah metode eliminasi."
+    },
+    {
+      "no": 2,
+      "title": "Persamaan dan Fungsi Kuadrat",
+      "pages": "37-80",
+      "sub_topics": [
+        "Akar-akar Persamaan Kuadrat",
+        "Diskriminan",
+        "Karakteristik Grafik Fungsi Kuadrat",
+        "Menyusun Persamaan Kuadrat Baru"
+      ],
+      "key_terms": ["Parabola", "Simetri", "Titik Puncak", "Diskriminan", "Pemfaktoran"],
+      "visual_hints": "Gunakan LaTeX untuk penulisan rumus ABC secara mendetail."
+    },
+    {
+      "no": 3,
+      "title": "Transformasi Geometri",
+      "pages": "81-120",
+      "sub_topics": [
+        "Translasi (Pergeseran)",
+        "Refleksi (Pencerminan)",
+        "Rotasi (Perputaran)",
+        "Dilatasi (Perkalian)"
+      ],
+      "key_terms": ["Vektor", "Sumbu Simetri", "Titik Pusat", "Faktor Skala"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk menghitung koordinat titik baru hasil transformasi."
+    },
+    {
+      "no": 4,
+      "title": "Statistik dan Peluang",
+      "pages": "121-160",
+      "sub_topics": [
+        "Penyajian Data (Histogram, Poligon)",
+        "Ukuran Pemusatan (Mean, Median, Modus)",
+        "Peluang Empirik dan Teoretik"
+      ],
+      "key_terms": ["Rata-rata", "Titik Sampel", "Ruang Sampel", "Distribusi"],
+      "visual_hints": "WAJIB: Gunakan Spreadsheet Renderer untuk tabel frekuensi dan perhitungan statistik."
+    }
+  ]
+}

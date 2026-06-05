@@ -1,0 +1,60 @@
+{
+  "bookId": "sma-bio-10",
+  "isbn": "978-602-244-373-5",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Biologi SMA Kelas X",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Keanekaragaman Hayati",
+      "pages": "1-30",
+      "sub_topics": [
+        "Tingkatan Keanekaragaman Hayati (Gen, Jenis, Ekosistem)",
+        "Keanekaragaman Hayati Indonesia (Flora & Fauna)",
+        "Manfaat dan Pelestarian Keanekaragaman Hayati",
+        "Klasifikasi Makhluk Hidup (Sistem 5 Kingdom)"
+      ],
+      "key_terms": ["Biodiversitas", "Endemik", "In-situ", "Ex-situ", "Filogenik"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan persebaran fauna Indonesia berdasarkan garis Wallace dan Weber."
+    },
+    {
+      "no": 2,
+      "title": "Virus dan Peranannya",
+      "pages": "31-60",
+      "sub_topics": [
+        "Karakteristik dan Struktur Virus",
+        "Siklus Replikasi Virus (Litik dan Lisogenik)",
+        "Peranan Virus dalam Kehidupan (Merugikan & Menguntungkan)",
+        "Pencegahan Infeksi Virus (Vaksinasi)"
+      ],
+      "key_terms": ["Kapsid", "Bakteriofag", "Retrovirus", "Vaksin", "Herd Immunity"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk membandingkan tahapan siklus Litik dan Lisogenik secara berdampingan."
+    },
+    {
+      "no": 3,
+      "title": "Inovasi Teknologi Biologi (Bioteknologi)",
+      "pages": "61-90",
+      "sub_topics": [
+        "Bioteknologi Konvensional",
+        "Bioteknologi Modern (Rekayasa Genetika)",
+        "Aplikasi Bioteknologi di Bidang Pangan, Medis, dan Lingkungan",
+        "Etika dan Dampak Bioteknologi"
+      ],
+      "key_terms": ["Fermentasi", "Kultur Jaringan", "Kloning", "Transgenik", "Stem Cell"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan proses pembuatan Insulin melalui rekayasa genetika."
+    },
+    {
+      "no": 4,
+      "title": "Ekosistem dan Perubahan Lingkungan",
+      "pages": "91-130",
+      "sub_topics": [
+        "Komponen Ekosistem dan Interaksinya",
+        "Aliran Energi (Rantai Makanan & Jaring-jaring Makanan)",
+        "Daur Biogeokimia (Karbon, Nitrogen, Air)",
+        "Pencemaran Lingkungan dan Pemanasan Global"
+      ],
+      "key_terms": ["Abiotik", "Autotrof", "Daur Nitrogen", "Efek Rumah Kaca", "Eutrofikasi"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk memvisualisasikan siklus Nitrogen di alam."
+    }
+  ]
+}

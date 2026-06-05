@@ -1,0 +1,97 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-ind-12",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Struktur Surat Lamaran",
+                                            "Kebahasaan",
+                                            "Menulis Surat Lamaran",
+                                            "Kelengkapan Dokumen"
+                                        ],
+                         "key_terms":  [
+                                           "Surat Lamaran",
+                                           "Aplikasi",
+                                           "CV",
+                                           "Dokumen"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Surat Lamaran Pekerjaan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Unsur Intrinsik Novel",
+                                            "Unsur Ekstrinsik",
+                                            "Menganalisis Novel",
+                                            "Nilai dalam Novel"
+                                        ],
+                         "key_terms":  [
+                                           "Novel",
+                                           "Karakterisasi",
+                                           "Amanat",
+                                           "Sudut Pandang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Novel"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pengertian Editorial",
+                                            "Struktur Editorial",
+                                            "Kebahasaan",
+                                            "Menganalisis Editorial"
+                                        ],
+                         "key_terms":  [
+                                           "Editorial",
+                                           "Opini",
+                                           "Tajuk",
+                                           "Komentar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Teks Editorial"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Kritik",
+                                            "Pengertian Esai",
+                                            "Menulis Kritik Sastra",
+                                            "Menulis Esai Sastra"
+                                        ],
+                         "key_terms":  [
+                                           "Kritik",
+                                           "Esai",
+                                           "Sastra",
+                                           "Analisis"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kritik dan Esai Sastra"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Jenis Artikel",
+                                            "Struktur Artikel",
+                                            "Kebahasaan Artikel",
+                                            "Menulis Artikel"
+                                        ],
+                         "key_terms":  [
+                                           "Artikel",
+                                           "Opini",
+                                           "Faktual",
+                                           "Argumentatif"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Artikel"
+                     }
+                 ],
+    "isbn":  "978-623-194-704-2"
+}

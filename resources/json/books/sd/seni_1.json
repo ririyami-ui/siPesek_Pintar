@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-seni-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Apa Itu Seni Rupa",
+                                            "Unsur Seni Rupa",
+                                            "Alat dan Bahan Menggambar",
+                                            "Menggambar Bebas"
+                                        ],
+                         "key_terms":  [
+                                           "seni rupa",
+                                           "unsur",
+                                           "menggambar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Mengenal Seni Rupa"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Warna Dasar",
+                                            "Campuran Warna",
+                                            "Bentuk Geometris",
+                                            "Bentuk Organis"
+                                        ],
+                         "key_terms":  [
+                                           "warna",
+                                           "bentuk",
+                                           "geometris"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Warna dan Bentuk"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Menggambar Alam",
+                                            "Menggambar Imajinasi",
+                                            "Menggambar Cerita",
+                                            "Kolase Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "menggambar",
+                                           "ekspresif",
+                                           "imajinasi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Menggambar Ekspresif"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Mencetak dengan Alam",
+                                            "Mencetak dengan Bahan Buatan",
+                                            "Membentuk dengan Plastisin",
+                                            "Membentuk dengan Tanah Liat"
+                                        ],
+                         "key_terms":  [
+                                           "mencetak",
+                                           "membentuk",
+                                           "plastisin"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Mencetak dan Membentuk"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Membuat Boneka",
+                                            "Membuat Topeng",
+                                            "Anyaman Sederhana",
+                                            "Merancang Kartu Ucapan"
+                                        ],
+                         "key_terms":  [
+                                           "kriya",
+                                           "boneka",
+                                           "anyaman"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kriya Sederhana"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Mengamati Karya Seni",
+                                            "Mendeskripsikan Karya",
+                                            "Pameran Kecil",
+                                            "Menghargai Karya Teman"
+                                        ],
+                         "key_terms":  [
+                                           "apresiasi",
+                                           "karya seni",
+                                           "pameran"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Apresiasi Seni"
+                     }
+                 ],
+    "isbn":  "978-623-194-511-X"
+}

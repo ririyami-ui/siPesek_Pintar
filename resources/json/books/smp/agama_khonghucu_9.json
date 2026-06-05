@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-khonghucu-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Asal-usul Ru Jia",
+                "Perkembangan Ru Jia",
+                "Tokoh-tokoh Ru Jia",
+                "Pengaruh Ru Jia di Asia"
+            ],
+            "key_terms": [
+                "Ru Jia",
+                "Konfusianisme",
+                "sejarah"
+            ],
+            "semester": "Ganjil",
+            "title": "Sejarah Ru Jia"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Tata Cara Sembahyang",
+                "Persembahyangan Harian",
+                "Persembahyangan Khusus",
+                "Makna Peribadatan"
+            ],
+            "key_terms": [
+                "peribadatan",
+                "sembahyang",
+                "liturgi"
+            ],
+            "semester": "Ganjil",
+            "title": "Peribadatan"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Tahun Baru Imlek",
+                "Cap Go Meh",
+                "Ceng Beng",
+                "Hari Raya Lainnya"
+            ],
+            "key_terms": [
+                "hari raya",
+                "Imlek",
+                "tradisi"
+            ],
+            "semester": "Ganjil",
+            "title": "Hari Raya Khonghucu"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Etika dalam Masyarakat",
+                "Hubungan Sosial",
+                "Lima Hubungan Sosial",
+                "Keselarasan Sosial"
+            ],
+            "key_terms": [
+                "etika",
+                "sosial",
+                "Wu Lun"
+            ],
+            "semester": "Genap",
+            "title": "Etika Sosial"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Tanggung Jawab Pribadi",
+                "Tanggung Jawab Keluarga",
+                "Tanggung Jawab Bermasyarakat",
+                "Tanggung Jawab Moral"
+            ],
+            "key_terms": [
+                "tanggung jawab",
+                "kewajiban",
+                "moral"
+            ],
+            "semester": "Genap",
+            "title": "Tanggung Jawab"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Masyarakat Harmonis",
+                "Peran Individu",
+                "Musyawarah dan Gotong Royong",
+                "Masyarakat Sejahtera"
+            ],
+            "key_terms": [
+                "masyarakat",
+                "harmoni",
+                "gotong royong"
+            ],
+            "semester": "Genap",
+            "title": "Masyarakat"
+        }
+    ],
+    "isbn": "978-623-194-915-7"
+}

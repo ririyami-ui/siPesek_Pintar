@@ -1,0 +1,60 @@
+{
+  "bookId": "smp-ipa-7",
+  "isbn": "978-602-244-384-1",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPA SMP Kelas VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Hakikat Ilmu Sains dan Metode Ilmiah",
+      "pages": "1-30",
+      "sub_topics": [
+        "Apa itu Sains?",
+        "Laboratorium IPA",
+        "Merancang Percobaan",
+        "Pengukuran dan Satuan",
+        "Pelaporan Hasil Percobaan"
+      ],
+      "key_terms": ["Metode Ilmiah", "Hipotesis", "Variabel Bebas", "Besaran Pokok", "Ketelitian"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur metode ilmiah dari observasi hingga kesimpulan."
+    },
+    {
+      "no": 2,
+      "title": "Zat dan Perubahannya",
+      "pages": "31-60",
+      "sub_topics": [
+        "Wujud Zat dan Model Partikel",
+        "Perubahan Wujud Zat",
+        "Perubahan Fisika dan Kimia",
+        "Kerapatan Zat (Massa Jenis)"
+      ],
+      "key_terms": ["Difusi", "Meniskus", "Evaporasi", "Massa Jenis", "Sifat Kimia"],
+      "visual_hints": "Tampilkan tabel Spreadsheet untuk membandingkan karakteristik partikel pada zat padat, cair, dan gas."
+    },
+    {
+      "no": 3,
+      "title": "Suhu, Kalor, dan Pemuaian",
+      "pages": "61-90",
+      "sub_topics": [
+        "Suhu dan Termometer",
+        "Kalor dan Perubahan Suhu",
+        "Perpindahan Kalor (Konduksi, Konveksi, Radiasi)",
+        "Pemuaian Benda"
+      ],
+      "key_terms": ["Celsius", "Kelvin", "Kalor Jenis", "Konveksi", "Bimetal"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi jenis-jenis perpindahan kalor dan contohnya."
+    },
+    {
+      "no": 4,
+      "title": "Klasifikasi Makhluk Hidup",
+      "pages": "91-125",
+      "sub_topics": [
+        "Ciri-ciri Makhluk Hidup",
+        "Klasifikasi Dikotomi dan Kunci Determinasi",
+        "Kingdom Monera, Protista, Fungi, Plantae, Animalia"
+      ],
+      "key_terms": ["Takson", "Binomial Nomenklatur", "Determinasi", "Eukariotik"],
+      "visual_hints": "Gunakan Mermaid Mindmap (Hierarkis) untuk menjelaskan tingkatan taksonomi makhluk hidup."
+    }
+  ]
+}

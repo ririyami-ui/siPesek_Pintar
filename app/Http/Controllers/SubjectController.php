@@ -25,46 +25,28 @@ class SubjectController extends Controller
 
         // 1. Admin Logic
         if ($user->isAdmin()) {
-            if ($request->has('class_id') || $request->has('teacher_id')) {
-                $assignmentQuery = TeacherAssignment::query();
-                if ($request->has('class_id')) {
-                    $assignmentQuery->where('class_id', $request->class_id);
-                }
-                if ($request->has('teacher_id')) {
-                    $assignmentQuery->where('teacher_id', $request->teacher_id);
-                }
-                $subjectIds = $assignmentQuery->pluck('subject_id')->unique();
-                $query->whereIn('id', $subjectIds);
-            }
-            return response()->json(['data' => $query->get()]);
+            return response()->json(['data' => $query->orderBy('name')->get()]);
         }
 
         // 2. Teacher Logic
         if ($user->role === 'teacher') {
             $teacherRecord = Teacher::where('auth_user_id', $user->id)->first();
-            
-            if (!$teacherRecord) {
-                return response()->json(['data' => []]);
-            }
+            if (!$teacherRecord) return response()->json(['data' => []]);
 
-            $assignmentQuery = TeacherAssignment::where('teacher_id', $teacherRecord->id);
-            if ($request->has('class_id')) {
-                $assignmentQuery->where('class_id', $request->class_id);
-            }
+            $subjectIds = TeacherAssignment::where('teacher_id', $teacherRecord->id)
+                ->pluck('subject_id')->unique();
             
-            $subjectIds = $assignmentQuery->pluck('subject_id')->unique();
-            $query->whereIn('id', $subjectIds);
-            
-            return response()->json(['data' => $query->get()]);
+            return response()->json(['data' => $query->whereIn('id', $subjectIds)->orderBy('name')->get()]);
         }
 
-        // 3. Other Roles
+        // 3. Fallback for Class Context (Students, etc)
         if ($request->has('class_id')) {
-            $subjectIds = TeacherAssignment::where('class_id', $request->class_id)->pluck('subject_id')->unique();
-            $query->whereIn('id', $subjectIds);
+            $subjectIds = TeacherAssignment::where('class_id', $request->class_id)
+                ->pluck('subject_id')->unique();
+            return response()->json(['data' => $query->whereIn('id', $subjectIds)->orderBy('name')->get()]);
         }
 
-        return response()->json(['data' => $query->get()]);
+        return response()->json(['data' => []]);
     }
 
     /**
@@ -83,7 +65,7 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:subjects,code',
             'school_level' => 'nullable|string|max:10',
-            'weekly_hours' => 'required|integer|min:1|max:6',
+            'weekly_hours' => 'required|integer|min:1|max:10',
         ]);
 
         $subject = Subject::create($validated);
@@ -120,7 +102,7 @@ class SubjectController extends Controller
             'name' => 'string|max:255',
             'code' => 'string|unique:subjects,code,' . $subject->id,
             'school_level' => 'nullable|string|max:10',
-            'weekly_hours' => 'nullable|integer|min:1|max:6',
+            'weekly_hours' => 'nullable|integer|min:1|max:10',
         ]);
 
         $subject->update($validated);

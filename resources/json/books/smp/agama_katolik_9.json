@@ -1,0 +1,109 @@
+{
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-katolik-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                "Hubungan Iman dan Akal Budi",
+                "Mencari Kebenaran",
+                "Iman yang Rasional",
+                "Dialog Iman dan Ilmu"
+            ],
+            "key_terms": [
+                "iman",
+                "akal budi",
+                "kebenaran"
+            ],
+            "semester": "Ganjil",
+            "title": "Iman dan Akal Budi"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                "Pengertian Hati Nurani",
+                "Pembentukan Hati Nurani",
+                "Hati Nurani dan Keputusan Moral",
+                "Melatih Hati Nurani"
+            ],
+            "key_terms": [
+                "hati nurani",
+                "moral",
+                "keputusan"
+            ],
+            "semester": "Ganjil",
+            "title": "Hati Nurani"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                "Suara Hati dan Kebenaran",
+                "Mendengarkan Suara Hati",
+                "Suara Hati dan Iman",
+                "Hidup Seturut Suara Hati"
+            ],
+            "key_terms": [
+                "suara hati",
+                "kebenaran",
+                "bimbingan"
+            ],
+            "semester": "Ganjil",
+            "title": "Suara Hati"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                "Tuhan Pencipta",
+                "Karya Penciptaan",
+                "Pemeliharaan Tuhan",
+                "Keagungan Ciptaan"
+            ],
+            "key_terms": [
+                "penciptaan",
+                "Tuhan",
+                "alam"
+            ],
+            "semester": "Genap",
+            "title": "Tuhan dan Karya-Nya"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                "Martabat Manusia",
+                "Manusia dan Harapan",
+                "Optimisme Kristen",
+                "Menghadapi Tantangan"
+            ],
+            "key_terms": [
+                "manusia",
+                "harapan",
+                "martabat"
+            ],
+            "semester": "Genap",
+            "title": "Manusia dan Harapan"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                "Visi Masa Depan",
+                "Kerajaan Allah dan Masa Depan",
+                "Peran Umat Muda",
+                "Membangun Masa Depan"
+            ],
+            "key_terms": [
+                "masa depan",
+                "visi",
+                "peran muda"
+            ],
+            "semester": "Genap",
+            "title": "Masa Depan"
+        }
+    ],
+    "isbn": "978-623-194-906-5"
+}

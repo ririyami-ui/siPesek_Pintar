@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Mengenal Aksara",
+                                            "Huruf Dasar Aksara Daerah",
+                                            "Menulis Aksara Sederhana",
+                                            "Membaca Aksara"
+                                        ],
+                         "key_terms":  [
+                                           "aksara",
+                                           "huruf",
+                                           "menulis"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aksara Sederhana"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Bahasa Hormat Sederhana",
+                                            "Berbicara dengan Orang Tua",
+                                            "Berbicara dengan Teman",
+                                            "Unggah-Ungguh di Rumah"
+                                        ],
+                         "key_terms":  [
+                                           "unggah-ungguh",
+                                           "hormat",
+                                           "sopan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Unggah-Ungguh Dasar"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Cerita Rakyat Daerah",
+                                            "Legenda Sederhana",
+                                            "Tokoh Cerita Rakyat",
+                                            "Pesan Moral"
+                                        ],
+                         "key_terms":  [
+                                           "cerita rakyat",
+                                           "legenda",
+                                           "moral"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Cerita Rakyat"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Nama Benda di Rumah",
+                                            "Nama Benda di Sekolah",
+                                            "Nama Benda di Alam",
+                                            "Mengelompokkan Benda"
+                                        ],
+                         "key_terms":  [
+                                           "benda",
+                                           "nama",
+                                           "sebutan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Nama Benda"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Tembang Dolanan Anak",
+                                            "Lirik dan Gerakan",
+                                            "Tembang untuk Bermain",
+                                            "Mengarang Tembang Sederhana"
+                                        ],
+                         "key_terms":  [
+                                           "tembang",
+                                           "dolanan",
+                                           "lirik"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Tembang Dolanan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Tanaman dan Peternakan",
+                                            "Alat Pertanian",
+                                            "Musim Tanam",
+                                            "Hasil Bumi"
+                                        ],
+                         "key_terms":  [
+                                           "pertanian",
+                                           "tanam",
+                                           "panen"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pertanian"
+                     }
+                 ],
+    "isbn":  "978-623-194-832-7"
+}

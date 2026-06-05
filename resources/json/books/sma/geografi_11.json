@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-geo-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Dinamika Penduduk",
+                                            "Komposisi Penduduk",
+                                            "Pertumbuhan Penduduk",
+                                            "Migrasi",
+                                            "Proyeksi Penduduk"
+                                        ],
+                         "key_terms":  [
+                                           "Penduduk",
+                                           "Demografi",
+                                           "Migrasi",
+                                           "Piramida"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Antroposfer"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Jenis SDA",
+                                            "SDA Terbarukan",
+                                            "SDA Tak Terbarukan",
+                                            "Konservasi SDA",
+                                            "Pembangunan Berkelanjutan"
+                                        ],
+                         "key_terms":  [
+                                           "SDA",
+                                           "Konservasi",
+                                           "Berkelanjutan",
+                                           "Energi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sumber Daya Alam"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Kualitas Penduduk",
+                                            "Ledakan Penduduk",
+                                            "Transisi Demografi",
+                                            "Keluarga Berencana",
+                                            "Bonus Demografi"
+                                        ],
+                         "key_terms":  [
+                                           "Kependudukan",
+                                           "Demografi",
+                                           "Kualitas",
+                                           "Bonus"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kependudukan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Kebudayaan Daerah",
+                                            "Persebaran Budaya",
+                                            "Akulturasi",
+                                            "Asimilasi",
+                                            "Globalisasi Budaya"
+                                        ],
+                         "key_terms":  [
+                                           "Budaya",
+                                           "Akulturasi",
+                                           "Tradisi",
+                                           "Modernisasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kebudayaan dan Masyarakat"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Industri",
+                                            "Klasifikasi Industri",
+                                            "Lokasi Industri",
+                                            "Kawasan Industri",
+                                            "Industrialisasi"
+                                        ],
+                         "key_terms":  [
+                                           "Industri",
+                                           "Manufaktur",
+                                           "Lokasi",
+                                           "Kawasan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Industri"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Transportasi",
+                                            "Interaksi Desa Kota",
+                                            "Pusat Pertumbuhan",
+                                            "Wilayah Fungsional",
+                                            "Keterkaitan Spasial"
+                                        ],
+                         "key_terms":  [
+                                           "Konektivitas",
+                                           "Transportasi",
+                                           "Interaksi",
+                                           "Wilayah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Konektivitas Wilayah"
+                     }
+                 ],
+    "isbn":  "978-623-194-735-5"
+}

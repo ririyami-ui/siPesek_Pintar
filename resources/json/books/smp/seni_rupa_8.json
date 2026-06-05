@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-seni-rupa-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Menggambar", "pages": "1-30", "semester": "Ganjil", "sub_topics": ["Teknik Menggambar", "Komposisi dan Proporsi", "Menggambar Bentuk"], "key_terms": ["Menggambar", "Komposisi", "Proporsi", "Perspektif"] },
+    { "no": 2, "title": "Mendesain", "pages": "31-60", "semester": "Ganjil", "sub_topics": ["Prinsip Desain", "Desain Grafis", "Desain Produk"], "key_terms": ["Desain", "Grafis", "Tipografi", "Layout"] },
+    { "no": 3, "title": "Apresiasi", "pages": "61-80", "semester": "Genap", "sub_topics": ["Apresiasi Karya Seni", "Kritik Seni", "Nilai Estetis"], "key_terms": ["Apresiasi", "Kritik", "Estetika", "Seni Rupa"] },
+    { "no": 4, "title": "Pameran", "pages": "81-100", "semester": "Genap", "sub_topics": ["Perencanaan Pameran", "Penataan Karya", "Evaluasi Pameran"], "key_terms": ["Pameran", "Kurator", "Galeri", "Eksposisi"] }
+  ]
+}

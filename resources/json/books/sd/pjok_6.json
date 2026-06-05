@@ -1,0 +1,109 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-6",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Atletik Lanjutan",
+                                            "Renang Lanjutan",
+                                            "Nomor Perlombaan",
+                                            "Rekor dan Prestasi"
+                                        ],
+                         "key_terms":  [
+                                           "prestasi",
+                                           "atletik",
+                                           "renang"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Olahraga Prestasi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Rangkaian Senam",
+                                            "Akrobatik Berpasangan",
+                                            "Koreografi Senam",
+                                            "Penilaian Senam"
+                                        ],
+                         "key_terms":  [
+                                           "senam",
+                                           "akrobatik",
+                                           "rangkaian"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Senam dan Akrobatik"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Jurus",
+                                            "Pertandingan",
+                                            "Seni Bela Diri",
+                                            "Prestasi"
+                                        ],
+                         "key_terms":  [
+                                           "pencak silat",
+                                           "jurus",
+                                           "pertandingan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pencak Silat Lanjutan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Gizi Olahraga",
+                                            "Suplemen",
+                                            "Hidrasi",
+                                            "Pemulihan Cedera"
+                                        ],
+                         "key_terms":  [
+                                           "gizi",
+                                           "nutrisi",
+                                           "pemulihan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kebugaran dan Nutrisi"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Panjat Tebing",
+                                            "Arung Jeram",
+                                            "Mendaki Gunung",
+                                            "Navigasi Alam"
+                                        ],
+                         "key_terms":  [
+                                           "petualangan",
+                                           "alam",
+                                           "navigasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Aktivitas Petualangan"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Organisasi Olahraga",
+                                            "Kepanitiaan",
+                                            "Event Olahraga",
+                                            "Karier Olahraga"
+                                        ],
+                         "key_terms":  [
+                                           "manajemen",
+                                           "organisasi",
+                                           "karier"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Manajemen Olahraga"
+                     }
+                 ],
+    "isbn":  "978-623-194-461-X"
+}

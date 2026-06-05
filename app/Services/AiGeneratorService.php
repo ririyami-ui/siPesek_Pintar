@@ -17,6 +17,71 @@ class AiGeneratorService extends GeminiService
         $this->loadBskapData();
     }
 
+    /**
+     * Mengambil konten buku yang relevan dari folder resources
+     */
+    protected function getRelevantBookContent($level, $gradeLevel, $subjectKey, $topic, $semester = null)
+    {
+        try {
+            $indexPath = base_path('resources/json/books/index.json');
+            if (!file_exists($indexPath)) return null;
+
+            $index = json_decode(file_get_contents($indexPath), true);
+            
+            // 1. Cari buku yang pas (Jenjang + Mapel + Kelas)
+            $bookInfo = collect($index)->filter(function($b) use ($level, $gradeLevel, $subjectKey) {
+                return strtoupper($b['jenjang']) === strtoupper($level) && 
+                       $b['kelas'] == $gradeLevel &&
+                       stripos($b['mapel'], $subjectKey) !== false;
+            })->first();
+
+            if (!$bookInfo) return null;
+
+            // 2. Baca file buku
+            $bookPath = base_path('resources/json/books/' . $bookInfo['path']);
+            if (!file_exists($bookPath)) return null;
+
+            $book = json_decode(file_get_contents($bookPath), true);
+            if (!isset($book['chapters'])) return null;
+
+            // 3. Filter bab berdasarkan semester jika diberikan
+            $chapters = collect($book['chapters']);
+            if ($semester) {
+                $semLabel = $this->getSemesterLabel($semester);
+                
+                // Cek apakah ada satupun chapter yang punya field semester
+                $hasSemesterData = $chapters->contains(fn($ch) => isset($ch['semester']));
+                
+                if ($hasSemesterData) {
+                    $chapters = $chapters->filter(fn($ch) => ($ch['semester'] ?? '') === $semLabel);
+                }
+            }
+
+            // 4. Cari bab yang paling relevan dengan topik
+            $relevantChapter = null;
+            if ($topic) {
+                $relevantChapter = $chapters->filter(function($ch) use ($topic) {
+                    return stripos($ch['title'], $topic) !== false || 
+                           (isset($ch['sub_topics']) && stripos(json_encode($ch['sub_topics']), $topic) !== false);
+                })->first();
+            }
+
+            // Jika tidak ada bab yang pas, ambil info buku saja untuk referensi
+            return [
+                'book_title' => $book['title'] ?? $bookInfo['title'],
+                'publisher' => $book['publisher'] ?? 'Kemendikbudristek',
+                'chapter' => $relevantChapter,
+                'all_chapters' => $chapters->map(fn($c) => [
+                    'title' => $c['title'],
+                    'sub_topics' => $c['sub_topics'] ?? []
+                ])->values()->toArray()
+            ];
+        } catch (\Exception $e) {
+            Log::error("Error loading book content: " . $e->getMessage());
+            return null;
+        }
+    }
+
     protected function loadBskapData()
     {
         try {
@@ -40,10 +105,10 @@ class AiGeneratorService extends GeminiService
 
     public function generateLessonPlan(array $data)
     {
-        // Use model from data if provided, otherwise fallback to class property (profile)
         $modelName = $data['modelName'] ?? $this->model;
         $level = $this->getLevel($data['gradeLevel']);
         $subjectKey = $this->getSubjectKey($data['subject']);
+        $part = $data['part'] ?? 'all'; // all, main, attachments
         
         // Ensure BSKAP data is loaded
         if (!$this->bskapVerbatim) {
@@ -54,17 +119,35 @@ class AiGeneratorService extends GeminiService
             Log::warning("BSKAP Verbatim data not loaded. Using fallback CP text.");
             $cpFullVerbatim = "Data Capaian Pembelajaran resmi tidak tersedia di server. Silakan susun berdasarkan elemen: " . ($data['elemen'] ?? 'N/A');
         } else {
-            // Try to find the exact CP from national standard JSON
             $verbatimEntry = $this->bskapVerbatim['subjects'][$level][$data['gradeLevel']][$subjectKey] ?? [];
             $cpFullVerbatim = $verbatimEntry['cp_full'] ?? null;
 
             if (!$cpFullVerbatim) {
-                Log::warning("CP not found in BSKAP for: $level - {$data['gradeLevel']} - $subjectKey. Using fallback.");
-                $cpFullVerbatim = "Data Capaian Pembelajaran untuk Elemen \"{$data['elemen']}\" tidak ditemukan di database nasional. Silakan buat TP berdasarkan alur materi umum.";
+                $cpFullVerbatim = "Data Capaian Pembelajaran untuk Elemen \"{$data['elemen']}\" tidak ditemukan di database nasional.";
             }
         }
 
-        $prompt = $this->buildLessonPlanPrompt($data, $cpFullVerbatim, $level, $subjectKey);
+        if ($part === 'attachments') {
+            $prompt = $this->buildLessonPlanAttachmentsPrompt($data, $cpFullVerbatim, $level, $subjectKey);
+        } else {
+            $prompt = $this->buildLessonPlanPrompt($data, $cpFullVerbatim, $level, $subjectKey);
+            if ($part === 'main') {
+                $prompt .= "\n\n**KHUSUS**: Hasilkan HANYA bagian Identitas hingga Langkah Pembelajaran saja. BERHENTI setelah bagian Penutup (Ritual Penutup). JANGAN hasilkan bagian Lampiran (LKPD, KKTP, Materi).";
+            }
+        }
+
+        // INJEKSI DATA BUKU
+        $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, $data['materi'] ?? $data['topic'] ?? '');
+        if ($bookData) {
+            $bookPrompt = "\n\n**REFERENSI MATERI BUKU TEKS RESMI:**\n";
+            $bookPrompt .= "- Buku: {$bookData['book_title']}\n";
+            if ($bookData['chapter']) {
+                $bookPrompt .= "- Bab: {$bookData['chapter']['title']}\n";
+                $bookPrompt .= "- Materi Spesifik: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+            }
+            $bookPrompt .= "\nWAJIB: Gunakan data materi di atas untuk menyusun konten RPP agar akurat sesuai buku pemerintah.";
+            $prompt .= $bookPrompt;
+        }
 
         return $this->callGeminiApi($prompt, $modelName, 8192);
     }
@@ -72,7 +155,22 @@ class AiGeneratorService extends GeminiService
     public function generateQuiz(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
+        $level = $this->getLevel($data['gradeLevel']);
+        $subjectKey = $this->getSubjectKey($data['subject']);
+        
         $prompt = $this->buildQuizPrompt($data);
+
+        // INJEKSI DATA BUKU UNTUK KUIS
+        $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, $data['topic'] ?? '');
+        if ($bookData && $bookData['chapter']) {
+            $bookPrompt = "\n\n**SUMBER MATERI SOAL (BUKU TEKS):**\n";
+            $bookPrompt .= "Bab: {$bookData['chapter']['title']}\n";
+            $bookPrompt .= "Cakupan Materi: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+            $bookPrompt .= "Istilah Penting: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
+            $bookPrompt .= "\nINSTRUKSI: Buat soal yang benar-benar menguji pemahaman materi di atas.";
+            $prompt .= $bookPrompt;
+        }
+
         $response = $this->callGeminiApi($prompt, $modelName, 8192);
         
         return $this->extractJson($response);
@@ -81,8 +179,121 @@ class AiGeneratorService extends GeminiService
     public function generateHandout(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
+        $level = $this->getLevel($data['gradeLevel']);
+        $subjectKey = $this->getSubjectKey($data['subject']);
+        
         $prompt = $this->buildHandoutPrompt($data);
+
+        // INJEKSI DATA BUKU UNTUK BAHAN AJAR
+        $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, $data['materi'] ?? $data['topic'] ?? '');
+        if ($bookData && $bookData['chapter']) {
+            $bookPrompt = "\n\n**KONTEN MATERI UTAMA (DARI BUKU):**\n";
+            $bookPrompt .= "Gunakan struktur ini: {$bookData['chapter']['title']}\n";
+            $bookPrompt .= "Detail Materi: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+            $bookPrompt .= "Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
+            $prompt .= $bookPrompt;
+        }
+
         return $this->callGeminiApi($prompt, $modelName, 8192);
+    }
+
+    public function generateATP(array $data)
+    {
+        $modelName = $data['modelName'] ?? $this->model;
+        $level = $this->getLevel($data['gradeLevel']);
+        $subjectKey = $this->getSubjectKey($data['subject']);
+        $semester = $data['semester'] ?? 'Ganjil';
+        
+        $prompt = $this->buildATPPrompt($data);
+
+        // INJEKSI DATA BUKU UNTUK ATP (Filter by Semester)
+        $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, '', $semester);
+        if ($bookData) {
+            $bookPrompt = "\n\n**REFERENSI STRUKTUR BUKU TEKS (SEMESTER " . strtoupper($semester) . "):**\n";
+            $bookPrompt .= "Judul Buku: {$bookData['book_title']}\n";
+            if (isset($bookData['all_chapters'])) {
+                $bookPrompt .= "Daftar Bab & Sub-Materi:\n" . json_encode($bookData['all_chapters'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n";
+            }
+            $bookPrompt .= "\nINSTRUKSI KHUSUS LINGKUP MATERI:\n";
+            $bookPrompt .= "1. Kolom 'materi' WAJIB menggunakan 'title' dari daftar bab di atas.\n";
+            $bookPrompt .= "2. Kolom 'tp' WAJIB mengintegrasikan poin-poin 'sub_topics' dari bab tersebut.\n";
+            $bookPrompt .= "3. Pastikan alur (no) mengikuti urutan daftar bab di atas agar logis.\n";
+            $prompt .= $bookPrompt;
+        }
+
+        $response = $this->callGeminiApi($prompt, $modelName, 8192);
+        $atp = $this->extractJson($response);
+
+        // --- POST-PROCESSING VALIDATION (PROFIL LULUSAN & BSKAP ALIGNMENT) ---
+        if (is_array($atp)) {
+            $rawValid = $this->bskapIntel['standards']['profile_lulusan_2025'] ?? [];
+            $validDimensions = collect($rawValid)->map(fn($p) => $p['dimensi'])->toArray();
+            
+            // Ambil elemen resmi untuk validasi (Issue 3 fix)
+            $gradeLevel = $data['gradeLevel'] ?? '7';
+            $level = $this->getLevel($gradeLevel);
+            $subjectKey = $this->getSubjectKey($data['subject'] ?? '');
+            $semesterKey = $this->getSemesterKey($data['semester'] ?? 'Ganjil');
+            
+            $officialElemen = $this->bskapIntel['subjects'][$level][$gradeLevel][$subjectKey][$semesterKey]['elemen'] 
+                              ?? $this->bskapIntel['subjects'][$level][$subjectKey][$semesterKey]['elemen'] 
+                              ?? [];
+
+            foreach ($atp as &$item) {
+                // 1. Validasi Elemen (Mapping Issue 3 fix)
+                if (!empty($officialElemen)) {
+                    $currentElemen = $item['elemen'] ?? '';
+                    // Cari elemen resmi yang paling mirip jika tidak ada match exact
+                    if (!in_array($currentElemen, $officialElemen)) {
+                        $bestMatch = $officialElemen[0];
+                        $maxSim = 0;
+                        foreach ($officialElemen as $off) {
+                            similar_text(strtolower($currentElemen), strtolower($off), $sim);
+                            if ($sim > $maxSim) {
+                                $maxSim = $sim;
+                                $bestMatch = $off;
+                            }
+                        }
+                        if ($maxSim > 40) { // Hanya ganti jika kemiripan > 40%
+                            $item['elemen'] = $bestMatch;
+                        }
+                    }
+                }
+
+                // 2. Validasi Profil Lulusan (2-3 dimensi)
+                if (!isset($item['profilLulusan'])) {
+                    $item['profilLulusan'] = '';
+                }
+
+                $original = $item['profilLulusan'];
+                $dims = explode(',', $item['profilLulusan']);
+                $dims = array_map('trim', $dims);
+                $dims = array_filter($dims);
+
+                // Jika < 2 dimensi, genapi dari list resmi yang belum ada
+                if (count($dims) < 2) {
+                    $needed = 2 - count($dims);
+                    $available = array_diff($validDimensions, $dims);
+                    
+                    if (!empty($available)) {
+                        $randomExtras = collect($available)->random(min($needed, count($available)))->toArray();
+                        $dims = array_merge($dims, $randomExtras);
+                        Log::info("ATP Post-Processing: Fixed row from '{$original}' to " . implode(', ', $dims));
+                    } else {
+                        Log::warning("ATP Post-Processing: No available dimensions to fill!");
+                    }
+                }
+
+                // Jika > 3 dimensi, potong
+                if (count($dims) > 3) {
+                    $dims = array_slice($dims, 0, 3);
+                }
+
+                $item['profilLulusan'] = implode(', ', $dims);
+            }
+        }
+
+        return $atp;
     }
 
     public function generateWorksheet(array $data)
@@ -354,14 +565,9 @@ class AiGeneratorService extends GeminiService
         }
 
         // Profile Lulusan string
-        $profileLulusanText = "";
-        foreach ($bskapData['standards']['profile_lulusan_2025'] ?? [] as $p) {
-            if ($p['id'] !== 1) {
-                $dimensi = $p['dimensi'] ?? 'N/A';
-                $deskripsi = $p['deskripsi'] ?? ''; // Safely handle missing description
-                $profileLulusanText .= "          *   **{$dimensi}**" . ($deskripsi ? ": {$deskripsi}" : "") . "\n";
-            }
-        }
+        $profileLulusanText = collect($bskapData['standards']['profile_lulusan_2025'] ?? [])
+            ->map(fn($p) => "- " . $p['dimensi'])
+            ->implode("\n      ");
 
         // Textbook info
         $textbookInfo = $bskapData['textbooks'][$level][$gradeLevel][$subjectKey] ?? null;
@@ -409,8 +615,9 @@ class AiGeneratorService extends GeminiService
       
       Contoh Format yang SALAH:
       \"2.1. Pancasila Mengidentifikasi makna sila-sila Pancasila...\"
-      " . (!empty($data['profilLulusan']) ? "
-      - **PROFIL LULUSAN (MANDATORY)**: Dimensi yang HARUS digunakan: **{$data['profilLulusan']}**. DILARANG KERAS berimprovisasi, menambah, atau mengurangi dimensi ini. Gunakan PERSIS seperti tertulis." : "") . "
+      - **PROFIL LULUSAN (8 DIMENSI 2025)**:
+      List Resmi: {$profileLulusanText}
+      - **INSTRUKSI (MANDATORY)**: Pilih **MINIMAL 2** dan **MAKSIMAL 3** dimensi dari list di atas yang paling relevan dengan materi ini. Cantumkan di bagian Identitas RPP.
       " . (($data['sourceType'] ?? '') === 'atp' ? "- **SUMBER UTAMA (ATP)**: RPP ini HARUS diturunkan secara spesifik dari butir Tujuan Pembelajaran (TP) yang tercantum di Alur Tujuan Pembelajaran (ATP). Gunakan Elemen {$elemen} sebagai jangkar kompetensi." : "") . "
       
       " . ($regionalLanguage ? "
@@ -434,6 +641,17 @@ class AiGeneratorService extends GeminiService
       2. **FOKUS MATERI:** Pembahasan harus terpusat pada \"{$materi}\" tanpa melebar.
       3. **KESESUAIAN JENJANG:** Sesuaikan bahasa, contoh, dan kegiatan dengan tingkat perkembangan Kelas {$gradeLevel}.
       4. **INDIKATOR OPERASIONAL:** Turunkan TP menjadi beberapa IKTP yang spesifik dan terukur.
+
+      **PENTING - DETAIL LANGKAH PEMBELAJARAN (DEEP LEARNING):**
+      Anda **WAJIB** mendetailkan setiap langkah kegiatan (Pendahuluan, Inti, Penutup) dengan format interaksi:
+      - **Aktivitas Guru**: Apa yang dilakukan/dikatakan guru (Misal: memberikan pertanyaan pemantik, mendemonstrasikan, memfasilitasi diskusi).
+      - **Respon/Aktivitas Murid**: Apa yang dilakukan murid secara aktif (Misal: mengamati, berdiskusi dalam kelompok, melakukan eksperimen, mempresentasikan).
+      - **LABELING (MANDATORY)**: Setiap poin langkah pembelajaran **WAJIB** menyertakan salah satu label berikut di akhir kalimat atau judul poinnya:
+        *   **(Mindful)**: Untuk kegiatan yang membangun fokus, kesadaran, atau empati.
+        *   **(Meaningful)**: Untuk kegiatan yang menghubungkan materi dengan dunia nyata atau pemahaman mendalam.
+        *   **(Joyful)**: Untuk kegiatan yang membangkitkan antusiasme, kreativitas, atau kegembiraan belajar.
+      
+      Contoh: \"Guru memberikan pertanyaan pemantik tentang fenomena alam di sekitar siswa (Meaningful).\" atau \"Kegiatan Inti: Diskusi Kelompok (Joyful).\"
 
       **PENTING - OPERASIONALISASI TUJUAN (IKTP):**
       Anda **WAJIB** menurunkan Tujuan Pembelajaran (TP) yang luas menjadi beberapa **Indikator Tujuan Pembelajaran (IKTP)** yang spesifik, operasional, and terukur untuk kegiatan ini.
@@ -770,15 +988,14 @@ class AiGeneratorService extends GeminiService
 
 
       **CATATAN PENTING TENTANG KEPADATAN & KELENGKAPAN (PRIORITAS UTAMA):**
-      - **TARGET KELENGKAPAN (MUTLAK):** Seluruh struktur RPP dari Identifikasi hingga Daftar Pustaka **WAJIB SELESAI 100%**. DILARANG TERPUTUS di tengah jalan.
-      - **MANAJEMEN TOKEN:** Kelola kedalaman penjelasan Anda agar bagian **Lampiran (LKPD & Instrumen)** mendapatkan ruang yang cukup dan tidak terpotong.
-      - **KEDALAMAN NARASI:** 
-        - Buatlah skenario pembelajaran yang **substantif dan bermakna**, namun tetap **efisien** (to the point). 
-        - Gunakan poin-poin atau paragraf yang padat informasi, hindari pengulangan kalimat.
-        - Fokus pada kualitas interaksi Guru-Siswa daripada panjangnya teks.
-      - **TARGET ESTIMASI:** 
-        - **1 Pertemuan**: Sekitar 5-7 halaman konten berkualitas (Pastikan Lampiran Komplit).
-        - **2+ Pertemuan**: Sekitar 8-10 halaman (Gunakan progresivitas yang jelas tanpa bertele-tele).
+      - **TOKEN MANAGEMENT (CRITICAL)**: Hindari kalimat basa-basi. Langsung ke inti teknis. 
+      - **LKPD & MATERI**: Gunakan format yang padat. Jika materi sangat panjang (800 kata), fokuskan pada poin-poin analisis yang mendalam agar tidak memakan seluruh kuota token.
+      - **CUT-OFF PREVENTION**: Jika Anda merasa token akan habis, prioritaskan penyelesaian **Tabel KKTP** dan **Glosarium** sebagai penutup wajib.
+      
+      **STRUKTUR LAMPIRAN (MANDATORY):**
+      - **LKPD**: Fokus pada instruksi kerja yang spesifik dan menantang (HOTS).
+      - **MATERI**: Sajikan dalam 4-5 paragraf yang sangat padat informasi teknis/teoritis.
+      - **KKTP**: Wajib TABEL, namun gunakan kata-kata yang efisien agar tabel tidak terlalu lebar.
       
       **INSTRUKSI VERIFIKASI:** Sebelum mengakhiri respon, pastikan Anda telah menuliskan bagian **GLOSARIUM** dan **DAFTAR PUSTAKA** secara lengkap.
       
@@ -933,9 +1150,14 @@ class AiGeneratorService extends GeminiService
       | **Aplikasi/Analisis** | Belum bisa menerapkan | Bisa menerapkan dengan bantuan | Bisa menerapkan mandiri | Bisa menganalisis & berinovasi |
 
       ### 3. MATERI AJAR MENDETAIL (KONSISTENSI TP)
-      **WAJIB DIISI DENGAN KONTEN LENGKAP & RELEVAN!**
-      - **CEK KONSISTENSI:** Pastikan materi yang ditulis di sini **MENJAWAB** seluruh Tujuan Pembelajaran (TP). Jika TP menuntut \"Menganalisis\", maka materi harus memberikan landasan teori untuk analisis tersebut.
-      - Minimal 3-5 paragraf substantif yang mencakup konsep, teori, contoh konkret, and aplikasi nyata materi ini.
+      **WAJIB DIISI DENGAN KONTEN KOMPLEKS & KOMPREHENSIF!**
+      - **KEDALAMAN MATERI (MANDATORY)**: Jangan hanya menulis poin-poin singkat. Sajikan materi dalam bentuk narasi akademik yang mendalam (seperti isi buku teks).
+      - **STRUKTUR MATERI**:
+        1. **Fakta & Konsep**: Penjelasan detail tentang materi utama.
+        2. **Prinsip & Prosedur**: Bagaimana materi ini bekerja atau diaplikasikan.
+        3. **Analisis Mendalam**: Hubungan materi dengan fenomena nyata atau isu global/lokal terkini.
+      - **VOLUME KONTEN**: Minimal 500-800 kata yang padat informasi, mencakup seluruh indikator kompetensi dalam Tujuan Pembelajaran (TP).
+      - **REFERENSI**: Integrasikan data atau kutipan relevan dari buku sumber Kemendikdasmen agar terlihat otoritatif.
 
       ### 4. GLOSARIUM
       **WAJIB DIISI!** Daftar minimal 5-10 istilah penting and definisinya.
@@ -961,6 +1183,47 @@ class AiGeneratorService extends GeminiService
       - Output harus **langsung dalam format Markdown** tanpa komentar pembuka atau penutup dari asisten.
     ";
 
+        return $prompt;
+    }
+
+    protected function buildLessonPlanAttachmentsPrompt($data, $cpFullVerbatim, $level, $subjectKey)
+    {
+        $subject = $data['subject'];
+        $materi = $data['materi'];
+        $gradeLevel = $data['gradeLevel'];
+        
+        $prompt = "
+        TUGAS: Lanjutkan penyusunan MODUL AJAR untuk materi \"{$materi}\" (Mapel: {$subject}, Kelas: {$gradeLevel}).
+        
+        Anda HANYA boleh menghasilkan bagian **LAMPIRAN** yang mendalam dan kompleks.
+        
+        **STRUKTUR LAMPIRAN YANG HARUS DIHASILKAN (Gunakan Format Markdown):**
+        
+        ## IV. LAMPIRAN
+        
+        ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
+        - Buatlah LKPD yang sangat mendalam dan menantang (HOTS).
+        - Wajib mencakup 3 kegiatan utama:
+          1. **Kegiatan 1: Mengamati & Memahami** (Stimulus kaya, 4-5 pertanyaan analitis).
+          2. **Kegiatan 2: Menganalisis & Berdiskusi** (Studi kasus nyata/fenomena).
+          3. **Kegiatan 3: Mencoba & Berkreasi** (Tugas praktik/proyek nyata).
+        
+        ### 2. INSTRUMEN PENILAIAN (ASESMEN & KKTP)
+        - **Asesmen Diagnostik**: 5 pertanyaan pemetaan kemampuan awal.
+        - **KKTP (TABEL)**: Wajib menghasilkan TABEL KKTP (Rubrik/Interval) yang sangat detail.
+        - **Asesmen Formatif & Sumatif**: Instrumen lengkap (soal, rubrik, lembar observasi).
+        
+        ### 3. MATERI AJAR MENDETAIL
+        - Sajikan materi akademik yang sangat kompleks dan komprehensif (minimal 800-1000 kata).
+        - Harus mencakup: Konsep, Fakta, Prinsip, Prosedur, dan Analisis Kontekstual.
+        - Penjelasan harus selevel isi bab buku teks berkualitas tinggi.
+        
+        ### 4. GLOSARIUM & 5. DAFTAR PUSTAKA
+        - Daftar istilah penting dan referensi resmi Kemendikdasmen.
+        
+        **PRINSIP**: Output harus sangat substantif, tidak boleh ringkas. Gunakan seluruh kapasitas token untuk bagian ini saja.
+        ";
+        
         return $prompt;
     }
 
@@ -1024,6 +1287,9 @@ class AiGeneratorService extends GeminiService
            - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
            - **Reflektif**: Ajak siswa melihat kembali apa yang dipelajari dan proses belajarnya.
            - **Eksploratif**: Berikan ruang untuk berbagai kemungkinan jawaban atau solusi kreatif.
+           - **PROFIL LULUSAN (8 DIMENSI 2025)**:
+             List Resmi: {$profilLulusanList}
+             - **WAJIB**: Cantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi yang diperkuat melalui kuis ini.
         
         STRUKTUR JSON PER TIPE (INPUT HARUS SESUAI):
         - **Wajib Ada di Setiap Soal (MANDATORY SINGKAT)**: 
@@ -1088,6 +1354,10 @@ class AiGeneratorService extends GeminiService
         # 📘 MODUL BELAJAR: [JUDUL MATERI DI SINI]
         
         > \"Belajar itu bukan tentang menjadi pintar, tapi tentang peka terhadap sekitarmu.\" - Smart Teaching
+        
+        **PROFIL LULUSAN (8 DIMENSI 2025):**
+        List Resmi: {$profilLulusanList}
+        - **WAJIB**: Cantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi yang dikembangkan melalui modul ini.
         
         ---
 
@@ -1256,6 +1526,82 @@ class AiGeneratorService extends GeminiService
         **CONSTRAINT:**
         - Output harus **LANGSUNG START** dari Judul LKPD (Markdown).
         - Jangan berikan komentar pembuka atau penutup.
+        ";
+    }
+
+    protected function buildATPPrompt($data)
+    {
+        $subject = $data['subject'];
+        $gradeLevel = $data['gradeLevel'];
+        $semester = $data['semester'] ?? 'Ganjil';
+        $totalJP = $data['totalJP'] ?? 0;
+        $jpPerWeek = $data['jpPerWeek'] ?? 0;
+        
+        $level = $this->getLevel($gradeLevel);
+        $regulation = $this->bskapIntel['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
+
+        // --- AMBIL DATA ELEMEN & MATERI DARI BSKAP INTEL ---
+        $subjectKey = $this->getSubjectKey($subject);
+        $semesterKey = $this->getSemesterKey($semester);
+        
+        $bskapSubject = $this->bskapIntel['subjects'][$level][$gradeLevel][$subjectKey] 
+                        ?? $this->bskapIntel['subjects'][$level][$subjectKey] 
+                        ?? [];
+        
+        $officialElemen = $bskapSubject[$semesterKey]['elemen'] ?? [];
+        $officialMateri = $bskapSubject[$semesterKey]['materi_inti'] ?? [];
+
+        $profilLulusanList = collect($this->bskapIntel['standards']['profile_lulusan_2025'] ?? [])
+            ->map(fn($p) => $p['dimensi'])
+            ->implode(', ');
+
+        return "
+        Anda adalah **Sistem Pakar Kurikulum Nasional & Auditor Administrasi Guru** dari Kemendikbudristek yang sangat canggih.
+        Tugas Anda: Menyusun **Alur Tujuan Pembelajaran (ATP)** yang memiliki kecerdasan analisa tinggi dan presisi matematis 100%.
+
+        **PARAMETER KURIKULUM:**
+        - Regulasi: {$regulation}
+        - Mapel: {$subject} | Jenjang: {$level} | Kelas: {$gradeLevel}
+        - Semester: {$semester}
+        - Target Total JP: {$totalJP} JP
+        - JP per Minggu: {$jpPerWeek} JP
+
+        **ELEMEN & LINGKUP MATERI RESMI (MANDATORY):**
+        - Elemen: " . json_encode($officialElemen) . "
+        - Materi Inti: " . json_encode($officialMateri) . "
+
+        **PROFIL LULUSAN (8 DIMENSI 2025):**
+        List Resmi: {$profilLulusanList}
+
+        **INSTRUKSI PENYUSUNAN (STRICT):**
+        1. **MANDATORY STRUCTURE**: Hasil harus berupa Array JSON yang merepresentasikan alur pembelajaran linier.
+        2. **MATHEMATICAL PRECISION**: 
+           - Durasi total seluruh baris HARUS TEPAT EQUAL {$totalJP} JP.
+           - Setiap baris biasanya 1, 2, atau 3 minggu. JP per baris = Minggu * {$jpPerWeek}.
+        3. **DEEP LEARNING**: Fokus pada kedalaman pemahaman (Deep Learning). Pecah materi menjadi bagian-bagian logis yang membangun kompetensi secara bertahap.
+        4. **STRICT PROFIL LULUSAN (MANDATORY)**: 
+           - Setiap baris ATP **WAJIB** mencantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi Profil Lulusan.
+           - **AUDIT RULES**: Kurang dari 2 dimensi atau lebih dari 3 dimensi dianggap GAGAL VALIDASI.
+           - Gunakan list resmi di atas. Pisahkan dengan koma jika lebih dari satu (Contoh: Mandiri, Gotong Royong).
+        5. **ALIGNMENT RULES (MANDATORY)**:
+           - Kolom 'elemen' HARUS diambil dari list Elemen Resmi di atas.
+           - Kolom 'materi' HARUS merujuk pada list Materi Inti Resmi di atas.
+        6. **FORMAT OUTPUT (JSON ARRAY ONLY)**:
+           [
+             {
+               \"no\": 1,
+               \"elemen\": \"Elemen CP yang relevan\",
+               \"materi\": \"Judul Lingkup Materi Spesifik\",
+               \"tp\": \"Tujuan Pembelajaran (Narasi lengkap)\",
+               \"jp\": 12, 
+               \"profilLulusan\": \"Dimensi 1, Dimensi 2\" // WAJIB MIN 2, MAX 3
+             }
+           ]
+
+        **STRICT RULES**:
+        - HANYA keluarkan JSON. Tanpa Markdown, tanpa teks pembuka/penutup.
+        - Pastikan urutan logis dan tidak melompat-lompat.
+        - Gunakan Bahasa Indonesia formal yang inspiratif.
         ";
     }
 

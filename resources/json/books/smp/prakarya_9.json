@@ -1,0 +1,10 @@
+{
+  "bookId": "smp-prakarya-9",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    { "no": 1, "title": "Kerajinan Berbasis Media Campuran", "pages": "1-45", "semester": "Ganjil", "sub_topics": ["Kombinasi Bahan", "Teknik Campuran", "Desain Produk Kreatif"], "key_terms": ["Media Campuran", "Kombinasi", "Desain", "Inovasi"] },
+    { "no": 2, "title": "Prinsip Kelistrikan", "pages": "46-90", "semester": "Ganjil", "sub_topics": ["Rangkaian Listrik", "Komponen Elektronika", "Instalasi Listrik Sederhana"], "key_terms": ["Listrik", "Rangkaian", "Elektronika", "Instalasi"] },
+    { "no": 3, "title": "Budidaya Ikan Hias", "pages": "91-130", "semester": "Genap", "sub_topics": ["Jenis Ikan Hias", "Pembuatan Akuarium", "Perawatan Ikan Hias"], "key_terms": ["Ikan Hias", "Akuarium", "Budidaya", "Ekosistem Air"] },
+    { "no": 4, "title": "Pengolahan Hasil Peternakan", "pages": "131-180", "semester": "Genap", "sub_topics": ["Pengolahan Daging", "Pengolahan Susu", "Pengolahan Telur"], "key_terms": ["Peternakan", "Daging", "Susu", "Telur"] }
+  ]
+}

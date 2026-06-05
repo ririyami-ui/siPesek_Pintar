@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Surat Al-Ashr",
+                                            "Surat Al-Ma\u0027un",
+                                            "Surat Al-Fiil",
+                                            "Pengenalan Hadits"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "hadits",
+                                           "surat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Al-Qur\u0027an dan Hadits"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Nama Malaikat",
+                                            "Tugas Malaikat",
+                                            "Jibril dan Mikail",
+                                            "Raqib dan Atid"
+                                        ],
+                         "key_terms":  [
+                                           "malaikat",
+                                           "tugas",
+                                           "Jibril"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Malaikat dan Tugasnya"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Shalat Dhuha",
+                                            "Shalat Tahajud",
+                                            "Shalat Rawatib",
+                                            "Shalat Idain"
+                                        ],
+                         "key_terms":  [
+                                           "shalat",
+                                           "sunnah",
+                                           "dhuha",
+                                           "tahajud"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Shalat Sunnah"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-142",
+                         "sub_topics":  [
+                                            "Puasa Senin Kamis",
+                                            "Puasa Syawal",
+                                            "Puasa Arafah",
+                                            "Hikmah Puasa Sunnah"
+                                        ],
+                         "key_terms":  [
+                                           "puasa",
+                                           "sunnah",
+                                           "syawal"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Puasa Sunnah"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "143-176",
+                         "sub_topics":  [
+                                            "Pemaaf",
+                                            "Pemalu",
+                                            "Takabur",
+                                            "Hasad Dengki"
+                                        ],
+                         "key_terms":  [
+                                           "akhlak",
+                                           "terpuji",
+                                           "tercela"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak Terpuji dan Tercela"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "177-210",
+                         "sub_topics":  [
+                                            "Masa Kecil Nabi",
+                                            "Diangkat Menjadi Rasul",
+                                            "Hijrah",
+                                            "Perjuangan Nabi"
+                                        ],
+                         "key_terms":  [
+                                           "Nabi Muhammad",
+                                           "hijrah",
+                                           "perjuangan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kisah Nabi Muhammad"
+                     }
+                 ],
+    "isbn":  "978-623-194-631-X"
+}

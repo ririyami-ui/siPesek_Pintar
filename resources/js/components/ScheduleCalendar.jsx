@@ -10,7 +10,7 @@ import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import Modal from './Modal';
-import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus, Zap, Settings } from 'lucide-react';
+import { Trash2, Edit, Calendar as CalendarIcon, X, Save, RefreshCw, Info, AlertTriangle, CheckCircle, Clock, Globe, Plus, Zap, Settings, Lock, Unlock } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 import { getHolidaysByYear } from '../utils/holidayData';
 import TimeSlotModal from './TimeSlotModal';
@@ -72,6 +72,10 @@ const ScheduleCalendar = () => {
     const [showPrintModal, setShowPrintModal] = useState(false);
     const [isClearingAll, setIsClearingAll] = useState(false);
     const [teachers, setTeachers] = useState([]);
+    const [isEditingUnlocked, setIsEditingUnlocked] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [adminPassword, setAdminPassword] = useState('');
+    const [isVerifyingPassword, setIsVerifyingPassword] = useState(false);
 
     const daysOfWeek = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
@@ -158,6 +162,10 @@ const ScheduleCalendar = () => {
     };
 
     const handleAutoGenerate = async () => {
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         setConfirmModal({
             isOpen: true,
             title: 'Buat Jadwal Otomatis?',
@@ -226,6 +234,30 @@ const ScheduleCalendar = () => {
             console.error("Auto-generate error:", error);
             toast.error('Gagal menyusun jadwal otomatis.', { id: toastId });
             setIsGeneratingAuto(false);
+        }
+    };
+
+    const handleVerifyPasswordSubmit = async (e) => {
+        e.preventDefault();
+        if (!adminPassword) {
+            toast.error('Masukkan password Anda.');
+            return;
+        }
+        setIsVerifyingPassword(true);
+        try {
+            const res = await api.post('/verify-password', { password: adminPassword });
+            if (res.data.success) {
+                setIsEditingUnlocked(true);
+                setShowPasswordModal(false);
+                setAdminPassword('');
+                toast.success('🔓 Password Cocok! Mode Edit Berhasil Diaktifkan.');
+            }
+        } catch (error) {
+            console.error('Password verification error:', error);
+            const errorMsg = error.response?.data?.message || 'Password yang Anda masukkan salah!';
+            toast.error(errorMsg);
+        } finally {
+            setIsVerifyingPassword(false);
         }
     };
 
@@ -426,6 +458,10 @@ const ScheduleCalendar = () => {
     const handleAddSchedule = async (e) => {
         e.preventDefault();
         if (isSubmitting) return;
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
 
         const isNonTeaching = scheduleType === 'non-teaching';
 
@@ -490,6 +526,10 @@ const ScheduleCalendar = () => {
     };
 
     const handleEditSchedule = (schedule) => {
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         resetForm();
         setEditingScheduleId(schedule.id);
         setDay(schedule.day);
@@ -507,6 +547,10 @@ const ScheduleCalendar = () => {
     };
 
     const handleDeleteSchedule = (id) => {
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         setConfirmModal({
             isOpen: true,
             title: 'Hapus Jadwal',
@@ -527,6 +571,10 @@ const ScheduleCalendar = () => {
     };
 
     const handleClearAllSchedules = () => {
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         setConfirmModal({
             isOpen: true,
             title: 'Hapus Semua Jadwal',
@@ -600,11 +648,19 @@ const ScheduleCalendar = () => {
 
     const handleSelectEvent = (event) => {
         if (event.isHoliday) return;
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         const schedule = event.resource;
         handleEditSchedule(schedule);
     };
 
     const handleSelectSlot = ({ start }) => {
+        if (!isEditingUnlocked) {
+            toast.error('🔒 Mode Edit Terkunci! Silakan aktifkan Mode Edit di pojok kanan atas terlebih dahulu.');
+            return;
+        }
         const date = moment(start);
         const dayIndex = date.day();
         const idDayIndex = (dayIndex + 6) % 7;
@@ -665,6 +721,25 @@ const ScheduleCalendar = () => {
                     {isAdmin && (
                         <div className="flex flex-wrap gap-2">
                             <StyledButton
+                                onClick={() => {
+                                    if (!isEditingUnlocked) {
+                                        setShowPasswordModal(true);
+                                        setAdminPassword('');
+                                    } else {
+                                        setIsEditingUnlocked(false);
+                                        toast('🔒 Mode Edit Dinonaktifkan. Jadwal dikunci kembali.', { icon: '🔒' });
+                                    }
+                                }}
+                                variant={isEditingUnlocked ? 'outline' : 'solid'}
+                                className={isEditingUnlocked 
+                                    ? 'border-amber-500 text-amber-600 hover:bg-amber-50 font-black shadow-none' 
+                                    : '!bg-emerald-600 hover:!bg-emerald-700 !text-white font-black flex items-center gap-2 shadow-lg shadow-emerald-100 dark:shadow-none'
+                                }
+                            >
+                                {isEditingUnlocked ? <Unlock size={18} /> : <Lock size={18} />}
+                                {isEditingUnlocked ? 'Matikan Mode Edit' : 'Aktifkan Mode Edit'}
+                            </StyledButton>
+                            <StyledButton
                                 onClick={() => setShowSyncModal(true)}
                                 variant="outline"
                                 className="flex items-center gap-2 border-indigo-200 text-indigo-600 hover:bg-indigo-50"
@@ -674,11 +749,17 @@ const ScheduleCalendar = () => {
                             <StyledButton
                                 onClick={handleAutoGenerate}
                                 loading={isGeneratingAuto}
-                                className="!bg-purple-600 hover:!bg-purple-700 !text-white flex items-center gap-2 group relative overflow-hidden"
+                                className={`${isEditingUnlocked ? '!bg-purple-600 hover:!bg-purple-700' : '!bg-gray-200 dark:!bg-gray-800 !text-gray-400 dark:!text-gray-600 cursor-not-allowed'} !text-white flex items-center gap-2 group relative overflow-hidden`}
                             >
-                                <Zap size={18} className={isGeneratingAuto ? 'animate-pulse' : 'group-hover:animate-bounce'} />
+                                {isEditingUnlocked ? (
+                                    <Zap size={18} className={isGeneratingAuto ? 'animate-pulse' : 'group-hover:animate-bounce'} />
+                                ) : (
+                                    <Lock size={18} />
+                                )}
                                 <span className="relative z-10">Generate Otomatis</span>
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] skew-x-12" />
+                                {isEditingUnlocked && (
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] skew-x-12" />
+                                )}
                             </StyledButton>
                             <StyledButton
                                 onClick={() => setShowPrintModal(true)}
@@ -700,10 +781,11 @@ const ScheduleCalendar = () => {
                             <StyledButton 
                                 onClick={handleClearAllSchedules} 
                                 variant="outline" 
-                                className="flex items-center gap-2 border-red-200 text-red-600 hover:bg-red-50"
+                                className={`flex items-center gap-2 border-red-200 ${isEditingUnlocked ? 'text-red-600 hover:bg-red-50' : 'text-gray-400 bg-gray-50/50 cursor-not-allowed'}`}
                                 loading={isClearingAll}
                             >
-                                <Trash2 size={18} /> Hapus Semua Jadwal
+                                {isEditingUnlocked ? <Trash2 size={18} /> : <Lock size={18} />}
+                                Hapus Semua Jadwal
                             </StyledButton>
                             <StyledButton onClick={() => setShowHolidayModal(true)} variant="outline" className="flex items-center gap-2">
                                 <CalendarIcon size={18} /> Kelola Agenda Sekolah
@@ -715,7 +797,18 @@ const ScheduleCalendar = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div className="lg:col-span-1">
-                    <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/20 sticky top-4">
+                    <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-3xl shadow-xl border border-purple-100 dark:border-purple-900/20 sticky top-4 relative overflow-hidden">
+                        {!isEditingUnlocked && isAdmin && (
+                            <div className="absolute inset-0 backdrop-blur-md bg-white/70 dark:bg-[#1a1a2e]/80 rounded-3xl flex flex-col items-center justify-center text-center p-6 z-20 transition-all border border-purple-100 dark:border-purple-900/20">
+                                <div className="p-4 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full mb-4 animate-bounce">
+                                    <Lock size={32} />
+                                </div>
+                                <h4 className="font-black text-gray-800 dark:text-white mb-2">Formulir Terkunci</h4>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 max-w-[200px] leading-relaxed">
+                                    Aktifkan <strong>Mode Edit</strong> di kanan atas untuk menambah atau mengubah rincian jadwal.
+                                </p>
+                            </div>
+                        )}
                         <div className="flex items-center gap-2 mb-6">
                             <div className="p-2.5 rounded-2xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
                                 <Plus size={20} />
@@ -1007,10 +1100,20 @@ const ScheduleCalendar = () => {
                                                 </div>
                                             </td>
                                             <td className="py-4 pr-4 rounded-r-2xl text-right">
-                                                <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => handleEditSchedule(schedule)} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors"><Edit size={16} /></button>
-                                                    <button onClick={() => handleDeleteSchedule(schedule.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"><Trash2 size={16} /></button>
-                                                </div>
+                                                {isAdmin ? (
+                                                    isEditingUnlocked ? (
+                                                        <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <button onClick={() => handleEditSchedule(schedule)} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors"><Edit size={16} /></button>
+                                                            <button onClick={() => handleDeleteSchedule(schedule.id)} className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors"><Trash2 size={16} /></button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex justify-end pr-2 text-gray-400 dark:text-gray-600" title="Aktifkan Mode Edit untuk mengubah jadwal">
+                                                            <Lock size={14} className="opacity-60" />
+                                                        </div>
+                                                    )
+                                                ) : (
+                                                    <span className="text-xs text-gray-400 font-medium italic">Hanya Baca</span>
+                                                )}
                                             </td>
                                         </tr>
                                     );
@@ -1183,6 +1286,51 @@ const ScheduleCalendar = () => {
                                 Ya, Hapus
                             </StyledButton>
                         </div>
+                    </div>
+                </Modal>
+            )}
+
+            {/* Admin Password Verification Modal */}
+            {showPasswordModal && (
+                <Modal onClose={() => setShowPasswordModal(false)} size="md">
+                    <div className="p-6 text-center">
+                        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 dark:bg-amber-900/20 mb-4 text-amber-600">
+                            <Lock size={32} className="animate-pulse" />
+                        </div>
+                        <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2">Verifikasi Password Admin</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                            Mengubah jadwal adalah tindakan krusial. Harap masukkan password akun Admin Anda untuk melanjutkan.
+                        </p>
+                        <form onSubmit={handleVerifyPasswordSubmit} className="space-y-4 text-left">
+                            <div className="space-y-1">
+                                <label className="text-[10px] font-bold text-gray-400 ml-1">Password Anda</label>
+                                <StyledInput 
+                                    type="password" 
+                                    placeholder="••••••••" 
+                                    value={adminPassword} 
+                                    onChange={(e) => setAdminPassword(e.target.value)} 
+                                    required 
+                                    autoFocus 
+                                />
+                            </div>
+                            <div className="flex gap-3 pt-2">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setShowPasswordModal(false)} 
+                                    className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold rounded-2xl text-sm"
+                                    disabled={isVerifyingPassword}
+                                >
+                                    Batal
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="flex-1 px-4 py-3 bg-emerald-600 text-white font-bold rounded-2xl text-sm shadow-lg shadow-emerald-100 dark:shadow-none hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
+                                    disabled={isVerifyingPassword}
+                                >
+                                    {isVerifyingPassword ? 'Memverifikasi...' : 'Konfirmasi'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </Modal>
             )}

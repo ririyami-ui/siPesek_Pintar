@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-dae-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Aksara Lanjutan",
+                                            "Pasangan Aksara",
+                                            "Sandhangan",
+                                            "Menulis Kata dengan Aksara"
+                                        ],
+                         "key_terms":  [
+                                           "aksara",
+                                           "pasangan",
+                                           "sandhangan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aksara Lanjutan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Kalimat Sederhana",
+                                            "Subjek dan Predikat",
+                                            "Kalimat Tanya",
+                                            "Kalimat Perintah"
+                                        ],
+                         "key_terms":  [
+                                           "kalimat",
+                                           "subjek",
+                                           "predikat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kalimat Sederhana"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Apa Itu Parikan?",
+                                            "Wangsalan Sederhana",
+                                            "Membuat Parikan",
+                                            "Membuat Wangsalan"
+                                        ],
+                         "key_terms":  [
+                                           "parikan",
+                                           "wangsalan",
+                                           "pantun"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Parikan dan Wangsalan"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Membaca Cerita Pendek",
+                                            "Cerita tentang Hewan",
+                                            "Cerita tentang Alam",
+                                            "Menjawab Pertanyaan Bacaan"
+                                        ],
+                         "key_terms":  [
+                                           "bacaan",
+                                           "cerita",
+                                           "membaca"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Bacaan Cerita"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Apa Itu Piwulang?",
+                                            "Piwulang dari Orang Tua",
+                                            "Piwulang dari Alam",
+                                            "Menerapkan Piwulang"
+                                        ],
+                         "key_terms":  [
+                                           "piwulang",
+                                           "ajaran",
+                                           "nasihat"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Piwulang"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Rumah Adat Daerah",
+                                            "Pakaian Adat Daerah",
+                                            "Makanan Khas Daerah",
+                                            "Tarian Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "budaya",
+                                           "adat",
+                                           "daerah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Budaya Daerah"
+                     }
+                 ],
+    "isbn":  "978-623-194-833-4"
+}

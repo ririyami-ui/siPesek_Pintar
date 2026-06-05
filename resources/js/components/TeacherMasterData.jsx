@@ -7,7 +7,7 @@ import StyledInput from './StyledInput';
 import StyledButton from './StyledButton';
 import TeacherCard from './TeacherCard';
 import Modal from './Modal';
-import { Plus, Trash2, UserPlus, Pencil, Upload, Download, UserCheck, CalendarOff } from 'lucide-react';
+import { Plus, Trash2, UserPlus, Pencil, Upload, Download, UserCheck, CalendarOff, User } from 'lucide-react';
 
 const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
 
@@ -45,6 +45,9 @@ export default function TeacherMasterData() {
         isOpen: false,
         id: null
     });
+
+    const [photoFile, setPhotoFile] = useState(null);
+    const [photoPreview, setPhotoPreview] = useState(null);
 
     const [isBulkClearOpen, setIsBulkClearOpen] = useState(false);
 
@@ -153,6 +156,8 @@ export default function TeacherMasterData() {
             password: '',
             unavailable_days: teacher.unavailable_days || []
         });
+        setPhotoFile(null);
+        setPhotoPreview(teacher.auth_user?.photo_url || null);
         setIsEditModalOpen(true);
     };
 
@@ -160,12 +165,27 @@ export default function TeacherMasterData() {
         e.preventDefault();
         if (!currentTeacher) return;
 
-        const promise = api.put(`/teachers/${currentTeacher.id}`, editData);
+        const promise = (async () => {
+            // 1. Update teacher details
+            const res = await api.put(`/teachers/${currentTeacher.id}`, editData);
+            
+            // 2. If photo file is selected and teacher has a linked user account
+            if (photoFile && currentTeacher.auth_user_id) {
+                const formData = new FormData();
+                formData.append('photo', photoFile);
+                await api.post(`/users/${currentTeacher.auth_user_id}/photo`, formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+            }
+            return res;
+        })();
 
         toast.promise(promise, {
             loading: 'Memperbarui...',
             success: () => {
                 setIsEditModalOpen(false);
+                setPhotoFile(null);
+                setPhotoPreview(null);
                 getTeachers();
                 return 'Data guru berhasil diperbarui!';
             },
@@ -467,6 +487,44 @@ export default function TeacherMasterData() {
                                 onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                             />
                         </div>
+
+                        {/* PROFILE PHOTO SECTION */}
+                        {currentTeacher?.auth_user_id && (
+                            <div className="space-y-2 p-3 bg-purple-50 dark:bg-purple-900/10 rounded-xl border border-purple-100 dark:border-purple-900/20">
+                                <label className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase tracking-wider block">Foto Profil Guru</label>
+                                <div className="flex items-center gap-4 mt-2">
+                                    <div className="h-16 w-16 rounded-full border border-purple-200 dark:border-purple-800 overflow-hidden bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                        {photoPreview ? (
+                                            <img src={photoPreview} className="w-full h-full object-cover" alt="Preview" />
+                                        ) : (
+                                            <User size={32} className="text-purple-300" />
+                                        )}
+                                    </div>
+                                    <div className="flex-1 space-y-1">
+                                        <label className="cursor-pointer inline-block px-3 py-1.5 bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/40 dark:hover:bg-purple-900/60 text-purple-700 dark:text-purple-300 rounded-lg text-xs font-bold transition-all shadow-sm active:scale-95">
+                                            PILIH FOTO
+                                            <input 
+                                                type="file" 
+                                                onChange={(e) => {
+                                                    const file = e.target.files[0];
+                                                    if (file) {
+                                                        if (file.size > 300 * 1024) {
+                                                            toast.error('Ukuran file maksimal 300KB.');
+                                                            return;
+                                                        }
+                                                        setPhotoFile(file);
+                                                        setPhotoPreview(URL.createObjectURL(file));
+                                                    }
+                                                }} 
+                                                className="hidden" 
+                                                accept="image/*" 
+                                            />
+                                        </label>
+                                        <p className="text-[9px] text-gray-400 italic">* Format: JPG, PNG, WEBP (Maks 300KB)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="space-y-2 p-3 bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-100 dark:border-red-900/20">
                             <div className="flex items-center gap-2">

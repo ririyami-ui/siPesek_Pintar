@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pjok-3",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-36",
+                         "sub_topics":  [
+                                            "Kombinasi Jalan-Lari",
+                                            "Kombinasi Lompat-Lempar",
+                                            "Kombinasi Gerak Ritmik",
+                                            "Rangkaian Gerak"
+                                        ],
+                         "key_terms":  [
+                                           "kombinasi",
+                                           "gerak",
+                                           "rangkaian"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kombinasi Gerak Dasar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "37-72",
+                         "sub_topics":  [
+                                            "Lari Jarak Pendek",
+                                            "Lompat Jauh",
+                                            "Lempar Turbo",
+                                            "Tolak Peluru"
+                                        ],
+                         "key_terms":  [
+                                           "atletik",
+                                           "lari",
+                                           "lompat",
+                                           "lempar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Atletik"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "73-108",
+                         "sub_topics":  [
+                                            "Pencak Silat",
+                                            "Kuda-Kuda",
+                                            "Pukulan",
+                                            "Tangkisan"
+                                        ],
+                         "key_terms":  [
+                                           "beladiri",
+                                           "pencak silat",
+                                           "pukulan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Olahraga Beladiri"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "109-144",
+                         "sub_topics":  [
+                                            "Tes Kebugaran",
+                                            "Latihan Sirkuit",
+                                            "Interval Training",
+                                            "Pemulihan"
+                                        ],
+                         "key_terms":  [
+                                           "kebugaran",
+                                           "sirkuit",
+                                           "training"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kebugaran dan Kesehatan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "145-180",
+                         "sub_topics":  [
+                                            "Renang Gaya Bebas",
+                                            "Pernapasan",
+                                            "Koordinasi Gerak",
+                                            "Keselamatan di Air"
+                                        ],
+                         "key_terms":  [
+                                           "renang",
+                                           "gaya bebas",
+                                           "keselamatan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Renang Gaya Dasar"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "181-216",
+                         "sub_topics":  [
+                                            "Aktivitas Fisik Harian",
+                                            "Manfaat Olahraga",
+                                            "Gizi dan Olahraga",
+                                            "Pencegahan Cedera"
+                                        ],
+                         "key_terms":  [
+                                           "aktif",
+                                           "olahraga",
+                                           "cedera"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Pola Hidup Aktif"
+                     }
+                 ],
+    "isbn":  "978-623-194-431-X"
+}

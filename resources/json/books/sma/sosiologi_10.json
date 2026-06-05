@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-sos-10",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Pengertian Sosiologi",
+                                            "Tokoh Sosiologi",
+                                            "Objek Sosiologi",
+                                            "Fungsi Sosiologi",
+                                            "Manfaat Sosiologi"
+                                        ],
+                         "key_terms":  [
+                                           "Sosiologi",
+                                           "Masyarakat",
+                                           "Fakta Sosial",
+                                           "Empiris"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sosiologi sebagai Ilmu"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Ciri Interaksi",
+                                            "Syarat Interaksi",
+                                            "Faktor Pembentuk",
+                                            "Bentuk Interaksi",
+                                            "Akibat Interaksi"
+                                        ],
+                         "key_terms":  [
+                                           "Interaksi",
+                                           "Timbal Balik",
+                                           "Asosiatif",
+                                           "Disosiatif"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Interaksi Sosial"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pengertian Sosialisasi",
+                                            "Media Sosialisasi",
+                                            "Proses Sosialisasi",
+                                            "Agen Sosialisasi",
+                                            "Hasil Sosialisasi"
+                                        ],
+                         "key_terms":  [
+                                           "Sosialisasi",
+                                           "Internalisasi",
+                                           "Identitas",
+                                           "Agen"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Sosialisasi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Pengertian Nilai",
+                                            "Pengertian Norma",
+                                            "Macam Norma",
+                                            "Klasifikasi Norma",
+                                            "Fungsi Norma"
+                                        ],
+                         "key_terms":  [
+                                           "Nilai",
+                                           "Norma",
+                                           "Kesopanan",
+                                           "Hukum"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Nilai dan Norma Sosial"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Ciri Kelompok",
+                                            "Tipe Kelompok",
+                                            "In Group Out Group",
+                                            "Patembayan Patung",
+                                            "Proses Pembentukan"
+                                        ],
+                         "key_terms":  [
+                                           "Kelompok",
+                                           "Primer",
+                                           "Sekunder",
+                                           "Paguyuban"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kelompok Sosial"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Diferensiasi Sosial",
+                                            "Stratifikasi Sosial",
+                                            "Kriteria",
+                                            "Konsekuensi",
+                                            "Interseksi Konsolidasi"
+                                        ],
+                         "key_terms":  [
+                                           "Struktur",
+                                           "Stratifikasi",
+                                           "Diferensiasi",
+                                           "Status"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Struktur Sosial"
+                     }
+                 ],
+    "isbn":  "978-623-194-739-7"
+}

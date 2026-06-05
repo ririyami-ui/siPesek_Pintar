@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pkn-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Pengertian Ideologi",
+                                            "Ideologi Terbuka",
+                                            "Ideologi Pancasila",
+                                            "Perbandingan Ideologi",
+                                            "Pancasila vs Liberalisme"
+                                        ],
+                         "key_terms":  [
+                                           "Ideologi",
+                                           "Pancasila",
+                                           "Liberalisme",
+                                           "Komunisme"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ideologi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Politik Hukum Nasional",
+                                            "Sumber Hukum",
+                                            "Hierarki Peraturan",
+                                            "Penegakan Hukum",
+                                            "Budaya Hukum"
+                                        ],
+                         "key_terms":  [
+                                           "Politik",
+                                           "Hukum",
+                                           "Penegakan",
+                                           "Peraturan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Politik Hukum"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Konsep Desentralisasi",
+                                            "Dekonsentrasi",
+                                            "Tugas Pembantuan",
+                                            "Pemerintahan Daerah",
+                                            "Otonomi Daerah"
+                                        ],
+                         "key_terms":  [
+                                           "Desentralisasi",
+                                           "Otonomi",
+                                           "Dekonsentrasi",
+                                           "Daerah"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Desentralisasi"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Tata Hukum Indonesia",
+                                            "Lembaga Yudikatif",
+                                            "Peradilan Umum",
+                                            "Peradilan Agama",
+                                            "Peradilan Tata Usaha Negara"
+                                        ],
+                         "key_terms":  [
+                                           "Yudikatif",
+                                           "Peradilan",
+                                           "Hukum",
+                                           "Mahkamah"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Sistem Hukum Indonesia"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Konsep Civil Society",
+                                            "Ciri Masyarakat Madani",
+                                            "Warga Negara",
+                                            "Organisasi Kemasyarakatan",
+                                            "Partisipasi Publik"
+                                        ],
+                         "key_terms":  [
+                                           "Madani",
+                                           "Civil Society",
+                                           "Partisipasi",
+                                           "Demokrasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Masyarakat Madani"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Pengertian Hak dan Kewajiban",
+                                            "Macam Hak Warga Negara",
+                                            "Macam Kewajiban",
+                                            "Keseimbangan Hak Kewajiban",
+                                            "Contoh Implementasi"
+                                        ],
+                         "key_terms":  [
+                                           "Hak",
+                                           "Kewajiban",
+                                           "Warga Negara",
+                                           "Kewarganegaraan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hak dan Kewajiban Warga Negara"
+                     }
+                 ],
+    "isbn":  "978-623-194-711-3"
+}

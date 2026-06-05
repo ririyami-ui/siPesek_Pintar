@@ -1,0 +1,102 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-mtl-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Operasi Polinomial",
+                                            "Teorema Sisa",
+                                            "Teorema Faktor",
+                                            "Akar Rasional",
+                                            "Akar Kompleks"
+                                        ],
+                         "key_terms":  [
+                                           "Polinomial",
+                                           "Sisa",
+                                           "Faktor",
+                                           "Akar"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Polinomial Tingkat Lanjut"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Transformasi Linear",
+                                            "Matriks Refleksi",
+                                            "Matriks Rotasi",
+                                            "Komposisi Transformasi",
+                                            "Invers Transformasi"
+                                        ],
+                         "key_terms":  [
+                                           "Transformasi",
+                                           "Matriks",
+                                           "Linear",
+                                           "Geometri"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Matriks Transformasi"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Konsep Periodik",
+                                            "Amplitudo dan Frekuensi",
+                                            "Fase dan Geseran",
+                                            "Grafik Fungsi Periodik",
+                                            "Aplikasi Fungsi Periodik"
+                                        ],
+                         "key_terms":  [
+                                           "Periodik",
+                                           "Amplitudo",
+                                           "Frekuensi",
+                                           "Fase"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Fungsi Periodik"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Barisan Tak Hingga",
+                                            "Deret Konvergen",
+                                            "Deret Divergen",
+                                            "Uji Konvergensi",
+                                            "Deret Geometri"
+                                        ],
+                         "key_terms":  [
+                                           "Tak Hingga",
+                                           "Konvergen",
+                                           "Divergen",
+                                           "Barisan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Barisan dan Deret Tak Hingga"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Persamaan Lingkaran",
+                                            "Persamaan Parabola",
+                                            "Persamaan Elips",
+                                            "Persamaan Hiperbola",
+                                            "Aplikasi Irisan Kerucut"
+                                        ],
+                         "key_terms":  [
+                                           "Parabola",
+                                           "Elips",
+                                           "Hiperbola",
+                                           "Eksentrisitas"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Irisan Kerucut Lanjutan"
+                     }
+                 ],
+    "isbn":  "978-623-194-720-0"
+}

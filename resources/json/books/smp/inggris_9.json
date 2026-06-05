@@ -1,0 +1,47 @@
+{
+  "bookId": "smp-ing-9",
+  "isbn": "978-602-244-887-7",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "English for Nusantara SMP Class IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bekantan",
+      "pages": "1-40",
+      "sub_topics": [
+        "Describing Animals (Report Text)",
+        "Scientific vs Popular Names",
+        "Adjective Clauses",
+        "Information Reports on Wildlife"
+      ],
+      "key_terms": ["Report Text", "General Classification", "Description", "Habitat", "Endangered"],
+      "visual_hints": "Use Mermaid Mindmap to organize technical information about a specific animal."
+    },
+    {
+      "no": 2,
+      "title": "Orangutan",
+      "pages": "41-80",
+      "sub_topics": [
+        "Identifying Main Ideas in a Text",
+        "Connecting Words (Cohesion)",
+        "Writing an Informative Text",
+        "Conservation Efforts"
+      ],
+      "key_terms": ["Cohesion", "Topic Sentence", "Supporting Details", "Preservation"],
+      "visual_hints": "Use Mermaid Flowchart to show the cause and effect of deforestation on wildlife Habitats."
+    },
+    {
+      "no": 3,
+      "title": "Indonesian Birds",
+      "pages": "81-120",
+      "sub_topics": [
+        "Analyzing Visual Information",
+        "Expressing Comparison and Contrast",
+        "Listening for Specific Details",
+        "Presenting a Mini Report"
+      ],
+      "key_terms": ["Comparison", "Contrast", "Degrees of Comparison", "Fact vs Opinion"],
+      "visual_hints": "Use Spreadsheet Renderer to compare features of different bird species."
+    }
+  ]
+}

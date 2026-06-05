@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ing-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "My Classroom",
+                                            "School Objects",
+                                            "Teachers and Friends",
+                                            "School Rules"
+                                        ],
+                         "key_terms":  [
+                                           "school",
+                                           "classroom",
+                                           "teacher"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "My School"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Parts of the House",
+                                            "My Bedroom",
+                                            "Living Room",
+                                            "Kitchen and Bathroom"
+                                        ],
+                         "key_terms":  [
+                                           "house",
+                                           "room",
+                                           "home"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "My House"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Telling Time",
+                                            "O'clock and Half Past",
+                                            "Daily Schedule",
+                                            "What Time Is It?"
+                                        ],
+                         "key_terms":  [
+                                           "time",
+                                           "clock",
+                                           "o'clock"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Time"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Days of the Week",
+                                            "Months of the Year",
+                                            "Today, Yesterday, Tomorrow",
+                                            "My Week Schedule"
+                                        ],
+                         "key_terms":  [
+                                           "days",
+                                           "week",
+                                           "months"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Days"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Food and Drinks",
+                                            "Healthy Food",
+                                            "Breakfast, Lunch, Dinner",
+                                            "My Favorite Food"
+                                        ],
+                         "key_terms":  [
+                                           "food",
+                                           "drink",
+                                           "healthy"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Food"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Toys Names",
+                                            "My Favorite Toy",
+                                            "Playing with Friends",
+                                            "Sharing Toys"
+                                        ],
+                         "key_terms":  [
+                                           "toys",
+                                           "play",
+                                           "ball"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Toys"
+                     }
+                 ],
+    "isbn":  "978-623-194-822-8"
+}

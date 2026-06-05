@@ -1,0 +1,83 @@
+{
+  "bookId": "smp-info-7",
+  "isbn": "978-602-244-503-6",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Informatika SMP Kelas VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Berpikir Komputasional (Computational Thinking)",
+      "pages": "25-45",
+      "sub_topics": [
+        "Dekomposisi Masalah Kompleks",
+        "Pengenalan Pola dalam Data",
+        "Abstraksi dan Generalisasi",
+        "Perancangan Algoritma Sederhana"
+      ],
+      "key_terms": [
+        "Computational Thinking",
+        "Dekomposisi",
+        "Abstraksi",
+        "Algoritma",
+        "Logika"
+      ],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan 4 pilar CT. Gunakan Flowchart untuk contoh algoritma kehidupan sehari-hari."
+    },
+    {
+      "no": 2,
+      "title": "Teknologi Informasi dan Komunikasi",
+      "pages": "47-70",
+      "sub_topics": [
+        "Antarmuka Pengguna (GUI)",
+        "Manajemen File dan Folder",
+        "Browser dan Search Engine",
+        "Aplikasi Pengolah Kata dan Angka"
+      ],
+      "key_terms": [
+        "Folder",
+        "Ekstensi File",
+        "Cloud Storage",
+        "Snippet"
+      ],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk mendemonstrasikan tabel data di Excel."
+    },
+    {
+      "no": 3,
+      "title": "Sistem Komputer",
+      "pages": "71-95",
+      "sub_topics": [
+        "Perangkat Keras (Hardware)",
+        "Perangkat Lunak (Software)",
+        "Interaksi Antar Perangkat",
+        "Siklus Pengolahan Data (Input-Process-Output)"
+      ],
+      "key_terms": [
+        "CPU",
+        "RAM",
+        "Operating System",
+        "Driver"
+      ],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan siklus Input-Process-Output."
+    },
+    {
+      "no": 4,
+      "title": "Algoritma dan Pemrograman (Scratch)",
+      "pages": "97-140",
+      "sub_topics": [
+        "Mengenal Lingkungan Scratch",
+        "Gerakan (Motion) dan Tampilan (Looks)",
+        "Kontrol: Perulangan (Loop) dan Percabangan (If-Then)",
+        "Variabel dan Operator Matematika",
+        "Membuat Game Sederhana"
+      ],
+      "key_terms": [
+        "Sprite",
+        "Backdrop",
+        "Looping",
+        "Conditional",
+        "Event Handler"
+      ],
+      "visual_hints": "PENTING: Gunakan blok Scratch Visual untuk setiap contoh kode. Pastikan instruksi seperti 'When Green Flag Clicked' muncul secara eksplisit."
+    }
+  ]
+}

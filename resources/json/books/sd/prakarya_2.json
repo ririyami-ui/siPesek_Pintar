@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pra-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-30",
+                         "sub_topics":  [
+                                            "Kerajinan Origami",
+                                            "Membentuk Kertas",
+                                            "Kerajinan Kertas Bekas",
+                                            "Membuat Hiasan Kertas"
+                                        ],
+                         "key_terms":  [
+                                           "kertas",
+                                           "origami",
+                                           "lipat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Kerajinan Kertas"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "31-60",
+                         "sub_topics":  [
+                                            "Pengertian Batik",
+                                            "Batik Sederhana dengan Kertas",
+                                            "Batik Jumputan",
+                                            "Batik Celup Ikat"
+                                        ],
+                         "key_terms":  [
+                                           "batik",
+                                           "celup",
+                                           "jumputan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Membatik Sederhana"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "61-90",
+                         "sub_topics":  [
+                                            "Teknik Dasar Menenun",
+                                            "Alat Tenun Sederhana",
+                                            "Menenun dengan Kertas",
+                                            "Menenun dengan Benang"
+                                        ],
+                         "key_terms":  [
+                                           "tenun",
+                                           "benang",
+                                           "alat tenun"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Menenun"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "91-120",
+                         "sub_topics":  [
+                                            "Apa Itu Makrame?",
+                                            "Simpul Dasar Makrame",
+                                            "Membuat Gelang Makrame",
+                                            "Membuat Gantungan"
+                                        ],
+                         "key_terms":  [
+                                           "makrame",
+                                           "simpul",
+                                           "tali"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Makrame Dasar"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "121-150",
+                         "sub_topics":  [
+                                            "Teknik Ecoprint",
+                                            "Bahan Alami Ecoprint",
+                                            "Ecoprint pada Kain",
+                                            "Membuat Taplak Ecoprint"
+                                        ],
+                         "key_terms":  [
+                                           "ecoprint",
+                                           "daun",
+                                           "kain"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Ecoprint"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "151-180",
+                         "sub_topics":  [
+                                            "Mengenal Bambu",
+                                            "Kerajinan Bambu Sederhana",
+                                            "Anyaman Bambu",
+                                            "Hiasan dari Bambu"
+                                        ],
+                         "key_terms":  [
+                                           "bambu",
+                                           "anyaman",
+                                           "kerajinan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kerajinan Bambu"
+                     }
+                 ],
+    "isbn":  "978-623-194-842-6"
+}

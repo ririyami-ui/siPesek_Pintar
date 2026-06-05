@@ -256,8 +256,8 @@ class StudentDashboardController extends Controller
         $possibleExtensions = ['png', 'jpg', 'jpeg'];
         foreach ($possibleExtensions as $ext) {
             $filename = "student_photos/{$student->nisn}.{$ext}";
-            if (Storage::disk('public')->exists($filename)) {
-                $studentPhoto = asset('storage/' . $filename);
+            if (file_exists(public_path($filename))) {
+                $studentPhoto = asset($filename);
                 break;
             }
         }

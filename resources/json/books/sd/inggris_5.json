@@ -1,0 +1,109 @@
+{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-ing-5",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Immediate Family",
+                                            "Extended Family",
+                                            "Family Relationships",
+                                            "Family Tree Project"
+                                        ],
+                         "key_terms":  [
+                                           "family",
+                                           "relative",
+                                           "parent"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Family Members"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Habitual Actions",
+                                            "Simple Present for Habits",
+                                            "Daily Habits",
+                                            "Good and Bad Habits"
+                                        ],
+                         "key_terms":  [
+                                           "habit",
+                                           "usually",
+                                           "always"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Habitual Actions"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Expressing Ability",
+                                            "Can and Cannot",
+                                            "Able To",
+                                            "Talking about Skills"
+                                        ],
+                         "key_terms":  [
+                                           "ability",
+                                           "can",
+                                           "skill"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ability"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Expressing Obligation",
+                                            "Must and Have To",
+                                            "Should and Ought To",
+                                            "Rules and Responsibilities"
+                                        ],
+                         "key_terms":  [
+                                           "obligation",
+                                           "must",
+                                           "should"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Obligation"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-158",
+                         "sub_topics":  [
+                                            "Expressing Preferences",
+                                            "Like, Love, Prefer",
+                                            "Would Rather",
+                                            "Talking about Favorites"
+                                        ],
+                         "key_terms":  [
+                                           "preference",
+                                           "like",
+                                           "prefer"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Preferences"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "159-190",
+                         "sub_topics":  [
+                                            "Structure of Narrative",
+                                            "Fables and Folktales",
+                                            "Orientation, Complication, Resolution",
+                                            "Writing a Narrative"
+                                        ],
+                         "key_terms":  [
+                                           "narrative",
+                                           "story",
+                                           "fable"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Narrative Text"
+                     }
+                 ],
+    "isbn":  "978-623-194-825-9"
+}

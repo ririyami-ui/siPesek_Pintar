@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-pjo-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Pola Penyerangan",
+                                            "Pola Pertahanan",
+                                            "Formasi Sepak Bola",
+                                            "Formasi Bola Voli",
+                                            "Formasi Bola Basket"
+                                        ],
+                         "key_terms":  [
+                                           "Strategi",
+                                           "Formasi",
+                                           "Penyerangan",
+                                           "Pertahanan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Strategi Permainan Bola Besar"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Prinsip Biomekanika",
+                                            "Analisis Gerak Lari",
+                                            "Analisis Gerak Lompat",
+                                            "Analisis Gerak Lempar",
+                                            "Efisiensi Gerak"
+                                        ],
+                         "key_terms":  [
+                                           "Biomekanika",
+                                           "Gerak",
+                                           "Analisis",
+                                           "Efisiensi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Analisis Gerak"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Prinsip Latihan Beban",
+                                            "Jenis Latihan Beban",
+                                            "Program Latihan",
+                                            "Frekuensi dan Intensitas",
+                                            "Peralatan Beban"
+                                        ],
+                         "key_terms":  [
+                                           "Beban",
+                                           "Latihan",
+                                           "Intensitas",
+                                           "Repetisi"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Latihan Beban"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Senam Artistik",
+                                            "Senam Ritmik",
+                                            "Unsur Kelenturan",
+                                            "Keseimbangan",
+                                            "Koordinasi"
+                                        ],
+                         "key_terms":  [
+                                           "Senam",
+                                           "Artistik",
+                                           "Ritmik",
+                                           "Koordinasi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Senam Lanjutan"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Kesehatan Mental",
+                                            "Stres dan Kecemasan",
+                                            "Manajemen Stres",
+                                            "Olahraga dan Mental",
+                                            "Pola Hidup Sehat"
+                                        ],
+                         "key_terms":  [
+                                           "Mental",
+                                           "Stres",
+                                           "Relaksasi",
+                                           "Sehat"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kesehatan Mental"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Peraturan Sepak Bola",
+                                            "Peraturan Bola Voli",
+                                            "Peraturan Bola Basket",
+                                            "Peraturan Bulu Tangkis",
+                                            "Fair Play"
+                                        ],
+                         "key_terms":  [
+                                           "Peraturan",
+                                           "Wasit",
+                                           "Fair Play",
+                                           "Pelanggaran"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Peraturan Permainan"
+                     }
+                 ],
+    "isbn":  "978-623-194-714-2"
+}

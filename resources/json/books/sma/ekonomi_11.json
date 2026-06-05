@@ -1,0 +1,121 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sma-eko-11",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-26",
+                         "sub_topics":  [
+                                            "Konsep Pertumbuhan",
+                                            "PDB dan PNB",
+                                            "Faktor Pertumbuhan",
+                                            "Teori Pertumbuhan",
+                                            "Pembangunan Ekonomi"
+                                        ],
+                         "key_terms":  [
+                                           "Pertumbuhan",
+                                           "PDB",
+                                           "PNB",
+                                           "Pembangunan"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pertumbuhan Ekonomi"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "27-55",
+                         "sub_topics":  [
+                                            "Angkatan Kerja",
+                                            "Kesempatan Kerja",
+                                            "Pengangguran",
+                                            "Upah",
+                                            "Hubungan Industrial"
+                                        ],
+                         "key_terms":  [
+                                           "Tenaga Kerja",
+                                           "Pengangguran",
+                                           "Upah",
+                                           "Industrial"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Ketenagakerjaan"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "56-87",
+                         "sub_topics":  [
+                                            "Pengertian Pajak",
+                                            "Fungsi Pajak",
+                                            "Jenis Pajak",
+                                            "Tarif Pajak",
+                                            "Ketentuan Perpajakan"
+                                        ],
+                         "key_terms":  [
+                                           "Pajak",
+                                           "SPT",
+                                           "Tarif",
+                                           "Wajib Pajak"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pajak"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "88-110",
+                         "sub_topics":  [
+                                            "Manfaat Perdagangan",
+                                            "Ekspor Impor",
+                                            "Neraca Pembayaran",
+                                            "Kurs Valuta Asing",
+                                            "Kebijakan Perdagangan"
+                                        ],
+                         "key_terms":  [
+                                           "Perdagangan",
+                                           "Ekspor",
+                                           "Impor",
+                                           "Kurs"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Perdagangan Internasional"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "111-136",
+                         "sub_topics":  [
+                                            "Pengertian Akuntansi",
+                                            "Siklus Akuntansi",
+                                            "Persamaan Akuntansi",
+                                            "Jurnal Umum",
+                                            "Buku Besar"
+                                        ],
+                         "key_terms":  [
+                                           "Akuntansi",
+                                           "Jurnal",
+                                           "Buku Besar",
+                                           "Debit Kredit"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akuntansi Dasar"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "137-165",
+                         "sub_topics":  [
+                                            "Laporan Laba Rugi",
+                                            "Laporan Perubahan Modal",
+                                            "Neraca",
+                                            "Laporan Arus Kas",
+                                            "Analisis Laporan"
+                                        ],
+                         "key_terms":  [
+                                           "Laporan",
+                                           "Keuangan",
+                                           "Neraca",
+                                           "Laba Rugi"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Laporan Keuangan"
+                     }
+                 ],
+    "isbn":  "978-623-194-732-6"
+}

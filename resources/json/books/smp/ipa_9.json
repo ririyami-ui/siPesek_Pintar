@@ -1,0 +1,71 @@
+{
+  "bookId": "smp-ipa-9",
+  "isbn": "978-602-244-386-5",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPA SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Pertumbuhan dan Perkembangan",
+      "pages": "1-28",
+      "sub_topics": [
+        "Pertumbuhan dan Perkembangan Manusia",
+        "Siklus Hidup Hewan (Metamorfosis)",
+        "Pertumbuhan dan Perkembangan Tumbuhan"
+      ],
+      "key_terms": ["Pubertas", "Embrio", "Kecambah", "Metamorfosis Sempurna"],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk memvisualisasikan siklus hidup katak atau kupu-kupu."
+    },
+    {
+      "no": 2,
+      "title": "Sistem Koordinasi, Reproduksi, dan Homeostasis",
+      "pages": "29-70",
+      "sub_topics": [
+        "Sistem Saraf dan Alat Indra",
+        "Sistem Hormon",
+        "Sistem Reproduksi Manusia",
+        "Homeostasis (Keseimbangan Tubuh)"
+      ],
+      "key_terms": ["Neuron", "Sinapsis", "Estrogen", "Testosteron", "Hipotalamus"],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi sistem saraf pusat dan saraf tepi."
+    },
+    {
+      "no": 3,
+      "title": "Tekanan",
+      "pages": "71-100",
+      "sub_topics": [
+        "Tekanan Zat Padat",
+        "Tekanan Zat Cair (Hidrostatis)",
+        "Hukum Pascal dan Archimedes",
+        "Tekanan Gas (Atmosfer)"
+      ],
+      "key_terms": ["Pascal", "Archimedes", "Barometer", "Hukum Boyle"],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk latihan soal gaya apung dan tekanan hidrostatis."
+    },
+    {
+      "no": 4,
+      "title": "Listrik, Magnet, dan Sumber Energi Terbarukan",
+      "pages": "101-150",
+      "sub_topics": [
+        "Listrik Statis dan Dinamis",
+        "Rangkaian Listrik (Seri & Paralel)",
+        "Kemagnetan dan Induksi Elektromagnetik",
+        "Teknologi Ramah Lingkungan"
+      ],
+      "key_terms": ["Muatan Listrik", "Ohm", "Voltase", "Feromagnetik", "Panel Surya"],
+      "visual_hints": "Tampilkan tabel perbandingan kelebihan/kekurangan rangkaian Seri dan Paralel."
+    },
+    {
+      "no": 5,
+      "title": "Pewarisan Sifat dan Bioteknologi",
+      "pages": "151-180",
+      "sub_topics": [
+        "Materi Genetik (DNA & RNA)",
+        "Hukum Mendel (Monohibrid & Dihibrid)",
+        "Penerapan Bioteknologi Konvensional dan Modern"
+      ],
+      "key_terms": ["Genotipe", "Fenotipe", "Dominan", "Resesif", "Fermentasi"],
+      "visual_hints": "Gunakan Tabel Excel untuk mendemonstrasikan Diagram Punnett pada persilangan genetika."
+    }
+  ]
+}

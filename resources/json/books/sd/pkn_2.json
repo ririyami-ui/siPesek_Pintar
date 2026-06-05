@@ -1,0 +1,110 @@
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pkn-2",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-34",
+                         "sub_topics":  [
+                                            "Sejarah Pancasila",
+                                            "Penerapan Sila Pertama",
+                                            "Penerapan Sila Kedua",
+                                            "Penerapan Sila Ketiga"
+                                        ],
+                         "key_terms":  [
+                                           "pancasila",
+                                           "sejarah",
+                                           "sila"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Pancasila dalam Kehidupan"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "35-68",
+                         "sub_topics":  [
+                                            "Norma dalam Keluarga",
+                                            "Norma di Sekolah",
+                                            "Norma di Masyarakat",
+                                            "Akibat Melanggar Aturan"
+                                        ],
+                         "key_terms":  [
+                                           "norma",
+                                           "aturan",
+                                           "masyarakat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aturan dan Norma"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "69-102",
+                         "sub_topics":  [
+                                            "Keragaman Suku",
+                                            "Keragaman Bahasa",
+                                            "Keragaman Agama",
+                                            "Bhinneka Tunggal Ika"
+                                        ],
+                         "key_terms":  [
+                                           "keragaman",
+                                           "bhinneka",
+                                           "suku",
+                                           "agama"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Keragaman Indonesia"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "103-136",
+                         "sub_topics":  [
+                                            "Hak di Rumah",
+                                            "Kewajiban di Rumah",
+                                            "Hak dan Kewajiban di Sekolah",
+                                            "Tanggung Jawab"
+                                        ],
+                         "key_terms":  [
+                                           "hak",
+                                           "kewajiban",
+                                           "tanggung jawab"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hak dan Kewajiban"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "137-170",
+                         "sub_topics":  [
+                                            "Musyawarah",
+                                            "Voting",
+                                            "Keputusan Bersama",
+                                            "Menghargai Pendapat"
+                                        ],
+                         "key_terms":  [
+                                           "musyawarah",
+                                           "demokrasi",
+                                           "keputusan"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Musyawarah dan Demokrasi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "171-204",
+                         "sub_topics":  [
+                                            "Pahlawan Nasional",
+                                            "Cinta Produk Indonesia",
+                                            "Menjaga NKRI",
+                                            "Semangat Nasionalisme"
+                                        ],
+                         "key_terms":  [
+                                           "tanah air",
+                                           "pahlawan",
+                                           "nasionalisme"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Cinta Tanah Air"
+                     }
+                 ],
+    "isbn":  "978-623-194-221-X"
+}
