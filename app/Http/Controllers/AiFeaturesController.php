@@ -95,6 +95,8 @@ class AiFeaturesController extends Controller
                 'assessment_model' => $request->input('assessmentModel'),
                 'academic_year' => $request->input('academicYear'),
                 'semester' => $request->input('semester'),
+                'visualization' => $request->input('visualization'),
+                'visualization' => $request->input('visualization'),
             ]);
 
             return response()->json(['message' => 'RPP berhasil disimpan', 'data' => $lessonPlan], 201);

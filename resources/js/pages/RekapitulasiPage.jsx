@@ -558,6 +558,7 @@ const RekapitulasiPage = () => {
           PTS: [],
           PAS: [],
           Praktik: [],
+          Sikap: [],
         };
       });
 
@@ -573,6 +574,7 @@ const RekapitulasiPage = () => {
             else if (type === 'Tengah Semester' || type === 'PTS') recapitulation[grade.studentId].PTS.push(score);
             else if (type === 'Akhir Semester' || type === 'PAS') recapitulation[grade.studentId].PAS.push(score);
             else if (['Praktik', 'Proyek', 'Produk', 'Portofolio', 'Keterampilan', 'Unjuk Kerja', 'Praktikum', 'Project', 'Skill'].includes(type)) recapitulation[grade.studentId].Praktik.push(score);
+            else if (['Sikap', 'Afektif', 'Attitude', 'Observasi'].includes(type)) recapitulation[grade.studentId].Sikap.push(score);
           }
         }
       });
@@ -590,20 +592,36 @@ const RekapitulasiPage = () => {
           ...studentData.PAS
         ];
 
+        const sikapScores = [...(studentData.Sikap || [])];
+
         const NH_avg = studentData.NH.length > 0 ? studentData.NH.reduce((a, b) => a + b, 0) / studentData.NH.length : 0;
         const Formatif_avg = studentData.Formatif.length > 0 ? studentData.Formatif.reduce((a, b) => a + b, 0) / studentData.Formatif.length : 0;
         const Sumatif_avg = studentData.Sumatif.length > 0 ? studentData.Sumatif.reduce((a, b) => a + b, 0) / studentData.Sumatif.length : 0;
         const Praktik_avg = studentData.Praktik.length > 0 ? studentData.Praktik.reduce((a, b) => a + b, 0) / studentData.Praktik.length : 0;
 
         const Pengetahuan_avg = pengetahuanScores.length > 0 ? pengetahuanScores.reduce((a, b) => a + b, 0) / pengetahuanScores.length : 0;
+        const Sikap_avg = sikapScores.length > 0 ? sikapScores.reduce((a, b) => a + b, 0) / sikapScores.length : 0;
+
+        // Weighted: Knowledge+Practice (academic) vs Attitude (afektif)
+        const akademikWeight = (agreementRes.data.academic_weight ?? 50) / 100;
+        const sikapWeight = (agreementRes.data.attitude_weight ?? 50) / 100;
 
         let NA = 0;
+        let nilai_akademik = 0;
         if (Pengetahuan_avg > 0 && Praktik_avg > 0) {
-          NA = (Pengetahuan_avg * knowledgeW) + (Praktik_avg * practiceW);
+          nilai_akademik = (Pengetahuan_avg * knowledgeW) + (Praktik_avg * practiceW);
         } else if (Pengetahuan_avg > 0) {
-          NA = Pengetahuan_avg;
+          nilai_akademik = Pengetahuan_avg;
         } else if (Praktik_avg > 0) {
-          NA = Praktik_avg;
+          nilai_akademik = Praktik_avg;
+        }
+
+        if (nilai_akademik > 0 && Sikap_avg > 0) {
+          NA = (nilai_akademik * akademikWeight) + (Sikap_avg * sikapWeight);
+        } else if (Sikap_avg > 0) {
+          NA = Sikap_avg;
+        } else {
+          NA = nilai_akademik;
         }
 
         return {
@@ -614,9 +632,12 @@ const RekapitulasiPage = () => {
           Formatif_avg: Formatif_avg.toFixed(2),
           Sumatif_avg: Sumatif_avg.toFixed(2),
           Praktik_avg: Praktik_avg.toFixed(2),
+          Sikap_avg: Sikap_avg.toFixed(2),
           NA: NA.toFixed(2),
           knowledgeW: (knowledgeW * 100).toFixed(0),
-          practiceW: (practiceW * 100).toFixed(0)
+          practiceW: (practiceW * 100).toFixed(0),
+          akademikWeight: (akademikWeight * 100).toFixed(0),
+          sikapWeight: (sikapWeight * 100).toFixed(0)
         };
       }).sort((a, b) => a.absen - b.absen);
       setNilaiData(finalNilaiData);
@@ -833,6 +854,14 @@ const RekapitulasiPage = () => {
       accessor: 'Praktik_avg'
     },
     { header: { label: 'Nilai Akhir (NA)' }, accessor: 'NA' },
+    {
+      header: {
+        label: nilaiData.length > 0 && nilaiData[0].sikapWeight
+          ? `Sikap (${nilaiData[0].sikapWeight}%)`
+          : 'Sikap'
+      },
+      accessor: 'Sikap_avg'
+    },
   ];
 
   const pelanggaranColumns = [

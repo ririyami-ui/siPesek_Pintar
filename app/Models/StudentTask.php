@@ -27,6 +27,16 @@ class StudentTask extends Model
         'deadline' => 'date',
     ];
 
+    public function scopeOverdue($query)
+    {
+        return $query->where('deadline', '<', now())->where('status', '!=', 'completed');
+    }
+
+    public function scopeDueSoon($query)
+    {
+        return $query->whereBetween('deadline', [now(), now()->addDays(3)])->where('status', '!=', 'completed');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

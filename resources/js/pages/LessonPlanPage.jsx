@@ -32,6 +32,7 @@ import StyledSelect from '../components/StyledSelect';
 import StyledButton from '../components/StyledButton';
 import toast from 'react-hot-toast';
 import Modal from '../components/Modal';
+import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
 
 const LessonPlanPage = () => {
     const { activeSemester, academicYear, geminiModel } = useSettings();
@@ -896,6 +897,24 @@ const LessonPlanPage = () => {
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm, remarkMath]}
                                     rehypePlugins={[rehypeRaw, rehypeKatex]}
+                                    components={{
+                                        code({ node, inline, className, children, ...props }) {
+                                            const match = /language-(\w+)/.exec(className || '');
+                                            if (!inline && match && match[1] === 'visualization') {
+                                                try {
+                                                    const config = JSON.parse(String(children).replace(/\n/g, ' '));
+                                                    return (
+                                                        <div className="my-4 no-print">
+                                                            <VisualizationRenderer visualization={config} />
+                                                        </div>
+                                                    );
+                                                } catch (e) {
+                                                    return <code className={className} {...props}>{children}</code>;
+                                                }
+                                            }
+                                            return <code className={className} {...props}>{children}</code>;
+                                        }
+                                    }}
                                 >
                                     {generatedRPP || viewingRPP?.content}
                                 </ReactMarkdown>

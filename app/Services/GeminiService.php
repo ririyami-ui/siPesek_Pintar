@@ -10,11 +10,11 @@ class GeminiService
 {
     protected string $apiKey;
     protected string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
-    protected string $model = 'gemini-2.0-flash'; // Optimized default
+    protected string $model = 'gemini-1.5-flash';
 
     public function __construct()
     {
-        $this->resolveSettings();
+        // Settings will be resolved lazily in callGeminiApi
     }
 
     /**
@@ -22,42 +22,39 @@ class GeminiService
      */
     protected function resolveSettings(): void
     {
-        // 1. Default from config
+        // 1. Start with config defaults
         $this->apiKey = (string) config('services.gemini.api_key', '');
         if ($this->apiKey === 'your_gemini_api_key_here') $this->apiKey = '';
+        
+        // No hardcoded default model anymore
+        $this->model = ''; 
 
-        // 2. Override from current user profile
+        // 2. Load Master Admin (School Owner) profile for fallback
+        $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id');
+        
+        $adminProfile = $primaryAdminId ? \App\Models\UserProfile::where('user_id', $primaryAdminId)->first() : null;
+
+        // 3. Resolve for current logged in user
         if (auth()->check()) {
-            $profile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($profile) {
-                if ($profile->google_ai_api_key && $profile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                    $this->apiKey = $profile->google_ai_api_key;
-                }
-                if ($profile->gemini_model) {
-                    $this->model = $profile->gemini_model;
-                }
+            $userProfile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
+            if ($userProfile) {
+                // Prioritaskan API Key dari User -> Admin -> Config
+                $this->apiKey = $userProfile->google_ai_api_key ?: ($adminProfile->google_ai_api_key ?? $this->apiKey);
+                
+                // Prioritaskan Model dari User -> Admin -> Profil Pertama
+                $this->model = $userProfile->gemini_model ?: ($adminProfile->gemini_model ?? '');
             }
         }
 
-        // 3. Fallback to master admin if still empty
-        if (empty($this->apiKey)) {
-            $primaryAdminId = \App\Models\User::whereIn('role', ['admin', 'adminer'])
-                ->orderBy('id', 'asc')
-                ->value('id');
-
-            if ($primaryAdminId) {
-                $adminProfile = \App\Models\UserProfile::where('user_id', $primaryAdminId)->first();
-                if ($adminProfile) {
-                    if ($adminProfile->google_ai_api_key && $adminProfile->google_ai_api_key !== 'your_gemini_api_key_here') {
-                        $this->apiKey = $adminProfile->google_ai_api_key;
-                    }
-                    // Only override model if not explicitly set by user or we want global school consistency
-                    if (empty($this->model) || $this->model === 'gemini-2.0-flash') {
-                        $this->model = $adminProfile->gemini_model ?? $this->model;
-                    }
-                }
-            }
+        // Jika masih kosong, ambil dari admin manapun yang punya setting
+        if (empty($this->model) && $adminProfile) {
+            $this->model = $adminProfile->gemini_model;
         }
+
+        // Clean values
+        if ($this->apiKey === 'your_gemini_api_key_here') $this->apiKey = '';
     }
 
     /**
@@ -66,6 +63,9 @@ class GeminiService
      */
     public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7, ?string $systemInstruction = null): ?string
     {
+        // Resolve settings here instead of constructor to ensure auth() is ready
+        $this->resolveSettings();
+
         $retries = 3;
         $delay = 1000; // 1 second initial delay
         $lastError = null;
@@ -77,14 +77,13 @@ class GeminiService
                     throw new \Exception('Gemini API Key is not configured.');
                 }
 
-                // Fallback to flash-lite if overloaded (503) on subsequent attempts
-                if ($i > 0 && $lastError && str_contains($lastError, '503')) {
-                    $finalModel = 'gemini-2.0-flash-lite-preview-02-05'; 
-                }
-
+                // Handle both string prompt and structured contents array
                 $contents = is_string($promptOrContents) 
                     ? [['role' => 'user', 'parts' => [['text' => $promptOrContents]]]]
                     : $promptOrContents;
+
+                // Pastikan format model benar (models/nama-model)
+                $modelPath = str_starts_with($finalModel, 'models/') ? $finalModel : "models/{$finalModel}";
 
                 $payload = [
                     'contents' => $contents,
@@ -101,8 +100,8 @@ class GeminiService
                     ];
                 }
 
-                $response = Http::timeout(90)->post(
-                    "{$this->baseUrl}/models/{$finalModel}:generateContent?key={$this->apiKey}",
+                $response = Http::timeout(120)->post(
+                    "{$this->baseUrl}/{$modelPath}:generateContent?key={$this->apiKey}",
                     $payload
                 );
 
@@ -219,6 +218,16 @@ class GeminiService
     }
 
     /**
+     * Generate Portfolio Chapter
+     */
+    public function generatePortfolioChapter(array $data)
+    {
+        $prompt = $this->buildPortfolioPrompt($data);
+        $systemInstruction = "Anda adalah Smartty, asisten AI profesional buatan Bapak Ririyami, S.Kom. Gunakan gaya bahasa santai tapi profesional (Deep Learning BSKAP 2025). JANGAN gunakan sapaan pembuka/penutup, langsung berikan konten Markdown formal untuk isi bab portofolio.";
+        return $this->callGeminiApi($prompt, null, 4096, 0.8, $systemInstruction);
+    }
+
+    /**
      * Analyze student performance
      */
     public function analyzeStudentPerformance(array $data): ?string
@@ -232,33 +241,23 @@ class GeminiService
      */
     public function chat($message, $history = [], $context = [])
     {
-        $systemInstruction = null;
-        $realHistory = [];
-        $modelName = $this->model;
-
-        // Support options array passed as second argument (as seen in StudentChatController)
-        if (is_array($history) && isset($history['system_instruction'])) {
-            $systemInstruction = $history['system_instruction'];
-            $realHistory = $history['history'] ?? [];
-            $modelName = $history['model'] ?? $modelName;
-        } else {
-            $realHistory = $history;
-            $systemInstruction = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
-            if (!empty($context)) {
-                $systemInstruction .= "\n\nKonteks: " . json_encode($context, JSON_UNESCAPED_UNICODE);
-            }
+        $this->resolveSettings(); // Pastikan settings terisi
+        
+        $systemInstruction = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
+        if (!empty($context)) {
+            $systemInstruction .= "\n\nKonteks: " . json_encode($context, JSON_UNESCAPED_UNICODE);
         }
 
-        // Prepare contents for callGeminiApi
-        $contents = $realHistory;
+        // Jika history datang sebagai array kosong, inisialisasi
+        $contents = is_array($history) ? $history : [];
         
-        // Add current user message
+        // Tambahkan pesan user terbaru ke contents
         $contents[] = [
             'role' => 'user',
             'parts' => [['text' => $message]]
         ];
         
-        return $this->callGeminiApi($contents, $modelName, 4096, 0.7, $systemInstruction);
+        return $this->callGeminiApi($contents, $this->model, 4096, 0.7, $systemInstruction);
     }
 
     // =================== PROMPT BUILDERS ===================
@@ -336,6 +335,31 @@ class GeminiService
                "3. Kegiatan/eksperimen\n" .
                "4. Pertanyaan diskusi\n" .
                "5. Kesimpulan";
+    }
+
+    private function buildPortfolioPrompt(array $data): string
+    {
+        $chapterTitles = [
+            1 => 'BAB I: PENDAHULUAN',
+            2 => 'BAB II: PEMETAAN KURIKULUM & TARGET',
+            3 => 'BAB III: STRATEGI PEMBELAJARAN (PEDAGOGY)',
+            4 => 'BAB IV: ANALISIS HASIL BELAJAR (MAPEL)',
+            5 => 'BAB V: DISIPLIN AKADEMIK & ETIKA',
+            6 => 'BAB VI: EVALUASI PERIODE (SWOT)',
+            7 => 'BAB VII: PENUTUP & REKOMENDASI'
+        ];
+
+        $title = $chapterTitles[$data['chapter_id']] ?? 'Laporan Portofolio';
+        $context = json_encode($data['context'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        return "Susunlah konten untuk {$title} dalam sebuah Laporan Portofolio Akademik Guru.\n\n" .
+               "DATA KONTEKS GURU & KELAS:\n{$context}\n\n" .
+               "INSTRUKSI KHUSUS BAB {$data['chapter_id']}:\n" .
+               "- Gunakan data yang ada di konteks untuk memberikan analisis mendalam.\n" .
+               "- Gunakan standar Kurikulum Merdeka & BSKAP 2025.\n" .
+               "- Tuliskan dalam format Markdown yang rapi dengan heading, bullet points, dan tabel jika diperlukan.\n" .
+               "- Hubungkan dengan 3 pilar Deep Learning: Mindful, Meaningful, dan Joyful.\n\n" .
+               "HASILKAN HANYA ISI KONTEN UNTUK {$title}:";
     }
 
     private function buildStudentAnalysisPrompt(array $data): string

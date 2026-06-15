@@ -100,6 +100,8 @@ const NAV_CATEGORIES = [
       { name: 'Rekap Individu', icon: <User size={20} />, path: '/rekap-individu' },
       { name: 'Analisis Kelas', icon: <ClipboardCheck size={20} />, path: '/analisis-kelas' },
       { name: 'Sistem Peringatan Dini', icon: <ShieldAlert size={20} />, path: '/sistem-peringatan' },
+      { name: 'Portofolio Guru', icon: <BookMarked size={20} />, path: '/portfolio' },
+      { name: 'Kartu Kendali Tugas', icon: <ClipboardCheck size={20} />, path: '/kartu-kendali' },
     ]
   },
   {
@@ -161,6 +163,8 @@ const TEACHER_NAV_CATEGORIES = [
       { name: 'Rekap Individu', icon: <User size={20} />, path: '/rekap-individu' },
       { name: 'Analisis Kelas', icon: <ClipboardCheck size={20} />, path: '/analisis-kelas' },
       { name: 'Sistem Peringatan Dini', icon: <ShieldAlert size={20} />, path: '/sistem-peringatan' },
+      { name: 'Portofolio Guru', icon: <BookMarked size={20} />, path: '/portfolio' },
+      { name: 'Kartu Kendali Tugas', icon: <ClipboardCheck size={20} />, path: '/kartu-kendali' },
     ]
   },
   {

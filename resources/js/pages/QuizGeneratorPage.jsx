@@ -23,6 +23,7 @@ import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import html2canvas from 'html2canvas';
 import Modal from '../components/Modal';
+import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
 
 const QuizGeneratorPage = () => {
     const { activeSemester, academicYear, geminiModel } = useSettings();
@@ -1641,6 +1642,11 @@ const QuizGeneratorPage = () => {
                                                         >
                                                             {`${q.stimulus ? q.stimulus + '\n\n' : ''}${q.image_hint ? '> 🖼️ **INSTRUKSI GAMBAR:** ' + q.image_hint + '\n\n' : ''}${q.question || 'Petunjuk: Klik "Generate" untuk membuat soal.'}`}
                                                         </ReactMarkdown>
+                                                        {q.visualization && (
+                                                            <div className="mt-4">
+                                                                <VisualizationRenderer visualization={q.visualization} />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

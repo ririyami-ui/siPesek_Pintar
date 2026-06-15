@@ -63,7 +63,7 @@ const getApiKey = () => {
  * Initializes or re-initializes the Generative AI model with the latest API key.
  * @returns {Object} The initialized model.
  */
-const getModel = (modelName, isJson = false) => {
+export const getModel = (modelName, isJson = false) => {
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error("API_KEY_MISSING");
@@ -145,7 +145,7 @@ let lastNarrativeResultCache = null;
  * @param {number} delay The initial delay in milliseconds.
  * @returns {Promise<any>} The result of the function.
  */
-const retryWithBackoff = async (fn, retries = 3, delay = 1000) => {
+export const retryWithBackoff = async (fn, retries = 3, delay = 1000) => {
   try {
     return await fn();
   } catch (error) {
@@ -177,7 +177,7 @@ const retryWithBackoff = async (fn, retries = 3, delay = 1000) => {
 /**
  * Common error handler for Gemini API calls.
  */
-const handleGeminiError = (error, context) => {
+export const handleGeminiError = (error, context) => {
   console.error(`Error in ${context}: `, error);
   const errorMsg = error.message || "";
 

@@ -24,6 +24,8 @@ import QuizGeneratorPage from './pages/QuizGeneratorPage.jsx';
 import PenugasanPage from './pages/PenugasanPage.jsx';
 import RekapIndividuPage from './pages/RekapIndividuPage.jsx';
 import HandoutGeneratorPage from './pages/HandoutGeneratorPage.jsx';
+import PortfolioPage from './pages/PortfolioPage.jsx';
+import KartuKendaliPage from './pages/KartuKendaliPage.jsx';
 import AssessmentKktpPage from './pages/PenilaianKktpPage.jsx';
 import MonitoringAbsensiPage from './pages/MonitoringAbsensiPage.jsx';
 import MonitoringNilaiPage from './pages/MonitoringNilaiPage.jsx';
@@ -283,6 +285,8 @@ function App() {
           <Route path="/monitoring-absensi" element={<MonitoringAbsensiPage />} />
           <Route path="/monitoring-nilai" element={<MonitoringNilaiPage />} />
           <Route path="/wali-kelas" element={<WaliKelasPage />} />
+          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/kartu-kendali" element={<KartuKendaliPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>

@@ -48,6 +48,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
+
+    // Portofolio & Kalender Pendidikan
+    Route::get('/calendar/effective-weeks', [App\Http\Controllers\Admin\CalendarController::class, 'getEffectiveWeeks']);
+    Route::get('/grades/balanced-analysis', [App\Http\Controllers\Teacher\GradeAnalysisController::class, 'getBalancedAnalysis']);
+    Route::get('/portfolios', [App\Http\Controllers\Teacher\PortfolioController::class, 'index']);
+    Route::post('/portfolios/generate', [App\Http\Controllers\Teacher\PortfolioController::class, 'generate']);
+    Route::get('/portfolios/{id}', [App\Http\Controllers\Teacher\PortfolioController::class, 'show']);
+    Route::put('/portfolios/{id}', [App\Http\Controllers\Teacher\PortfolioController::class, 'update']);
     Route::get('/assignments', [App\Http\Controllers\TeacherController::class, 'getAllAssignments']);
     Route::post('/teachers/bulk-clear', [App\Http\Controllers\TeacherController::class, 'bulkClear']);
     Route::post('/teachers/{teacher}/sync-assignments', [App\Http\Controllers\TeacherController::class, 'syncAssignments']);

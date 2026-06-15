@@ -189,7 +189,7 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       }
     };
 
-    // 2. Analyze Grades (Per Subject)
+    // 2. Analyze Grades (Per Subject) with Academic/Attitude Split
     const studentSubjectGrades = {};
     grades.forEach(grade => {
       const key = `${grade.studentId}-${grade.subjectName}`;
@@ -203,28 +203,68 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       studentSubjectGrades[key].scores.push(parseFloat(grade.score) || 0);
     });
 
+    // Fetch class agreements for weight information
+    let classAgreements = {};
+    try {
+      const allClasses = await getAllStudents();
+      // Get unique class IDs from students
+      const classIds = [...new Set(allClasses.map(s => s.class_id).filter(Boolean))];
+      for (const classId of classIds) {
+        try {
+          const res = await api.get(`/class-agreements/${classId}`);
+          classAgreements[classId] = res.data;
+        } catch (e) {
+          classAgreements[classId] = { knowledge_weight: 40, practice_weight: 60, academic_weight: 50, attitude_weight: 50 };
+        }
+      }
+    } catch (e) {
+      console.warn("Could not fetch class agreements, using defaults", e);
+    }
+
     for (const key in studentSubjectGrades) {
       const item = studentSubjectGrades[key];
       const studentId = item.studentId;
       const subjectName = item.subjectName;
 
-      // Separate knowledge and practice scores for this subject
+      // Find student's class
+      const studentInfo = students.find(s => s.id === studentId);
+      const classId = studentInfo?.class_id;
+      const agreement = classAgreements[classId] || {};
+      const wa = (agreement.academic_weight ?? 50) / 100;
+      const ws = (agreement.attitude_weight ?? 50) / 100;
+      const wk = (agreement.knowledge_weight ?? 40) / 100;
+      const wp = (agreement.practice_weight ?? 60) / 100;
+
+      // Separate knowledge, practice, and attitude scores
       const subjectGrades = grades.filter(g => g.studentId === studentId && g.subjectName === subjectName);
       const knowledgeTypes = ['Harian', 'Formatif', 'Sumatif', 'Ulangan', 'Tengah Semester', 'PTS', 'Akhir Semester', 'PAS'];
 
       const knowledgeScores = subjectGrades.filter(g => knowledgeTypes.includes(g.assessmentType)).map(g => parseFloat(g.score) || 0);
       const practiceScores = subjectGrades.filter(g => g.assessmentType === 'Praktik').map(g => parseFloat(g.score) || 0);
+      const attitudeScores = subjectGrades.filter(g => ['Sikap', 'Afektif', 'Attitude', 'Observasi'].includes(g.assessmentType)).map(g => parseFloat(g.score) || 0);
 
       const knowledgeAvg = knowledgeScores.length > 0 ? knowledgeScores.reduce((a, b) => a + b, 0) / knowledgeScores.length : 0;
       const practiceAvg = practiceScores.length > 0 ? practiceScores.reduce((a, b) => a + b, 0) / practiceScores.length : 0;
+      const attitudeAvg = attitudeScores.length > 0 ? attitudeScores.reduce((a, b) => a + b, 0) / attitudeScores.length : 0;
 
-      let average = 0;
+      // Academic score (knowledge + practice)
+      let akademikAvg = 0;
       if (knowledgeAvg > 0 && practiceAvg > 0) {
-        average = (knowledgeAvg * 0.4) + (practiceAvg * 0.6);
+        akademikAvg = (knowledgeAvg * wk) + (practiceAvg * wp);
       } else if (knowledgeAvg > 0) {
-        average = knowledgeAvg;
+        akademikAvg = knowledgeAvg;
       } else if (practiceAvg > 0) {
-        average = practiceAvg;
+        akademikAvg = practiceAvg;
+      }
+
+      // Final combined score (academic + attitude)
+      let average = 0;
+      if (akademikAvg > 0 && attitudeAvg > 0) {
+        average = (akademikAvg * wa) + (attitudeAvg * ws);
+      } else if (akademikAvg > 0) {
+        average = akademikAvg;
+      } else if (attitudeAvg > 0) {
+        average = attitudeAvg;
       }
 
       if (average < LOW_GRADE_THRESHOLD && average > 0) {

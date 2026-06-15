@@ -1282,7 +1282,8 @@ class AiGeneratorService extends GeminiService
            - **Mindful**: Mengajak siswa menyadari fenomena/masalah secara utuh.
            - **Meaningful**: Menunjukkan relevansi materi dengan kehidupan nyata atau isu global/lokal.
         5. **TRUE/FALSE MULTI-STATEMENT (MANDATORY)**: Khusus tipe \"true_false\", Anda WAJIB membuat minimal 3-5 pernyataan dalam satu nomor soal untuk dianalisis siswa.
-        6. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
+        6. **VISUALIZATION (OPTIONAL - 5% OF QUESTIONS)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, tambahkan field "visualization" dengan config yang sesuai. HANYA lakukan ini jika benar-benar menambah nilai edukatif. Jika tidak, set ke null.
+        7. 6. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
         7. **PRINSIP DEEP LEARNING (WAJIB)**:
            - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
            - **Reflektif**: Ajak siswa melihat kembali apa yang dipelajari dan proses belajarnya.
