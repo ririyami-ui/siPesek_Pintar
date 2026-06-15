@@ -27,7 +27,6 @@ class AiFeaturesController extends Controller
             'subject' => 'required|string',
             'gradeLevel' => 'required',
             'topic' => 'required|string', // materi
-            // Add other validations as needed
         ]);
 
         try {
@@ -96,7 +95,6 @@ class AiFeaturesController extends Controller
                 'academic_year' => $request->input('academicYear'),
                 'semester' => $request->input('semester'),
                 'visualization' => $request->input('visualization'),
-                'visualization' => $request->input('visualization'),
             ]);
 
             return response()->json(['message' => 'RPP berhasil disimpan', 'data' => $lessonPlan], 201);
@@ -110,32 +108,30 @@ class AiFeaturesController extends Controller
     public function getRppHistory(Request $request)
     {
         try {
-            $limit = $request->input('limit', 50);
-            $gradeLevel = $request->input('grade_level');
-            $subjectId = $request->input('subject_id');
+            $limit = (int) $request->input('limit', 50);
+            $gradeLevel = $request->input('grade_level') ?? $request->input('gradeLevel');
+            $subjectId = $request->input('subject_id') ?? $request->input('subjectId');
             
             $query = LessonPlan::query();
             
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
 
-            if ($gradeLevel) {
+            if (!empty($gradeLevel)) {
                 $query->where('grade_level', $gradeLevel);
             }
 
-            if ($subjectId) {
+            if (!empty($subjectId)) {
                 $query->where('subject_id', $subjectId);
             }
             
-            $plans = $query->orderBy('created_at', 'desc')
-                        ->limit($limit)
-                        ->get();
+            $plans = $query->latest()->take($limit)->get();
             
             return response()->json($plans);
         } catch (\Exception $e) {
             Log::error("Error fetching RPP history: " . $e->getMessage());
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            return response()->json(['error' => 'Gagal mengambil riwayat RPP: ' . $e->getMessage()], 500);
         }
     }
     
@@ -167,7 +163,6 @@ class AiFeaturesController extends Controller
              $data = $request->all();
              $result = $this->aiService->generateQuiz($data);
              
-             // If result is empty or invalid, it might be an array [] from extractJson
              if (empty($result)) {
                  throw new \Exception("AI gagal menghasilkan format JSON yang valid. Silakan coba lagi.");
              }
@@ -195,7 +190,7 @@ class AiFeaturesController extends Controller
                 'subject' => $request->subject,
                 'grade_level' => $request->gradeLevel,
                 'topic' => $request->topic,
-                'quiz_data' => $request->quizData ?? $request->quiz, // stored as json
+                'quiz_data' => $request->quizData ?? $request->quiz,
                 'academic_year' => $request->academicYear,
                 'semester' => $request->semester,
                 'is_saved' => true
@@ -212,11 +207,10 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Quiz::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
-            $quizzes = $query->latest()
-                ->get();
+            $quizzes = $query->latest()->get();
             return response()->json($quizzes);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal memuat riwayat'], 500);
@@ -227,7 +221,7 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Quiz::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
             $quiz = $query->where('id', $id)->firstOrFail();
@@ -253,8 +247,6 @@ class AiFeaturesController extends Controller
 
         try {
             $data = $request->all();
-            
-            // Handle materi/topic interchangeably
             $materi = $request->input('materi') ?? $request->input('topic');
             if (empty($materi)) {
                 return response()->json(['error' => 'Topik atau materi harus diisi'], 422);
@@ -282,7 +274,7 @@ class AiFeaturesController extends Controller
             $handout = Handout::create([
                 'user_id' => Auth::id(),
                 'topic' => $request->topic,
-                'subject_id' => $request->subjectId, // optional
+                'subject_id' => $request->subjectId,
                 'subject' => $request->subject,
                 'grade_level' => $request->gradeLevel,
                 'content' => $request->content,
@@ -302,11 +294,10 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Handout::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
-            $handouts = $query->latest()
-                ->get();
+            $handouts = $query->latest()->get();
             return response()->json($handouts);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal memuat riwayat'], 500);
@@ -317,7 +308,7 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Handout::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
             $handout = $query->where('id', $id)->firstOrFail();
@@ -327,8 +318,6 @@ class AiFeaturesController extends Controller
             return response()->json(['error' => 'Gagal menghapus bahan ajar'], 500);
         }
     }
-
-    // --- CHAT ASSISTANT (SMARTTY) ---
 
     public function chat(Request $request)
     {
@@ -343,7 +332,6 @@ class AiFeaturesController extends Controller
             $history = $request->input('history', []);
             $context = $request->input('context', []);
             
-            // Add user profile data to context
             $context['user'] = Auth::user();
             $context['modelName'] = $request->input('modelName');
             $context['imageData'] = $request->input('imageData');
@@ -357,18 +345,11 @@ class AiFeaturesController extends Controller
         }
     }
 
-    // --- CLASS ANALYSIS FEATURES ---
-
     public function analyzeClass(Request $request)
     {
         $request->validate([
             'className' => 'required|string',
             'students' => 'nullable|array',
-            'attendanceSummary' => 'nullable|array',
-            'gradesSummary' => 'nullable|array',
-            'infractionsSummary' => 'nullable|array',
-            'journalsSummary' => 'nullable|array',
-            'isConcise' => 'boolean',
         ]);
 
         try {
@@ -381,15 +362,11 @@ class AiFeaturesController extends Controller
         }
     }
 
-    // --- WORKSHEET (LKPD) FEATURES ---
-
     public function generateWorksheet(Request $request)
     {
-         // Usually takes RPP content as input
          $request->validate([
              'rppContent' => 'required_without:topic', 
              'gradeLevel' => 'required',
-             // 'subject' => 'required',
          ]);
 
          try {
@@ -435,11 +412,11 @@ class AiFeaturesController extends Controller
             $worksheet = Worksheet::create([
                 'user_id' => Auth::id(),
                 'rpp_id' => $request->rppId,
-                'rpp_topic' => $request->rppTopic, // mapped to 'rpp_topic' in db
+                'rpp_topic' => $request->rppTopic,
                 'subject' => $request->subject,
-                'grade_level' => $request->gradeLevel, // mapped to 'grade_level'
-                'class_id' => $request->classId, // mapped to 'class_id'
-                'class_room' => $request->classRoom, // mapped to 'class_room'
+                'grade_level' => $request->gradeLevel,
+                'class_id' => $request->classId,
+                'class_room' => $request->classRoom,
                 'content' => $request->content,
             ]);
 
@@ -454,11 +431,10 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Worksheet::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
-            $worksheets = $query->latest()
-                ->get();
+            $worksheets = $query->latest()->get();
             return response()->json($worksheets);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal memuat riwayat LKPD'], 500);
@@ -469,7 +445,7 @@ class AiFeaturesController extends Controller
     {
         try {
             $query = Worksheet::query();
-            if (!Auth::user()->isAdmin()) {
+            if (Auth::user() && !Auth::user()->isAdmin()) {
                 $query->where('user_id', Auth::id());
             }
             $worksheet = $query->where('id', $id)->firstOrFail();

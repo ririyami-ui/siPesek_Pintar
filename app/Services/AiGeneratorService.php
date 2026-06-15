@@ -327,7 +327,7 @@ class AiGeneratorService extends GeminiService
         **Gaya Bicara (TONE & STYLE):**
         - **Santai & Akrab**: Panggil user dengan \"Bapak/Ibu\" atau \"Pak/Bu\". Gunakan kata-kata seperti \"Siap!\", \"Beres!\", \"Mantap!\", \"Gini loh...\".
         - **To The Point**: Langsung ke inti masalah.
-        - **Emoji**: Pakai emoji secukupnya (😊, 👍, ✅, 🚀).
+        - **Emoji**: Pakai emoji secukupnya (ðŸ˜Š, ðŸ‘, âœ…, ðŸš€).
 
         **Keahlian Khusus:**
         - Membantu menyusun RPP, Kuis, Bahan Ajar, dan LKPD sesuai standar nasional.
@@ -449,20 +449,20 @@ class AiGeneratorService extends GeminiService
         ### INSTRUKSI OUTPUT:
         Gunakan format Markdown yang sangat rapi untuk laporan ini. Berikan jawaban dalam struktur berikut:
 
-        # 📊 INFOGRAFIS CAPAIAN KELAS
+        # ðŸ“Š INFOGRAFIS CAPAIAN KELAS
         [Berikan ringkasan eksekutif 2-3 kalimat]
 
-        ## 🏆 KEKUATAN UTAMA (Strengths)
+        ## ðŸ† KEKUATAN UTAMA (Strengths)
         - [Poin kekuatan 1]
         - [Poin kekuatan 2]
         - [Poin kekuatan 3]
 
-        ## ⚠️ KELEMAHAN & TANTANGAN (Weaknesses)
+        ## âš ï¸ KELEMAHAN & TANTANGAN (Weaknesses)
         - [Poin kelemahan 1]
         - [Poin kelemahan 2]
         - [Poin kelemahan 3]
 
-        ## 💡 SARAN PERBAIKAN (Action Plan)
+        ## ðŸ’¡ SARAN PERBAIKAN (Action Plan)
         - [Saran 1]
         - [Saran 2]
         - [Saran 3]
@@ -777,11 +777,11 @@ class AiGeneratorService extends GeminiService
         **5. VALIDASI KESESUAIAN MATERI:**
         
         Pastikan materi yang Anda ambil:
-        - ✅ Sesuai dengan CP yang tercantum di BSKAP 046/2025
-        - ✅ Sesuai dengan fase pembelajaran (A-F)
-        - ✅ Sesuai dengan tingkat kognitif peserta didik
-        - ✅ Menggunakan terminologi yang sama dengan buku teks pemerintah Kemendikdasmen
-        - ✅ Tidak bertentangan dengan nilai-nilai Pancasila dan UUD 1945
+        - âœ… Sesuai dengan CP yang tercantum di BSKAP 046/2025
+        - âœ… Sesuai dengan fase pembelajaran (A-F)
+        - âœ… Sesuai dengan tingkat kognitif peserta didik
+        - âœ… Menggunakan terminologi yang sama dengan buku teks pemerintah Kemendikdasmen
+        - âœ… Tidak bertentangan dengan nilai-nilai Pancasila dan UUD 1945
   
         **6. JIKA BUKU SPESIFIK TIDAK TERSEDIA:**
         
@@ -866,7 +866,7 @@ class AiGeneratorService extends GeminiService
       **Pastikan 4 unsur (A, B, C, D) selalu ada dalam kalimat, namun TERSEMBUNYI (implisit).**
 
       **JANGAN GUNAKAN FORMAT INI (SALAH):**
-      *❌ \"Menyimpulkan sifat-sifat magnet.\" (Tidak ada Condition, Audience, and Degree)*
+      *âŒ \"Menyimpulkan sifat-sifat magnet.\" (Tidak ada Condition, Audience, and Degree)*
 
       **3. Kesiapan Peserta Didik:**
       " . ($data['studentCharacteristics']
@@ -1073,9 +1073,9 @@ class AiGeneratorService extends GeminiService
       **Penilaian Diri:**
       | Aspek | Sudah Paham | Cukup Paham | Perlu Bimbingan |
       | :--- | :---: | :---: | :---: |
-      | Saya memahami tujuan pembelajaran | ☐ | ☐ | ☐ |
-      | Saya dapat menjelaskan konsep utama | ☐ | ☐ | ☐ |
-      | Saya aktif dalam kegiatan | ☐ | ☐ | ☐ |
+      | Saya memahami tujuan pembelajaran | â˜ | â˜ | â˜ |
+      | Saya dapat menjelaskan konsep utama | â˜ | â˜ | â˜ |
+      | Saya aktif dalam kegiatan | â˜ | â˜ | â˜ |
       
       ---
 
@@ -1096,7 +1096,7 @@ class AiGeneratorService extends GeminiService
       **B.1. DESKRIPSI KRITERIA (Checklist)**
       Guru menetapkan kriteria ketuntasan yang spesifik. Peserta didik dianggap mencapai tujuan pembelajaran jika memenuhi minimal jumlah kriteria tertentu (misal 3 dari 4).
 
-      | Kriteria (Indikator Ketercapaian) | Sudah Muncul (✔) | Belum Muncul (❌) |
+      | Kriteria (Indikator Ketercapaian) | Sudah Muncul (âœ”) | Belum Muncul (âŒ) |
       | :--- | :---: | :---: |
       | 1. [Indikator 1 - turunan TP] | | |
       | 2. [Indikator 2 - turunan TP] | | |
@@ -1282,7 +1282,7 @@ class AiGeneratorService extends GeminiService
            - **Mindful**: Mengajak siswa menyadari fenomena/masalah secara utuh.
            - **Meaningful**: Menunjukkan relevansi materi dengan kehidupan nyata atau isu global/lokal.
         5. **TRUE/FALSE MULTI-STATEMENT (MANDATORY)**: Khusus tipe \"true_false\", Anda WAJIB membuat minimal 3-5 pernyataan dalam satu nomor soal untuk dianalisis siswa.
-        6. **VISUALIZATION (OPTIONAL - 5% OF QUESTIONS)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, tambahkan field "visualization" dengan config yang sesuai. HANYA lakukan ini jika benar-benar menambah nilai edukatif. Jika tidak, set ke null.
+        6. **VISUALIZATION (OPTIONAL - 5% OF QUESTIONS)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, tambahkan field \"visualization\" dengan config yang sesuai. HANYA lakukan ini jika benar-benar menambah nilai edukatif. Jika tidak, set ke null.
         7. 6. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
         7. **PRINSIP DEEP LEARNING (WAJIB)**:
            - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
@@ -1352,7 +1352,7 @@ class AiGeneratorService extends GeminiService
 
         **STRUKTUR MODUL (WAJIB IKUTI FORMAT INI):**
 
-        # 📘 MODUL BELAJAR: [JUDUL MATERI DI SINI]
+        # ðŸ“˜ MODUL BELAJAR: [JUDUL MATERI DI SINI]
         
         > \"Belajar itu bukan tentang menjadi pintar, tapi tentang peka terhadap sekitarmu.\" - Smart Teaching
         
@@ -1362,49 +1362,49 @@ class AiGeneratorService extends GeminiService
         
         ---
 
-        ## 🎯 TARGET BELAJAR KITA HARI INI
+        ## ðŸŽ¯ TARGET BELAJAR KITA HARI INI
         Di akhir modul ini, kamu bakal jago dalam:
         - [Tujuan 1 bahasa siswa]
         - [Tujuan 2 bahasa siswa]
         
         ---
 
-        ## 🗺️ PETA KONSEP (MIND MAP)
+        ## ðŸ—ºï¸ PETA KONSEP (MIND MAP)
         *(Sajikan ringkasan alur materi menggunakan diagram Mermaid `graph TD` agar siswa mudah membayangkan peta perjalanan belajarnya).*
         
         ---
 
-        ## 🚀 APERSEPSI: TAHUKAH KAMU?
+        ## ðŸš€ APERSEPSI: TAHUKAH KAMU?
         (Berikan paragraf pembuka yang menarik dan relevan dengan dunia nyata).
 
         ---
 
-        ## 📚 MATERI INTI (DAGINGNYA!)
+        ## ðŸ“š MATERI INTI (DAGINGNYA!)
         *(Bagian ini harus menjadi bagian TERPANJANG. Jangan hanya poin-poin. Jelaskan konsep selengkap-lengkapnya layaknya Anda mengajar di depan kelas dengan bahasa yang mengalir).*
         
         ### 1. [Sub-Bab 1]
         
         ### 2. [Sub-Bab 2]
         
-        > **💡 TIPS JITU:**
+        > **ðŸ’¡ TIPS JITU:**
         > (Masukkan tips atau cara cepat memahami konsep ini).
 
-        ### 🔦 STUDI KASUS / POJOK LITERASI
+        ### ðŸ”¦ STUDI KASUS / POJOK LITERASI
         (Tambahkan satu cerita pendek, fakta menarik, atau kasus nyata untuk dianalisis).
 
         ---
 
-        ## 🧪 CONTOH SOAL & BEDAH JAWABAN (WAJIB)
+        ## ðŸ§ª CONTOH SOAL & BEDAH JAWABAN (WAJIB)
         *(Berikan minimal 2 contoh soal dengan tingkat kesulitan berbeda beserta penjelasan logikanya).*
 
         ---
 
-        ## 📝 TANTANGAN MINIMU (LATIHAN) - WAJIB MUNCUL
+        ## ðŸ“ TANTANGAN MINIMU (LATIHAN) - WAJIB MUNCUL
         *(Berikan tepat 5 soal latihan bervariasi: pilihan ganda atau esai singkat).*
 
         ---
 
-        ## 📖 KAMUS MINI (GLOSARIUM) - WAJIB MUNCUL
+        ## ðŸ“– KAMUS MINI (GLOSARIUM) - WAJIB MUNCUL
         *(Berikan minimal 5-10 istilah penting beserta definisinya).*
         
         ---
@@ -1515,9 +1515,9 @@ class AiGeneratorService extends GeminiService
         **Penilaian Diri:**
         | Aspek | Sudah Paham | Cukup Paham | Perlu Bimbingan |
         | :--- | :---: | :---: | :---: |
-        | Saya memahami tujuan pembelajaran | ☐ | ☐ | ☐ |
-        | Saya dapat menjelaskan konsep utama | ☐ | ☐ | ☐ |
-        | Saya aktif dalam kegiatan | ☐ | ☐ | ☐ |
+        | Saya memahami tujuan pembelajaran | â˜ | â˜ | â˜ |
+        | Saya dapat menjelaskan konsep utama | â˜ | â˜ | â˜ |
+        | Saya aktif dalam kegiatan | â˜ | â˜ | â˜ |
         
         ---
 
