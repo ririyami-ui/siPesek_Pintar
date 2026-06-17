@@ -30,6 +30,10 @@ class GradeCalculationService
         // It's Date based. We fetch all for the student for the summary or could filter by date if passed.
         
         $attendances = $attendanceQuery->get();
+        // Group attendances by subject_id for subject-specific attendance percentage
+        $attendanceBySubject = $attendances->groupBy(function($a) {
+            return $a->subject_id ?? 'none';
+        });
         $uniqueDates = $attendances->pluck('date')->unique();
         $numDays = $uniqueDates->count();
 
@@ -62,7 +66,7 @@ class GradeCalculationService
         $ws = ($agreement?->attitude_weight ?? 50) / 100;
 
         // 4. Group by subject and calculate scores
-        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws) {
+        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws, $attendanceBySubject) {
             $subject = $records->first()->subject;
             $avg     = round($records->avg('score'), 2);
 
@@ -82,7 +86,15 @@ class GradeCalculationService
                 : 0;
 
             $base_attitude = $attitudeScores->count() > 0 ? $attitudeScores->avg('score') : 100;
-            $nilai_sikap   = max(0, $base_attitude - $penalty);
+
+            // Calculate attendance percentage for this specific subject
+            $subjectAttendances = $attendanceBySubject->get($subjectId, collect());
+            $subjectTotal = $subjectAttendances->count();
+            $subjectHadir = $subjectAttendances->where('status', 'hadir')->count();
+            $subjectAttPct = $subjectTotal > 0 ? ($subjectHadir / $subjectTotal) * 100 : 100;
+
+            // Attitude = (base - penalty) * attendance percentage
+            $nilai_sikap   = max(0, ($base_attitude - $penalty) * ($subjectAttPct / 100));
             $nilai_akhir   = round(($nilai_akademik * $wa) + ($nilai_sikap * $ws), 2);
 
             $byType = $records->groupBy('type')->map(function ($typeRecords, $type) {
@@ -148,8 +160,11 @@ class GradeCalculationService
         if ($overallNilaiAkhir < 65 && $bySubject->count() > 0) {
             $warnings[] = "Rata-rata akademik rendah ($overallNilaiAkhir)";
         }
+        if ($alpa >= 1) {
+            $warnings[] = "Ketidakhadiran (Alpha) sebanyak $alpa kali berdampak pada penurunan Nilai Sikap secara proporsional.";
+        }
         if ($alpa >= 3) {
-            $warnings[] = "$alpa kali Alpa (Tanpa Keterangan)";
+            $warnings[] = "Peringatan: Jumlah Alpha ($alpa) sudah melebihi batas toleransi ideal.";
         }
         if ($attitudeAvg < 70) {
             $warnings[] = "Skor sikap sangat kurang (" . round($attitudeAvg, 1) . ")";
