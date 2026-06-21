@@ -1,10 +1,122 @@
 {
-  "bookId": "smp-daerah-9",
-  "publisher": "Kemendikbudristek",
-  "chapters": [
-    { "no": 1, "title": "Sastra Klasik", "pages": "1-50", "semester": "Ganjil", "sub_topics": ["Kakawin dan Kidung", "Hikayat dan Babad", "Nilai Filosofis Sastra Klasik"], "key_terms": ["Sastra Klasik", "Kakawin", "Hikayat", "Babad"] },
-    { "no": 2, "title": "Kebudayaan Daerah", "pages": "51-100", "semester": "Ganjil", "sub_topics": ["Cagar Budaya", "Tradisi Masyarakat", "Pengelolaan Warisan Budaya"], "key_terms": ["Kebudayaan", "Cagar Budaya", "Warisan", "Tradisi"] },
-    { "no": 3, "title": "Karya Modern", "pages": "101-150", "semester": "Genap", "sub_topics": ["Puisi dan Cerpen Modern", "Novel Daerah", "Kritik Sastra"], "key_terms": ["Karya Modern", "Puisi", "Cerpen", "Novel"] },
-    { "no": 4, "title": "Etika dan Tata Krama", "pages": "151-200", "semester": "Genap", "sub_topics": ["Norma Kesopanan", "Perilaku Santun", "Etika Bermasyarakat"], "key_terms": ["Etika", "Tata Krama", "Norma", "Kesopanan"] }
-  ]
+    "bookId": "smp-daerah-9",
+    "publisher": "Kemendikbudristek",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Sastra Klasik",
+            "pages": "1-50",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Kakawin dan Kidung",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hikayat dan Babad",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Filosofis Sastra Klasik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Sastra Klasik",
+                "Kakawin",
+                "Hikayat",
+                "Babad"
+            ]
+        },
+        {
+            "no": 2,
+            "title": "Kebudayaan Daerah",
+            "pages": "51-100",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Cagar Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tradisi Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengelolaan Warisan Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Kebudayaan",
+                "Cagar Budaya",
+                "Warisan",
+                "Tradisi"
+            ]
+        },
+        {
+            "no": 3,
+            "title": "Karya Modern",
+            "pages": "101-150",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Puisi dan Cerpen Modern",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Novel Daerah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kritik Sastra",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Karya Modern",
+                "Puisi",
+                "Cerpen",
+                "Novel"
+            ]
+        },
+        {
+            "no": 4,
+            "title": "Etika dan Tata Krama",
+            "pages": "151-200",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Norma Kesopanan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perilaku Santun",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Etika Bermasyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Etika",
+                "Tata Krama",
+                "Norma",
+                "Kesopanan"
+            ]
+        }
+    ]
 }

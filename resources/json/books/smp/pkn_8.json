@@ -1,60 +1,150 @@
 {
-  "bookId": "smp-pkn-8",
-  "isbn": "978-602-244-312-4",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Pendidikan Pancasila SMP Kelas VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Kedudukan dan Fungsi Pancasila",
-      "pages": "1-25",
-      "sub_topics": [
-        "Pancasila sebagai Dasar Negara",
-        "Pancasila sebagai Ideologi Bangsa",
-        "Pancasila sebagai Kepribadian Bangsa",
-        "Menghayati Nilai Pancasila dalam Keseharian"
-      ],
-      "key_terms": ["Philosophische Grondslag", "Ideologi", "Dasar Negara", "Etika Politik"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk menguraikan 5 fungsi Pancasila bagi negara Indonesia."
-    },
-    {
-      "no": 2,
-      "title": "Bentuk dan Kedaulatan Negara",
-      "pages": "27-60",
-      "sub_topics": [
-        "Negara Kesatuan Republik Indonesia",
-        "Kedaulatan Rakyat dan Demokrasi Pancasila",
-        "Sistem Pemerintahan di Indonesia",
-        "Lembaga-lembaga Negara"
-      ],
-      "key_terms": ["Demokrasi", "Kedaulatan", "MPR", "DPR", "MA", "MK"],
-      "visual_hints": "Gunakan Mermaid Flowchart (Tree Structure) untuk memvisualisasikan pembagian kekuasaan (Eksekutif, Legislatif, Yudikatif)."
-    },
-    {
-      "no": 3,
-      "title": "Tata Tertib dan Hukum di Indonesia",
-      "pages": "61-90",
-      "sub_topics": [
-        "Mengenal Peraturan Perundang-undangan",
-        "Hierarki Hukum di Indonesia (UU No. 12 Tahun 2011)",
-        "Kepatuhan terhadap Peraturan Sekolah",
-        "Membangun Budaya Taat Hukum"
-      ],
-      "key_terms": ["Ketetapan MPR", "Undang-Undang", "Peraturan Pemerintah", "Peraturan Daerah"],
-      "visual_hints": "PENTING: Gunakan Mermaid Flowchart (Hierarkis) untuk menunjukkan tata urutan peraturan perundang-undangan."
-    },
-    {
-      "no": 4,
-      "title": "Kebangkitan Nasional dan Sumpah Pemuda",
-      "pages": "91-125",
-      "sub_topics": [
-        "Sejarah Kebangkitan Nasional 1908",
-        "Makna Sumpah Pemuda 1928",
-        "Semangat Juang Pemuda dalam Pembangunan",
-        "Kontribusi Pemuda di Era Digital"
-      ],
-      "key_terms": ["Budi Utomo", "Sumpah Pemuda", "Patriotisme", "Nasionalisme"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan rantai peristiwa dari 1908 hingga 1945."
-    }
-  ]
+    "bookId": "smp-pkn-8",
+    "isbn": "978-602-244-312-4",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Pendidikan Pancasila SMP Kelas VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Kedudukan dan Fungsi Pancasila",
+            "pages": "1-25",
+            "sub_topics": [
+                {
+                    "name": "Pancasila sebagai Dasar Negara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pancasila sebagai Ideologi Bangsa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pancasila sebagai Kepribadian Bangsa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menghayati Nilai Pancasila dalam Keseharian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Philosophische Grondslag",
+                "Ideologi",
+                "Dasar Negara",
+                "Etika Politik"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk menguraikan 5 fungsi Pancasila bagi negara Indonesia.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Bentuk dan Kedaulatan Negara",
+            "pages": "27-60",
+            "sub_topics": [
+                {
+                    "name": "Negara Kesatuan Republik Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kedaulatan Rakyat dan Demokrasi Pancasila",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Pemerintahan di Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lembaga-lembaga Negara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Demokrasi",
+                "Kedaulatan",
+                "MPR",
+                "DPR",
+                "MA",
+                "MK"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart (Tree Structure) untuk memvisualisasikan pembagian kekuasaan (Eksekutif, Legislatif, Yudikatif).",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Tata Tertib dan Hukum di Indonesia",
+            "pages": "61-90",
+            "sub_topics": [
+                {
+                    "name": "Mengenal Peraturan Perundang-undangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hierarki Hukum di Indonesia (UU No. 12 Tahun 2011)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kepatuhan terhadap Peraturan Sekolah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Membangun Budaya Taat Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Ketetapan MPR",
+                "Undang-Undang",
+                "Peraturan Pemerintah",
+                "Peraturan Daerah"
+            ],
+            "visual_hints": "PENTING: Gunakan Mermaid Flowchart (Hierarkis) untuk menunjukkan tata urutan peraturan perundang-undangan.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Kebangkitan Nasional dan Sumpah Pemuda",
+            "pages": "91-125",
+            "sub_topics": [
+                {
+                    "name": "Sejarah Kebangkitan Nasional 1908",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Sumpah Pemuda 1928",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Semangat Juang Pemuda dalam Pembangunan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kontribusi Pemuda di Era Digital",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Budi Utomo",
+                "Sumpah Pemuda",
+                "Patriotisme",
+                "Nasionalisme"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan rantai peristiwa dari 1908 hingga 1945.",
+            "semester": "Genap"
+        }
+    ]
 }

@@ -1,109 +1,205 @@
 {
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "sd-pra-5",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "pages":  "1-32",
-                         "sub_topics":  [
-                                            "Jenis Makanan Ringan",
-                                            "Kue Kering Tradisional",
-                                            "Kue Basah Tradisional",
-                                            "Pengemasan Makanan Ringan"
-                                        ],
-                         "key_terms":  [
-                                           "makanan ringan",
-                                           "kue",
-                                           "kemasan"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Pengolahan Makanan Ringan"
-                     },
-                     {
-                         "no":  2,
-                         "pages":  "33-64",
-                         "sub_topics":  [
-                                            "Makanan Tradisional Daerah",
-                                            "Resep Makanan Tradisional",
-                                            "Teknik Memasak Tradisional",
-                                            "Melestarikan Makanan Tradisional"
-                                        ],
-                         "key_terms":  [
-                                           "makanan tradisional",
-                                           "resep",
-                                           "daerah"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Pengolahan Makanan Tradisional"
-                     },
-                     {
-                         "no":  3,
-                         "pages":  "65-96",
-                         "sub_topics":  [
-                                            "Hasil Samping Tanaman",
-                                            "Hasil Samping Hewan",
-                                            "Olahan Hasil Samping",
-                                            "Nilai Gizi Hasil Samping"
-                                        ],
-                         "key_terms":  [
-                                           "hasil samping",
-                                           "olahan",
-                                           "gizi"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Pengolahan Hasil Samping"
-                     },
-                     {
-                         "no":  4,
-                         "pages":  "97-128",
-                         "sub_topics":  [
-                                            "Kerajinan Pasar Lokal",
-                                            "Produk Khas Daerah",
-                                            "Souvenir Khas Daerah",
-                                            "Pemasaran Kerajinan Lokal"
-                                        ],
-                         "key_terms":  [
-                                           "pasar lokal",
-                                           "kerajinan",
-                                           "souvenir"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Kerajinan Pasar Lokal"
-                     },
-                     {
-                         "no":  5,
-                         "pages":  "129-158",
-                         "sub_topics":  [
-                                            "Inovasi Produk",
-                                            "Modifikasi Produk",
-                                            "Mengidentifikasi Peluang",
-                                            "Membuat Produk Inovatif"
-                                        ],
-                         "key_terms":  [
-                                           "inovasi",
-                                           "produk",
-                                           "modifikasi"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Produk Inovatif"
-                     },
-                     {
-                         "no":  6,
-                         "pages":  "159-190",
-                         "sub_topics":  [
-                                            "Apa Itu Wirausaha?",
-                                            "Karakter Wirausaha",
-                                            "Perencanaan Usaha Kecil",
-                                            "Mengelola Keuangan Sederhana"
-                                        ],
-                         "key_terms":  [
-                                           "wirausaha",
-                                           "usaha",
-                                           "modal"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Wirausaha Kecil"
-                     }
-                 ],
-    "isbn":  "978-623-194-845-7"
+    "publisher": "Kemendikbudristek",
+    "bookId": "sd-pra-5",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-32",
+            "sub_topics": [
+                {
+                    "name": "Jenis Makanan Ringan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kue Kering Tradisional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kue Basah Tradisional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengemasan Makanan Ringan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "makanan ringan",
+                "kue",
+                "kemasan"
+            ],
+            "semester": "Ganjil",
+            "title": "Pengolahan Makanan Ringan"
+        },
+        {
+            "no": 2,
+            "pages": "33-64",
+            "sub_topics": [
+                {
+                    "name": "Makanan Tradisional Daerah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Resep Makanan Tradisional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Teknik Memasak Tradisional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Melestarikan Makanan Tradisional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "makanan tradisional",
+                "resep",
+                "daerah"
+            ],
+            "semester": "Ganjil",
+            "title": "Pengolahan Makanan Tradisional"
+        },
+        {
+            "no": 3,
+            "pages": "65-96",
+            "sub_topics": [
+                {
+                    "name": "Hasil Samping Tanaman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hasil Samping Hewan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Olahan Hasil Samping",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Gizi Hasil Samping",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "hasil samping",
+                "olahan",
+                "gizi"
+            ],
+            "semester": "Ganjil",
+            "title": "Pengolahan Hasil Samping"
+        },
+        {
+            "no": 4,
+            "pages": "97-128",
+            "sub_topics": [
+                {
+                    "name": "Kerajinan Pasar Lokal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Produk Khas Daerah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Souvenir Khas Daerah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemasaran Kerajinan Lokal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "pasar lokal",
+                "kerajinan",
+                "souvenir"
+            ],
+            "semester": "Genap",
+            "title": "Kerajinan Pasar Lokal"
+        },
+        {
+            "no": 5,
+            "pages": "129-158",
+            "sub_topics": [
+                {
+                    "name": "Inovasi Produk",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Modifikasi Produk",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengidentifikasi Peluang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Membuat Produk Inovatif",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "inovasi",
+                "produk",
+                "modifikasi"
+            ],
+            "semester": "Genap",
+            "title": "Produk Inovatif"
+        },
+        {
+            "no": 6,
+            "pages": "159-190",
+            "sub_topics": [
+                {
+                    "name": "Apa Itu Wirausaha?",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karakter Wirausaha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perencanaan Usaha Kecil",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengelola Keuangan Sederhana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "wirausaha",
+                "usaha",
+                "modal"
+            ],
+            "semester": "Genap",
+            "title": "Wirausaha Kecil"
+        }
+    ],
+    "isbn": "978-623-194-845-7"
 }

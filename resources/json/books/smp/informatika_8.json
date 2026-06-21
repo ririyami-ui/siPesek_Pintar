@@ -1,60 +1,150 @@
 {
-  "bookId": "smp-info-8",
-  "isbn": "978-602-244-504-3",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Informatika SMP Kelas VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Berpikir Komputasional",
-      "pages": "23-40",
-      "sub_topics": [
-        "Fungsi dan Representasi Data",
-        "Himpunan dan Sistem Bilangan (Biner, Desimal)",
-        "Algoritma: Struktur Data Stack (Tumpukan)",
-        "Algoritma: Struktur Data Queue (Antrean)"
-      ],
-      "key_terms": ["Stack", "Queue", "LIFO", "FIFO", "Biner"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk simulasi tumpukan piring (Stack) dan antrean bank (Queue)."
-    },
-    {
-      "no": 2,
-      "title": "Sistem Komputer & Jaringan",
-      "pages": "41-65",
-      "sub_topics": [
-        "Komponen Sistem Komputer (Von Neumann)",
-        "Sistem Operasi dan Manajemen Memori",
-        "Jaringan Lokal (LAN) dan Internet",
-        "Enkripsi Data Sederhana"
-      ],
-      "key_terms": ["Motherboard", "Multitasking", "IP Address", "Router", "Enkripsi"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan jenis-jenis jaringan komputer."
-    },
-    {
-      "no": 3,
-      "title": "Analisis Data",
-      "pages": "67-90",
-      "sub_topics": [
-        "Pencarian dan Pengolahan Data",
-        "Fungsi Statistik Dasar (SUM, AVERAGE, IF)",
-        "Visualisasi Data dengan Grafik",
-        "Prediksi Data Sederhana"
-      ],
-      "key_terms": ["Filter", "Pivot Table", "Validasi Data", "Tren"],
-      "visual_hints": "Wajib gunakan Spreadsheet Renderer untuk mendemonstrasikan rumus IF bercabang."
-    },
-    {
-      "no": 4,
-      "title": "Algoritma dan Pemrograman (Pengembangan)",
-      "pages": "91-130",
-      "sub_topics": [
-        "Pemrograman Blok (Scratch/Blockly)",
-        "Penggunaan List (Array) dalam Scratch",
-        "Modularisasi: Membuat Blok Sendiri (Custom Blocks)",
-        "Logika Perulangan Bersarang (Nested Loop)"
-      ],
-      "key_terms": ["List", "Parameter", "Nested Loop", "Modularisasi"],
-      "visual_hints": "Tampilkan contoh Scratch untuk membuat pola geometri menggunakan Nested Loop (Repeat dalam Repeat)."
-    }
-  ]
+    "bookId": "smp-info-8",
+    "isbn": "978-602-244-504-3",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Informatika SMP Kelas VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Berpikir Komputasional",
+            "pages": "23-40",
+            "sub_topics": [
+                {
+                    "name": "Fungsi dan Representasi Data",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Himpunan dan Sistem Bilangan (Biner, Desimal)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Algoritma: Struktur Data Stack (Tumpukan)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Algoritma: Struktur Data Queue (Antrean)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Stack",
+                "Queue",
+                "LIFO",
+                "FIFO",
+                "Biner"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk simulasi tumpukan piring (Stack) dan antrean bank (Queue).",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Sistem Komputer & Jaringan",
+            "pages": "41-65",
+            "sub_topics": [
+                {
+                    "name": "Komponen Sistem Komputer (Von Neumann)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Operasi dan Manajemen Memori",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jaringan Lokal (LAN) dan Internet",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Enkripsi Data Sederhana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Motherboard",
+                "Multitasking",
+                "IP Address",
+                "Router",
+                "Enkripsi"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan jenis-jenis jaringan komputer.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Analisis Data",
+            "pages": "67-90",
+            "sub_topics": [
+                {
+                    "name": "Pencarian dan Pengolahan Data",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fungsi Statistik Dasar (SUM, AVERAGE, IF)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Visualisasi Data dengan Grafik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Prediksi Data Sederhana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Filter",
+                "Pivot Table",
+                "Validasi Data",
+                "Tren"
+            ],
+            "visual_hints": "Wajib gunakan Spreadsheet Renderer untuk mendemonstrasikan rumus IF bercabang.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Algoritma dan Pemrograman (Pengembangan)",
+            "pages": "91-130",
+            "sub_topics": [
+                {
+                    "name": "Pemrograman Blok (Scratch\/Blockly)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penggunaan List (Array) dalam Scratch",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Modularisasi: Membuat Blok Sendiri (Custom Blocks)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Logika Perulangan Bersarang (Nested Loop)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "List",
+                "Parameter",
+                "Nested Loop",
+                "Modularisasi"
+            ],
+            "visual_hints": "Tampilkan contoh Scratch untuk membuat pola geometri menggunakan Nested Loop (Repeat dalam Repeat).",
+            "semester": "Genap"
+        }
+    ]
 }

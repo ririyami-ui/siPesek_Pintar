@@ -233,6 +233,7 @@ const LessonPlanPage = () => {
                     // We need to parse 'prota' and 'promes' JSON fields.
 
                     const materials = [];
+                    let uidCounter = 0;
 
                     programs.forEach(prog => {
                         if (prog.type !== 'atp_document') {
@@ -247,7 +248,7 @@ const LessonPlanPage = () => {
                                         if (val > 0) distributions.push(val);
                                     }
                                 });
-                                return { ...item, distribution: distributions };
+                                return { ...item, _uid: ++uidCounter, distribution: distributions };
                             });
                             materials.push(...enhanced);
                         }
@@ -598,9 +599,9 @@ const LessonPlanPage = () => {
                             <div className="max-h-64 overflow-y-auto border dark:border-gray-600 rounded-xl divide-y dark:divide-gray-700">
                                 {sourceType === 'atp' ? (
                                     atpMaterials.length > 0 ? (
-                                        atpMaterials.map((m, idx) => (
+                                        atpMaterials.map((m) => (
                                             <button
-                                                key={idx}
+                                                key={`atp-${m.id}`}
                                                 onClick={() => {
                                                     setSelectedMaterial(m);
                                                     setManualKd(m.tp || '');
@@ -626,13 +627,13 @@ const LessonPlanPage = () => {
                                     promesMaterials.length > 0 ? (
                                         promesMaterials.map((m) => (
                                             <button
-                                                key={m.id}
+                                                key={m._uid}
                                                 onClick={() => {
                                                     setSelectedMaterial(m);
                                                     setManualKd(m.kd || '');
                                                     setManualMateri(m.materi || '');
                                                 }}
-                                                className={`w-full text-left p-3 text-sm transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 ${selectedMaterial?.id === m.id ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-bold' : 'text-gray-600 dark:text-gray-400'}`}
+                                                className={`w-full text-left p-3 text-sm transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 ${selectedMaterial?._uid === m._uid ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-bold' : 'text-gray-600 dark:text-gray-400'}`}
                                             >
                                                 {m.materi}
                                             </button>

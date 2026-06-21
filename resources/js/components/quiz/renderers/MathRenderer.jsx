@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useId } from 'react';
-import JXG from 'jsxgraph';
-import '../../../../node_modules/jsxgraph/distrib/jsxgraph.css';
 
 const MathRenderer = ({ config }) => {
   const containerId = useId().replace(/:/g, '');

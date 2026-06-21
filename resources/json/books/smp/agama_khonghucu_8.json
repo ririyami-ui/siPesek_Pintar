@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Konsep Tian",
-                "Konsep Dao",
-                "Hubungan Tian dan Manusia",
-                "Jalan Suci Tian"
+                {
+                    "name": "Konsep Tian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsep Dao",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hubungan Tian dan Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jalan Suci Tian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Tian",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Pengakuan Iman Pertama",
-                "Pengakuan Iman Kedua",
-                "Delapan Pengakuan Iman",
-                "Makna Pengakuan Iman"
+                {
+                    "name": "Pengakuan Iman Pertama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengakuan Iman Kedua",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Delapan Pengakuan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Pengakuan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "pengakuan iman",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Pengertian Junzi",
-                "Ciri-ciri Junzi",
-                "Junzi dan Kebajikan",
-                "Menjadi Junzi"
+                {
+                    "name": "Pengertian Junzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ciri-ciri Junzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Junzi dan Kebajikan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menjadi Junzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Junzi",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Ren",
-                "Yi",
-                "Li",
-                "Zhi"
+                {
+                    "name": "Ren",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Yi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Li",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Zhi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Wu Chang",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Zhong",
-                "Shu",
-                "Kebenaran Hati",
-                "Kejujuran"
+                {
+                    "name": "Zhong",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Shu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kebenaran Hati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kejujuran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Si Wei",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Pengertian Zhong Yong",
-                "Jalan Tengah",
-                "Keseimbangan Hidup",
-                "Penerapan Zhong Yong"
+                {
+                    "name": "Pengertian Zhong Yong",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jalan Tengah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keseimbangan Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penerapan Zhong Yong",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Zhong Yong",

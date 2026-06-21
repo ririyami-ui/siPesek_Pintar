@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-34",
             "sub_topics": [
-                "Pengertian Sejarah",
-                "Ruang Lingkup Sejarah",
-                "Kegunaan Sejarah",
-                "Sejarah sebagai Ilmu"
+                {
+                    "name": "Pengertian Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ruang Lingkup Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kegunaan Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sejarah sebagai Ilmu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "sejarah",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "35-66",
             "sub_topics": [
-                "Periodisasi dalam Sejarah",
-                "Pembabakan Waktu",
-                "Kronologi dan Periodisasi",
-                "Periodisasi Sejarah Indonesia"
+                {
+                    "name": "Periodisasi dalam Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembabakan Waktu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kronologi dan Periodisasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Periodisasi Sejarah Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "periodisasi",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "67-98",
             "sub_topics": [
-                "Masa Praaksara",
-                "Zaman Batu dan Logan",
-                "Kehidupan Masyarakat Prasejarah",
-                "Peninggalan Prasejarah"
+                {
+                    "name": "Masa Praaksara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Zaman Batu dan Logan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kehidupan Masyarakat Prasejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peninggalan Prasejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "prasejarah",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "99-130",
             "sub_topics": [
-                "Pengaruh Hindu-Buddha",
-                "Kerajaan Hindu-Buddha",
-                "Akulturasi Budaya",
-                "Peninggalan Hindu-Buddha"
+                {
+                    "name": "Pengaruh Hindu-Buddha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kerajaan Hindu-Buddha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Akulturasi Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peninggalan Hindu-Buddha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Hindu",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "131-162",
             "sub_topics": [
-                "Masuknya Islam ke Indonesia",
-                "Kerajaan Islam",
-                "Penyebaran Islam",
-                "Akulturasi Islam dan Budaya Lokal"
+                {
+                    "name": "Masuknya Islam ke Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kerajaan Islam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penyebaran Islam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Akulturasi Islam dan Budaya Lokal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Islam",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "163-194",
             "sub_topics": [
-                "Kedatangan Bangsa Eropa",
-                "VOC dan Penjajahan",
-                "Sistem Tanam Paksa",
-                "Politik Etis"
+                {
+                    "name": "Kedatangan Bangsa Eropa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "VOC dan Penjajahan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Tanam Paksa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Politik Etis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "kolonialisme",

@@ -66,20 +66,77 @@ class AiGeneratorService extends GeminiService
                 })->first();
             }
 
+            // 5. Enrich sub_topics dengan bloom_level & suggested_jp
+            $enrichSubTopics = function($rawTopics) {
+                return collect($rawTopics)->map(function($topic) {
+                    $topicName = is_string($topic) ? $topic : ($topic['name'] ?? '');
+                    $bloom = $this->inferBloomLevel($topicName);
+                    return [
+                        'name' => $topicName,
+                        'bloom_level' => $bloom,
+                        'suggested_jp' => ($bloom === 'HOTS') ? 2 : 1
+                    ];
+                })->values()->toArray();
+            };
+
             // Jika tidak ada bab yang pas, ambil info buku saja untuk referensi
             return [
                 'book_title' => $book['title'] ?? $bookInfo['title'],
                 'publisher' => $book['publisher'] ?? 'Kemendikbudristek',
-                'chapter' => $relevantChapter,
+                'book_id' => $book['bookId'] ?? $bookInfo['id'] ?? null,
+                'isbn' => $book['isbn'] ?? null,
+                'chapter' => $relevantChapter ? [
+                    'title' => $relevantChapter['title'],
+                    'sub_topics' => $enrichSubTopics($relevantChapter['sub_topics'] ?? []),
+                    'key_terms' => $relevantChapter['key_terms'] ?? [],
+                    'pages' => $relevantChapter['pages'] ?? ''
+                ] : null,
                 'all_chapters' => $chapters->map(fn($c) => [
                     'title' => $c['title'],
-                    'sub_topics' => $c['sub_topics'] ?? []
+                    'sub_topics' => $enrichSubTopics($c['sub_topics'] ?? []),
+                    'key_terms' => $c['key_terms'] ?? []
                 ])->values()->toArray()
             ];
         } catch (\Exception $e) {
             Log::error("Error loading book content: " . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Infer level Bloom dari nama sub-topik berdasarkan kata kunci operasional
+     */
+    private function inferBloomLevel($topic)
+    {
+        if (empty($topic)) return 'LOTS';
+
+        $hotsKeywords = [
+            'menganalisis', 'mengevaluasi', 'menciptakan', 'memproduksi',
+            'menyelesaikan masalah', 'berpikir kritis', 'memecahkan',
+            'merancang', 'mendesain', 'membuat proyek', 'menyusun laporan',
+            'mempresentasikan', 'mendemonstrasikan', 'mensimulasikan',
+            'mengkreasi', 'mengembangkan', 'menginovasi',
+            'studi kasus', 'proyek', 'eksperimen', 'investigasi',
+            'pemecahan masalah', 'analisis', 'evaluasi', 'kreasi',
+            'penalaran tingkat tinggi', 'pemodelan matematika',
+            'penyelesaian masalah', 'diskusi', 'debat'
+        ];
+        $lower = strtolower($topic);
+        foreach ($hotsKeywords as $kw) {
+            if (strpos($lower, $kw) !== false) return 'HOTS';
+        }
+
+        $motsKeywords = [
+            'menerapkan', 'mengklasifikasi', 'mengurutkan', 'membandingkan',
+            'membedakan', 'menyimpulkan', 'menjelaskan', 'menginterpretasi',
+            'memprediksi', 'mengestimasi', 'mengukur', 'menghitung',
+            'mengkonversi', 'mengilustrasikan'
+        ];
+        foreach ($motsKeywords as $kw) {
+            if (strpos($lower, $kw) !== false) return 'MOTS';
+        }
+
+        return 'LOTS';
     }
 
     protected function loadBskapData()
@@ -143,7 +200,8 @@ class AiGeneratorService extends GeminiService
             $bookPrompt .= "- Buku: {$bookData['book_title']}\n";
             if ($bookData['chapter']) {
                 $bookPrompt .= "- Bab: {$bookData['chapter']['title']}\n";
-                $bookPrompt .= "- Materi Spesifik: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+                $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+                $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             }
             $bookPrompt .= "\nWAJIB: Gunakan data materi di atas untuk menyusun konten RPP agar akurat sesuai buku pemerintah.";
             $prompt .= $bookPrompt;
@@ -165,7 +223,8 @@ class AiGeneratorService extends GeminiService
         if ($bookData && $bookData['chapter']) {
             $bookPrompt = "\n\n**SUMBER MATERI SOAL (BUKU TEKS):**\n";
             $bookPrompt .= "Bab: {$bookData['chapter']['title']}\n";
-            $bookPrompt .= "Cakupan Materi: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+            $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+            $bookPrompt .= "Cakupan Materi: {$subTopicNames}\n";
             $bookPrompt .= "Istilah Penting: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
             $bookPrompt .= "\nINSTRUKSI: Buat soal yang benar-benar menguji pemahaman materi di atas.";
             $prompt .= $bookPrompt;
@@ -189,7 +248,8 @@ class AiGeneratorService extends GeminiService
         if ($bookData && $bookData['chapter']) {
             $bookPrompt = "\n\n**KONTEN MATERI UTAMA (DARI BUKU):**\n";
             $bookPrompt .= "Gunakan struktur ini: {$bookData['chapter']['title']}\n";
-            $bookPrompt .= "Detail Materi: " . implode(", ", $bookData['chapter']['sub_topics'] ?? []) . "\n";
+            $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+            $bookPrompt .= "Detail Materi: {$subTopicNames}\n";
             $bookPrompt .= "Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
             $prompt .= $bookPrompt;
         }
@@ -206,18 +266,51 @@ class AiGeneratorService extends GeminiService
         
         $prompt = $this->buildATPPrompt($data);
 
+        // --- ANALISA TINGKAT KESULITAN ELEMEN BSKAP ---
+        $semesterKey = $this->getSemesterKey($semester);
+        $bskapSubject = $this->bskapIntel['subjects'][$level][$data['gradeLevel']][$subjectKey] ?? [];
+        $cpSnippet = $bskapSubject[$semesterKey]['cp_snippet'] ?? '';
+        $officialElemen = $bskapSubject[$semesterKey]['elemen'] ?? [];
+        
+        $difficultyAnalysis = "";
+        if (!empty($officialElemen)) {
+            $difficultyAnalysis .= "\n**ANALISA TINGKAT KESULITAN ELEMEN (BERDASARKAN CP):**\n";
+            foreach ($officialElemen as $el) {
+                // Sederhana: jika CP mengandung kata kerja HOTS, tandai sebagai Sulit
+                $isHots = preg_match('/(menganalisis|mengevaluasi|menciptakan|memproduksi|menyelesaikan masalah|berpikir kritis)/i', $cpSnippet);
+                $levelDesc = $isHots ? "TINGGI (HOTS)" : "SEDANG/RENDAH (LOTS)";
+                $difficultyAnalysis .= "- Elemen '{$el}': Prioritas Kesulitan {$levelDesc}.\n";
+            }
+            $difficultyAnalysis .= "INSTRUKSI: Elemen dengan Kesulitan TINGGI wajib mendapatkan distribusi JP yang lebih dominan dibandingkan elemen lainnya.\n";
+            $prompt .= $difficultyAnalysis;
+        }
+
         // INJEKSI DATA BUKU UNTUK ATP (Filter by Semester)
         $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, '', $semester);
         if ($bookData) {
             $bookPrompt = "\n\n**REFERENSI STRUKTUR BUKU TEKS (SEMESTER " . strtoupper($semester) . "):**\n";
             $bookPrompt .= "Judul Buku: {$bookData['book_title']}\n";
+            $bookPrompt .= "Penerbit: {$bookData['publisher']}\n";
+            $bookPrompt .= "ISBN: {$bookData['isbn']}\n";
             if (isset($bookData['all_chapters'])) {
-                $bookPrompt .= "Daftar Bab & Sub-Materi:\n" . json_encode($bookData['all_chapters'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n";
+                $bookPrompt .= "Daftar Bab & Detail Materi:\n";
+                foreach ($bookData['all_chapters'] as $ch) {
+                    $subTopicNames = implode(", ", array_column($ch['sub_topics'] ?? [], 'name'));
+                    $subTopicBlooms = implode(", ", array_column($ch['sub_topics'] ?? [], 'bloom_level'));
+                    $totalSuggestedJP = array_sum(array_column($ch['sub_topics'] ?? [], 'suggested_jp'));
+                    $bookPrompt .= "- Bab: {$ch['title']}\n";
+                    $bookPrompt .= "  Sub-Materi: {$subTopicNames}\n";
+                    $bookPrompt .= "  Level Bloom: {$subTopicBlooms}\n";
+                    $bookPrompt .= "  Estimasi JP Minimal: {$totalSuggestedJP}\n";
+                    $bookPrompt .= "  Istilah Kunci: " . implode(", ", $ch['key_terms'] ?? []) . "\n";
+                }
             }
-            $bookPrompt .= "\nINSTRUKSI KHUSUS LINGKUP MATERI:\n";
-            $bookPrompt .= "1. Kolom 'materi' WAJIB menggunakan 'title' dari daftar bab di atas.\n";
-            $bookPrompt .= "2. Kolom 'tp' WAJIB mengintegrasikan poin-poin 'sub_topics' dari bab tersebut.\n";
-            $bookPrompt .= "3. Pastikan alur (no) mengikuti urutan daftar bab di atas agar logis.\n";
+            $bookPrompt .= "\n**INSTRUKSI ANALISA JAM (JP) - KETAT & LOGIS:**\n";
+            $bookPrompt .= "INSTRUKSI UTAMA: Gunakan data **Level Bloom** dan **Estimasi JP Minimal** di atas sebagai acuan utama alokasi JP.\n";
+            $bookPrompt .= "1. **Materi LOTS/MOTS**: Alokasikan JP MINIMAL (= Estimasi JP Minimal). Jangan tambah.\n";
+            $bookPrompt .= "2. **Materi HOTS**: Alokasikan JP LEBIH (2-4x dari Estimasi JP Minimal) karena butuh latihan mendalam, proyek, atau penyelidikan.\n";
+            $bookPrompt .= "3. **Larangan KERAS**: DILARANG beri JP besar ke materi LOTS (pengenalan/sejarah tanpa praktik).\n";
+            $bookPrompt .= "4. **Matematis**: Tiap baris JP = (Minggu) x {$data['jpPerWeek']}. Total kumulatif WAJIB PERSIS {$data['totalJP']} JP.\n";
             $prompt .= $bookPrompt;
         }
 
@@ -569,11 +662,14 @@ class AiGeneratorService extends GeminiService
             ->map(fn($p) => "- " . $p['dimensi'])
             ->implode("\n      ");
 
-        // Textbook info
-        $textbookInfo = $bskapData['textbooks'][$level][$gradeLevel][$subjectKey] ?? null;
-        $textbookTitle = $textbookInfo['title'] ?? "Buku Siswa {$subject} Kelas {$gradeLevel} Kurikulum Merdeka";
-        $textbookPublisher = $textbookInfo['publisher'] ?? 'Kemendikbudristek';
-        $textbookChapters = json_encode($textbookInfo['chapters'] ?? [], JSON_UNESCAPED_UNICODE);
+        // Textbook info (real from JSON books folder)
+        $bookRefData = $this->getRelevantBookContent($level, $gradeLevel, $subjectKey, $materi);
+        $bookRefTitle = $bookRefData['book_title'] ?? "Buku Siswa {$subject} Kelas {$gradeLevel} Kurikulum Merdeka";
+        $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
+        $bookRefChaptersJson = json_encode(
+            $bookRefData['all_chapters'] ?? [],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
 
         // Subject Data
         $subjectData = (($bskapData['subjects'][$level][$gradeLevel][$subjectKey] ?? $bskapData['subjects'][$level][$subjectKey] ?? [])[$semesterKey] ?? []);
@@ -818,9 +914,9 @@ class AiGeneratorService extends GeminiService
 
       **OFFICIAL TEXTBOOK REFERENCE (INTERNAL ONLY - DO NOT SHOW IN RPP OUTPUT):**
       Berdasarkan database BSKAP_DATA, berikut adalah buku yang relevan untuk materi \"{$materi}\":
-      - **Buku**: {$textbookTitle}
-      - **Penerbit**: {$textbookPublisher}
-      - **Peta Bab Resmi**: {$textbookChapters}
+      - **Buku**: {$bookRefTitle}
+      - **Penerbit**: {$bookRefPublisher}
+      - **Peta Bab Resmi**: {$bookRefChaptersJson}
 
       **INSTRUKSI**: 
       1. Jika materi \"{$materi}\" cocok dengan salah satu bab di atas, Anda **WAJIB** menyebutkan nama bab tersebut secara spesifik di bagian \"Buku Sumber\".
@@ -1574,35 +1670,35 @@ class AiGeneratorService extends GeminiService
         **PROFIL LULUSAN (8 DIMENSI 2025):**
         List Resmi: {$profilLulusanList}
 
-        **INSTRUKSI PENYUSUNAN (STRICT):**
-        1. **MANDATORY STRUCTURE**: Hasil harus berupa Array JSON yang merepresentasikan alur pembelajaran linier.
-        2. **MATHEMATICAL PRECISION**: 
-           - Durasi total seluruh baris HARUS TEPAT EQUAL {$totalJP} JP.
-           - Setiap baris biasanya 1, 2, atau 3 minggu. JP per baris = Minggu * {$jpPerWeek}.
-        3. **DEEP LEARNING**: Fokus pada kedalaman pemahaman (Deep Learning). Pecah materi menjadi bagian-bagian logis yang membangun kompetensi secara bertahap.
-        4. **STRICT PROFIL LULUSAN (MANDATORY)**: 
-           - Setiap baris ATP **WAJIB** mencantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi Profil Lulusan.
-           - **AUDIT RULES**: Kurang dari 2 dimensi atau lebih dari 3 dimensi dianggap GAGAL VALIDASI.
-           - Gunakan list resmi di atas. Pisahkan dengan koma jika lebih dari satu (Contoh: Mandiri, Gotong Royong).
-        5. **ALIGNMENT RULES (MANDATORY)**:
-           - Kolom 'elemen' HARUS diambil dari list Elemen Resmi di atas.
-           - Kolom 'materi' HARUS merujuk pada list Materi Inti Resmi di atas.
-        6. **FORMAT OUTPUT (JSON ARRAY ONLY)**:
-           [
-             {
-               \"no\": 1,
-               \"elemen\": \"Elemen CP yang relevan\",
-               \"materi\": \"Judul Lingkup Materi Spesifik\",
-               \"tp\": \"Tujuan Pembelajaran (Narasi lengkap)\",
-               \"jp\": 12, 
-               \"profilLulusan\": \"Dimensi 1, Dimensi 2\" // WAJIB MIN 2, MAX 3
-             }
-           ]
+        **STRATEGI PENENTUAN JP & KESULITAN (SMART ALLOCATION):**
+        Anda WAJIB menganalisis sub-topik dari referensi buku untuk menentukan bobot JP:
+        1. **Materi SULIT (HOTS)**: Konsep abstrak, analisis mendalam, atau materi baru. Alokasikan JP MAKSIMAL (misal: 3-4 minggu).
+        2. **Materi SEDANG**: Pemahaman konsep dan aplikasi dasar. Alokasikan JP MEDIAN (misal: 2 minggu).
+        3. **Materi MUDAH (LOTS)**: Pengenalan istilah, sejarah singkat, atau review. Alokasikan JP MINIMAL (misal: 1 minggu).
+        *Total JP kumulatif wajib presisi {$totalJP} JP.*
+
+        **ALIGNMENT RULES (MANDATORY):**
+        - Kolom 'elemen' HARUS diambil dari list Elemen Resmi di atas.
+        - Kolom 'materi' WAJIB menggunakan judul bab/sub-bab dari REFERENSI BUKU.
+        - TP (Tujuan Pembelajaran) harus mengintegrasikan kata kunci kompetensi dari BSKAP dengan materi dari buku.
+
+        **FORMAT OUTPUT (JSON ARRAY ONLY):**
+        [
+          {
+            \"no\": 1,
+            \"elemen\": \"Elemen BSKAP\",
+            \"materi\": \"Judul Bab/Materi Buku\",
+            \"tp\": \"Tujuan Pembelajaran (A-B-C-D)\",
+            \"jp\": 8, 
+            \"kesulitan\": \"Sulit/Sedang/Mudah\",
+            \"profilLulusan\": \"Dimensi 1, Dimensi 2\"
+          }
+        ]
 
         **STRICT RULES**:
         - HANYA keluarkan JSON. Tanpa Markdown, tanpa teks pembuka/penutup.
-        - Pastikan urutan logis dan tidak melompat-lompat.
-        - Gunakan Bahasa Indonesia formal yang inspiratif.
+        - Jika total JP ({$totalJP}) tidak habis dibagi rata, berikan sisa JP ke materi yang berlabel 'Sulit'.
+        - Pastikan urutan mengikuti alur bab di buku agar sistematis.
         ";
     }
 

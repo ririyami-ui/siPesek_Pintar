@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Allah Bapa",
-                "Allah Putra",
-                "Allah Roh Kudus",
-                "Misteri Tritunggal"
+                {
+                    "name": "Allah Bapa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Allah Putra",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Allah Roh Kudus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Misteri Tritunggal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Tritunggal",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Perjanjian Lama",
-                "Perjanjian Baru",
-                "Inspirasi Alkitab",
-                "Tafsir Alkitab"
+                {
+                    "name": "Perjanjian Lama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perjanjian Baru",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Inspirasi Alkitab",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tafsir Alkitab",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Alkitab",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Iman Sejati",
-                "Iman dan Perbuatan",
-                "Kasih sebagai Dasar",
-                "Buah Iman"
+                {
+                    "name": "Iman Sejati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Iman dan Perbuatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kasih sebagai Dasar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Buah Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "iman",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Keluarga sebagai Lembaga Allah",
-                "Peran Anggota Keluarga",
-                "Pendidikan Iman dalam Keluarga",
-                "Keluarga Bahagia"
+                {
+                    "name": "Keluarga sebagai Lembaga Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peran Anggota Keluarga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pendidikan Iman dalam Keluarga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keluarga Bahagia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "keluarga",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Etika dan Moral Kristen",
-                "Nilai-nilai Kristiani",
-                "Pengambilan Keputusan Etis",
-                "Hidup Berdampak"
+                {
+                    "name": "Etika dan Moral Kristen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai-nilai Kristiani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengambilan Keputusan Etis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Berdampak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "etika",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Panggilan Melayani",
-                "Karunia dan Bakat",
-                "Pelayanan di Gereja",
-                "Pelayanan di Masyarakat"
+                {
+                    "name": "Panggilan Melayani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karunia dan Bakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pelayanan di Gereja",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pelayanan di Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "pelayanan",

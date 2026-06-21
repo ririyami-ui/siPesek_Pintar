@@ -1,60 +1,151 @@
 {
-  "bookId": "sma-kim-10",
-  "isbn": "978-602-244-377-3",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Kimia SMA Kelas X",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Struktur Atom dan Sistem Periodik",
-      "pages": "1-45",
-      "sub_topics": [
-        "Teori Atom (Dalton, Thomson, Rutherford, Bohr, Mekanika Kuantum)",
-        "Konfigurasi Elektron",
-        "Bilangan Kuantum dan Bentuk Orbital",
-        "Sifat Periodik Unsur (Jari-jari, Energi Ionisasi, Keelektronegatifan)"
-      ],
-      "key_terms": ["Orbital", "Aufbau", "Pauli", "Hund", "Elektronegativitas"],
-      "visual_hints": "Gunakan tabel Spreadsheet untuk membandingkan sifat periodik unsur dalam satu golongan dan periode."
-    },
-    {
-      "no": 2,
-      "title": "Ikatan Kimia",
-      "pages": "47-80",
-      "sub_topics": [
-        "Struktur Lewis dan Ikatan Ion",
-        "Ikatan Kovalen Tunggal, Rangkap, dan Koordinasi",
-        "Ikatan Logam (Teori Lautan Elektron)",
-        "Gaya Antar Molekul (Van der Waals, Dipole, Ikatan Hidrogen)"
-      ],
-      "key_terms": ["Kovalen Polar", "Kovalen Nonpolar", "Ikatan Hidrogen", "Teori VSEPR"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan jenis-jenis ikatan kimia berdasarkan nilai perbedaan elektronegativitas."
-    },
-    {
-      "no": 3,
-      "title": "Stoikiometri dan Hukum Dasar Kimia",
-      "pages": "81-120",
-      "sub_topics": [
-        "Hukum Lavoisier, Proust, Gay-Lussac, Avogadro",
-        "Konsep Mol dan Massa Molar",
-        "Rumus Empiris dan Rumus Molekul",
-        "Pereaksi Pembatas dan Kadar Zat"
-      ],
-      "key_terms": ["Mol", "Molaritas", "Rumus Molekul", "Pereaksi Pembatas", "Persen Massa"],
-      "visual_hints": "Wajib gunakan LaTeX untuk penulisan rumus kimia dan perhitungan stoikiometri."
-    },
-    {
-      "no": 4,
-      "title": "Larutan Elektrolit dan Redoks",
-      "pages": "121-160",
-      "sub_topics": [
-        "Larutan Elektrolit dan Non-elektrolit",
-        "Hantaran Listrik Larutan",
-        "Konsep Reaksi Reduksi-Oksidasi",
-        "Bilangan Oksidasi dan Tata Nama Senyawa Redoks"
-      ],
-      "key_terms": ["Elektrolit Kuat", "Elektrolit Lemah", "Reagen", "Oksidator", "Reduktor"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk mengklasifikasikan larutan ke dalam golongan elektrolit berdasarkan data pengujian."
-    }
-  ]
+    "bookId": "sma-kim-10",
+    "isbn": "978-602-244-377-3",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Kimia SMA Kelas X",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Struktur Atom dan Sistem Periodik",
+            "pages": "1-45",
+            "sub_topics": [
+                {
+                    "name": "Teori Atom (Dalton, Thomson, Rutherford, Bohr, Mekanika Kuantum)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konfigurasi Elektron",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bilangan Kuantum dan Bentuk Orbital",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sifat Periodik Unsur (Jari-jari, Energi Ionisasi, Keelektronegatifan)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Orbital",
+                "Aufbau",
+                "Pauli",
+                "Hund",
+                "Elektronegativitas"
+            ],
+            "visual_hints": "Gunakan tabel Spreadsheet untuk membandingkan sifat periodik unsur dalam satu golongan dan periode.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Ikatan Kimia",
+            "pages": "47-80",
+            "sub_topics": [
+                {
+                    "name": "Struktur Lewis dan Ikatan Ion",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ikatan Kovalen Tunggal, Rangkap, dan Koordinasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ikatan Logam (Teori Lautan Elektron)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gaya Antar Molekul (Van der Waals, Dipole, Ikatan Hidrogen)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Kovalen Polar",
+                "Kovalen Nonpolar",
+                "Ikatan Hidrogen",
+                "Teori VSEPR"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan jenis-jenis ikatan kimia berdasarkan nilai perbedaan elektronegativitas.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Stoikiometri dan Hukum Dasar Kimia",
+            "pages": "81-120",
+            "sub_topics": [
+                {
+                    "name": "Hukum Lavoisier, Proust, Gay-Lussac, Avogadro",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsep Mol dan Massa Molar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rumus Empiris dan Rumus Molekul",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pereaksi Pembatas dan Kadar Zat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Mol",
+                "Molaritas",
+                "Rumus Molekul",
+                "Pereaksi Pembatas",
+                "Persen Massa"
+            ],
+            "visual_hints": "Wajib gunakan LaTeX untuk penulisan rumus kimia dan perhitungan stoikiometri.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Larutan Elektrolit dan Redoks",
+            "pages": "121-160",
+            "sub_topics": [
+                {
+                    "name": "Larutan Elektrolit dan Non-elektrolit",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hantaran Listrik Larutan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsep Reaksi Reduksi-Oksidasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bilangan Oksidasi dan Tata Nama Senyawa Redoks",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Elektrolit Kuat",
+                "Elektrolit Lemah",
+                "Reagen",
+                "Oksidator",
+                "Reduktor"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk mengklasifikasikan larutan ke dalam golongan elektrolit berdasarkan data pengujian.",
+            "semester": "Genap"
+        }
+    ]
 }

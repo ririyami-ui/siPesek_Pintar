@@ -6,6 +6,7 @@ import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import api from '../lib/axios';
+import { HelpCircle } from 'lucide-react';
 
 export default function ProfileEditor() {
   const { userProfile, loadingSettings, updateProfile, refreshProfile } = useSettings();
@@ -423,12 +424,25 @@ export default function ProfileEditor() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-gray-500 ml-1">Tahun Pelajaran</label>
+              <label className="text-xs font-semibold text-gray-500 ml-1 flex items-center gap-1 group relative cursor-help">
+                Tahun Pelajaran
+                <HelpCircle size={14} className="text-gray-400" />
+                <span className="absolute bottom-full left-0 mb-2 hidden group-hover:block w-48 p-2 bg-gray-800 text-white text-[10px] rounded shadow-xl z-50">
+                  Format otomatis: YYYY/YYYY (Hanya angka, slash ditambahkan otomatis)
+                </span>
+              </label>
               <StyledInput
                 type="text"
                 placeholder="Misal: 2025/2026"
                 value={formData.academic_year}
-                onChange={(e) => handleInputChange('academic_year', e.target.value)}
+                onChange={(e) => {
+                  let val = e.target.value.replace(/\D/g, ''); // Ambil hanya angka
+                  if (val.length > 4) {
+                    val = val.substring(0, 4) + '/' + val.substring(4, 8); // Tambah slash otomatis
+                  }
+                  handleInputChange('academic_year', val);
+                }}
+                maxLength={9} // Batasi maksimal 9 karakter (YYYY/YYYY)
                 required
                 disabled={!isAdmin}
               />

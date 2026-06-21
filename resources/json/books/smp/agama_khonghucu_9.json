@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Asal-usul Ru Jia",
-                "Perkembangan Ru Jia",
-                "Tokoh-tokoh Ru Jia",
-                "Pengaruh Ru Jia di Asia"
+                {
+                    "name": "Asal-usul Ru Jia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perkembangan Ru Jia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tokoh-tokoh Ru Jia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengaruh Ru Jia di Asia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Ru Jia",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Tata Cara Sembahyang",
-                "Persembahyangan Harian",
-                "Persembahyangan Khusus",
-                "Makna Peribadatan"
+                {
+                    "name": "Tata Cara Sembahyang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Persembahyangan Harian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Persembahyangan Khusus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Peribadatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "peribadatan",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Tahun Baru Imlek",
-                "Cap Go Meh",
-                "Ceng Beng",
-                "Hari Raya Lainnya"
+                {
+                    "name": "Tahun Baru Imlek",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Cap Go Meh",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ceng Beng",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hari Raya Lainnya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "hari raya",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Etika dalam Masyarakat",
-                "Hubungan Sosial",
-                "Lima Hubungan Sosial",
-                "Keselarasan Sosial"
+                {
+                    "name": "Etika dalam Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hubungan Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lima Hubungan Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keselarasan Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "etika",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Tanggung Jawab Pribadi",
-                "Tanggung Jawab Keluarga",
-                "Tanggung Jawab Bermasyarakat",
-                "Tanggung Jawab Moral"
+                {
+                    "name": "Tanggung Jawab Pribadi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab Keluarga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab Bermasyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab Moral",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "tanggung jawab",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Masyarakat Harmonis",
-                "Peran Individu",
-                "Musyawarah dan Gotong Royong",
-                "Masyarakat Sejahtera"
+                {
+                    "name": "Masyarakat Harmonis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peran Individu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Musyawarah dan Gotong Royong",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masyarakat Sejahtera",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "masyarakat",

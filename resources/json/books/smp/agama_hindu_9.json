@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Pengertian Upaveda",
-                "Ayurveda",
-                "Dhanurveda",
-                "Gandharvaveda"
+                {
+                    "name": "Pengertian Upaveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ayurveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dhanurveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gandharvaveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Upaveda",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Siksha",
-                "Vyakarana",
-                "Nirukta",
-                "Chanda"
+                {
+                    "name": "Siksha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Vyakarana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nirukta",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Chanda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Wedangga",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Aliran Filsafat Hindu",
-                "Darshana",
-                "Konsep Ketuhanan",
-                "Filsafat dan Kehidupan"
+                {
+                    "name": "Aliran Filsafat Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Darshana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsep Ketuhanan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Filsafat dan Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "filsafat",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Kepemimpinan dalam Hindu",
-                "Ciri Pemimpin Bijak",
-                "Contoh Pemimpin Hindu",
-                "Nilai Kepemimpinan"
+                {
+                    "name": "Kepemimpinan dalam Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ciri Pemimpin Bijak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Contoh Pemimpin Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Kepemimpinan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "kepemimpinan",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Seni dalam Agama Hindu",
-                "Seni Tari dan Musik",
-                "Seni Ukir dan Patung",
-                "Religi dan Kreativitas"
+                {
+                    "name": "Seni dalam Agama Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Seni Tari dan Musik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Seni Ukir dan Patung",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Religi dan Kreativitas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "seni",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Etika Hindu",
-                "Ajaran Susila",
-                "Catur Warna dan Catur Asrama",
-                "Hidup Beretika"
+                {
+                    "name": "Etika Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Susila",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Catur Warna dan Catur Asrama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Beretika",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "etika",

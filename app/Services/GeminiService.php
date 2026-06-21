@@ -38,12 +38,17 @@ class GeminiService
 
         // 3. Resolve for current logged in user
         if (auth()->check()) {
-            $userProfile = \App\Models\UserProfile::where('user_id', auth()->id())->first();
-            if ($userProfile) {
-                // Prioritaskan API Key dari User -> Admin -> Config
+            $currentUser = auth()->user();
+            $userProfile = \App\Models\UserProfile::where('user_id', $currentUser->id)->first();
+            
+            // IF STUDENT: Always use Admin's Key (Students don't have their own keys)
+            if ($currentUser->role === 'student') {
+                $this->apiKey = $adminProfile->google_ai_api_key ?? $this->apiKey;
+                $this->model = $adminProfile->gemini_model ?? $this->model;
+            } 
+            // IF TEACHER/ADMIN: Use their own key if available, else fallback to master admin
+            else if ($userProfile) {
                 $this->apiKey = $userProfile->google_ai_api_key ?: ($adminProfile->google_ai_api_key ?? $this->apiKey);
-                
-                // Prioritaskan Model dari User -> Admin -> Profil Pertama
                 $this->model = $userProfile->gemini_model ?: ($adminProfile->gemini_model ?? '');
             }
         }
@@ -241,17 +246,14 @@ class GeminiService
      */
     public function chat($message, $history = [], $context = [])
     {
-        $this->resolveSettings(); // Pastikan settings terisi
+        $this->resolveSettings();
         
-        $systemInstruction = "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran dan analisis pendidikan.";
-        if (!empty($context)) {
-            $systemInstruction .= "\n\nKonteks: " . json_encode($context, JSON_UNESCAPED_UNICODE);
-        }
-
-        // Jika history datang sebagai array kosong, inisialisasi
+        $systemInstruction = $context['system_instruction'] ?? "Anda adalah asisten guru yang membantu dalam perencanaan pembelajaran.";
+        
+        // Ensure history is correctly formatted for Gemini
         $contents = is_array($history) ? $history : [];
         
-        // Tambahkan pesan user terbaru ke contents
+        // Add current user message
         $contents[] = [
             'role' => 'user',
             'parts' => [['text' => $message]]

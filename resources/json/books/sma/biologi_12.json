@@ -1,60 +1,152 @@
 {
-  "bookId": "sma-bio-12",
-  "isbn": "978-602-244-375-9",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Biologi SMA Kelas XII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Metabolisme",
-      "pages": "1-45",
-      "sub_topics": [
-        "Enzim: Karakteristik dan Cara Kerja",
-        "Katabolisme Karbohidrat (Respirasi Aerob & Anaerob)",
-        "Anabolisme (Fotosintesis & Kemosintesis)",
-        "Keterkaitan Metabolisme Karbohidrat, Lemak, dan Protein"
-      ],
-      "key_terms": ["ATP", "Glikolisis", "Siklus Krebs", "Fotolisis", "Katalis"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan tahapan Respirasi Aerob secara mendetail."
-    },
-    {
-      "no": 2,
-      "title": "Genetika dan Pewarisan Sifat",
-      "pages": "47-100",
-      "sub_topics": [
-        "Materi Genetik (Gen, DNA, Kromosom)",
-        "Sintesis Protein (Transkripsi & Translasi)",
-        "Pembelahan Sel (Mitosis & Meiosis)",
-        "Penyimpangan Semu Hukum Mendel"
-      ],
-      "key_terms": ["Genotipe", "Fenotipe", "Kodon", "Kromosom", "Alel"],
-      "visual_hints": "Wajib gunakan Tabel Excel untuk mendemonstrasikan persilangan Atavisme atau Polimeri."
-    },
-    {
-      "no": 3,
-      "title": "Evolusi",
-      "pages": "101-140",
-      "sub_topics": [
-        "Teori Evolusi Biologi",
-        "Mekanisme Evolusi (Seleksi Alam & Mutasi)",
-        "Bukti-bukti Evolusi",
-        "Pandangan Baru Mengenai Evolusi"
-      ],
-      "key_terms": ["Adaptasi", "Spesiasi", "Fosil", "Hanyutan Genetik", "Homologi"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk merangkum bukti-bukti evolusi dari berbagai disiplin ilmu."
-    },
-    {
-      "no": 4,
-      "title": "Hereditas Manusia dan Mutasi",
-      "pages": "141-180",
-      "sub_topics": [
-        "Penyakit Menurun pada Manusia",
-        "Golongan Darah",
-        "Jenis-jenis Mutasi (Gen & Kromosom)",
-        "Dampak Mutasi bagi Kehidupan"
-      ],
-      "key_terms": ["Hemofilia", "Buta Warna", "Trisomi", "Aneuploidi", "Mutagen"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan silsilah keluarga (Pedigree) penyakit menurun."
-    }
-  ]
+    "bookId": "sma-bio-12",
+    "isbn": "978-602-244-375-9",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Biologi SMA Kelas XII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Metabolisme",
+            "pages": "1-45",
+            "sub_topics": [
+                {
+                    "name": "Enzim: Karakteristik dan Cara Kerja",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Katabolisme Karbohidrat (Respirasi Aerob & Anaerob)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Anabolisme (Fotosintesis & Kemosintesis)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keterkaitan Metabolisme Karbohidrat, Lemak, dan Protein",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "ATP",
+                "Glikolisis",
+                "Siklus Krebs",
+                "Fotolisis",
+                "Katalis"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan tahapan Respirasi Aerob secara mendetail.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Genetika dan Pewarisan Sifat",
+            "pages": "47-100",
+            "sub_topics": [
+                {
+                    "name": "Materi Genetik (Gen, DNA, Kromosom)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sintesis Protein (Transkripsi & Translasi)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembelahan Sel (Mitosis & Meiosis)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penyimpangan Semu Hukum Mendel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Genotipe",
+                "Fenotipe",
+                "Kodon",
+                "Kromosom",
+                "Alel"
+            ],
+            "visual_hints": "Wajib gunakan Tabel Excel untuk mendemonstrasikan persilangan Atavisme atau Polimeri.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Evolusi",
+            "pages": "101-140",
+            "sub_topics": [
+                {
+                    "name": "Teori Evolusi Biologi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mekanisme Evolusi (Seleksi Alam & Mutasi)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bukti-bukti Evolusi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pandangan Baru Mengenai Evolusi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Adaptasi",
+                "Spesiasi",
+                "Fosil",
+                "Hanyutan Genetik",
+                "Homologi"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk merangkum bukti-bukti evolusi dari berbagai disiplin ilmu.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Hereditas Manusia dan Mutasi",
+            "pages": "141-180",
+            "sub_topics": [
+                {
+                    "name": "Penyakit Menurun pada Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Golongan Darah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jenis-jenis Mutasi (Gen & Kromosom)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dampak Mutasi bagi Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Hemofilia",
+                "Buta Warna",
+                "Trisomi",
+                "Aneuploidi",
+                "Mutagen"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan silsilah keluarga (Pedigree) penyakit menurun.",
+            "semester": "Genap"
+        }
+    ]
 }

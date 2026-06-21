@@ -1,59 +1,144 @@
 {
-  "bookId": "sma-fis-11",
-  "isbn": "978-602-244-381-0",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Fisika SMA Kelas XI",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Vektor dan Kinematika",
-      "pages": "1-40",
-      "sub_topics": [
-        "Gerak Lurus Beraturan (GLB)",
-        "Gerak Lurus Berubah Beraturan (GLBB)",
-        "Gerak Parabola",
-        "Gerak Melingkar Beraturan"
-      ],
-      "key_terms": ["Posisi", "Percepatan", "Kecepatan Sudut", "Lintasan"],
-      "visual_hints": "Gunakan LaTeX untuk menyajikan persamaan posisi dan kecepatan pada gerak parabola."
-    },
-    {
-      "no": 2,
-      "title": "Dinamika Gerak",
-      "pages": "41-80",
-      "sub_topics": [
-        "Hukum-hukum Newton tentang Gerak",
-        "Gaya Gesek dan Gaya Sentripetal",
-        "Momen Inersia dan Momentum Sudut",
-        "Kesetimbangan Benda Tegar"
-      ],
-      "key_terms": ["Torsi", "Lengan Gaya", "Translasi", "Rotasi", "Statika"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan berbagai jenis gaya (Berat, Normal, Gesek, Tegangan Tali)."
-    },
-    {
-      "no": 3,
-      "title": "Fluida",
-      "pages": "81-120",
-      "sub_topics": [
-        "Fluida Statis (Tekanan Hidrostatis, Hukum Pascal, Archimedes)",
-        "Fluida Dinamis (Asas Kontinuitas, Hukum Bernoulli)",
-        "Viskositas dan Tegangan Permukaan"
-      ],
-      "key_terms": ["Debit", "Venturimeter", "Gaya Angkat", "Hukum Stokes"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme kerja pipa pitot atau semprotan obat nyamuk berdasarkan Hukum Bernoulli."
-    },
-    {
-      "no": 4,
-      "title": "Gelombang, Cahaya, dan Bunyi",
-      "pages": "121-160",
-      "sub_topics": [
-        "Karakteristik Gelombang Mekanik",
-        "Gelombang Berjalan dan Stasioner",
-        "Gelombang Cahaya (Interferensi, Difraksi, Polarisasi)",
-        "Gelombang Bunyi dan Efek Doppler"
-      ],
-      "key_terms": ["Amplitudo", "Frekuensi", "Intensitas", "Resonansi"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk tabel data cepat rambat bunyi pada berbagai medium."
-    }
-  ]
+    "bookId": "sma-fis-11",
+    "isbn": "978-602-244-381-0",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Fisika SMA Kelas XI",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Vektor dan Kinematika",
+            "pages": "1-40",
+            "sub_topics": [
+                {
+                    "name": "Gerak Lurus Beraturan (GLB)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gerak Lurus Berubah Beraturan (GLBB)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gerak Parabola",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gerak Melingkar Beraturan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Posisi",
+                "Percepatan",
+                "Kecepatan Sudut",
+                "Lintasan"
+            ],
+            "visual_hints": "Gunakan LaTeX untuk menyajikan persamaan posisi dan kecepatan pada gerak parabola.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Dinamika Gerak",
+            "pages": "41-80",
+            "sub_topics": [
+                {
+                    "name": "Hukum-hukum Newton tentang Gerak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gaya Gesek dan Gaya Sentripetal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Momen Inersia dan Momentum Sudut",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kesetimbangan Benda Tegar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Torsi",
+                "Lengan Gaya",
+                "Translasi",
+                "Rotasi",
+                "Statika"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan berbagai jenis gaya (Berat, Normal, Gesek, Tegangan Tali).",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Fluida",
+            "pages": "81-120",
+            "sub_topics": [
+                {
+                    "name": "Fluida Statis (Tekanan Hidrostatis, Hukum Pascal, Archimedes)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fluida Dinamis (Asas Kontinuitas, Hukum Bernoulli)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Viskositas dan Tegangan Permukaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Debit",
+                "Venturimeter",
+                "Gaya Angkat",
+                "Hukum Stokes"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme kerja pipa pitot atau semprotan obat nyamuk berdasarkan Hukum Bernoulli.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Gelombang, Cahaya, dan Bunyi",
+            "pages": "121-160",
+            "sub_topics": [
+                {
+                    "name": "Karakteristik Gelombang Mekanik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gelombang Berjalan dan Stasioner",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gelombang Cahaya (Interferensi, Difraksi, Polarisasi)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gelombang Bunyi dan Efek Doppler",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Amplitudo",
+                "Frekuensi",
+                "Intensitas",
+                "Resonansi"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk tabel data cepat rambat bunyi pada berbagai medium.",
+            "semester": "Genap"
+        }
+    ]
 }

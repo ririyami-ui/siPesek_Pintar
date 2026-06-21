@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Hubungan Iman dan Akal Budi",
-                "Mencari Kebenaran",
-                "Iman yang Rasional",
-                "Dialog Iman dan Ilmu"
+                {
+                    "name": "Hubungan Iman dan Akal Budi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mencari Kebenaran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Iman yang Rasional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dialog Iman dan Ilmu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "iman",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Pengertian Hati Nurani",
-                "Pembentukan Hati Nurani",
-                "Hati Nurani dan Keputusan Moral",
-                "Melatih Hati Nurani"
+                {
+                    "name": "Pengertian Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembentukan Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hati Nurani dan Keputusan Moral",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Melatih Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "hati nurani",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Suara Hati dan Kebenaran",
-                "Mendengarkan Suara Hati",
-                "Suara Hati dan Iman",
-                "Hidup Seturut Suara Hati"
+                {
+                    "name": "Suara Hati dan Kebenaran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mendengarkan Suara Hati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Suara Hati dan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Seturut Suara Hati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "suara hati",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Tuhan Pencipta",
-                "Karya Penciptaan",
-                "Pemeliharaan Tuhan",
-                "Keagungan Ciptaan"
+                {
+                    "name": "Tuhan Pencipta",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karya Penciptaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemeliharaan Tuhan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keagungan Ciptaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "penciptaan",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Martabat Manusia",
-                "Manusia dan Harapan",
-                "Optimisme Kristen",
-                "Menghadapi Tantangan"
+                {
+                    "name": "Martabat Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manusia dan Harapan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Optimisme Kristen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menghadapi Tantangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "manusia",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Visi Masa Depan",
-                "Kerajaan Allah dan Masa Depan",
-                "Peran Umat Muda",
-                "Membangun Masa Depan"
+                {
+                    "name": "Visi Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kerajaan Allah dan Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peran Umat Muda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Membangun Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "masa depan",

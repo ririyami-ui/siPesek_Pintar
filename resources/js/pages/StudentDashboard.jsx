@@ -62,34 +62,49 @@ export default function StudentDashboard() {
   const schedule = data?.today_schedule ?? [];
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 bg-gradient-to-b from-slate-50 to-emerald-50/10 dark:from-slate-900 dark:to-emerald-900/10 backdrop-blur-sm p-4 rounded-2xl shadow-lg">
       {/* Small Header Section */}
-      <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-4">
-        <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+      <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2">
+        <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                 {student?.photo_url ? (
                     <img src={student.photo_url} className="w-full h-full object-cover" alt="Student" />
                 ) : (
-                    <User size={20} className="text-slate-400" />
+                    <User size={16} className="text-slate-400" />
                 )}
             </div>
-            <div>
-                <h1 className="text-base font-bold text-slate-800 dark:text-white leading-tight">{student?.name}</h1>
-                <p className="text-[11px] font-medium text-slate-500">
-                    Kelas {student?.class} · No. Absen {student?.absen}
+            <div className="min-w-0">
+                <h1 className="text-sm font-bold text-slate-800 dark:text-white leading-tight truncate">{student?.name}</h1>
+                <p className="text-[10px] font-medium text-slate-500 truncate">
+                    Kelas {student?.class} · Absen {student?.absen}
                 </p>
-                <p className="text-[11px] font-medium text-slate-400 mt-0.5">
+                <p className="text-[9px] font-medium text-slate-400 truncate mt-0.5">
                     NIS: {student?.nis || '-'} · NISN: {student?.nisn || '-'}
                 </p>
             </div>
         </div>
-        <div className="text-right">
-            <div className="text-xl font-mono font-bold text-slate-700 dark:text-slate-300">
+        <div className="text-right shrink-0">
+            <div className="text-lg font-mono font-black text-emerald-600 dark:text-emerald-400 leading-none">
                 {new Date(data?.server_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
             </div>
-            <div className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Live Monitoring</div>
+            <div className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-0.5">LIVE</div>
         </div>
       </div>
+
+      {/* Holiday Banner */}
+      {data?.holiday && (
+        <div className="bg-amber-50/80 dark:bg-amber-950/40 backdrop-blur-md rounded-2xl p-4 border border-amber-200 dark:border-amber-900/30 flex items-center gap-3">
+          <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-xl shrink-0">
+            <CalendarDays size={16} className="text-amber-600 dark:text-amber-400" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-amber-700 dark:text-amber-300">{data.holiday.title}</p>
+            {data.holiday.description && (
+              <p className="text-[10px] font-medium text-amber-600/80 dark:text-amber-400/70">{data.holiday.description}</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Main Focus: Current Learning */}
       <div className="space-y-4">
@@ -98,7 +113,7 @@ export default function StudentDashboard() {
         </h3>
 
         {current ? (
-            <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
+            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-6 border border-slate-100 dark:border-white/5 shadow-sm">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2">
@@ -126,7 +141,7 @@ export default function StudentDashboard() {
                 </div>
             </div>
         ) : (
-            <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-8 border border-dashed border-slate-200 dark:border-white/5 text-center">
+            <div className="bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-2xl p-8 border border-dashed border-slate-200 dark:border-white/5 text-center">
                 <p className="text-sm text-slate-400 italic font-medium">Tidak ada pelajaran yang sedang berlangsung saat ini.</p>
             </div>
         )}
@@ -134,7 +149,7 @@ export default function StudentDashboard() {
 
       {/* Narrative AI Summary (Simple Box) */}
       {data?.daily_narrative && (
-        <div className="bg-indigo-50 dark:bg-indigo-950/20 rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex gap-4 items-start">
+        <div className="bg-indigo-50/80 dark:bg-indigo-950/40 backdrop-blur-md rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex gap-4 items-start">
             <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl shrink-0">
                 <Bot size={18} className="text-indigo-600 dark:text-indigo-400" />
             </div>
@@ -153,7 +168,7 @@ export default function StudentDashboard() {
             <CalendarDays size={14} /> Agenda Hari Ini
         </h3>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden shadow-sm">
+        <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden shadow-sm">
             <div className="divide-y divide-slate-50 dark:divide-white/5">
                 {schedule.map((s, idx) => (
                     <div key={idx} className={`p-4 flex items-center gap-4 ${s.status === 'ongoing' ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : (s.status === 'completed' ? 'opacity-50' : '')}`}>

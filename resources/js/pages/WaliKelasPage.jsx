@@ -144,9 +144,9 @@ export default function WaliKelasPage() {
         const sessionKey = `${timeKey} - ${subjectName}`;
         if (!sessionsMap[sessionKey]) {
           sessionsMap[sessionKey] = {
-             time: timeKey,
+             time: record.time || 'Waktu Tidak Diketahui',
              subject: subjectName,
-             teacher: record.teacher,
+             teacher: record.teacher?.name || record.teacher_name || '-',
              students: []
           };
         }
@@ -193,7 +193,7 @@ export default function WaliKelasPage() {
        'NIS': item.student?.nis || '',
        'Nama Siswa': item.student?.name || 'Unknown',
        'Status': item.status || '',
-       'Guru Mapel': item.teacher || ''
+       'Guru Mapel': item.teacher?.name || item.teacher_name || '-'
     })));
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Log Sesi');
@@ -202,7 +202,36 @@ export default function WaliKelasPage() {
     saveAs(dataBlob, `Log_Sesi_${myClass?.rombel}_30HariTerakhir.xlsx`);
   };
 
+  const handleDownloadPdf = async () => {
+    try {
+      const today = new Date();
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(today.getDate() - 30);
+
+      const response = await api.get('/attendances/pdf', {
+        params: {
+          class_id: myClass.id,
+          date_start: thirtyDaysAgo.toISOString().split('T')[0],
+          date_end: today.toISOString().split('T')[0]
+        },
+        responseType: 'blob'
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Rekap_Absensi_${myClass.rombel}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("PDF Download error:", error);
+      toast.error("Gagal mengunduh PDF");
+    }
+  };
+
   if (isLoading) {
+
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Loader2 className="animate-spin h-10 w-10 text-purple-600" />
@@ -405,6 +434,12 @@ export default function WaliKelasPage() {
                   className="px-3 py-1.5 text-xs font-bold rounded-lg border border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 transition shadow-sm dark:bg-blue-900/20 dark:border-blue-900/30 dark:text-blue-400"
                 >
                   Unduh Log Sesi
+                </button>
+                <button 
+                  onClick={handleDownloadPdf} 
+                  className="px-3 py-1.5 text-xs font-bold rounded-lg border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition shadow-sm dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400"
+                >
+                  Unduh PDF
                 </button>
               </div>
             </div>

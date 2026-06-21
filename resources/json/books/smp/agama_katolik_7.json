@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Siapa Aku sebagai Pribadi",
-                "Bakat dan Minat",
-                "Pertumbuhan Fisik dan Spiritual",
-                "Harga Diri"
+                {
+                    "name": "Siapa Aku sebagai Pribadi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bakat dan Minat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertumbuhan Fisik dan Spiritual",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Harga Diri",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "pribadi",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Keluarga sebagai Komunitas Cinta",
-                "Peran Orang Tua dan Anak",
-                "Nilai-nilai Keluarga",
-                "Keluarga Gereja Rumah Tangga"
+                {
+                    "name": "Keluarga sebagai Komunitas Cinta",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peran Orang Tua dan Anak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai-nilai Keluarga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keluarga Gereja Rumah Tangga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "keluarga",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Hidup dalam Masyarakat",
-                "Sikap Sosial",
-                "Keadilan dan Solidaritas",
-                "Partisipasi Sosial"
+                {
+                    "name": "Hidup dalam Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sikap Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keadilan dan Solidaritas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Partisipasi Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "masyarakat",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Gereja sebagai Umat Allah",
-                "Sakramen dalam Gereja",
-                "Tugas dan Panggilan Umat",
-                "Persekutuan Umat"
+                {
+                    "name": "Gereja sebagai Umat Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sakramen dalam Gereja",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tugas dan Panggilan Umat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Persekutuan Umat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "gereja",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Pokok-pokok Iman Katolik",
-                "Credo dan Pengakuan Iman",
-                "Penghayatan Iman",
-                "Pertumbuhan Iman"
+                {
+                    "name": "Pokok-pokok Iman Katolik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Credo dan Pengakuan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penghayatan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertumbuhan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "iman",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Doa sebagai Napas Hidup",
-                "Macam-macam Doa",
-                "Doa Pribadi dan Bersama",
-                "Doa Bapa Kami"
+                {
+                    "name": "Doa sebagai Napas Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Macam-macam Doa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Doa Pribadi dan Bersama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Doa Bapa Kami",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "doa",

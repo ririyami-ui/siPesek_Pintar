@@ -28,11 +28,16 @@
                 apiBaseUrl: subfolder + '/api'
             };
             
-            // Set manifest link dynamically
-            document.getElementById('manifest-link').href = window.Laravel.baseUrl + '/pwa-manifest.json?v=' + Date.now();
+            // [FIX] Only set manifest on HTTPS to prevent browser probing HTTPS on dev server
+            // php artisan serve is HTTP-only; browser manifest detection causes "Unsupported SSL request" warnings
+            if (window.location.protocol === 'https:') {
+                document.getElementById('manifest-link').href = window.Laravel.baseUrl + '/pwa-manifest.json?v=' + Date.now();
+            }
         </script>
 
         @viteReactRefresh
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
         @vite('resources/js/main.jsx')
         
         <style>

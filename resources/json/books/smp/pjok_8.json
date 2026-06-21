@@ -1,11 +1,151 @@
 {
-  "bookId": "smp-pjok-8",
-  "publisher": "Kemendikbudristek",
-  "chapters": [
-    { "no": 1, "title": "Permainan Bola Besar", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Futsal", "Bola Tangan", "Variasi Teknik Dasar"], "key_terms": ["Futsal", "Bola Tangan", "Variasi", "Strategi"] },
-    { "no": 2, "title": "Permainan Bola Kecil", "pages": "41-80", "semester": "Ganjil", "sub_topics": ["Softball", "Rounders", "Variasi Pukulan dan Lemparan"], "key_terms": ["Softball", "Rounders", "Pukulan", "Lemparan"] },
-    { "no": 3, "title": "Atletik", "pages": "81-110", "semester": "Ganjil", "sub_topics": ["Lari Estafet", "Lompat Tinggi", "Tolak Peluru"], "key_terms": ["Estafet", "Lompat Tinggi", "Tolak Peluru", "Start"] },
-    { "no": 4, "title": "Bela Diri", "pages": "111-140", "semester": "Genap", "sub_topics": ["Pencak Silat Lanjutan", "Elakan dan Tangkisan", "Serangan Bersenjata"], "key_terms": ["Elakan", "Tangkisan", "Serangan", "Pencak Silat"] },
-    { "no": 5, "title": "Kebugaran Jasmani", "pages": "141-170", "semester": "Genap", "sub_topics": ["Tes Kebugaran", "Latihan Sirkuit", "Program Latihan"], "key_terms": ["Sirkuit", "Tes Kebugaran", "Repetisi", "Set"] }
-  ]
+    "bookId": "smp-pjok-8",
+    "publisher": "Kemendikbudristek",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Permainan Bola Besar",
+            "pages": "1-40",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Futsal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bola Tangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Variasi Teknik Dasar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Futsal",
+                "Bola Tangan",
+                "Variasi",
+                "Strategi"
+            ]
+        },
+        {
+            "no": 2,
+            "title": "Permainan Bola Kecil",
+            "pages": "41-80",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Softball",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rounders",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Variasi Pukulan dan Lemparan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Softball",
+                "Rounders",
+                "Pukulan",
+                "Lemparan"
+            ]
+        },
+        {
+            "no": 3,
+            "title": "Atletik",
+            "pages": "81-110",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Lari Estafet",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lompat Tinggi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tolak Peluru",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Estafet",
+                "Lompat Tinggi",
+                "Tolak Peluru",
+                "Start"
+            ]
+        },
+        {
+            "no": 4,
+            "title": "Bela Diri",
+            "pages": "111-140",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Pencak Silat Lanjutan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Elakan dan Tangkisan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Serangan Bersenjata",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Elakan",
+                "Tangkisan",
+                "Serangan",
+                "Pencak Silat"
+            ]
+        },
+        {
+            "no": 5,
+            "title": "Kebugaran Jasmani",
+            "pages": "141-170",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Tes Kebugaran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Latihan Sirkuit",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Program Latihan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Sirkuit",
+                "Tes Kebugaran",
+                "Repetisi",
+                "Set"
+            ]
+        }
+    ]
 }

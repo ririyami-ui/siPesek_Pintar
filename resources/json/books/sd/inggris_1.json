@@ -1,109 +1,205 @@
 {
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "sd-ing-1",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "pages":  "1-28",
-                         "sub_topics":  [
-                                            "Greetings and Introductions",
-                                            "Saying My Name",
-                                            "How Are You?",
-                                            "Introducing Myself"
-                                        ],
-                         "key_terms":  [
-                                           "hello",
-                                           "name",
-                                           "greetings"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "My Self"
-                     },
-                     {
-                         "no":  2,
-                         "pages":  "29-56",
-                         "sub_topics":  [
-                                            "Family Members",
-                                            "Father and Mother",
-                                            "Brother and Sister",
-                                            "My Family Tree"
-                                        ],
-                         "key_terms":  [
-                                           "family",
-                                           "father",
-                                           "mother"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "My Family"
-                     },
-                     {
-                         "no":  3,
-                         "pages":  "57-84",
-                         "sub_topics":  [
-                                            "Numbers 1-10",
-                                            "Numbers 11-20",
-                                            "Counting Objects",
-                                            "How Many?"
-                                        ],
-                         "key_terms":  [
-                                           "numbers",
-                                           "count",
-                                           "many"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Numbers"
-                     },
-                     {
-                         "no":  4,
-                         "pages":  "85-112",
-                         "sub_topics":  [
-                                            "Red, Blue, Yellow",
-                                            "Green, Black, White",
-                                            "Colors Around Us",
-                                            "My Favorite Color"
-                                        ],
-                         "key_terms":  [
-                                           "colors",
-                                           "red",
-                                           "blue"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Colors"
-                     },
-                     {
-                         "no":  5,
-                         "pages":  "113-140",
-                         "sub_topics":  [
-                                            "Pet Animals",
-                                            "Farm Animals",
-                                            "Wild Animals",
-                                            "Animal Sounds"
-                                        ],
-                         "key_terms":  [
-                                           "animals",
-                                           "pet",
-                                           "farm"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Animals"
-                     },
-                     {
-                         "no":  6,
-                         "pages":  "141-170",
-                         "sub_topics":  [
-                                            "Fruits Names",
-                                            "Tastes of Fruits",
-                                            "I Like Apples",
-                                            "Fruit Salad"
-                                        ],
-                         "key_terms":  [
-                                           "fruits",
-                                           "apple",
-                                           "banana"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Fruits"
-                     }
-                 ],
-    "isbn":  "978-623-194-821-1"
+    "publisher": "Kemendikbudristek",
+    "bookId": "sd-ing-1",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-28",
+            "sub_topics": [
+                {
+                    "name": "Greetings and Introductions",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Saying My Name",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "How Are You?",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Introducing Myself",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "hello",
+                "name",
+                "greetings"
+            ],
+            "semester": "Ganjil",
+            "title": "My Self"
+        },
+        {
+            "no": 2,
+            "pages": "29-56",
+            "sub_topics": [
+                {
+                    "name": "Family Members",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Father and Mother",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Brother and Sister",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "My Family Tree",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "family",
+                "father",
+                "mother"
+            ],
+            "semester": "Ganjil",
+            "title": "My Family"
+        },
+        {
+            "no": 3,
+            "pages": "57-84",
+            "sub_topics": [
+                {
+                    "name": "Numbers 1-10",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Numbers 11-20",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Counting Objects",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "How Many?",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "numbers",
+                "count",
+                "many"
+            ],
+            "semester": "Ganjil",
+            "title": "Numbers"
+        },
+        {
+            "no": 4,
+            "pages": "85-112",
+            "sub_topics": [
+                {
+                    "name": "Red, Blue, Yellow",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Green, Black, White",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Colors Around Us",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "My Favorite Color",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "colors",
+                "red",
+                "blue"
+            ],
+            "semester": "Genap",
+            "title": "Colors"
+        },
+        {
+            "no": 5,
+            "pages": "113-140",
+            "sub_topics": [
+                {
+                    "name": "Pet Animals",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Farm Animals",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Wild Animals",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Animal Sounds",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "animals",
+                "pet",
+                "farm"
+            ],
+            "semester": "Genap",
+            "title": "Animals"
+        },
+        {
+            "no": 6,
+            "pages": "141-170",
+            "sub_topics": [
+                {
+                    "name": "Fruits Names",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tastes of Fruits",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "I Like Apples",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fruit Salad",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "fruits",
+                "apple",
+                "banana"
+            ],
+            "semester": "Genap",
+            "title": "Fruits"
+        }
+    ],
+    "isbn": "978-623-194-821-1"
 }

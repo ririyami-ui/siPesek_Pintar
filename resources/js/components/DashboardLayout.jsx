@@ -235,6 +235,7 @@ export default function DashboardLayout({ children, user, onLogout }) {
       icon: <Users size={14} />,
       items: [
         { name: 'Monitoring Wali Kelas', icon: <Scale size={20} />, path: '/wali-kelas' },
+        { name: 'Radar Perwalian', icon: <ShieldAlert size={20} />, path: '/radar-perwalian' },
       ]
     };
     const newCategories = [...categories];
@@ -316,6 +317,7 @@ export default function DashboardLayout({ children, user, onLogout }) {
     return (
       <Link
         to={item.path}
+        state={item.state}
         onClick={() => {
           if (isMobile) setIsSidebarOpen(false);
         }}

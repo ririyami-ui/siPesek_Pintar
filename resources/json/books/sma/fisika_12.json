@@ -1,60 +1,151 @@
 {
-  "bookId": "sma-fis-12",
-  "isbn": "978-602-244-382-7",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Fisika SMA Kelas XII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Listrik Statis dan Dinamis",
-      "pages": "1-45",
-      "sub_topics": [
-        "Hukum Coulomb dan Medan Listrik",
-        "Potensial Listrik dan Kapasitor",
-        "Rangkaian Arus Searah (DC)",
-        "Hukum Ohm dan Hukum Kirchhoff"
-      ],
-      "key_terms": ["Permitivitas", "Kapasitansi", "Hambatan Jenis", "Loop"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan algoritma penyelesaian soal rangkaian majemuk menggunakan Hukum Kirchhoff II."
-    },
-    {
-      "no": 2,
-      "title": "Elektromagnetisme",
-      "pages": "47-90",
-      "sub_topics": [
-        "Medan Magnet di Sekitar Arus Listrik",
-        "Gaya Lorentz",
-        "Induksi Elektromagnetik (Hukum Faraday & Lenz)",
-        "Rangkaian Arus Bolak-balik (AC)"
-      ],
-      "key_terms": ["Induksi", "Fluks", "Impedansi", "Fasor", "Transformator"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan aplikasi induksi elektromagnetik dalam teknologi modern."
-    },
-    {
-      "no": 3,
-      "title": "Fisika Modern dan Radioaktivitas",
-      "pages": "91-135",
-      "sub_topics": [
-        "Relativitas Khusus",
-        "Fenomena Kuantum (Efek Fotolistrik & Compton)",
-        "Struktur Inti dan Radioaktivitas",
-        "Pemanfaatan Radioisotop dalam Kehidupan"
-      ],
-      "key_terms": ["Dilatasi Waktu", "Foton", "Waktu Paruh", "Fisi", "Fusi"],
-      "visual_hints": "Gunakan LaTeX untuk penulisan persamaan energi relativistik dan reaksi inti."
-    },
-    {
-      "no": 4,
-      "title": "Teknologi Digital dan Energi Alternatif Lanjut",
-      "pages": "137-170",
-      "sub_topics": [
-        "Transmisi dan Penyimpanan Data Digital",
-        "Prinsip Kerja Semikonduktor",
-        "Teknologi Nanomaterial",
-        "Masa Depan Energi Nuklir"
-      ],
-      "key_terms": ["Biner", "Bit", "Transistor", "Fotovoltaik", "Reaktor"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk perbandingan densitas energi berbagai sumber bahan bakar."
-    }
-  ]
+    "bookId": "sma-fis-12",
+    "isbn": "978-602-244-382-7",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Fisika SMA Kelas XII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Listrik Statis dan Dinamis",
+            "pages": "1-45",
+            "sub_topics": [
+                {
+                    "name": "Hukum Coulomb dan Medan Listrik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Potensial Listrik dan Kapasitor",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rangkaian Arus Searah (DC)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hukum Ohm dan Hukum Kirchhoff",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Permitivitas",
+                "Kapasitansi",
+                "Hambatan Jenis",
+                "Loop"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan algoritma penyelesaian soal rangkaian majemuk menggunakan Hukum Kirchhoff II.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Elektromagnetisme",
+            "pages": "47-90",
+            "sub_topics": [
+                {
+                    "name": "Medan Magnet di Sekitar Arus Listrik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gaya Lorentz",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Induksi Elektromagnetik (Hukum Faraday & Lenz)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rangkaian Arus Bolak-balik (AC)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Induksi",
+                "Fluks",
+                "Impedansi",
+                "Fasor",
+                "Transformator"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan aplikasi induksi elektromagnetik dalam teknologi modern.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Fisika Modern dan Radioaktivitas",
+            "pages": "91-135",
+            "sub_topics": [
+                {
+                    "name": "Relativitas Khusus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fenomena Kuantum (Efek Fotolistrik & Compton)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Struktur Inti dan Radioaktivitas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemanfaatan Radioisotop dalam Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Dilatasi Waktu",
+                "Foton",
+                "Waktu Paruh",
+                "Fisi",
+                "Fusi"
+            ],
+            "visual_hints": "Gunakan LaTeX untuk penulisan persamaan energi relativistik dan reaksi inti.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Teknologi Digital dan Energi Alternatif Lanjut",
+            "pages": "137-170",
+            "sub_topics": [
+                {
+                    "name": "Transmisi dan Penyimpanan Data Digital",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Prinsip Kerja Semikonduktor",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Teknologi Nanomaterial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masa Depan Energi Nuklir",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Biner",
+                "Bit",
+                "Transistor",
+                "Fotovoltaik",
+                "Reaktor"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk perbandingan densitas energi berbagai sumber bahan bakar.",
+            "semester": "Genap"
+        }
+    ]
 }

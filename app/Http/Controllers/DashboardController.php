@@ -69,7 +69,38 @@ class DashboardController extends Controller
                         ->where('end_date', '>=', $todayDate);
                   });
         })->first();
-        
+
+        // [HOTFIX] If today is a holiday, return empty monitoring data — no schedule cards should appear
+        if ($agenda && $agenda->is_holiday) {
+            return response()->json([
+                'date' => $todayDate,
+                'day' => $todayDay,
+                'current_time' => $currentTime,
+                'min_start_time' => null,
+                'max_end_time' => null,
+                'active_non_teaching' => null,
+                'non_teaching_schedules' => [],
+                'is_weekend' => false,
+                'school_agenda' => [
+                    'title' => $agenda->title,
+                    'is_holiday' => true,
+                    'description' => $agenda->description,
+                ],
+                'stats' => [
+                    'total_cards' => 0,
+                    'berlangsung' => 0,
+                    'selesai' => 0,
+                    'alfa' => 0,
+                    'belum_mulai' => 0,
+                    'needs_attention' => 0,
+                    'student_stats' => ['total' => 0, 'male' => 0, 'female' => 0],
+                    'attendance_summary' => ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpa' => 0],
+                ],
+                'data' => [],
+                'full_data' => [],
+            ]);
+        }
+
         // [FIX] Pre-fetch teacher names based on auth_user_id to ensure consistency with Schedule table
         $teacherUserIds = $schedules->pluck('teacher_id')->filter()->unique();
         $teacherUsers = \App\Models\User::whereIn('id', $teacherUserIds)->pluck('name', 'id');

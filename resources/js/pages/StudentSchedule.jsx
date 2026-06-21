@@ -46,21 +46,21 @@ export default function StudentSchedule() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in-premium">
-      {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-4 opacity-5 dark:opacity-10 rotate-12">
-          <CalendarDays size={120} />
+    <div className="space-y-4 animate-fade-in-premium">
+      {/* Compact Header */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-white/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-2 opacity-5 dark:opacity-10 rotate-12">
+          <CalendarDays size={80} />
         </div>
-        <div className="flex items-center gap-6 relative z-10">
-          <div className="p-5 rounded-[2rem] bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-2xl shadow-emerald-500/40 transform rotate-3">
-            <CalendarDays size={32} />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl shadow-emerald-500/20">
+            <CalendarDays size={20} />
           </div>
           <div>
-            <h2 className="text-3xl font-black text-gray-800 dark:text-white tracking-tighter leading-none mb-3">Jadwal Pelajaran</h2>
-            <div className="flex items-center gap-4">
-              <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-2xl italic leading-none">
-                Semester {activeSemester} • {academicYear}
+            <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight leading-none mb-2">Jadwal Pelajaran</h2>
+            <div className="flex items-center">
+              <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] bg-gray-50 dark:bg-gray-900/50 px-3 py-1.5 rounded-xl italic leading-none">
+                {activeSemester} • {academicYear}
               </p>
             </div>
           </div>

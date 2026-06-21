@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Allah Sumber Keselamatan",
-                "Rencana Keselamatan",
-                "Keselamatan dalam Yesus",
-                "Hidup dalam Keselamatan"
+                {
+                    "name": "Allah Sumber Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rencana Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keselamatan dalam Yesus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup dalam Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "keselamatan",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Hidup Baru dalam Kristus",
-                "Pertobatan Sejati",
-                "Pembaruan Hidup",
-                "Identitas Baru"
+                {
+                    "name": "Hidup Baru dalam Kristus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertobatan Sejati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembaruan Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Identitas Baru",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "hidup baru",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Konsep Kerajaan Allah",
-                "Nilai-nilai Kerajaan Allah",
-                "Menjadi Warga Kerajaan",
-                "Misi Kerajaan Allah"
+                {
+                    "name": "Konsep Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai-nilai Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menjadi Warga Kerajaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Misi Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Kerajaan Allah",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Panggilan Khusus",
-                "Panggilan Umum",
-                "Mengenal Panggilan Hidup",
-                "Komitmen Panggilan"
+                {
+                    "name": "Panggilan Khusus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Panggilan Umum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengenal Panggilan Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Komitmen Panggilan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "panggilan",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Tanggung Jawab kepada Allah",
-                "Tanggung Jawab kepada Sesama",
-                "Tanggung Jawab terhadap Alam",
-                "Hidup Bertanggung Jawab"
+                {
+                    "name": "Tanggung Jawab kepada Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab kepada Sesama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab terhadap Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Bertanggung Jawab",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "tanggung jawab",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Harapan Kristen",
-                "Masa Depan dalam Kristus",
-                "Menyongsong Masa Depan",
-                "Kemenangan Iman"
+                {
+                    "name": "Harapan Kristen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masa Depan dalam Kristus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menyongsong Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kemenangan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "masa depan",

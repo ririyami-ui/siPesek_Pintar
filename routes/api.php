@@ -107,6 +107,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/attendances', [App\Http\Controllers\AttendanceController::class, 'index']);
     Route::post('/attendances/bulk', [App\Http\Controllers\AttendanceController::class, 'storeBulk']);
     Route::get('/attendances/summary', [App\Http\Controllers\AttendanceController::class, 'summary']);
+    Route::get('/attendances/pdf', [App\Http\Controllers\AttendanceController::class, 'downloadPdf']);
+
     Route::get('/wali/my-class', [App\Http\Controllers\SchoolClassController::class, 'myClass']);
 
     // Teaching Journals

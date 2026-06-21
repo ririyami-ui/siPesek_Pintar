@@ -1,109 +1,205 @@
 {
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "sd-ing-6",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "pages":  "1-32",
-                         "sub_topics":  [
-                                            "Expressing Future Plans",
-                                            "Going To",
-                                            "Will and Shall",
-                                            "Making Plans and Promises"
-                                        ],
-                         "key_terms":  [
-                                           "future",
-                                           "will",
-                                           "plan"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Future Plans"
-                     },
-                     {
-                         "no":  2,
-                         "pages":  "33-64",
-                         "sub_topics":  [
-                                            "Descriptive Text Structure",
-                                            "Describing Places",
-                                            "Describing Animals",
-                                            "Writing Descriptions"
-                                        ],
-                         "key_terms":  [
-                                           "descriptive",
-                                           "description",
-                                           "adjective"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Descriptive Text"
-                     },
-                     {
-                         "no":  3,
-                         "pages":  "65-96",
-                         "sub_topics":  [
-                                            "Recount Text Structure",
-                                            "Personal Recount",
-                                            "Holiday Recount",
-                                            "Writing a Recount"
-                                        ],
-                         "key_terms":  [
-                                           "recount",
-                                           "event",
-                                           "experience"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Recount Text"
-                     },
-                     {
-                         "no":  4,
-                         "pages":  "97-128",
-                         "sub_topics":  [
-                                            "Procedure Text Structure",
-                                            "Imperative Sentences",
-                                            "Sequencing Words",
-                                            "Writing Instructions"
-                                        ],
-                         "key_terms":  [
-                                           "procedure",
-                                           "step",
-                                           "instruction"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Procedure Text"
-                     },
-                     {
-                         "no":  5,
-                         "pages":  "129-158",
-                         "sub_topics":  [
-                                            "Report Text Structure",
-                                            "Classifying Information",
-                                            "General and Specific",
-                                            "Writing a Report"
-                                        ],
-                         "key_terms":  [
-                                           "report",
-                                           "fact",
-                                           "information"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Report Text"
-                     },
-                     {
-                         "no":  6,
-                         "pages":  "159-190",
-                         "sub_topics":  [
-                                            "Folktales from Around the World",
-                                            "Indonesian Folktales",
-                                            "Moral Lessons",
-                                            "Retelling Folktales"
-                                        ],
-                         "key_terms":  [
-                                           "folktale",
-                                           "legend",
-                                           "moral"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Folktales"
-                     }
-                 ],
-    "isbn":  "978-623-194-826-6"
+    "publisher": "Kemendikbudristek",
+    "bookId": "sd-ing-6",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-32",
+            "sub_topics": [
+                {
+                    "name": "Expressing Future Plans",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Going To",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Will and Shall",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Making Plans and Promises",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "future",
+                "will",
+                "plan"
+            ],
+            "semester": "Ganjil",
+            "title": "Future Plans"
+        },
+        {
+            "no": 2,
+            "pages": "33-64",
+            "sub_topics": [
+                {
+                    "name": "Descriptive Text Structure",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Describing Places",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Describing Animals",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing Descriptions",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "descriptive",
+                "description",
+                "adjective"
+            ],
+            "semester": "Ganjil",
+            "title": "Descriptive Text"
+        },
+        {
+            "no": 3,
+            "pages": "65-96",
+            "sub_topics": [
+                {
+                    "name": "Recount Text Structure",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Personal Recount",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Holiday Recount",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing a Recount",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "recount",
+                "event",
+                "experience"
+            ],
+            "semester": "Ganjil",
+            "title": "Recount Text"
+        },
+        {
+            "no": 4,
+            "pages": "97-128",
+            "sub_topics": [
+                {
+                    "name": "Procedure Text Structure",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Imperative Sentences",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sequencing Words",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing Instructions",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "procedure",
+                "step",
+                "instruction"
+            ],
+            "semester": "Genap",
+            "title": "Procedure Text"
+        },
+        {
+            "no": 5,
+            "pages": "129-158",
+            "sub_topics": [
+                {
+                    "name": "Report Text Structure",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Classifying Information",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "General and Specific",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing a Report",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "report",
+                "fact",
+                "information"
+            ],
+            "semester": "Genap",
+            "title": "Report Text"
+        },
+        {
+            "no": 6,
+            "pages": "159-190",
+            "sub_topics": [
+                {
+                    "name": "Folktales from Around the World",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Indonesian Folktales",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Moral Lessons",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Retelling Folktales",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "folktale",
+                "legend",
+                "moral"
+            ],
+            "semester": "Genap",
+            "title": "Folktales"
+        }
+    ],
+    "isbn": "978-623-194-826-6"
 }

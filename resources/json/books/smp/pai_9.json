@@ -1,12 +1,182 @@
 {
-  "bookId": "smp-pai-9",
-  "publisher": "Kemendikbudristek",
-  "chapters": [
-    { "no": 1, "title": "Al-Qur'an dan Hadis tentang Hukum", "pages": "1-40", "semester": "Ganjil", "sub_topics": ["Ayat-Ayat tentang Hukum", "Hadis-Hadis Hukum", "Ijtihad sebagai Sumber Hukum"], "key_terms": ["Al-Qur'an", "Hadis", "Ijtihad", "Hukum Islam"] },
-    { "no": 2, "title": "Aqidah Akhlak", "pages": "41-78", "semester": "Ganjil", "sub_topics": ["Prinsip-Prinsip Aqidah", "Akhlak Mulia", "Hubungan Aqidah dan Akhlak"], "key_terms": ["Aqidah", "Akhlak", "Iman", "Tauhid"] },
-    { "no": 3, "title": "Zakat dan Sedekah", "pages": "79-114", "semester": "Ganjil", "sub_topics": ["Pengertian Zakat", "Macam-macam Zakat", "Keutamaan Sedekah"], "key_terms": ["Zakat", "Sedekah", "Zakat Fitrah", "Zakat Mal", "Mustahik"] },
-    { "no": 4, "title": "Haji dan Umrah", "pages": "115-150", "semester": "Genap", "sub_topics": ["Rukun Haji", "Wajib Haji", "Tata Cara Umrah"], "key_terms": ["Haji", "Umrah", "Ka'bah", "Miqat", "Ihram"] },
-    { "no": 5, "title": "Sejarah Peradaban Islam Masa Daulah Abbasiyah", "pages": "151-186", "semester": "Genap", "sub_topics": ["Berdirinya Daulah Abbasiyah", "Masa Keemasan Islam", "Kemajuan Ilmu Pengetahuan"], "key_terms": ["Daulah Abbasiyah", "Baghdad", "Baitul Hikmah", "Masa Keemasan"] },
-    { "no": 6, "title": "Membiasakan Akhlak Mulia", "pages": "187-220", "semester": "Genap", "sub_topics": ["Macam-macam Akhlak Mulia", "Cara Membiasakan Akhlak Baik", "Manfaat Akhlak Mulia"], "key_terms": ["Akhlak Karimah", "Jujur", "Dermawan", "Pemaaf"] }
-  ]
+    "bookId": "smp-pai-9",
+    "publisher": "Kemendikbudristek",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Al-Qur'an dan Hadis tentang Hukum",
+            "pages": "1-40",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Ayat-Ayat tentang Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hadis-Hadis Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ijtihad sebagai Sumber Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Al-Qur'an",
+                "Hadis",
+                "Ijtihad",
+                "Hukum Islam"
+            ]
+        },
+        {
+            "no": 2,
+            "title": "Aqidah Akhlak",
+            "pages": "41-78",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Prinsip-Prinsip Aqidah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Akhlak Mulia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hubungan Aqidah dan Akhlak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Aqidah",
+                "Akhlak",
+                "Iman",
+                "Tauhid"
+            ]
+        },
+        {
+            "no": 3,
+            "title": "Zakat dan Sedekah",
+            "pages": "79-114",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Zakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Macam-macam Zakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keutamaan Sedekah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Zakat",
+                "Sedekah",
+                "Zakat Fitrah",
+                "Zakat Mal",
+                "Mustahik"
+            ]
+        },
+        {
+            "no": 4,
+            "title": "Haji dan Umrah",
+            "pages": "115-150",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Rukun Haji",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Wajib Haji",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tata Cara Umrah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Haji",
+                "Umrah",
+                "Ka'bah",
+                "Miqat",
+                "Ihram"
+            ]
+        },
+        {
+            "no": 5,
+            "title": "Sejarah Peradaban Islam Masa Daulah Abbasiyah",
+            "pages": "151-186",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Berdirinya Daulah Abbasiyah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masa Keemasan Islam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kemajuan Ilmu Pengetahuan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Daulah Abbasiyah",
+                "Baghdad",
+                "Baitul Hikmah",
+                "Masa Keemasan"
+            ]
+        },
+        {
+            "no": 6,
+            "title": "Membiasakan Akhlak Mulia",
+            "pages": "187-220",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Macam-macam Akhlak Mulia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Cara Membiasakan Akhlak Baik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manfaat Akhlak Mulia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Akhlak Karimah",
+                "Jujur",
+                "Dermawan",
+                "Pemaaf"
+            ]
+        }
+    ]
 }

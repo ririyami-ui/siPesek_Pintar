@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-34",
             "sub_topics": [
-                "Lahirnya Pergerakan Nasional",
-                "Organisasi Pergerakan Awal",
-                "Sumpah Pemuda",
-                "Tokoh Pergerakan Nasional"
+                {
+                    "name": "Lahirnya Pergerakan Nasional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Organisasi Pergerakan Awal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sumpah Pemuda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tokoh Pergerakan Nasional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "pergerakan",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "35-66",
             "sub_topics": [
-                "Kedatangan Jepang",
-                "Pemerintahan Militer Jepang",
-                "Dampak Pendudukan Jepang",
-                "Perlawanan terhadap Jepang"
+                {
+                    "name": "Kedatangan Jepang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemerintahan Militer Jepang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dampak Pendudukan Jepang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perlawanan terhadap Jepang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Jepang",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "67-98",
             "sub_topics": [
-                "Peristiwa Rengasdengklok",
-                "Proklamasi Kemerdekaan",
-                "Makna Proklamasi",
-                "Reaksi Dunia atas Proklamasi"
+                {
+                    "name": "Peristiwa Rengasdengklok",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Proklamasi Kemerdekaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Proklamasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Reaksi Dunia atas Proklamasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "proklamasi",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "99-130",
             "sub_topics": [
-                "Perjuangan Mempertahankan Kemerdekaan",
-                "Pertempuran Surabaya",
-                "Perjanjian Linggarjati",
-                "Pengakuan Kedaulatan"
+                {
+                    "name": "Perjuangan Mempertahankan Kemerdekaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertempuran Surabaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perjanjian Linggarjati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengakuan Kedaulatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "revolusi",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "131-162",
             "sub_topics": [
-                "Demokrasi Liberal",
-                "Kabinet dan Parlemen",
-                "Pemilu 1955",
-                "Kegagalan Demokrasi Liberal"
+                {
+                    "name": "Demokrasi Liberal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kabinet dan Parlemen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemilu 1955",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kegagalan Demokrasi Liberal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "demokrasi",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "163-194",
             "sub_topics": [
-                "Lahirnya Demokrasi Terpimpin",
-                "Kebijakan Demokrasi Terpimpin",
-                "Konfrontasi dan Konflik",
-                "Akhir Demokrasi Terpimpin"
+                {
+                    "name": "Lahirnya Demokrasi Terpimpin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kebijakan Demokrasi Terpimpin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konfrontasi dan Konflik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Akhir Demokrasi Terpimpin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "terpimpin",

@@ -1,58 +1,139 @@
 {
-  "bookId": "sma-fis-10",
-  "isbn": "978-602-244-380-3",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Fisika SMA Kelas X",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Pengukuran dalam Kerja Ilmiah",
-      "pages": "1-30",
-      "sub_topics": [
-        "Macam-macam Alat Ukur",
-        "Besaran, Satuan, dan Dimensi",
-        "Aturan Angka Penting dan Notasi Ilmiah",
-        "Nilai Ketidakpastian pada Pengukuran Berulang"
-      ],
-      "key_terms": ["Mistar", "Jangka Sorong", "Mikrometer Sekrup", "Dimensi", "Presisi"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel data hasil pengukuran massa dan volume."
-    },
-    {
-      "no": 2,
-      "title": "Virus dan Peranannya (Integrasi IPA)",
-      "pages": "31-50",
-      "sub_topics": [
-        "Mekanisme Fisika pada Replikasi Virus",
-        "Biofisika Dasar"
-      ],
-      "key_terms": ["Biofisika", "Mekanika Sel"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan interaksi fisik virus dengan membran sel."
-    },
-    {
-      "no": 3,
-      "title": "Vektor",
-      "pages": "51-80",
-      "sub_topics": [
-        "Notasi Vektor",
-        "Penjumlahan Vektor (Metode Poligon & Jajaran Genjang)",
-        "Penguraian Komponen Vektor",
-        "Perkalian Vektor (Dot & Cross Product)"
-      ],
-      "key_terms": ["Resultan", "Kosinus", "Sinus", "Analitis", "Komponen"],
-      "visual_hints": "Wajib gunakan LaTeX untuk perhitungan resultan vektor menggunakan rumus kosinus."
-    },
-    {
-      "no": 4,
-      "title": "Energi Terbarukan",
-      "pages": "81-120",
-      "sub_topics": [
-        "Energi Potensial, Kinetik, dan Mekanik",
-        "Hukum Kekekalan Energi",
-        "Transformasi Energi",
-        "Urgensi Energi Terbarukan bagi Lingkungan"
-      ],
-      "key_terms": ["Joule", "Watt", "Geotermal", "Biomassa", "Efisiensi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk memvisualisasikan siklus energi dari matahari hingga menjadi listrik di rumah."
-    }
-  ]
+    "bookId": "sma-fis-10",
+    "isbn": "978-602-244-380-3",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Fisika SMA Kelas X",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Pengukuran dalam Kerja Ilmiah",
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Macam-macam Alat Ukur",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Besaran, Satuan, dan Dimensi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Aturan Angka Penting dan Notasi Ilmiah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Ketidakpastian pada Pengukuran Berulang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Mistar",
+                "Jangka Sorong",
+                "Mikrometer Sekrup",
+                "Dimensi",
+                "Presisi"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel data hasil pengukuran massa dan volume.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Virus dan Peranannya (Integrasi IPA)",
+            "pages": "31-50",
+            "sub_topics": [
+                {
+                    "name": "Mekanisme Fisika pada Replikasi Virus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Biofisika Dasar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Biofisika",
+                "Mekanika Sel"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan interaksi fisik virus dengan membran sel.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Vektor",
+            "pages": "51-80",
+            "sub_topics": [
+                {
+                    "name": "Notasi Vektor",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penjumlahan Vektor (Metode Poligon & Jajaran Genjang)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penguraian Komponen Vektor",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perkalian Vektor (Dot & Cross Product)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Resultan",
+                "Kosinus",
+                "Sinus",
+                "Analitis",
+                "Komponen"
+            ],
+            "visual_hints": "Wajib gunakan LaTeX untuk perhitungan resultan vektor menggunakan rumus kosinus.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Energi Terbarukan",
+            "pages": "81-120",
+            "sub_topics": [
+                {
+                    "name": "Energi Potensial, Kinetik, dan Mekanik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hukum Kekekalan Energi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Transformasi Energi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Urgensi Energi Terbarukan bagi Lingkungan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Joule",
+                "Watt",
+                "Geotermal",
+                "Biomassa",
+                "Efisiensi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk memvisualisasikan siklus energi dari matahari hingga menjadi listrik di rumah.",
+            "semester": "Genap"
+        }
+    ]
 }

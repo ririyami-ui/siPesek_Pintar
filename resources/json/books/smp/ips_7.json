@@ -1,60 +1,151 @@
 {
-  "bookId": "smp-ips-7",
-  "isbn": "978-602-244-307-0",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "IPS SMP Kelas VII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Keluarga Awal Kehidupan",
-      "pages": "1-40",
-      "sub_topics": [
-        "Silsilah Keluarga",
-        "Mengenal Lokasi Tempat Tinggal",
-        "Sosialisasi dalam Masyarakat",
-        "Aktivitas Memenuhi Kebutuhan"
-      ],
-      "key_terms": ["Silsilah", "Peta", "Sosialisasi", "Kebutuhan", "Keinginan"],
-      "visual_hints": "Gunakan Mermaid Flowchart (Tree) untuk menjelaskan struktur silsilah keluarga."
-    },
-    {
-      "no": 2,
-      "title": "Pembiasaan Diri untuk Melestarikan Lingkungan",
-      "pages": "41-85",
-      "sub_topics": [
-        "Berkenalan dengan Alam",
-        "Pencemaran Lingkungan",
-        "Pembangunan Berkelanjutan",
-        "Kelangkaan dan Kebutuhan Manusia"
-      ],
-      "key_terms": ["Ekosistem", "Polusi", "Sustainabilitas", "Kelangkaan", "Biaya Peluang"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan data perbandingan jenis limbah dan dampaknya."
-    },
-    {
-      "no": 3,
-      "title": "Potensi Ekonomi Lingkungan",
-      "pages": "87-130",
-      "sub_topics": [
-        "Perubahan Potensi Sumber Daya Alam",
-        "Aktivitas Ekonomi Masyarakat",
-        "Peranan Masyarakat dalam Rantai Ekonomi",
-        "Status dan Peran Sosial"
-      ],
-      "key_terms": ["Produksi", "Distribusi", "Konsumsi", "Pasar", "Harga"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur Rantai Distribusi Barang."
-    },
-    {
-      "no": 4,
-      "title": "Pemberdayaan Masyarakat",
-      "pages": "131-170",
-      "sub_topics": [
-        "Keragaman Masyarakat Indonesia",
-        "Permasalahan Sosial Budaya",
-        "Literasi Keuangan",
-        "Peranan Komunitas"
-      ],
-      "key_terms": ["Pluralitas", "Kearifan Lokal", "Investasi", "Pengelolaan Uang"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi perencanaan anggaran keuangan keluarga."
-    }
-  ]
+    "bookId": "smp-ips-7",
+    "isbn": "978-602-244-307-0",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "IPS SMP Kelas VII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Keluarga Awal Kehidupan",
+            "pages": "1-40",
+            "sub_topics": [
+                {
+                    "name": "Silsilah Keluarga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengenal Lokasi Tempat Tinggal",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sosialisasi dalam Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Aktivitas Memenuhi Kebutuhan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Silsilah",
+                "Peta",
+                "Sosialisasi",
+                "Kebutuhan",
+                "Keinginan"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart (Tree) untuk menjelaskan struktur silsilah keluarga.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Pembiasaan Diri untuk Melestarikan Lingkungan",
+            "pages": "41-85",
+            "sub_topics": [
+                {
+                    "name": "Berkenalan dengan Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pencemaran Lingkungan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembangunan Berkelanjutan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kelangkaan dan Kebutuhan Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Ekosistem",
+                "Polusi",
+                "Sustainabilitas",
+                "Kelangkaan",
+                "Biaya Peluang"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan data perbandingan jenis limbah dan dampaknya.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Potensi Ekonomi Lingkungan",
+            "pages": "87-130",
+            "sub_topics": [
+                {
+                    "name": "Perubahan Potensi Sumber Daya Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Aktivitas Ekonomi Masyarakat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peranan Masyarakat dalam Rantai Ekonomi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Status dan Peran Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Produksi",
+                "Distribusi",
+                "Konsumsi",
+                "Pasar",
+                "Harga"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur Rantai Distribusi Barang.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Pemberdayaan Masyarakat",
+            "pages": "131-170",
+            "sub_topics": [
+                {
+                    "name": "Keragaman Masyarakat Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Permasalahan Sosial Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Literasi Keuangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peranan Komunitas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Pluralitas",
+                "Kearifan Lokal",
+                "Investasi",
+                "Pengelolaan Uang"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi perencanaan anggaran keuangan keluarga.",
+            "semester": "Genap"
+        }
+    ]
 }

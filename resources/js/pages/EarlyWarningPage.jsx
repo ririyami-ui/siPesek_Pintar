@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../lib/axios';
 import { runEarlyWarningAnalysis, getAllStudents } from '../utils/analysis';
 import StyledSelect from '../components/StyledSelect';
@@ -24,22 +24,42 @@ const EarlyWarningPage = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
-  const { activeSemester, academicYear, geminiModel } = useSettings();
+  const { activeSemester, academicYear, geminiModel, userProfile } = useSettings();
+  const location = useLocation();
+  const isRadarMode = location.pathname === '/radar-perwalian';
 
   useEffect(() => {
     const performAnalysis = async () => {
       setIsLoading(true);
       try {
+        let currentRombel = '';
+        if (isRadarMode) {
+          try {
+            const classRes = await api.get('/wali/my-class');
+            if (classRes.data?.data?.rombel) {
+              currentRombel = classRes.data.data.rombel;
+              setSelectedClass(currentRombel);
+            }
+          } catch (err) {
+            console.error("Error fetching wali class:", err);
+          }
+        }
+
+        const analysisScope = isRadarMode ? currentRombel : 'me';
+        
         const [flaggedResults, allStudentsData, classesRes, subjectsRes] = await Promise.all([
-          runEarlyWarningAnalysis('me', activeSemester, academicYear, geminiModel),
-          getAllStudents(),
+          runEarlyWarningAnalysis(analysisScope, activeSemester, academicYear, geminiModel),
+          getAllStudents(null, isRadarMode ? currentRombel : null),
           api.get('/classes?all=true'),
           api.get('/subjects')
         ]);
+        
         setFlaggedStudents(flaggedResults);
         setAllStudents(allStudentsData);
+        
         const classList = classesRes.data.data || classesRes.data || [];
         setClasses(classList.map(c => ({ id: String(c.id), ...c })).sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
+        
         const subjectList = subjectsRes.data.data || subjectsRes.data || [];
         setSubjects(subjectList.map(s => ({ id: String(s.id), ...s })).sort((a, b) => (a.name || '').localeCompare(b.name || '')));
       } catch (err) {
@@ -50,7 +70,7 @@ const EarlyWarningPage = () => {
     };
 
     performAnalysis();
-  }, [activeSemester, academicYear, geminiModel]);
+  }, [activeSemester, academicYear, geminiModel, isRadarMode]);
 
   // Filter Logic
   const filteredFlaggedStudents = useMemo(() => {
@@ -138,6 +158,8 @@ const EarlyWarningPage = () => {
     );
   }
 
+
+
   return (
     <div className="container mx-auto p-4 space-y-6">
       {/* Header */}
@@ -145,7 +167,7 @@ const EarlyWarningPage = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
             <ShieldAlert className="text-red-500" size={32} />
-            Dashboard Monitoring Siswa
+            {location.pathname === '/radar-perwalian' ? 'Radar Perwalian' : 'Sistem Peringatan Dini'}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-1">
             Sistem peringatan dini & analisis komprehensif
@@ -156,34 +178,35 @@ const EarlyWarningPage = () => {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <StyledSelect
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
-        >
-          <option value="">Semua Kelas</option>
-          {classes.map(cls => (
-            <option key={cls.id} value={cls.rombel}>
-              {cls.rombel}
-            </option>
-          ))}
-        </StyledSelect>
-        <StyledSelect
-          value={selectedSubject}
-          onChange={(e) => setSelectedSubject(e.target.value)}
-        >
-          <option value="">Semua Mata Pelajaran</option>
-          {subjects.map(sub => (
-            <option key={sub.id} value={sub.id}>
-              {sub.name}
-            </option>
-          ))}
-        </StyledSelect>
-      </div>
+      {!isRadarMode && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StyledSelect
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+          >
+            <option value="">Semua Kelas</option>
+            {classes.map(cls => (
+              <option key={cls.id} value={cls.rombel}>
+                {cls.rombel}
+              </option>
+            ))}
+          </StyledSelect>
+          <StyledSelect
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+          >
+            <option value="">Semua Mata Pelajaran</option>
+            {subjects.map(sub => (
+              <option key={sub.id} value={sub.id}>
+                {sub.name}
+              </option>
+            ))}
+          </StyledSelect>
+        </div>
+      )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${isRadarMode ? "lg:grid-cols-3" : "lg:grid-cols-4"} gap-4`}>
         <div className="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between">
             <div>
@@ -204,15 +227,17 @@ const EarlyWarningPage = () => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-100 text-sm font-semibold">Kelas Bermasalah</p>
-              <p className="text-2xl font-black mt-2">{stats.problematicClass}</p>
+        {!isRadarMode && (
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-purple-100 text-sm font-semibold">Kelas Bermasalah</p>
+                <p className="text-2xl font-black mt-2">{stats.problematicClass}</p>
+              </div>
+              <Users size={40} className="opacity-50" />
             </div>
-            <Users size={40} className="opacity-50" />
           </div>
-        </div>
+        )}
 
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between">
@@ -226,28 +251,43 @@ const EarlyWarningPage = () => {
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Bar Chart: Students per Class */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
-          <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
-            <Users size={20} className="text-blue-500" />
-            Siswa Berisiko per Kelas
+      {isRadarMode && (
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-red-100 dark:border-red-900/30">
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-4">
+            <Calendar className="text-red-500" size={20} />
+            Radar Sesi Aktif Hari Ini & Kontrol Perwalian Kelas {userProfile?.rombel}
           </h3>
-          {classChartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={classChartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="class" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="students" fill="#3b82f6" />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-center text-gray-500 py-20">Tidak ada data</p>
-          )}
+          <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl text-sm text-gray-600 dark:text-gray-300">
+            Sistem secara dinamis memetakan status kehadiran realtime, akumulasi skor pelanggaran, serta grafik tren nilai rendah siswa khusus di kelas binaan Anda.
+          </div>
         </div>
+      )}
+
+
+      {/* Charts Section */}
+      <div className={`grid grid-cols-1 ${isRadarMode ? "" : "lg:grid-cols-2"} gap-6`}>
+        {/* Bar Chart: Students per Class - Only in general mode */}
+        {!isRadarMode && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-white flex items-center gap-2">
+              <Users size={20} className="text-blue-500" />
+              Siswa Berisiko per Kelas
+            </h3>
+            {classChartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={classChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="class" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="students" fill="#3b82f6" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-center text-gray-500 py-20">Tidak ada data</p>
+            )}
+          </div>
+        )}
 
         {/* Pie Chart: Warning Types */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">

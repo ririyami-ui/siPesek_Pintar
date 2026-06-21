@@ -12,7 +12,7 @@ export default function JadwalPage() {
   const [schedules, setSchedules] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState(null); // State for popup
+  const [selectedTopic, setSelectedTopic] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Fetch schedules, programs, and classes from Laravel API
@@ -87,20 +87,20 @@ export default function JadwalPage() {
       return acc;
     }, {});
 
-  // Sort by Class (Rombel), then start period
+  // Sort by Start Period (Jam Ke-), then Class (Rombel)
   Object.keys(groupedSchedules).forEach(day => {
     groupedSchedules[day].sort((a, b) => {
-      // 1. Sort by Class (Rombel)
+      // 1. Sort by Start Period (Jam Ke-)
+      const periodA = parseInt(a.startPeriod) || 0;
+      const periodB = parseInt(b.startPeriod) || 0;
+      if (periodA !== periodB) return periodA - periodB;
+      
+      // 2. Sort by Class (Rombel)
       const classA = a.class || '';
       const classB = b.class || '';
       const classDiff = classA.localeCompare(classB, undefined, { numeric: true, sensitivity: 'base' });
       if (classDiff !== 0) return classDiff;
 
-      // 2. Sort by Start Period (Jam Ke-)
-      const periodA = parseInt(a.startPeriod) || 0;
-      const periodB = parseInt(b.startPeriod) || 0;
-      if (periodA !== periodB) return periodA - periodB;
-      
       // 3. Sort by Start Time (fallback)
       return moment(a.startTime, 'HH:mm').diff(moment(b.startTime, 'HH:mm'));
     });

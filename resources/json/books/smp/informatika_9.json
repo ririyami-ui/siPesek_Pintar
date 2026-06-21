@@ -1,60 +1,148 @@
 {
-  "bookId": "smp-info-9",
-  "isbn": "978-602-244-505-0",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Informatika SMP Kelas IX",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Berpikir Komputasional Tingkat Lanjut",
-      "pages": "20-45",
-      "sub_topics": [
-        "Pencarian (Searching)",
-        "Pengurutan (Sorting): Bubble Sort & Insertion Sort",
-        "Logika Proposisi dan Gerbang Logika",
-        "Analisis Strategi Pemecahan Masalah"
-      ],
-      "key_terms": ["Searching", "Sorting", "AND/OR/NOT", "Optimasi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur algoritma Bubble Sort step-by-step."
-    },
-    {
-      "no": 2,
-      "title": "Teknologi Informasi & Analisis Data",
-      "pages": "47-75",
-      "sub_topics": [
-        "Integrasi Aplikasi Perkantoran (Object Linking & Embedding)",
-        "Blog dan Vlog sebagai Media Komunikasi",
-        "Keamanan Data dan Enkripsi Lanjut",
-        "Analisis Data Historis untuk Prediksi"
-      ],
-      "key_terms": ["Cyber Security", "OLE", "Phishing", "Metadata"],
-      "visual_hints": "Tampilkan tabel Spreadsheet untuk simulasi perhitungan bunga majemuk atau pertumbuhan populasi."
-    },
-    {
-      "no": 3,
-      "title": "Algoritma dan Pemrograman (Prosedural)",
-      "pages": "77-120",
-      "sub_topics": [
-        "Struktur Program Prosedural",
-        "Input, Output, dan Variabel dalam Bahasa Teks",
-        "Ekspresi Logika dan Aritmatika",
-        "Proyek: Membuat Aplikasi Sederhana"
-      ],
-      "key_terms": ["Variabel", "Tipe Data", "Input/Output", "Compiler"],
-      "visual_hints": "Gunakan blok Scratch untuk memodelkan logika pemrograman teks sebelum diimplementasikan."
-    },
-    {
-      "no": 4,
-      "title": "Dampak Sosial Informatika & Robotika",
-      "pages": "121-150",
-      "sub_topics": [
-        "Kolaborasi di Dunia Digital",
-        "Kekayaan Intelektual dan Lisensi",
-        "Pengenalan Robotika dan Sensor",
-        "Etika Penggunaan Kecerdasan Buatan (AI)"
-      ],
-      "key_terms": ["Hak Cipta", "Sensor", "Aktuator", "Artificial Intelligence"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan ekosistem masyarakat digital."
-    }
-  ]
+    "bookId": "smp-info-9",
+    "isbn": "978-602-244-505-0",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Informatika SMP Kelas IX",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Berpikir Komputasional Tingkat Lanjut",
+            "pages": "20-45",
+            "sub_topics": [
+                {
+                    "name": "Pencarian (Searching)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengurutan (Sorting): Bubble Sort & Insertion Sort",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Logika Proposisi dan Gerbang Logika",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Analisis Strategi Pemecahan Masalah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Searching",
+                "Sorting",
+                "AND\/OR\/NOT",
+                "Optimasi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur algoritma Bubble Sort step-by-step.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Teknologi Informasi & Analisis Data",
+            "pages": "47-75",
+            "sub_topics": [
+                {
+                    "name": "Integrasi Aplikasi Perkantoran (Object Linking & Embedding)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Blog dan Vlog sebagai Media Komunikasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keamanan Data dan Enkripsi Lanjut",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Analisis Data Historis untuk Prediksi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Cyber Security",
+                "OLE",
+                "Phishing",
+                "Metadata"
+            ],
+            "visual_hints": "Tampilkan tabel Spreadsheet untuk simulasi perhitungan bunga majemuk atau pertumbuhan populasi.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Algoritma dan Pemrograman (Prosedural)",
+            "pages": "77-120",
+            "sub_topics": [
+                {
+                    "name": "Struktur Program Prosedural",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Input, Output, dan Variabel dalam Bahasa Teks",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ekspresi Logika dan Aritmatika",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Proyek: Membuat Aplikasi Sederhana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Variabel",
+                "Tipe Data",
+                "Input\/Output",
+                "Compiler"
+            ],
+            "visual_hints": "Gunakan blok Scratch untuk memodelkan logika pemrograman teks sebelum diimplementasikan.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Dampak Sosial Informatika & Robotika",
+            "pages": "121-150",
+            "sub_topics": [
+                {
+                    "name": "Kolaborasi di Dunia Digital",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kekayaan Intelektual dan Lisensi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengenalan Robotika dan Sensor",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Etika Penggunaan Kecerdasan Buatan (AI)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Hak Cipta",
+                "Sensor",
+                "Aktuator",
+                "Artificial Intelligence"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk menjelaskan ekosistem masyarakat digital.",
+            "semester": "Genap"
+        }
+    ]
 }

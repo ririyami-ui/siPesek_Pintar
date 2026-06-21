@@ -1,60 +1,152 @@
 {
-  "bookId": "sma-bio-11",
-  "isbn": "978-602-244-374-2",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Biologi SMA Kelas XI",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Sel",
-      "pages": "1-35",
-      "sub_topics": [
-        "Komponen Kimiawi Penyusun Sel",
-        "Struktur dan Fungsi Organel Sel Lanjut",
-        "Proses Transpor Membran (Difusi, Osmosis, Transpor Aktif)",
-        "Sintesis Protein dan Pembelahan Sel"
-      ],
-      "key_terms": ["Prokariotik", "Eukariotik", "Fosfolipid", "Endositosis", "Eksositosis"],
-      "visual_hints": "Tampilkan tabel perbandingan mekanisme Transpor Pasif dan Transpor Aktif menggunakan Spreadsheet Renderer."
-    },
-    {
-      "no": 2,
-      "title": "Pergerakan dan Koordinasi",
-      "pages": "37-80",
-      "sub_topics": [
-        "Sistem Gerak (Tulang, Otot, Sendi)",
-        "Sistem Saraf dan Mekanisme Impuls",
-        "Sistem Hormon dan Mekanisme Umpan Balik",
-        "Alat Indra dan Fungsinya"
-      ],
-      "key_terms": ["Sarkomer", "Sinapsis", "Neurotransmitter", "Homeostasis", "Kelenjar Endokrin"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme kontraksi otot atau penghantaran impuls saraf."
-    },
-    {
-      "no": 3,
-      "title": "Transportasi dan Pertahanan Tubuh",
-      "pages": "81-120",
-      "sub_topics": [
-        "Sistem Peredaran Darah Manusia",
-        "Komponen Darah dan Mekanisme Pembekuan Darah",
-        "Sistem Imun (Pertahanan Tubuh)",
-        "Gangguan pada Sistem Sirkulasi dan Imunitas"
-      ],
-      "key_terms": ["Hemoglobin", "Leukosit", "Antibodi", "Limfosit", "Agregasi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan skema pembekuan darah (Kaskade Koagulasi)."
-    },
-    {
-      "no": 4,
-      "title": "Proses Reproduksi dan Pertumbuhan",
-      "pages": "121-160",
-      "sub_topics": [
-        "Sistem Reproduksi Laki-laki dan Perempuan",
-        "Gametogenesis (Spermatogenesis & Oogenesis)",
-        "Siklus Menstruasi dan Kehamilan",
-        "Alat Kontrasepsi dan Kesehatan Reproduksi"
-      ],
-      "key_terms": ["Meiosis", "Zigot", "Blastula", "LH", "FSH"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan grafik hormon pada siklus menstruasi."
-    }
-  ]
+    "bookId": "sma-bio-11",
+    "isbn": "978-602-244-374-2",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Biologi SMA Kelas XI",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Sel",
+            "pages": "1-35",
+            "sub_topics": [
+                {
+                    "name": "Komponen Kimiawi Penyusun Sel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Struktur dan Fungsi Organel Sel Lanjut",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Proses Transpor Membran (Difusi, Osmosis, Transpor Aktif)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sintesis Protein dan Pembelahan Sel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Prokariotik",
+                "Eukariotik",
+                "Fosfolipid",
+                "Endositosis",
+                "Eksositosis"
+            ],
+            "visual_hints": "Tampilkan tabel perbandingan mekanisme Transpor Pasif dan Transpor Aktif menggunakan Spreadsheet Renderer.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Pergerakan dan Koordinasi",
+            "pages": "37-80",
+            "sub_topics": [
+                {
+                    "name": "Sistem Gerak (Tulang, Otot, Sendi)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Saraf dan Mekanisme Impuls",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Hormon dan Mekanisme Umpan Balik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Alat Indra dan Fungsinya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Sarkomer",
+                "Sinapsis",
+                "Neurotransmitter",
+                "Homeostasis",
+                "Kelenjar Endokrin"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme kontraksi otot atau penghantaran impuls saraf.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Transportasi dan Pertahanan Tubuh",
+            "pages": "81-120",
+            "sub_topics": [
+                {
+                    "name": "Sistem Peredaran Darah Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Komponen Darah dan Mekanisme Pembekuan Darah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sistem Imun (Pertahanan Tubuh)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gangguan pada Sistem Sirkulasi dan Imunitas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Hemoglobin",
+                "Leukosit",
+                "Antibodi",
+                "Limfosit",
+                "Agregasi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan skema pembekuan darah (Kaskade Koagulasi).",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Proses Reproduksi dan Pertumbuhan",
+            "pages": "121-160",
+            "sub_topics": [
+                {
+                    "name": "Sistem Reproduksi Laki-laki dan Perempuan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gametogenesis (Spermatogenesis & Oogenesis)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Siklus Menstruasi dan Kehamilan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Alat Kontrasepsi dan Kesehatan Reproduksi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Meiosis",
+                "Zigot",
+                "Blastula",
+                "LH",
+                "FSH"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan grafik hormon pada siklus menstruasi.",
+            "semester": "Genap"
+        }
+    ]
 }

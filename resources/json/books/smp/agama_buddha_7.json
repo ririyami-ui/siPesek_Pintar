@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Kehidupan Pangeran Siddhartha",
-                "Pertapaan dan Pencerahan",
-                "Ajaran Buddha di India",
-                "Wafatnya Buddha"
+                {
+                    "name": "Kehidupan Pangeran Siddhartha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertapaan dan Pencerahan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Buddha di India",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Wafatnya Buddha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Buddha",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Pengertian Tipitaka",
-                "Vinaya Pitaka",
-                "Sutta Pitaka",
-                "Abhidhamma Pitaka"
+                {
+                    "name": "Pengertian Tipitaka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Vinaya Pitaka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sutta Pitaka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Abhidhamma Pitaka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Tipitaka",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Kebenaran Mulia Pertama",
-                "Kebenaran Mulia Kedua",
-                "Kebenaran Mulia Ketiga",
-                "Kebenaran Mulia Keempat"
+                {
+                    "name": "Kebenaran Mulia Pertama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kebenaran Mulia Kedua",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kebenaran Mulia Ketiga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kebenaran Mulia Keempat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Ariya Sacca",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Pengertian Jalan Mulia",
-                "Pandangan Benar dan Pikiran Benar",
-                "Kata Benar dan Perbuatan Benar",
-                "Konsentrasi Benar"
+                {
+                    "name": "Pengertian Jalan Mulia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pandangan Benar dan Pikiran Benar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kata Benar dan Perbuatan Benar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsentrasi Benar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Astangika Marga",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Hukum Karma",
-                "Punarbhava",
-                "Hubungan Karma dan Kelahiran Kembali",
-                "Pembebasan dari Samsara"
+                {
+                    "name": "Hukum Karma",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Punarbhava",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hubungan Karma dan Kelahiran Kembali",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembebasan dari Samsara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "karma",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Pengertian Meditasi",
-                "Samatha Bhavana",
-                "Vipassana Bhavana",
-                "Manfaat Meditasi"
+                {
+                    "name": "Pengertian Meditasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Samatha Bhavana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Vipassana Bhavana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manfaat Meditasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "meditasi",

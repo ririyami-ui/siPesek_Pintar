@@ -1,12 +1,180 @@
 {
-  "bookId": "smp-pai-7",
-  "publisher": "Kemendikbudristek",
-  "chapters": [
-    { "no": 1, "title": "Al-Qur'an dan Sunah sebagai Pedoman Hidup", "pages": "1-34", "semester": "Ganjil", "sub_topics": ["Pengertian Al-Qur'an dan Sunah", "Fungsi Al-Qur'an dalam Kehidupan", "Kedudukan Sunah sebagai Sumber Hukum"], "key_terms": ["Al-Qur'an", "Sunah", "Hadis", "Wahyu"] },
-    { "no": 2, "title": "Meneladani Asmaulhusna dan Sifat-Sifat Allah", "pages": "35-62", "semester": "Ganjil", "sub_topics": ["Pengertian Asmaulhusna", "Makna Sifat Wajib Allah", "Hikmah Meneladani Asmaulhusna"], "key_terms": ["Asmaulhusna", "Sifat Wajib", "Mukhalafatu Lil Hawaditsi", "Qidam"] },
-    { "no": 3, "title": "Membangun Kebiasaan Disiplin dan Tanggung Jawab", "pages": "63-90", "semester": "Ganjil", "sub_topics": ["Pengertian Disiplin", "Tanggung Jawab dalam Islam", "Contoh Perilaku Disiplin"], "key_terms": ["Disiplin", "Tanggung Jawab", "Amanah", "Istiqamah"] },
-    { "no": 4, "title": "Mengagungkan Allah dengan Sujud", "pages": "91-118", "semester": "Genap", "sub_topics": ["Macam-macam Sujud", "Tata Cara Sujud Syukur", "Hikmah Sujud"], "key_terms": ["Sujud Syukur", "Sujud Tilawah", "Sujud Sahwi", "Khusyuk"] },
-    { "no": 5, "title": "Kisah Nabi Muhammad dan Para Sahabat", "pages": "119-148", "semester": "Genap", "sub_topics": ["Sejarah Hidup Nabi Muhammad", "Perjuangan Para Sahabat", "Teladan dari Kisah Nabi"], "key_terms": ["Nabi Muhammad", "Sahabat", "Hijrah", "Dakwah"] },
-    { "no": 6, "title": "Menghindari Sikap Tercela", "pages": "149-176", "semester": "Genap", "sub_topics": ["Pengertian Akhlak Tercela", "Dampak Perilaku Tercela", "Cara Menghindari Sifat Buruk"], "key_terms": ["Akhlak Mazmumah", "Hasad", "Riya", "Ghibah"] }
-  ]
+    "bookId": "smp-pai-7",
+    "publisher": "Kemendikbudristek",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Al-Qur'an dan Sunah sebagai Pedoman Hidup",
+            "pages": "1-34",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Al-Qur'an dan Sunah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fungsi Al-Qur'an dalam Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kedudukan Sunah sebagai Sumber Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Al-Qur'an",
+                "Sunah",
+                "Hadis",
+                "Wahyu"
+            ]
+        },
+        {
+            "no": 2,
+            "title": "Meneladani Asmaulhusna dan Sifat-Sifat Allah",
+            "pages": "35-62",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Asmaulhusna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Sifat Wajib Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hikmah Meneladani Asmaulhusna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Asmaulhusna",
+                "Sifat Wajib",
+                "Mukhalafatu Lil Hawaditsi",
+                "Qidam"
+            ]
+        },
+        {
+            "no": 3,
+            "title": "Membangun Kebiasaan Disiplin dan Tanggung Jawab",
+            "pages": "63-90",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Disiplin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab dalam Islam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Contoh Perilaku Disiplin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Disiplin",
+                "Tanggung Jawab",
+                "Amanah",
+                "Istiqamah"
+            ]
+        },
+        {
+            "no": 4,
+            "title": "Mengagungkan Allah dengan Sujud",
+            "pages": "91-118",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Macam-macam Sujud",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tata Cara Sujud Syukur",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hikmah Sujud",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Sujud Syukur",
+                "Sujud Tilawah",
+                "Sujud Sahwi",
+                "Khusyuk"
+            ]
+        },
+        {
+            "no": 5,
+            "title": "Kisah Nabi Muhammad dan Para Sahabat",
+            "pages": "119-148",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Sejarah Hidup Nabi Muhammad",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perjuangan Para Sahabat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Teladan dari Kisah Nabi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Nabi Muhammad",
+                "Sahabat",
+                "Hijrah",
+                "Dakwah"
+            ]
+        },
+        {
+            "no": 6,
+            "title": "Menghindari Sikap Tercela",
+            "pages": "149-176",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Akhlak Tercela",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dampak Perilaku Tercela",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Cara Menghindari Sifat Buruk",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Akhlak Mazmumah",
+                "Hasad",
+                "Riya",
+                "Ghibah"
+            ]
+        }
+    ]
 }

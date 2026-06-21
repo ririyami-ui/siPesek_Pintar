@@ -15,4 +15,14 @@ export default defineConfig({
             '@': '/resources/js',
         },
     },
+    build: {
+        rollupOptions: {
+            external: ['jsxgraph'],
+            output: {
+                globals: {
+                    jsxgraph: 'JXG',
+                },
+            },
+        },
+    },
 });

@@ -1,56 +1,126 @@
 {
-  "bookId": "smp-mat-8",
-  "isbn": "978-602-244-515-9",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Matematika SMP Kelas VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Bilangan Berpangkat",
-      "pages": "1-35",
-      "sub_topics": [
-        "Sifat-sifat Bilangan Berpangkat",
-        "Bentuk Akar",
-        "Penulisan Bentuk Baku (Notasi Ilmiah)"
-      ],
-      "key_terms": ["Eksponen", "Radikal", "Basis", "Pangkat Negatif"],
-      "visual_hints": "Gunakan format LaTeX secara konsisten untuk penyederhanaan bentuk akar kompleks."
-    },
-    {
-      "no": 2,
-      "title": "Teorema Pythagoras",
-      "pages": "37-65",
-      "sub_topics": [
-        "Menemukan Konsep Pythagoras",
-        "Tripel Pythagoras",
-        "Penerapan Teorema Pythagoras pada Bangun Datar dan Ruang"
-      ],
-      "key_terms": ["Hipotenusa", "Sisi Siku-siku", "Luas Persegi"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi jenis segitiga berdasarkan panjang sisinya."
-    },
-    {
-      "no": 3,
-      "title": "Persamaan dan Pertidaksamaan Linear Satu Variabel (Lanjut)",
-      "pages": "67-90",
-      "sub_topics": [
-        "Persamaan Linear dengan Pecahan",
-        "Model Matematika dari Masalah Nyata",
-        "Penyelesaian Pertidaksamaan dengan Garis Bilangan"
-      ],
-      "key_terms": ["Substitusi", "Eliminasi", "Himpunan Penyelesaian"],
-      "visual_hints": "Tampilkan tabel Spreadsheet untuk perbandingan nilai variabel pada simulasi soal."
-    },
-    {
-      "no": 4,
-      "title": "Relasi dan Fungsi",
-      "pages": "91-125",
-      "sub_topics": [
-        "Memahami Relasi",
-        "Fungsi atau Pemetaan",
-        "Bentuk Penyajian Fungsi (Diagram Panah, Tabel, Grafik)"
-      ],
-      "key_terms": ["Domain", "Kodomain", "Range", "Korespondensi Satu-satu"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk struktur klasifikasi Relasi vs Fungsi."
-    }
-  ]
+    "bookId": "smp-mat-8",
+    "isbn": "978-602-244-515-9",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Matematika SMP Kelas VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Bilangan Berpangkat",
+            "pages": "1-35",
+            "sub_topics": [
+                {
+                    "name": "Sifat-sifat Bilangan Berpangkat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bentuk Akar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penulisan Bentuk Baku (Notasi Ilmiah)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Eksponen",
+                "Radikal",
+                "Basis",
+                "Pangkat Negatif"
+            ],
+            "visual_hints": "Gunakan format LaTeX secara konsisten untuk penyederhanaan bentuk akar kompleks.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Teorema Pythagoras",
+            "pages": "37-65",
+            "sub_topics": [
+                {
+                    "name": "Menemukan Konsep Pythagoras",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tripel Pythagoras",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penerapan Teorema Pythagoras pada Bangun Datar dan Ruang",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Hipotenusa",
+                "Sisi Siku-siku",
+                "Luas Persegi"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi jenis segitiga berdasarkan panjang sisinya.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Persamaan dan Pertidaksamaan Linear Satu Variabel (Lanjut)",
+            "pages": "67-90",
+            "sub_topics": [
+                {
+                    "name": "Persamaan Linear dengan Pecahan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Model Matematika dari Masalah Nyata",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penyelesaian Pertidaksamaan dengan Garis Bilangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Substitusi",
+                "Eliminasi",
+                "Himpunan Penyelesaian"
+            ],
+            "visual_hints": "Tampilkan tabel Spreadsheet untuk perbandingan nilai variabel pada simulasi soal.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Relasi dan Fungsi",
+            "pages": "91-125",
+            "sub_topics": [
+                {
+                    "name": "Memahami Relasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fungsi atau Pemetaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bentuk Penyajian Fungsi (Diagram Panah, Tabel, Grafik)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Domain",
+                "Kodomain",
+                "Range",
+                "Korespondensi Satu-satu"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk struktur klasifikasi Relasi vs Fungsi.",
+            "semester": "Genap"
+        }
+    ]
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\ClassAgreement;
 use App\Models\Grade;
+use App\Models\Holiday;
 use App\Models\Infraction;
 use App\Models\LibraryLoan;
 use App\Models\Schedule;
@@ -142,6 +143,17 @@ class StudentDashboardController extends Controller
         $currentTime = $now->format('H:i');
         $today = $now->toDateString();
 
+        // Check for holiday
+        $holiday = Holiday::where(function($q) use ($today) {
+                $q->whereDate('date', $today)
+                  ->orWhere(function($sq) use ($today) {
+                      $sq->whereDate('start_date', '<=', $today)
+                         ->whereDate('end_date', '>=', $today);
+                  });
+            })
+            ->where('is_holiday', true)
+            ->first();
+
         // Fetch all schedules for the student's class today
         $schedules = Schedule::with(['subject', 'teacher'])
             ->where('class_id', $student->class_id)
@@ -275,14 +287,18 @@ class StudentDashboardController extends Controller
             'student'         => [
                 'id'        => $student->id,
                 'name'      => $student->name,
-                'nis'       => $student->nis,
-                'nisn'      => $student->nisn,
-                'class'     => $this->getClassName($student),
-                'class_id'  => $student->class_id,
+                'class'     => $student->class->rombel ?? '-',
+                'absen'     => $student->absen ?? '-',
+                'nis'       => $student->nis ?? '-',
+                'nisn'      => $student->nisn ?? '-',
+                'photo_url' => $student->user->photo_url ?? null,
                 'gender'    => $student->gender ?? 'L',
-                'absen'     => $student->absen,
-                'photo_url' => $studentPhoto,
+                'class_id'  => $student->class_id,
             ],
+            'holiday'         => $holiday ? [
+                'title' => $holiday->title ?: $holiday->name,
+                'description' => $holiday->description
+            ] : null,
             'current_session' => $currentSession ? [
                 'subject_id'    => $currentSession->subject_id,
                 'subject_name'  => $currentSession->subject?->name ?? $currentSession->activity_name ?? 'Kegiatan',

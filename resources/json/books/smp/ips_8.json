@@ -1,60 +1,148 @@
 {
-  "bookId": "smp-ips-8",
-  "isbn": "978-602-244-308-7",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "IPS SMP Kelas VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Kondisi Geografis dan Pelestarian Sumber Daya Alam",
-      "pages": "1-50",
-      "sub_topics": [
-        "Keragaman Alam Indonesia",
-        "Pemanfaatan Sumber Daya Alam",
-        "Sumber Daya Manusia",
-        "Lembaga Sosial"
-      ],
-      "key_terms": ["Letak Geologis", "Kualitas SDM", "Institusi Sosial", "Lingkungan Hidup"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel potensi sumber daya tambang di tiap pulau."
-    },
-    {
-      "no": 2,
-      "title": "Kemajemukan Masyarakat Indonesia",
-      "pages": "51-100",
-      "sub_topics": [
-        "Keragaman Budaya",
-        "Mobilitas Sosial",
-        "Interaksi Budaya",
-        "Konflik dan Integrasi Sosial"
-      ],
-      "key_terms": ["Pluralitas", "Stratifikasi", "Asimilasi", "Harmoni"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan faktor pendorong dan penghambat mobilitas sosial."
-    },
-    {
-      "no": 3,
-      "title": "Nasionalisme dan Jati Diri Bangsa",
-      "pages": "101-150",
-      "sub_topics": [
-        "Penjelajahan Samudra",
-        "Perlawanan terhadap Kolonialisme",
-        "Pergerakan Nasional",
-        "Proklamasi Kemerdekaan"
-      ],
-      "key_terms": ["Kolonialisme", "Imperialisme", "Organisasi Modern", "Nasionalisme"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan lini masa perjuangan bangsa Indonesia."
-    },
-    {
-      "no": 4,
-      "title": "Pembangunan Ekonomi dan Pemberdayaan Masyarakat",
-      "pages": "151-200",
-      "sub_topics": [
-        "Keragaman Ekonomi",
-        "Perdagangan Antarpulau",
-        "Literasi Keuangan Lanjut",
-        "Peranan Pasar dalam Pembangunan"
-      ],
-      "key_terms": ["Rantai Pasok", "Investasi", "Kewirausahaan", "Siklus Ekonomi"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi rencana usaha kecil menengah (UMKM)."
-    }
-  ]
+    "bookId": "smp-ips-8",
+    "isbn": "978-602-244-308-7",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "IPS SMP Kelas VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Kondisi Geografis dan Pelestarian Sumber Daya Alam",
+            "pages": "1-50",
+            "sub_topics": [
+                {
+                    "name": "Keragaman Alam Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemanfaatan Sumber Daya Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sumber Daya Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lembaga Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Letak Geologis",
+                "Kualitas SDM",
+                "Institusi Sosial",
+                "Lingkungan Hidup"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel potensi sumber daya tambang di tiap pulau.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Kemajemukan Masyarakat Indonesia",
+            "pages": "51-100",
+            "sub_topics": [
+                {
+                    "name": "Keragaman Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mobilitas Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Interaksi Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konflik dan Integrasi Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Pluralitas",
+                "Stratifikasi",
+                "Asimilasi",
+                "Harmoni"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan faktor pendorong dan penghambat mobilitas sosial.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Nasionalisme dan Jati Diri Bangsa",
+            "pages": "101-150",
+            "sub_topics": [
+                {
+                    "name": "Penjelajahan Samudra",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perlawanan terhadap Kolonialisme",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pergerakan Nasional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Proklamasi Kemerdekaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Kolonialisme",
+                "Imperialisme",
+                "Organisasi Modern",
+                "Nasionalisme"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan lini masa perjuangan bangsa Indonesia.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Pembangunan Ekonomi dan Pemberdayaan Masyarakat",
+            "pages": "151-200",
+            "sub_topics": [
+                {
+                    "name": "Keragaman Ekonomi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perdagangan Antarpulau",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Literasi Keuangan Lanjut",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peranan Pasar dalam Pembangunan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Rantai Pasok",
+                "Investasi",
+                "Kewirausahaan",
+                "Siklus Ekonomi"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi rencana usaha kecil menengah (UMKM).",
+            "semester": "Genap"
+        }
+    ]
 }

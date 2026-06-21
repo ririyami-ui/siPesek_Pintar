@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Yesus Kristus Manusia Sejati",
-                "Yesus Kristus Allah Sejati",
-                "Misteri Inkarnasi",
-                "Karya Keselamatan Yesus"
+                {
+                    "name": "Yesus Kristus Manusia Sejati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Yesus Kristus Allah Sejati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Misteri Inkarnasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karya Keselamatan Yesus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Yesus",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Gereja sebagai Tubuh Kristus",
-                "Hierarki dan Umat",
-                "Perkembangan Gereja",
-                "Gereja dan Dunia"
+                {
+                    "name": "Gereja sebagai Tubuh Kristus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hierarki dan Umat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perkembangan Gereja",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gereja dan Dunia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "gereja",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Sakramen Baptis",
-                "Sakramen Ekaristi",
-                "Sakramen Krisma",
-                "Sakramen Tobat"
+                {
+                    "name": "Sakramen Baptis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sakramen Ekaristi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sakramen Krisma",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sakramen Tobat",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "sakramen",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Perayaan Liturgi",
-                "Tahun Liturgi",
-                "Hari Raya Gereja",
-                "Makna Perayaan Iman"
+                {
+                    "name": "Perayaan Liturgi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tahun Liturgi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hari Raya Gereja",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Perayaan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "liturgi",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Ajaran Moral Katolik",
-                "Sepuluh Perintah Allah",
-                "Hukum Kasih",
-                "Hati Nurani"
+                {
+                    "name": "Ajaran Moral Katolik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sepuluh Perintah Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hukum Kasih",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "moral",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Keadilan Menurut Injil",
-                "Keadilan Sosial",
-                "Solidaritas dengan Kaum Miskin",
-                "Perdamaian dan Rekonsiliasi"
+                {
+                    "name": "Keadilan Menurut Injil",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keadilan Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Solidaritas dengan Kaum Miskin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perdamaian dan Rekonsiliasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "keadilan",

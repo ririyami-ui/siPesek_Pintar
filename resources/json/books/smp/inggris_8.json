@@ -1,60 +1,150 @@
 {
-  "bookId": "smp-ing-8",
-  "isbn": "978-602-244-886-0",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "English for Nusantara SMP Class VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Celebrating Independence Day",
-      "pages": "1-50",
-      "sub_topics": [
-        "Independence Day Activities",
-        "Recounting Past Experiences",
-        "Using Past Tense Verbs",
-        "Writing a Personal Recount"
-      ],
-      "key_terms": ["Recount", "Past Tense", "Chronological", "Event", "Experience"],
-      "visual_hints": "Use Mermaid Flowchart to visualize the timeline of events in a recount text."
-    },
-    {
-      "no": 2,
-      "title": "Kindness and Happiness",
-      "pages": "51-100",
-      "sub_topics": [
-        "Narrative Text: Fables",
-        "Parts of a Narrative (Orientation, Complication, Resolution)",
-        "Direct and Indirect Speech",
-        "Identifying Moral Values"
-      ],
-      "key_terms": ["Fable", "Characterization", "Setting", "Climax", "Moral"],
-      "visual_hints": "Use Mermaid Mindmap to analyze story elements (Characters, Setting, Plot)."
-    },
-    {
-      "no": 3,
-      "title": "Love Our World",
-      "pages": "101-140",
-      "sub_topics": [
-        "Giving Instructions (Procedure Text)",
-        "Waste Management",
-        "Saving Water and Electricity",
-        "Designing a Poster for Environment"
-      ],
-      "key_terms": ["Instructions", "Imperative", "Environmental", "Action Verbs"],
-      "visual_hints": "Use Mermaid Flowchart to illustrate a recycling process."
-    },
-    {
-      "no": 4,
-      "title": "No Littering",
-      "pages": "141-180",
-      "sub_topics": [
-        "Identifying Plastic Waste",
-        "Reporting an Incident",
-        "Expressing Opinions and Facts",
-        "Writing a Short Report"
-      ],
-      "key_terms": ["Report", "Littering", "Observation", "Passive Voice"],
-      "visual_hints": "Use Spreadsheet Renderer to compare different types of waste and their decomposition time."
-    }
-  ]
+    "bookId": "smp-ing-8",
+    "isbn": "978-602-244-886-0",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "English for Nusantara SMP Class VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Celebrating Independence Day",
+            "pages": "1-50",
+            "sub_topics": [
+                {
+                    "name": "Independence Day Activities",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Recounting Past Experiences",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Using Past Tense Verbs",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing a Personal Recount",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Recount",
+                "Past Tense",
+                "Chronological",
+                "Event",
+                "Experience"
+            ],
+            "visual_hints": "Use Mermaid Flowchart to visualize the timeline of events in a recount text.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Kindness and Happiness",
+            "pages": "51-100",
+            "sub_topics": [
+                {
+                    "name": "Narrative Text: Fables",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Parts of a Narrative (Orientation, Complication, Resolution)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Direct and Indirect Speech",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Identifying Moral Values",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Fable",
+                "Characterization",
+                "Setting",
+                "Climax",
+                "Moral"
+            ],
+            "visual_hints": "Use Mermaid Mindmap to analyze story elements (Characters, Setting, Plot).",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Love Our World",
+            "pages": "101-140",
+            "sub_topics": [
+                {
+                    "name": "Giving Instructions (Procedure Text)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Waste Management",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Saving Water and Electricity",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Designing a Poster for Environment",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Instructions",
+                "Imperative",
+                "Environmental",
+                "Action Verbs"
+            ],
+            "visual_hints": "Use Mermaid Flowchart to illustrate a recycling process.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "No Littering",
+            "pages": "141-180",
+            "sub_topics": [
+                {
+                    "name": "Identifying Plastic Waste",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Reporting an Incident",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Expressing Opinions and Facts",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Writing a Short Report",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Report",
+                "Littering",
+                "Observation",
+                "Passive Voice"
+            ],
+            "visual_hints": "Use Spreadsheet Renderer to compare different types of waste and their decomposition time.",
+            "semester": "Genap"
+        }
+    ]
 }

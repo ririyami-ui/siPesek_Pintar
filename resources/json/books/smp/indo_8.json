@@ -1,60 +1,152 @@
 {
-  "bookId": "smp-indo-8",
-  "isbn": "978-602-244-299-8",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Bahasa Indonesia SMP Kelas VIII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Laporan Hasil Observasi",
-      "pages": "1-30",
-      "sub_topics": [
-        "Menemukan Informasi dalam LHO",
-        "Struktur Teks LHO (Definisi & Deskripsi)",
-        "Kalimat Objektif dan Subjektif",
-        "Menulis Laporan Observasi yang Menarik"
-      ],
-      "key_terms": ["Observasi", "Objektif", "Klasifikasi", "Data", "Eksplanasi"],
-      "visual_hints": "Tampilkan tabel data pengamatan dalam format Spreadsheet sebelum disusun menjadi narasi LHO."
-    },
-    {
-      "no": 2,
-      "title": "Iklan, Slogan, dan Poster",
-      "pages": "31-65",
-      "sub_topics": [
-        "Unsur-unsur Iklan",
-        "Bahasa Persuasif dalam Iklan",
-        "Langkah-langkah Membuat Iklan Efektif",
-        "Etika Beriklan"
-      ],
-      "key_terms": ["Iklan", "Slogan", "Poster", "Persuasi", "Imperatif"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk merancang pesan kunci (Key Message) dalam sebuah poster layanan masyarakat."
-    },
-    {
-      "no": 3,
-      "title": "Menulis Artikel Ilmiah Populer",
-      "pages": "67-100",
-      "sub_topics": [
-        "Ciri-ciri Artikel Ilmiah Populer",
-        "Fakta dan Opini",
-        "Langkah-langkah Menulis Artikel",
-        "Etika Mengutip Karya Orang Lain"
-      ],
-      "key_terms": ["Ilmiah Populer", "Opini", "Data", "Bibliografi", "Kutipan"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan proses penulisan dari ide hingga draf akhir."
-    },
-    {
-      "no": 4,
-      "title": "Mengulas Karya Fiksi",
-      "pages": "101-135",
-      "sub_topics": [
-        "Unsur Intrinsik Karya Fiksi",
-        "Menulis Resensi Buku",
-        "Menilai Kelebihan dan Kekurangan Buku",
-        "Bahasa Evaluatif"
-      ],
-      "key_terms": ["Resensi", "Sinopsis", "Evaluasi", "Rekomendasi", "Tema"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan keterkaitan antar tokoh dalam sebuah novel."
-    }
-  ]
+    "bookId": "smp-indo-8",
+    "isbn": "978-602-244-299-8",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Bahasa Indonesia SMP Kelas VIII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Laporan Hasil Observasi",
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Menemukan Informasi dalam LHO",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Struktur Teks LHO (Definisi & Deskripsi)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kalimat Objektif dan Subjektif",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menulis Laporan Observasi yang Menarik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Observasi",
+                "Objektif",
+                "Klasifikasi",
+                "Data",
+                "Eksplanasi"
+            ],
+            "visual_hints": "Tampilkan tabel data pengamatan dalam format Spreadsheet sebelum disusun menjadi narasi LHO.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Iklan, Slogan, dan Poster",
+            "pages": "31-65",
+            "sub_topics": [
+                {
+                    "name": "Unsur-unsur Iklan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bahasa Persuasif dalam Iklan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Langkah-langkah Membuat Iklan Efektif",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Etika Beriklan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Iklan",
+                "Slogan",
+                "Poster",
+                "Persuasi",
+                "Imperatif"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk merancang pesan kunci (Key Message) dalam sebuah poster layanan masyarakat.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Menulis Artikel Ilmiah Populer",
+            "pages": "67-100",
+            "sub_topics": [
+                {
+                    "name": "Ciri-ciri Artikel Ilmiah Populer",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fakta dan Opini",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Langkah-langkah Menulis Artikel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Etika Mengutip Karya Orang Lain",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Ilmiah Populer",
+                "Opini",
+                "Data",
+                "Bibliografi",
+                "Kutipan"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan proses penulisan dari ide hingga draf akhir.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Mengulas Karya Fiksi",
+            "pages": "101-135",
+            "sub_topics": [
+                {
+                    "name": "Unsur Intrinsik Karya Fiksi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menulis Resensi Buku",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menilai Kelebihan dan Kekurangan Buku",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bahasa Evaluatif",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Resensi",
+                "Sinopsis",
+                "Evaluasi",
+                "Rekomendasi",
+                "Tema"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan keterkaitan antar tokoh dalam sebuah novel.",
+            "semester": "Genap"
+        }
+    ]
 }

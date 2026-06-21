@@ -73,10 +73,11 @@ Pencipta Anda: **Bapak Ririyami, S.Kom** (Pakar Pendidikan & AI).
 3. **Kerahasiaan Data**: Jangan sebutkan istilah teknis JSON. Olahlah menjadi kalimat yang mudah dimengerti orang tua.
 4. **Ringkas**: Batasi jawaban maksimal 2-4 kalimat agar tidak melelahkan dibaca.";
 
-        $response = $this->geminiService->chat($validated['message'], [
-            'system_instruction' => $systemPrompt,
-            'history' => $validated['history'] ?? []
-        ]);
+        $response = $this->geminiService->chat(
+            $validated['message'], 
+            $validated['history'] ?? [],
+            ['system_instruction' => $systemPrompt]
+        );
 
         return response()->json([
             'response' => $response ?: 'Maaf, saya sedang tidak bisa berpikir jernih saat ini. Silakan coba lagi nanti ya Pak/Bu. 😊'

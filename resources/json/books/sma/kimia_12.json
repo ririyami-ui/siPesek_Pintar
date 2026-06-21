@@ -1,60 +1,151 @@
 {
-  "bookId": "sma-kim-12",
-  "isbn": "978-602-244-379-7",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Kimia SMA Kelas XII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Elektrokimia dan Sel Elektrolisis",
-      "pages": "1-45",
-      "sub_topics": [
-        "Konsep Redoks",
-        "Penyetaraan Reaksi Redoks",
-        "Sel Volta (Sel Galvani)",
-        "Sel Elektrolisis dan Hukum Faraday"
-      ],
-      "key_terms": ["Anoda", "Katoda", "Oksidasi", "Reduksi", "Bilangan Oksidasi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan aliran elektron dalam sel Volta."
-    },
-    {
-      "no": 2,
-      "title": "Kimia Unsur dan Senyawa Transisi",
-      "pages": "47-90",
-      "sub_topics": [
-        "Unsur-unsur Golongan Utama (Logam Alkali, Alkali Tanah, Halogen, Gas Mulia)",
-        "Unsur Periode Ketiga",
-        "Senyawa Kompleks dan Bilangan Koordinasi",
-        "Manfaat Unsur dalam Kehidupan"
-      ],
-      "key_terms": ["Logam Transisi", "Ligan", "Pengoksidasi", "Pereduksi"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan kegunaan logam alkali dalam industri."
-    },
-    {
-      "no": 3,
-      "title": "Kimia Organik",
-      "pages": "91-140",
-      "sub_topics": [
-        "Kekhasan Atom Karbon",
-        "Alkana, Alkena, Alkuna",
-        "Isomeri",
-        "Senyawa Turunan Alkana (Alkohol, Eter, Aldehida, Asam Karboksilat, Ester)"
-      ],
-      "key_terms": ["Hidrokarbon", "Isomer", "Gugus Fungsi", "Polimer", "Stereokimia"],
-      "visual_hints": "Gunakan tabel Spreadsheet untuk membandingkan rumus bangun (struktur Lewis) dari berbagai senyawa hidrokarbon."
-    },
-    {
-      "no": 4,
-      "title": "Kimia Lingkungan",
-      "pages": "141-180",
-      "sub_topics": [
-        "Polutan Udara (CO, SOx, NOx, CFC)",
-        "Pencemaran Air (Logam Berat, Deterjen)",
-        "Korosi",
-        "Penanganan Limbah dan Teknologi Ramah Lingkungan"
-      ],
-      "key_terms": ["Asam Hujan", "CFC", "BOD", "COD", "Bioremediasi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme terjadinya hujan asam (SOx + NOx → H2SO4 / HNO3)."
-    }
-  ]
+    "bookId": "sma-kim-12",
+    "isbn": "978-602-244-379-7",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Kimia SMA Kelas XII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Elektrokimia dan Sel Elektrolisis",
+            "pages": "1-45",
+            "sub_topics": [
+                {
+                    "name": "Konsep Redoks",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penyetaraan Reaksi Redoks",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sel Volta (Sel Galvani)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sel Elektrolisis dan Hukum Faraday",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Anoda",
+                "Katoda",
+                "Oksidasi",
+                "Reduksi",
+                "Bilangan Oksidasi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan aliran elektron dalam sel Volta.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Kimia Unsur dan Senyawa Transisi",
+            "pages": "47-90",
+            "sub_topics": [
+                {
+                    "name": "Unsur-unsur Golongan Utama (Logam Alkali, Alkali Tanah, Halogen, Gas Mulia)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Unsur Periode Ketiga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Senyawa Kompleks dan Bilangan Koordinasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manfaat Unsur dalam Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Logam Transisi",
+                "Ligan",
+                "Pengoksidasi",
+                "Pereduksi"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan kegunaan logam alkali dalam industri.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Kimia Organik",
+            "pages": "91-140",
+            "sub_topics": [
+                {
+                    "name": "Kekhasan Atom Karbon",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Alkana, Alkena, Alkuna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Isomeri",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Senyawa Turunan Alkana (Alkohol, Eter, Aldehida, Asam Karboksilat, Ester)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Hidrokarbon",
+                "Isomer",
+                "Gugus Fungsi",
+                "Polimer",
+                "Stereokimia"
+            ],
+            "visual_hints": "Gunakan tabel Spreadsheet untuk membandingkan rumus bangun (struktur Lewis) dari berbagai senyawa hidrokarbon.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Kimia Lingkungan",
+            "pages": "141-180",
+            "sub_topics": [
+                {
+                    "name": "Polutan Udara (CO, SOx, NOx, CFC)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pencemaran Air (Logam Berat, Deterjen)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Korosi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penanganan Limbah dan Teknologi Ramah Lingkungan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Asam Hujan",
+                "CFC",
+                "BOD",
+                "COD",
+                "Bioremediasi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan mekanisme terjadinya hujan asam (SOx + NOx → H2SO4 \/ HNO3).",
+            "semester": "Genap"
+        }
+    ]
 }

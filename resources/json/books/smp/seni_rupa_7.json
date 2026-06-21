@@ -1,78 +1,142 @@
 {
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "smp-seni-rupa-7",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "title":  "Menggambar",
-                         "pages":  "1-35",
-                         "semester":  "Ganjil",
-                         "sub_topics":  [
-                                            "Unsur dan Prinsip Menggambar",
-                                            "Teknik Menggambar Bentuk",
-                                            "Menggambar Flora dan Fauna",
-                                            "Menggambar Alam Benda"
-                                        ],
-                         "key_terms":  [
-                                          "Garis",
-                                          "Bidang",
-                                          "Proporsi",
-                                          "Komposisi"
-                                      ]
-                     },
-                     {
-                         "no":  2,
-                         "title":  "Mendesain",
-                         "pages":  "36-70",
-                         "semester":  "Ganjil",
-                         "sub_topics":  [
-                                            "Dasar Desain Dua Dimensi",
-                                            "Dasar Desain Tiga Dimensi",
-                                            "Ragam Hias Nusantara",
-                                            "Desain Produk Kerajinan"
-                                        ],
-                         "key_terms":  [
-                                          "Ragam Hias",
-                                          "Ornamen",
-                                          "Kontras",
-                                          "Keseimbangan"
-                                      ]
-                     },
-                     {
-                         "no":  3,
-                         "title":  "Menyanyi Solo",
-                         "pages":  "71-105",
-                         "semester":  "Genap",
-                         "sub_topics":  [
-                                            "Teknik Vokal Dasar",
-                                            "Artikulasi dan Pernapasan",
-                                            "Interpretasi Lagu",
-                                            "Penampilan Vokal Solo"
-                                        ],
-                         "key_terms":  [
-                                          "Artikulasi",
-                                          "Intonasi",
-                                          "Resonansi",
-                                          "Improvisasi"
-                                      ]
-                     },
-                     {
-                         "no":  4,
-                         "title":  "Bermain Ansambel",
-                         "pages":  "106-140",
-                         "semester":  "Genap",
-                         "sub_topics":  [
-                                            "Pengertian Musik Ansambel",
-                                            "Alat Musik Ritmis dan Melodis",
-                                            "Ansambel Sejenis dan Campuran",
-                                            "Latihan dan Penampilan Ansambel"
-                                        ],
-                         "key_terms":  [
-                                          "Ansambel",
-                                          "Ritmis",
-                                          "Melodis",
-                                          "Harmonis"
-                                      ]
-                     }
-                 ]
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-seni-rupa-7",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Menggambar",
+            "pages": "1-35",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Unsur dan Prinsip Menggambar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Teknik Menggambar Bentuk",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menggambar Flora dan Fauna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menggambar Alam Benda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Garis",
+                "Bidang",
+                "Proporsi",
+                "Komposisi"
+            ]
+        },
+        {
+            "no": 2,
+            "title": "Mendesain",
+            "pages": "36-70",
+            "semester": "Ganjil",
+            "sub_topics": [
+                {
+                    "name": "Dasar Desain Dua Dimensi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dasar Desain Tiga Dimensi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ragam Hias Nusantara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Desain Produk Kerajinan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Ragam Hias",
+                "Ornamen",
+                "Kontras",
+                "Keseimbangan"
+            ]
+        },
+        {
+            "no": 3,
+            "title": "Menyanyi Solo",
+            "pages": "71-105",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Teknik Vokal Dasar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Artikulasi dan Pernapasan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Interpretasi Lagu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penampilan Vokal Solo",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Artikulasi",
+                "Intonasi",
+                "Resonansi",
+                "Improvisasi"
+            ]
+        },
+        {
+            "no": 4,
+            "title": "Bermain Ansambel",
+            "pages": "106-140",
+            "semester": "Genap",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Musik Ansambel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Alat Musik Ritmis dan Melodis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ansambel Sejenis dan Campuran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Latihan dan Penampilan Ansambel",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Ansambel",
+                "Ritmis",
+                "Melodis",
+                "Harmonis"
+            ]
+        }
+    ]
 }

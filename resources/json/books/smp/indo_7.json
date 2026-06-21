@@ -1,60 +1,152 @@
 {
-  "bookId": "smp-indo-7",
-  "isbn": "978-602-244-298-1",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Bahasa Indonesia SMP Kelas VII",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Jelajah Nusantara",
-      "pages": "1-35",
-      "sub_topics": [
-        "Menemukan Makna Teks Deskripsi",
-        "Majas Personifikasi dalam Deskripsi",
-        "Menilai Pamflet Wisata",
-        "Menyajikan Teks Deskripsi Lisan dan Tulis"
-      ],
-      "key_terms": ["Teks Deskripsi", "Cerapah Indra", "Majas", "Sinonim", "Sufiks"],
-      "visual_hints": "Gunakan Mermaid Mindmap untuk merancang kerangka penulisan teks deskripsi objek wisata."
-    },
-    {
-      "no": 2,
-      "title": "Berkelana di Dunia Imajinasi",
-      "pages": "37-75",
-      "sub_topics": [
-        "Unsur-unsur Berita",
-        "Mengenal Teks Prosedur",
-        "Menyimak Cerita Fantasi",
-        "Struktur dan Kebahasaan Cerita Fantasi"
-      ],
-      "key_terms": ["Protagonis", "Latar", "Alur", "Amanat", "Konjungsi"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan tahapan alur (Plot) dalam sebuah cerita fantasi."
-    },
-    {
-      "no": 3,
-      "title": "Hal Baik bagi Tubuh",
-      "pages": "77-110",
-      "sub_topics": [
-        "Mengidentifikasi Karakteristik Teks Prosedur",
-        "Kata Kerja Imperatif",
-        "Menyajikan Teks Prosedur dalam Bentuk Infografik",
-        "Kalimat Inversi"
-      ],
-      "key_terms": ["Prosedur", "Imperatif", "Adverbia", "Infografik", "Langkah-langkah"],
-      "visual_hints": "Gunakan Mermaid Flowchart untuk memetakan langkah-langkah dalam teks prosedur kompleks."
-    },
-    {
-      "no": 4,
-      "title": "Aksi Nyata bagi Lingkungan",
-      "pages": "111-140",
-      "sub_topics": [
-        "Mengenal Teks Berita Online",
-        "Unsur Berita (ADIKSIMBA)",
-        "Menilai Akurasi Berita",
-        "Menulis Teks Berita Sederhana"
-      ],
-      "key_terms": ["ADIKSIMBA", "Headline", "Teras Berita", "Narasumber", "Fakta"],
-      "visual_hints": "Gunakan Spreadsheet Renderer untuk membandingkan unsur berita dari dua sumber yang berbeda."
-    }
-  ]
+    "bookId": "smp-indo-7",
+    "isbn": "978-602-244-298-1",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Bahasa Indonesia SMP Kelas VII",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Jelajah Nusantara",
+            "pages": "1-35",
+            "sub_topics": [
+                {
+                    "name": "Menemukan Makna Teks Deskripsi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Majas Personifikasi dalam Deskripsi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menilai Pamflet Wisata",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menyajikan Teks Deskripsi Lisan dan Tulis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Teks Deskripsi",
+                "Cerapah Indra",
+                "Majas",
+                "Sinonim",
+                "Sufiks"
+            ],
+            "visual_hints": "Gunakan Mermaid Mindmap untuk merancang kerangka penulisan teks deskripsi objek wisata.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Berkelana di Dunia Imajinasi",
+            "pages": "37-75",
+            "sub_topics": [
+                {
+                    "name": "Unsur-unsur Berita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengenal Teks Prosedur",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menyimak Cerita Fantasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Struktur dan Kebahasaan Cerita Fantasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Protagonis",
+                "Latar",
+                "Alur",
+                "Amanat",
+                "Konjungsi"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan tahapan alur (Plot) dalam sebuah cerita fantasi.",
+            "semester": "Genap"
+        },
+        {
+            "no": 3,
+            "title": "Hal Baik bagi Tubuh",
+            "pages": "77-110",
+            "sub_topics": [
+                {
+                    "name": "Mengidentifikasi Karakteristik Teks Prosedur",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kata Kerja Imperatif",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menyajikan Teks Prosedur dalam Bentuk Infografik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kalimat Inversi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Prosedur",
+                "Imperatif",
+                "Adverbia",
+                "Infografik",
+                "Langkah-langkah"
+            ],
+            "visual_hints": "Gunakan Mermaid Flowchart untuk memetakan langkah-langkah dalam teks prosedur kompleks.",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 4,
+            "title": "Aksi Nyata bagi Lingkungan",
+            "pages": "111-140",
+            "sub_topics": [
+                {
+                    "name": "Mengenal Teks Berita Online",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Unsur Berita (ADIKSIMBA)",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menilai Akurasi Berita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menulis Teks Berita Sederhana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "ADIKSIMBA",
+                "Headline",
+                "Teras Berita",
+                "Narasumber",
+                "Fakta"
+            ],
+            "visual_hints": "Gunakan Spreadsheet Renderer untuk membandingkan unsur berita dari dua sumber yang berbeda.",
+            "semester": "Genap"
+        }
+    ]
 }

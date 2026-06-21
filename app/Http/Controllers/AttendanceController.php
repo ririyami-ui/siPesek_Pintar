@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AttendanceController extends Controller
 {
@@ -14,8 +15,8 @@ class AttendanceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Attendance::with(['student', 'class', 'subject']);
-        
+        $query = Attendance::with(['student', 'class', 'subject', 'teacher']);
+
         // Removed user_id restriction to allow global visibility for the same class/subject
 
         if ($request->has('class_id')) {
@@ -40,7 +41,119 @@ class AttendanceController extends Controller
             $query->where('user_id', $request->user_id);
         }
 
-        return response()->json(['data' => $query->orderBy('date', 'desc')->get()]);
+        $attendances = $query->orderBy('date', 'desc')->get();
+
+        // [FIX] Attach time from Schedule for each attendance record
+        $dayMapping = [
+            'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+
+        $attendances->each(function ($attendance) use ($dayMapping) {
+            $dayName = $dayMapping[Carbon::parse($attendance->date)->format('l')] ?? null;
+            if ($dayName) {
+                $schedule = \App\Models\Schedule::where('class_id', $attendance->class_id)
+                    ->where('subject_id', $attendance->subject_id)
+                    ->where('day', $dayName)
+                    ->first();
+                if ($schedule) {
+                    $attendance->time = Carbon::parse($schedule->start_time)->format('H:i') . ' - ' . Carbon::parse($schedule->end_time)->format('H:i');
+                }
+            }
+        });
+
+        return response()->json(['data' => $attendances]);
+    }
+
+    /**
+     * Download attendance as PDF table
+     */
+    public function downloadPdf(Request $request)
+    {
+        $classId = $request->input('class_id');
+        if (!$classId) {
+            return response()->json(['message' => 'class_id required'], 400);
+        }
+
+        $user = auth()->user();
+        $profile = \App\Models\UserProfile::where('user_id', $user->id)->first() 
+                   ?? \App\Models\UserProfile::first();
+        
+        $semester = $request->input('semester') ?? ($profile->active_semester ?? 'Ganjil');
+        $academicYear = $profile->academic_year ?? date('Y') . '/' . (date('Y') + 1);
+
+        // Auto date range based on semester if not provided
+        $startDate = $request->input('date_start');
+        $endDate = $request->input('date_end');
+
+        if (!$startDate || !$endDate) {
+            $year = explode('/', $academicYear)[0];
+            if ($semester === 'Ganjil') {
+                $startDate = "$year-07-01";
+                $endDate = "$year-12-31";
+            } else {
+                $nextYear = count(explode('/', $academicYear)) > 1 ? explode('/', $academicYear)[1] : ($year + 1);
+                $startDate = "$nextYear-01-01";
+                $endDate = "$nextYear-06-30";
+            }
+        }
+
+        // fetch attendances for class in range
+        $attendances = Attendance::with(['student'])
+            ->where('class_id', $classId)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->orderBy('date')
+            ->get();
+
+        // collect unique dates
+        $dates = [];
+        foreach ($attendances as $a) {
+            $dateStr = \Carbon\Carbon::parse($a->date)->format('Y-m-d');
+            $dates[$dateStr] = $dateStr;
+        }
+        $dateObjs = collect($dates)->sort()->map(fn($d) => \Carbon\Carbon::parse($d));
+
+        // group by student
+        $students = [];
+        $summaryMap = [];
+        $attMap = [];
+        foreach ($attendances as $a) {
+            $sid = $a->student_id;
+            $dateStr = \Carbon\Carbon::parse($a->date)->format('Y-m-d');
+            $students[$sid] = $a->student; 
+            $status = strtolower($a->status);
+            $code = '';
+            if ($status === 'hadir') $code = 'H';
+            elseif ($status === 'sakit') $code = 'S';
+            elseif ($status === 'izin' || $status === 'ijin') $code = 'I';
+            elseif ($status === 'alpa' || $status === 'alpha') $code = 'A';
+            
+            $attMap[$sid][$dateStr] = $code;
+            if ($code) {
+                $summaryMap[$sid][$code] = ($summaryMap[$sid][$code] ?? 0) + 1;
+            }
+        }
+
+        $class = \App\Models\SchoolClass::with('wali')->find($classId);
+        if (!$class) {
+            return response()->json(['message' => 'Class not found'], 404);
+        }
+
+        $pdf = Pdf::loadView('attendance.pdf', [
+            'schoolName' => $profile->school_name ?? 'Sekolah Pintar',
+            'academicYear' => $academicYear,
+            'semester' => $semester,
+            'class' => $class,
+            'period' => \Carbon\Carbon::parse($startDate)->format('d/m/Y') . " s/d " . \Carbon\Carbon::parse($endDate)->format('d/m/Y'),
+            'waliName' => $class->wali?->name ?? auth()->user()->name,
+            'students' => collect($students)->sortBy('absen'),
+            'dates' => $dateObjs,
+            'attMap' => $attMap,
+            'summaryMap' => $summaryMap
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download("Rekap_Absensi_{$class->rombel}_{$semester}.pdf");
     }
 
     /**

@@ -97,9 +97,10 @@ function App() {
 
     checkAuth();
 
-    // [PUSH NOTIFICATION] Register Service Worker for PWA
+    // [PUSH NOTIFICATION] Register Service Worker for PWA (HTTPS only)
+    // php artisan serve is HTTP-only → skip registration to prevent "Unsupported SSL request" spam
     const swPath = (window.Laravel?.basePath || '') + '/sw.js';
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
+    if ('serviceWorker' in navigator && 'PushManager' in window && window.location.protocol === 'https:') {
       navigator.serviceWorker.register(swPath)
         .then(registration => {
           console.log('Service Worker registered:', registration);
@@ -150,7 +151,7 @@ function App() {
       }
     };
 
-    if (user && user.role === 'student') {
+    if (user && user.role === 'student' && window.location.protocol === 'https:') {
       subscribeToPush();
     }
   }, [user]);
@@ -271,6 +272,7 @@ function App() {
           <Route path="/about" element={<AboutPage installPrompt={installPrompt} onInstall={handleInstall} isPwaInstalled={isPwaInstalled} />} />
           <Route path="/analisis-kelas" element={<AnalisisKelasPage />} />
           <Route path="/sistem-peringatan" element={<EarlyWarningPage />} />
+          <Route path="/radar-perwalian" element={<EarlyWarningPage />} />
           <Route path="/asisten-guru" element={<AsistenGuruPage />} />
           <Route path="/analisis-rombel/:rombel" element={<AnalisisKelasPage />} />
           <Route path="/pelanggaran" element={<PelanggaranPage />} />

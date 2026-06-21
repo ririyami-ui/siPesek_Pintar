@@ -6,10 +6,26 @@
             "no": 1,
             "pages": "1-30",
             "sub_topics": [
-                "Buddha",
-                "Dhamma",
-                "Sangha",
-                "Makna Perlindungan"
+                {
+                    "name": "Buddha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dhamma",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sangha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Perlindungan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Tri Ratna",
@@ -23,10 +39,26 @@
             "no": 2,
             "pages": "31-58",
             "sub_topics": [
-                "Kandungan Dhammapada",
-                "Syair-syair Penting",
-                "Ajaran Moral dalam Dhammapada",
-                "Relevansi Dhammapada"
+                {
+                    "name": "Kandungan Dhammapada",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Syair-syair Penting",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Moral dalam Dhammapada",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Relevansi Dhammapada",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "Dhammapada",
@@ -40,10 +72,26 @@
             "no": 3,
             "pages": "59-88",
             "sub_topics": [
-                "Masuknya Buddha ke Indonesia",
-                "Kerajaan Buddha di Indonesia",
-                "Candi Borobudur",
-                "Perkembangan Buddha Masa Kini"
+                {
+                    "name": "Masuknya Buddha ke Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kerajaan Buddha di Indonesia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Candi Borobudur",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perkembangan Buddha Masa Kini",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "sejarah",
@@ -57,10 +105,26 @@
             "no": 4,
             "pages": "89-118",
             "sub_topics": [
-                "Kepemimpinan dalam Buddhisme",
-                "Ciri Pemimpin Buddhis",
-                "Raja Asoka",
-                "Teladan Pemimpin"
+                {
+                    "name": "Kepemimpinan dalam Buddhisme",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ciri Pemimpin Buddhis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Raja Asoka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Teladan Pemimpin",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "kepemimpinan",
@@ -74,10 +138,26 @@
             "no": 5,
             "pages": "119-148",
             "sub_topics": [
-                "Ajaran Sosial Buddhis",
-                "Kedermawanan",
-                "Pelayanan Sosial",
-                "Masyarakat Harmonis"
+                {
+                    "name": "Ajaran Sosial Buddhis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kedermawanan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pelayanan Sosial",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masyarakat Harmonis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "sosial",
@@ -91,10 +171,26 @@
             "no": 6,
             "pages": "149-176",
             "sub_topics": [
-                "Peradaban Buddhis Kuno",
-                "Warisan Budaya Buddhis",
-                "Pendidikan Buddhis",
-                "Buddhisme dan Dunia Modern"
+                {
+                    "name": "Peradaban Buddhis Kuno",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Warisan Budaya Buddhis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pendidikan Buddhis",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Buddhisme dan Dunia Modern",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
             ],
             "key_terms": [
                 "peradaban",
