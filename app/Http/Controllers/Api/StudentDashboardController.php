@@ -280,7 +280,7 @@ class StudentDashboardController extends Controller
             'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today, $profile),
         ] : null;
 
-        $graduateProfile = $this->generateGraduateProfile($student);
+        $graduateProfile = $this->loadGraduateProfileFromBskap($student);
 
         return response()->json([
             'school_name'     => $this->getSchoolName(),
@@ -645,112 +645,137 @@ class StudentDashboardController extends Controller
     }
 
     /**
-     * Generate Profil Lulusan (Graduate Profile) dimensions based on real student data.
-     * Each dimension includes a score (%), category label, and source info.
+     * Load Dimensi Profil Lulusan from BSKAP JSON standard (8 dimensions).
+     * Maps real student data as supporting evidence for each dimension.
      */
-    private function generateGraduateProfile($student)
+    private function loadGraduateProfileFromBskap($student)
     {
+        $path = resource_path('js/utils/bskap_2025_intel.json');
+        if (!file_exists($path)) {
+            return [];
+        }
+        $bskap = json_decode(file_get_contents($path), true);
+        $rawDimensions = $bskap['standards']['profile_lulusan_2025'] ?? [];
+        if (empty($rawDimensions)) return [];
+
+        // Gather student data for source mapping
         $today = Carbon::today();
         $semesterStart = $today->copy()->subMonths(6);
-
-        // ── Attendance ──
-        $allAttendances = Attendance::where('student_id', $student->id)
-            ->whereBetween('date', [$semesterStart, $today])
-            ->get();
-        $totalAtt = $allAttendances->count();
-        $hadirCount = $allAttendances->filter(fn($a) => strtolower($a->status) === 'hadir')->count();
+        $allAtt = Attendance::where('student_id', $student->id)
+            ->whereBetween('date', [$semesterStart, $today])->get();
+        $totalAtt = $allAtt->count();
+        $hadirCount = $allAtt->filter(fn($a) => strtolower($a->status) === 'hadir')->count();
+        $sakitCount = $allAtt->filter(fn($a) => strtolower($a->status) === 'sakit')->count();
+        $izinCount = $allAtt->filter(fn($a) => in_array(strtolower($a->status), ['izin', 'ijin']))->count();
+        $alpaCount = $allAtt->filter(fn($a) => in_array(strtolower($a->status), ['alpa', 'alpha']))->count();
         $attRate = $totalAtt > 0 ? round(($hadirCount / $totalAtt) * 100) : 0;
 
-        // ── Infractions ──
         $infractions = Infraction::where('student_id', $student->id)
-            ->whereBetween('date', [$semesterStart, $today])
-            ->get();
+            ->whereBetween('date', [$semesterStart, $today])->get();
         $totalPts = $infractions->sum('points');
-        $infCat = $infractions->pluck('category')->unique()->values()->toArray();
-        $discScore = max(0, min(100, 100 - ($totalPts * 5)));
+        $infByCategory = $infractions->groupBy('category');
+        $infCats = $infractions->pluck('category')->unique()->values()->toArray();
 
-        // ── Grades ──
         $grades = Grade::where('student_id', $student->id)
-            ->whereBetween('date', [$semesterStart, $today])
-            ->get();
+            ->whereBetween('date', [$semesterStart, $today])->get();
         $graded = $grades->filter(fn($g) => $g->score !== null);
         $avgScore = $graded->count() > 0 ? round($graded->avg('score')) : 0;
 
-        // ── Today attendance ──
+        // Today status
         $todayAtt = Attendance::where('student_id', $student->id)
-            ->whereDate('date', $today)
-            ->get();
-        $allHadir = $todayAtt->count() > 0 && $todayAtt->every(fn($a) => strtolower($a->status) === 'hadir');
+            ->whereDate('date', $today)->get();
+        $allHadirToday = $todayAtt->count() > 0 && $todayAtt->every(fn($a) => strtolower($a->status) === 'hadir');
 
-        $dimensions = [];
-
-        // 1. Kedisiplinan
-        $srcDisp = [];
-        $srcDisp[] = "Presensi: $hadirCount hadir dari $totalAtt sesi ({$attRate}%)";
-        if ($totalPts > 0) {
-            $srcDisp[] = "Poin pelanggaran: $totalPts (".implode(', ', $infCat).")";
-        } else {
-            $srcDisp[] = "Tidak ada pelanggaran";
-        }
-        if ($todayAtt->count() > 0) {
-            $srcDisp[] = $allHadir ? "Hari ini hadir semua" : "Hari ini ada sesi tidak hadir";
-        }
-        $dimensions[] = [
-            'nama_dimensi' => 'Kedisiplinan',
-            'skor'         => $discScore,
-            'kategori'     => $discScore >= 80 ? 'Baik' : ($discScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
-            'sumber'       => $srcDisp,
+        // Map source data for each BSKAP dimension
+        $dimensionSources = [
+            'Keimanan & Ketakwaan' => [
+                'sumber' => [
+                    'Data pelanggaran terkait akhlak & spiritual (jika ada)',
+                ],
+                'rincian' => $infByCategory->has('Akhlak') || $infByCategory->has('Spiritual')
+                    ? 'Ada catatan pembinaan akhlak'
+                    : 'Tidak ada catatan pelanggaran akhlak/spiritual'
+            ],
+            'Kewargaan' => [
+                'sumber' => [
+                    'Data kehadiran & partisipasi semester ini',
+                    'Catatan pelanggaran tata tertib sekolah',
+                ],
+                'rincian' => $totalAtt > 0
+                    ? "Kehadiran {$attRate}% dari {$totalAtt} sesi" . ($totalPts > 0 ? "; pelanggaran: {$totalPts} poin" : "; tanpa pelanggaran")
+                    : 'Belum ada data kehadiran'
+            ],
+            'Penalaran Kritis' => [
+                'sumber' => [
+                    'Nilai akademik dari setiap mata pelajaran',
+                    'Rata-rata nilai semester',
+                ],
+                'rincian' => $graded->count() > 0
+                    ? "Rata-rata nilai: {$avgScore} dari {$graded->count()} penilaian"
+                    : 'Belum ada data nilai'
+            ],
+            'Kreativitas' => [
+                'sumber' => [
+                    'Nilai tugas & proyek (jika ada)',
+                    'Partisipasi dalam kegiatan ekstrakurikuler',
+                ],
+                'rincian' => $graded->count() > 0
+                    ? "Terdapat {$graded->count()} catatan penilaian"
+                    : 'Belum ada data penilaian kreativitas'
+            ],
+            'Kolaborasi' => [
+                'sumber' => [
+                    'Data kehadiran (indikator partisipasi sosial)',
+                    'Catatan pelanggaran terkait interaksi sosial',
+                ],
+                'rincian' => $totalAtt > 0
+                    ? ($allHadirToday ? 'Hadir semua sesi hari ini' : "Kehadiran semester: {$attRate}%")
+                    : 'Belum ada data'
+            ],
+            'Kemandirian' => [
+                'sumber' => [
+                    'Pola kehadiran (sakit/izin vs tanpa keterangan)',
+                    'Konsistensi nilai akademik',
+                ],
+                'rincian' => $totalAtt > 0
+                    ? ($izinCount + $sakitCount) > 0
+                        ? "{$sakitCount}x sakit, {$izinCount}x izin, {$alpaCount}x alpa"
+                        : "Hadir {$hadirCount}/{$totalAtt} tanpa alpa"
+                    : 'Belum ada data'
+            ],
+            'Kesehatan' => [
+                'sumber' => [
+                    'Data ketidakhadiran karena sakit',
+                    'Catatan kesehatan dari UKS/klinik (jika terintegrasi)',
+                ],
+                'rincian' => $sakitCount > 0
+                    ? "Tercatat sakit {$sakitCount}x semester ini"
+                    : 'Tidak ada catatan ketidakhadiran karena sakit'
+            ],
+            'Komunikasi' => [
+                'sumber' => [
+                    'Catatan partisipasi di kelas (dari guru)',
+                    'Pelanggaran terkait komunikasi (jika ada)',
+                ],
+                'rincian' => $infByCategory->has('Komunikasi')
+                    ? 'Ada catatan pembinaan komunikasi'
+                    : 'Tidak ada catatan pelanggaran komunikasi'
+            ],
         ];
 
-        // 2. Kompetensi Akademik
-        $srcAkad = [];
-        if ($graded->count() > 0) {
-            $srcAkad[] = "Rata-rata dari {$graded->count()} penilaian: $avgScore";
-            $best = $graded->sortByDesc('score')->first();
-            $worst = $graded->sortBy('score')->first();
-            if ($best) $srcAkad[] = "Tertinggi: {$best->score} ({$best->subject?->name})";
-            if ($worst && $worst->id !== $best?->id) $srcAkad[] = "Terendah: {$worst->score} ({$worst->subject?->name})";
-        } else {
-            $srcAkad[] = "Belum ada data penilaian";
+        $result = [];
+        foreach ($rawDimensions as $dim) {
+            $ds = $dimensionSources[$dim['dimensi']] ?? [
+                'sumber' => ['Belum ada data terkait dimensi ini'],
+                'rincian' => 'Data belum tersedia'
+            ];
+            $result[] = [
+                'nama_dimensi' => $dim['dimensi'],
+                'sumber'       => $ds['sumber'],
+                'rincian'      => $ds['rincian'],
+            ];
         }
-        $dimensions[] = [
-            'nama_dimensi' => 'Kompetensi Akademik',
-            'skor'         => $avgScore,
-            'kategori'     => $avgScore >= 75 ? 'Baik' : ($avgScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
-            'sumber'       => $srcAkad,
-        ];
-
-        // 3. Partisipasi & Tanggung Jawab
-        $srcPart = [];
-        $srcPart[] = "Kehadiran semester: {$attRate}%";
-        if ($todayAtt->count() > 0) {
-            $srcPart[] = $allHadir ? "Hadir tepat waktu hari ini" : "Ada sesi tidak hadir hari ini";
-        }
-        $dimensions[] = [
-            'nama_dimensi' => 'Partisipasi & Tanggung Jawab',
-            'skor'         => $attRate,
-            'kategori'     => $attRate >= 80 ? 'Baik' : ($attRate >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
-            'sumber'       => $srcPart,
-        ];
-
-        // 4. Karakter & Budi Pekerti
-        $srcChar = [];
-        if ($infractions->count() > 0) {
-            $srcChar[] = "Pelanggaran: $totalPts poin dalam {$infractions->count()} kejadian";
-            foreach ($infractions->groupBy('category') as $cat => $items) {
-                $srcChar[] = "- $cat: {$items->count()}x";
-            }
-        } else {
-            $srcChar[] = "Tidak ada catatan pelanggaran (bersih)";
-        }
-        $dimensions[] = [
-            'nama_dimensi' => 'Karakter & Budi Pekerti',
-            'skor'         => $discScore,
-            'kategori'     => $discScore >= 80 ? 'Baik' : ($discScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
-            'sumber'       => $srcChar,
-        ];
-
-        return $dimensions;
+        return $result;
     }
 
     /**
