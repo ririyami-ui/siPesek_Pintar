@@ -11,14 +11,24 @@ import StudentChatWidget from './StudentChatWidget';
 import { useSettings } from '../utils/SettingsContext';
 
 const NAV_ITEMS = [
-  { path: '/siswa',               icon: MonitorPlay,    label: 'Pantau Belajar',  desc: 'Realtime & hari ini' },
-  { path: '/siswa/jadwal',        icon: CalendarDays,   label: 'Jadwal',          desc: 'Jadwal Mingguan' },
-  { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Presensi',        desc: 'Rekap presensi' },
-  { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
-  { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai', hideOnMobile: true },
-  { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib', hideOnMobile: true },
-  { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital', hideOnMobile: true },
-];
+    { path: '/siswa',               icon: MonitorPlay,    label: 'Pantau Belajar',  desc: 'Realtime & hari ini' },
+    { path: '/siswa/jadwal',        icon: CalendarDays,   label: 'Jadwal',          desc: 'Jadwal Mingguan' },
+    { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Presensi',        desc: 'Rekap presensi' },
+    { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
+    { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai', hideOnMobile: true },
+    { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib', hideOnMobile: true },
+    { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital', hideOnMobile: true },
+  ];
+
+  const PARENT_NAV = [
+    { path: '/orangtua',               icon: MonitorPlay,    label: 'Pantauan Anak',  desc: 'Belajar hari ini' },
+    { path: '/orangtua/jadwal',        icon: CalendarDays,   label: 'Jadwal',         desc: 'Jadwal mingguan' },
+    { path: '/orangtua/kehadiran',     icon: BookOpen,        label: 'Presensi',       desc: 'Rekap presensi' },
+    { path: '/orangtua/nilai',         icon: BarChart2,       label: 'Nilai',          desc: 'Laporan nilai' },
+    { path: '/orangtua/tugas',         icon: ClipboardList,   label: 'Tugas',          desc: 'Tugas belum selesai', hideOnMobile: true },
+    { path: '/orangtua/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',    desc: 'Catatan poin tatib', hideOnMobile: true },
+    { path: '/orangtua/perpustakaan',  icon: Library,         label: 'Perpustakaan',   desc: 'Katalog buku digital', hideOnMobile: true },
+  ];
 
 export default function StudentLayout({ user, onLogout, children }) {
   const { userProfile } = useSettings();
@@ -26,6 +36,8 @@ export default function StudentLayout({ user, onLogout, children }) {
   const [studentInfo, setStudentInfo] = useState(null);
   const [schoolName, setSchoolName]   = useState('Sekolah');
   const navigate = useNavigate();
+  const isParent = user?.role === 'parent';
+  const navItems = isParent ? PARENT_NAV : NAV_ITEMS;
 
   // Fetch student profile on mount
   useEffect(() => {
@@ -64,7 +76,7 @@ export default function StudentLayout({ user, onLogout, children }) {
         </div>
       </div>
 
-      {/* Student Card */}
+      {/* Student / Child Card */}
       <div className="mx-4 mt-4 mb-2 bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
           <User size={18} />
@@ -73,12 +85,12 @@ export default function StudentLayout({ user, onLogout, children }) {
           <p className="font-semibold text-sm truncate">{studentInfo?.name ?? user?.name}</p>
           {studentInfo ? (
             <>
-              <p className="text-xs text-white/80 truncate font-medium">Kelas {studentInfo.class}</p>
+              <p className="text-xs text-white/80 truncate font-medium">{isParent ? 'Anak: Kelas ' : 'Kelas '}{studentInfo.class}</p>
               <p className="text-xs text-white/50 truncate">No. Absen {studentInfo.absen} · NISN {studentInfo.nisn}</p>
             </>
           ) : (
             <p className="text-xs text-white/50 flex items-center gap-1">
-              <Loader2 size={10} className="animate-spin" /> Memuat info kelas...
+              <Loader2 size={10} className="animate-spin" /> {isParent ? 'Memuat data anak...' : 'Memuat info kelas...'}
             </p>
           )}
         </div>
@@ -86,11 +98,11 @@ export default function StudentLayout({ user, onLogout, children }) {
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map(item => (
+        {navItems.map(item => (
           <NavLink
             key={item.path}
             to={item.path}
-            end={item.path === '/siswa'}
+            end={item.path.endsWith('orangtua') || item.path.endsWith('siswa')}
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
@@ -168,7 +180,7 @@ export default function StudentLayout({ user, onLogout, children }) {
                 {userProfile?.school_name || schoolName}
               </p>
               <p className="font-bold text-sm leading-tight">Si Pesek Pintar</p>
-              {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">Kelas {studentInfo.class}</p>}
+              {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">{isParent ? 'Anak: Kelas ' : 'Kelas '}{studentInfo.class}</p>}
             </div>
           </div>
           <button 
@@ -190,11 +202,11 @@ export default function StudentLayout({ user, onLogout, children }) {
 
         {/* Mobile Bottom Navigation */}
         <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.04)] flex justify-around items-center px-2 pb-[env(safe-area-inset-bottom,0px)]">
-          {NAV_ITEMS.filter(item => !item.hideOnMobile).map((item) => (
+          {navItems.filter(item => !item.hideOnMobile).map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
-              end={item.path === '/siswa'}
+              end={item.path.endsWith('orangtua') || item.path.endsWith('siswa')}
               className={({ isActive }) =>
                 `relative flex flex-col items-center gap-1.5 py-3 px-1 transition-all duration-500 group ${
                   isActive ? 'text-emerald-700 scale-110' : 'text-slate-400 hover:text-slate-600'

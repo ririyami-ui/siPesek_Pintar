@@ -218,6 +218,23 @@ function App() {
     const location = useLocation();
     const isLibraryPath = location.pathname.startsWith('/library');
 
+    if (user.role === 'parent') {
+      return (
+        <StudentLayout user={user} student={null} onLogout={() => setUser(null)}>
+          <Routes>
+            <Route path="/orangtua"           element={<StudentDashboard />} />
+            <Route path="/orangtua/jadwal"    element={<StudentSchedule />} />
+            <Route path="/orangtua/kehadiran" element={<StudentAttendance />} />
+            <Route path="/orangtua/nilai"     element={<StudentGrades />} />
+            <Route path="/orangtua/tugas"     element={<StudentTasks />} />
+            <Route path="/orangtua/pelanggaran" element={<StudentInfractions />} />
+            <Route path="/orangtua/perpustakaan" element={<StudentLibraryPage />} />
+            <Route path="*"                element={<Navigate to="/orangtua" replace />} />
+          </Routes>
+        </StudentLayout>
+      );
+    }
+
     if (user.role === 'student') {
       return (
         <StudentLayout user={user} student={null} onLogout={() => setUser(null)}>
