@@ -280,7 +280,7 @@ class StudentDashboardController extends Controller
             'planned_material' => $this->getPlannedMaterial($student, $currentSession->subject_id, $today, $profile),
         ] : null;
 
-        $dailyNarrative = $this->generateDailyNarrative($student, $todayAttendance, $currentSessionData);
+        $graduateProfile = $this->generateGraduateProfile($student);
 
         return response()->json([
             'school_name'     => $this->getSchoolName(),
@@ -324,7 +324,7 @@ class StudentDashboardController extends Controller
                 $s['planned_material'] = isset($s['subject_id']) ? $this->getPlannedMaterial($student, $s['subject_id'], $today, $profile) : null;
                 return $s;
             }),
-            'daily_narrative' => $dailyNarrative,
+            'graduate_profile' => $graduateProfile,
             'server_time'     => $now->toIso8601String(),
             'day'             => $dayName,
         ]);
@@ -645,108 +645,112 @@ class StudentDashboardController extends Controller
     }
 
     /**
-     * Generate a descriptive narrative of the student's learning progress today.
-     * Uses template variations to provide a 'Smart AI' feel without token costs.
+     * Generate Profil Lulusan (Graduate Profile) dimensions based on real student data.
+     * Each dimension includes a score (%), category label, and source info.
      */
-    private function generateDailyNarrative($student, $attendance, $current)
+    private function generateGraduateProfile($student)
     {
-        $name = explode(' ', $student->name)[0];
         $today = Carbon::today();
-        
-        // [AUDIT] Comprehensive Attendance Check for Today
-        $todayAttendances = Attendance::where('student_id', $student->id)
+        $semesterStart = $today->copy()->subMonths(6);
+
+        // ── Attendance ──
+        $allAttendances = Attendance::where('student_id', $student->id)
+            ->whereBetween('date', [$semesterStart, $today])
+            ->get();
+        $totalAtt = $allAttendances->count();
+        $hadirCount = $allAttendances->filter(fn($a) => strtolower($a->status) === 'hadir')->count();
+        $attRate = $totalAtt > 0 ? round(($hadirCount / $totalAtt) * 100) : 0;
+
+        // ── Infractions ──
+        $infractions = Infraction::where('student_id', $student->id)
+            ->whereBetween('date', [$semesterStart, $today])
+            ->get();
+        $totalPts = $infractions->sum('points');
+        $infCat = $infractions->pluck('category')->unique()->values()->toArray();
+        $discScore = max(0, min(100, 100 - ($totalPts * 5)));
+
+        // ── Grades ──
+        $grades = Grade::where('student_id', $student->id)
+            ->whereBetween('date', [$semesterStart, $today])
+            ->get();
+        $graded = $grades->filter(fn($g) => $g->score !== null);
+        $avgScore = $graded->count() > 0 ? round($graded->avg('score')) : 0;
+
+        // ── Today attendance ──
+        $todayAtt = Attendance::where('student_id', $student->id)
             ->whereDate('date', $today)
             ->get();
-            
-        $hasAlpa = $todayAttendances->contains(fn($a) => in_array(strtolower($a->status), ['alpa', 'alpha']));
-        $hasIzin = $todayAttendances->contains(fn($a) => in_array(strtolower($a->status), ['izin', 'ijin']));
-        $hasSakit = $todayAttendances->contains(fn($a) => strtolower($a->status) === 'sakit');
-        $allHadir = $todayAttendances->count() > 0 && $todayAttendances->every(fn($a) => strtolower($a->status) === 'hadir');
-        
-        // Increased variability range (up to 10 unique combinations per día)
-        $seed = ($student->id + date('z')) % 10; 
+        $allHadir = $todayAtt->count() > 0 && $todayAtt->every(fn($a) => strtolower($a->status) === 'hadir');
 
-        $openings = [
-            0 => "Hari ini, pemantauan belajar **{$name}** sedang berlangsung dengan baik. ",
-            1 => "Berikut adalah sekilas progres belajar **{$name}** untuk hari ini. ",
-            2 => "Kami senang mengabarkan bahwa agenda belajar **{$name}** berjalan lancar hari ini. ",
-            3 => "**{$name}** sedang mengikuti rangkaian kegiatan di sekolah dengan penuh antusias. ",
-            4 => "Pantauan belajar **{$name}** menunjukkan aktivitas yang positif di sekolah. ",
-            5 => "Semoga hari Ayah/Bunda menyenangkan! Berikut kabar terbaru dari **{$name}** di sekolah. ",
-            6 => "Laporan harian **{$name}** hari ini telah tersedia. Mari kita lihat bersama progresnya. ",
-            7 => "Kabar gembira! Agenda pendidikan **{$name}** terpantau berlangsung kondusif hari ini. ",
-            8 => "Progres belajar **{$name}** hari ini menunjukkan semangat yang sangat baik. ",
-            9 => "Halo Ayah/Bunda! Kami ingin berbagi ringkasan aktivitas **{$name}** selama di sekolah hari ini. ",
-        ];
+        $dimensions = [];
 
-        $closings = [
-            0 => "Secara keseluruhan, progres hari ini berjalan lancar. Terus berikan dukungan untuk Ananda!",
-            1 => "Ananda menunjukkan partisipasi yang baik. Mari kita apresiasi upayanya hari ini.",
-            2 => "Semoga pembelajaran hari ini menjadi bekal ilmu yang bermanfaat bagi {$name}.",
-            3 => "Kami akan terus memantau and memberikan yang terbaik untuk pendidikan {$name}.",
-            4 => "Terima kasih atas kepercayaan Ayah/Bunda dalam mendampingi tumbuh kembang Ananda.",
-            5 => "Mari terus bersinergi demi masa depan terbaik bagi Ananda. Selamat melanjutkan aktivitas!",
-            6 => "Pendidikan adalah perjalanan panjang, mari kita nikmati setiap progres kecil **{$name}** hari ini.",
-            7 => "Dukungan kecil dari rumah adalah semangat besar bagi **{$name}** di sekolah. Terima kasih!",
-            8 => "Sampai jumpa di kabar progres esok hari. Semoga hari Anda menyenangkan!",
-            9 => "Setiap hari adalah kesempatan baru bagi **{$name}** untuk tumbuh. Mari kita dampingi bersama.",
-        ];
-
-        $narrative = $openings[$seed];
-
-        // Status for report-mode detection
-        $isSchoolOver = !$current;
-
-        // Part 1: Attendance Context (Improved with multi-subject awareness)
-        if ($hasAlpa) {
-            $narrative .= "Namun, kami mencatat Ananda **tidak hadir (Alpa)** pada sesi tertentu hari ini. Mohon perhatian Ayah/Bunda untuk mengonfirmasi hal ini. ";
-        } elseif ($hasSakit || $hasIzin) {
-            $type = $hasSakit ? 'sedang beristirahat (Sakit)' : 'berhalangan hadir (Izin)';
-            $narrative .= "Ananda tercatat **{$type}** pada agenda belajar hari ini. Semoga Ananda sehat selalu. ";
-        } elseif ($allHadir) {
-            $narrative .= "Ananda telah **hadir tepat waktu** di seluruh jam pelajaran. ";
-        } elseif ($todayAttendances->count() === 0) {
-            $narrative .= "Sesi absensi untuk hari ini sedang dalam proses pembaruan oleh Bapak/Ibu guru. ";
-        }
-
-        // Part 2: Learning Progress (The Core)
-        if ($current) {
-            $subject = $current['subject_name'] ?? 'Mata Pelajaran';
-            $topic = $current['planned_material'] ?? 'materi pilihan';
-            $narrative .= "Saat ini, Ananda sedang mendalami topik **\"{$topic}\"** pada sesi **{$subject}**. ";
-        } elseif ($isSchoolOver) {
-            $statusFinish = $hasAlpa ? "sebagian besar agenda" : "seluruh rangkaian pembelajaran";
-            $narrative .= "Agenda belajar hari ini telah **{$statusFinish}** selesai dilaksanakan. ";
+        // 1. Kedisiplinan
+        $srcDisp = [];
+        $srcDisp[] = "Presensi: $hadirCount hadir dari $totalAtt sesi ({$attRate}%)";
+        if ($totalPts > 0) {
+            $srcDisp[] = "Poin pelanggaran: $totalPts (".implode(', ', $infCat).")";
         } else {
-            $narrative .= "Sesi pembelajaran saat ini dialokasikan untuk kegiatan mandiri atau transisi mata pelajaran. ";
+            $srcDisp[] = "Tidak ada pelanggaran";
         }
-
-        // Part 3: Achievement Check (Recent Grade Today)
-        $todayGrade = Grade::where('student_id', $student->id)
-            ->whereDate('date', $today)
-            ->whereNotNull('score')
-            ->first();
-            
-        if ($todayGrade) {
-            $type = $todayGrade->type ?? 'Evaluasi';
-            $scoreStr = $todayGrade->score >= 75 ? "hasil yang sangat memuaskan" : "proses yang perlu terus didukung";
-            $narrative .= "Selain itu, {$name} baru saja menuntaskan {$type} dengan {$scoreStr}. ";
+        if ($todayAtt->count() > 0) {
+            $srcDisp[] = $allHadir ? "Hari ini hadir semua" : "Hari ini ada sesi tidak hadir";
         }
+        $dimensions[] = [
+            'nama_dimensi' => 'Kedisiplinan',
+            'skor'         => $discScore,
+            'kategori'     => $discScore >= 80 ? 'Baik' : ($discScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
+            'sumber'       => $srcDisp,
+        ];
 
-        // Part 4: Infractions (Violations)
-        $todayInfractions = Infraction::where('student_id', $student->id)
-            ->whereDate('date', $today)
-            ->get();
-            
-        if ($todayInfractions->count() > 0) {
-            $totalPoints = $todayInfractions->sum('points');
-            $categories = $todayInfractions->pluck('category')->unique()->implode(', ');
-            $narrative .= "Hari ini tercatat ada **{$totalPoints} poin pelanggaran** terkait *{$categories}*. Harap Ayah/Bunda memberikan bimbingan khusus di rumah agar kejadian serupa tidak terulang. ";
-        } elseif ($isSchoolOver && !$hasAlpa) {
-            $narrative .= "Kami juga senang menginformasikan bahwa **tidak ada catatan pelanggaran** hari ini. ";
+        // 2. Kompetensi Akademik
+        $srcAkad = [];
+        if ($graded->count() > 0) {
+            $srcAkad[] = "Rata-rata dari {$graded->count()} penilaian: $avgScore";
+            $best = $graded->sortByDesc('score')->first();
+            $worst = $graded->sortBy('score')->first();
+            if ($best) $srcAkad[] = "Tertinggi: {$best->score} ({$best->subject?->name})";
+            if ($worst && $worst->id !== $best?->id) $srcAkad[] = "Terendah: {$worst->score} ({$worst->subject?->name})";
+        } else {
+            $srcAkad[] = "Belum ada data penilaian";
         }
+        $dimensions[] = [
+            'nama_dimensi' => 'Kompetensi Akademik',
+            'skor'         => $avgScore,
+            'kategori'     => $avgScore >= 75 ? 'Baik' : ($avgScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
+            'sumber'       => $srcAkad,
+        ];
 
-        return $narrative . ($isSchoolOver ? "Semoga istirahat Ananda menyenangkan. " : "") . $closings[$seed];
+        // 3. Partisipasi & Tanggung Jawab
+        $srcPart = [];
+        $srcPart[] = "Kehadiran semester: {$attRate}%";
+        if ($todayAtt->count() > 0) {
+            $srcPart[] = $allHadir ? "Hadir tepat waktu hari ini" : "Ada sesi tidak hadir hari ini";
+        }
+        $dimensions[] = [
+            'nama_dimensi' => 'Partisipasi & Tanggung Jawab',
+            'skor'         => $attRate,
+            'kategori'     => $attRate >= 80 ? 'Baik' : ($attRate >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
+            'sumber'       => $srcPart,
+        ];
+
+        // 4. Karakter & Budi Pekerti
+        $srcChar = [];
+        if ($infractions->count() > 0) {
+            $srcChar[] = "Pelanggaran: $totalPts poin dalam {$infractions->count()} kejadian";
+            foreach ($infractions->groupBy('category') as $cat => $items) {
+                $srcChar[] = "- $cat: {$items->count()}x";
+            }
+        } else {
+            $srcChar[] = "Tidak ada catatan pelanggaran (bersih)";
+        }
+        $dimensions[] = [
+            'nama_dimensi' => 'Karakter & Budi Pekerti',
+            'skor'         => $discScore,
+            'kategori'     => $discScore >= 80 ? 'Baik' : ($discScore >= 60 ? 'Cukup' : 'Perlu Bimbingan'),
+            'sumber'       => $srcChar,
+        ];
+
+        return $dimensions;
     }
 
     /**

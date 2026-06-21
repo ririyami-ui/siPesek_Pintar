@@ -147,18 +147,56 @@ export default function StudentDashboard() {
         )}
       </div>
 
-      {/* Narrative AI Summary (Simple Box) */}
-      {data?.daily_narrative && (
-        <div className="bg-indigo-50/80 dark:bg-indigo-950/40 backdrop-blur-md rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex gap-4 items-start">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl shrink-0">
-                <Bot size={18} className="text-indigo-600 dark:text-indigo-400" />
-            </div>
-            <div>
-                <h5 className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 mb-1">Analisis Belajar Hari Ini</h5>
-                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                    {data.daily_narrative.replace(/\*\*/g, '')}
-                </p>
-            </div>
+      {/* Dimensi Profil Lulusan */}
+      {data?.graduate_profile && data.graduate_profile.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
+            <Bot size={14} /> Dimensi Profil Lulusan
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {data.graduate_profile.map((dim, idx) => (
+              <div key={idx} className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider">
+                    {dim.nama_dimensi}
+                  </h4>
+                  <span className={`text-[10px] font-bold px-2.5 py-1 rounded-lg ${
+                    dim.kategori === 'Baik' 
+                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400'
+                      : dim.kategori === 'Cukup'
+                        ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400'
+                        : 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'
+                  }`}>
+                    {dim.kategori}
+                  </span>
+                </div>
+                {/* Score bar */}
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full transition-all duration-700 ${
+                        dim.skor >= 80 ? 'bg-emerald-500' : dim.skor >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                      }`}
+                      style={{ width: `${dim.skor}%` }}
+                    />
+                  </div>
+                  <span className="text-lg font-black text-slate-700 dark:text-slate-200 tabular-nums">{dim.skor}</span>
+                </div>
+                {/* Sumber data */}
+                <div className="mt-2 pt-2 border-t border-slate-50 dark:border-white/5">
+                  <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Sumber Data:</p>
+                  <ul className="space-y-0.5">
+                    {dim.sumber.map((s, si) => (
+                      <li key={si} className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed flex items-start gap-1.5">
+                        <span className="text-slate-300 dark:text-slate-600 mt-0.5">•</span>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
