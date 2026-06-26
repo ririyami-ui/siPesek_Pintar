@@ -1,0 +1,56 @@
+{
+    "bookId": "sma-seni_rupa-11",
+    "isbn": "",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Seni Rupa SMA Kelas XI",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Menciptakan",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Menciptakan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Apresiasi",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Apresiasi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Genap"
+        }
+    ],
+    "atp": [
+        {
+            "chapter_no": 1,
+            "materi": "Konsep Menciptakan",
+            "tp": "Konsep Menciptakan",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        },
+        {
+            "chapter_no": 2,
+            "materi": "Konsep Apresiasi",
+            "tp": "Konsep Apresiasi",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        }
+    ]
+}

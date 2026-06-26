@@ -57,4 +57,9 @@ class Teacher extends Model
     {
         return $this->hasMany(TeacherAssignment::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'teacher_id', 'auth_user_id');
+    }
 }

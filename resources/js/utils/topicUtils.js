@@ -74,14 +74,58 @@ export const getTopicForSchedule = (schedule, date, programs, classes, activeSem
     const monthConfig = pekanEfektif[monthIndex];
     const totalWeeksInMonth = monthConfig?.totalWeeks || 4;
 
-    // Stable Week Index: Strictly follows the visual grid in Promes (Day 1-7 = P1, etc.)
-    const weekIndex = Math.min(Math.floor((dateMoment.date() - 1) / 7), totalWeeksInMonth - 1);
+    // Stable Week Index: Use ISO week iteration, same as PekanEfektifView
+    const schoolDaysCount = 6; // default, will match saved pekan_efektif arrangement
+    const threshold = schoolDaysCount === 5 ? 3 : 4;
+
+    // Build list of ISO week start dates for this month that have enough school days
+    const monthStart = dateMoment.clone().startOf('month');
+    const monthEnd = dateMoment.clone().endOf('month');
+    let validWeeks = [];
+    let isoWeekStart = monthStart.clone().startOf('isoWeek');
+    while (isoWeekStart.isBefore(monthEnd)) {
+        const isoWeekEnd = isoWeekStart.clone().endOf('isoWeek');
+
+        // Count school days in this week within this month
+        let schoolDaysInMonth = 0;
+        let dayIter = isoWeekStart.clone();
+        while (dayIter.isSameOrBefore(isoWeekEnd)) {
+            if (dayIter.month() === monthStart.month()) {
+                const d = dayIter.day();
+                if (schoolDaysCount === 5) {
+                    if (d >= 1 && d <= 5) schoolDaysInMonth++;
+                } else {
+                    if (d >= 1 && d <= 6) schoolDaysInMonth++;
+                }
+            }
+            dayIter.add(1, 'day');
+        }
+
+        if (schoolDaysInMonth >= threshold) {
+            validWeeks.push(isoWeekStart.clone());
+        }
+        isoWeekStart.add(1, 'week');
+    }
+
+    // Find which valid week this date falls in
+    let weekIndex = -1;
+    for (let i = 0; i < validWeeks.length; i++) {
+        const ws = validWeeks[i];
+        const we = ws.clone().endOf('isoWeek');
+        if (dateMoment.isSameOrAfter(ws) && dateMoment.isSameOrBefore(we)) {
+            weekIndex = i;
+            break;
+        }
+    }
+
+    // Clamp to valid range
+    const clampedIndex = Math.min(Math.max(weekIndex, 0), totalWeeksInMonth - 1);
 
     const activeTopics = [];
     const protaRows = Array.isArray(program.prota) ? program.prota : [];
 
     protaRows.forEach(row => {
-        const key = `${row.id}_${monthIndex}_${weekIndex}`;
+        const key = `${row.id}_${monthIndex}_${clampedIndex}`;
         const val = program.promes[key];
         if (val !== undefined && val !== null && val !== '' && val !== 0 && val !== '0' && val !== false && val !== 'false') {
             // Only show material (materi), not KD/learning objectives to keep it concise

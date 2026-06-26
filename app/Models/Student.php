@@ -43,4 +43,14 @@ class Student extends Model
     {
         return $this->hasMany(LibraryLoan::class);
     }
+
+    public function infractions()
+    {
+        return $this->hasMany(Infraction::class);
+    }
+
+    public function studentNotes()
+    {
+        return $this->hasMany(StudentNote::class);
+    }
 }

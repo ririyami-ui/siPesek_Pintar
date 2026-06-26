@@ -1,0 +1,56 @@
+{
+    "bookId": "sma-prakarya-11",
+    "isbn": "",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Prakarya SMA Kelas XI",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Produksi",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Produksi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Produksi",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Produksi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Genap"
+        }
+    ],
+    "atp": [
+        {
+            "chapter_no": 1,
+            "materi": "Konsep Produksi",
+            "tp": "Konsep Produksi",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        },
+        {
+            "chapter_no": 2,
+            "materi": "Konsep Produksi",
+            "tp": "Konsep Produksi",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        }
+    ]
+}

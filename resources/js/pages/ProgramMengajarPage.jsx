@@ -559,9 +559,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
             });
             isInternalChange.current = false; // Reset after sync
         }
-    }, [months, jpPerWeek, onUpdateData]);
-
-    // INITIAL SYNC FROM GLOBAL (Parent)
+    }, [months, jpPerWeek, onUpdateData]);    // INITIAL SYNC FROM GLOBAL (Parent)
     useEffect(() => {
         if (sharedEfektifData && sharedEfektifData.pekanEfektif && sharedEfektifData.pekanEfektif.length > 0) {
             setMonths(sharedEfektifData.pekanEfektif);
@@ -587,12 +585,6 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
         let ignore = false;
         const fetchData = async () => {
             if (!userProfile) return;
-
-            // If we already have live shared data, don't fetch from DB again (avoid race/flicker)
-            if (sharedEfektifData && sharedEfektifData.pekanEfektif && sharedEfektifData.pekanEfektif.length > 0) {
-                setLoading(false);
-                return;
-            }
 
             setLoading(true);
             try {
@@ -625,6 +617,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                 const calData = (calRes.data.data || calRes.data || [])[0] || {};
                 const progData = (progRes.data.data || progRes.data || [])[0] || {};
 
+                // Prefer calendar data, fallback to program data; always set months when data exists
                 if (calData.pekan_efektif) {
                     setMonths(calData.pekan_efektif);
                 } else if (progData.pekan_efektif) {
@@ -637,71 +630,87 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                     setJpPerWeek(0);
                 }
 
-                // --- NEW: AUTO-CALCULATE NON-EFFECTIVE WEEKS FROM HOLIDAYS ---
+                // --- AUTO-CALCULATE NON-EFFECTIVE WEEKS (ISO week based) ---
                 const hRes = await api.get('/holidays');
                 const allHolidays = hRes.data.data || hRes.data || [];
 
                 setMonths(prevMonths => {
                     return prevMonths.map(m => {
-                        // Calculate how many weeks in this month are affected by manual holidays
                         const mNum = MONTH_MAP[m.name];
                         const years = year.split('/');
                         const actualYear = mNum >= 7 ? years[0] : years[1];
-                        const daysInMonth = moment(`${actualYear}-${mNum}`, 'YYYY-M').daysInMonth();
+                        const monthStart = moment(`${actualYear}-${mNum}-01`, 'YYYY-MM-DD');
+                        const monthEnd = monthStart.clone().endOf('month');
 
                         let calculatedNonEffective = 0;
                         let holidaynotes = [];
+                        let nonEffectiveWeekIndices = [];
+                        let totalWeeksCount = 0;
+                        let weekIndexInMonth = 0;
 
-                        // Check each week
-                        const totalWeeks = daysInMonth > 28 ? 5 : 4;
-                        for (let w = 0; w < totalWeeks; w++) {
-                            const weekStart = moment(`${actualYear}-${mNum}-${(w * 7) + 1}`, 'YYYY-MM-D').startOf('day');
-                            const weekEnd = weekStart.clone().add(6, 'days').endOf('day');
+                        const schoolDaysCount = parseInt(userProfile?.school_days || userProfile?.schoolDays || 6);
+                        const threshold = schoolDaysCount === 5 ? 3 : 4;
 
-                            const blockingHoliday = allHolidays.find(h => {
-                                // Include all holidays (manual, national_sync, etc.)
-                                const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
-                                const hEnd = moment(h.endDate || h.end_date || h.date).startOf('day');
+                        // Iterate ISO weeks that intersect the month
+                        let weekStart = monthStart.clone().startOf('isoWeek');
+                        while (weekStart.isBefore(monthEnd)) {
+                            const weekEnd = weekStart.clone().endOf('isoWeek');
 
-                                // Intersection
-                                const overlapStart = moment.max(weekStart, hStart);
-                                const overlapEnd = moment.min(weekEnd, hEnd);
-
-                                if (overlapEnd.isBefore(overlapStart)) return false;
-
-                                const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
-                                
-                                // Threshold based on school days
-                                // In Indonesia: 5 days school usually means 3 days holiday blocks a week (Majority of school week)
-                                // 6 days school usually means 4 days holiday blocks a week
-                                const schoolDaysCount = parseInt(userProfile?.school_days || userProfile?.schoolDays || 6);
-                                const threshold = schoolDaysCount === 5 ? 3 : 4;
-
-                                return overlapDays >= threshold;
-                            });
-
-                            if (blockingHoliday) {
-                                calculatedNonEffective++;
-                                const holidayTitle = blockingHoliday.title || blockingHoliday.name;
-                                if (holidayTitle && !holidaynotes.includes(holidayTitle)) {
-                                    holidaynotes.push(holidayTitle);
+                            // Count school days in THIS week that fall WITHIN this month
+                            let schoolDaysInMonth = 0;
+                            let dayIter = weekStart.clone();
+                            while (dayIter.isSameOrBefore(weekEnd)) {
+                                if (dayIter.month() === mNum - 1) {
+                                    const d = dayIter.day();
+                                    if (schoolDaysCount === 5) {
+                                        if (d >= 1 && d <= 5) schoolDaysInMonth++;
+                                    } else {
+                                        if (d >= 1 && d <= 6) schoolDaysInMonth++;
+                                    }
                                 }
+                                dayIter.add(1, 'day');
                             }
+
+                            // Only count as "calendar week" if it has enough school days in this month
+                            if (schoolDaysInMonth >= threshold) {
+                                totalWeeksCount++;
+                                weekIndexInMonth++;
+
+                                const blockingHoliday = allHolidays.find(h => {
+                                    const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
+                                    const hEnd = moment(h.endDate || h.end_date || h.date).startOf('day');
+                                    const overlapStart = moment.max(weekStart, hStart);
+                                    const overlapEnd = moment.min(weekEnd, hEnd);
+                                    if (overlapEnd.isBefore(overlapStart)) return false;
+                                    const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
+                                    return overlapDays >= threshold;
+                                });
+
+                                if (blockingHoliday) {
+                                    calculatedNonEffective++;
+                                    nonEffectiveWeekIndices.push(weekIndexInMonth);
+                                    const holidayTitle = blockingHoliday.title || blockingHoliday.name;
+                                    if (holidayTitle && !holidaynotes.includes(holidayTitle)) {
+                                        holidaynotes.push(holidayTitle);
+                                    }
+                                }
+                            } else {
+                                weekIndexInMonth++;
+                            }
+
+                            weekStart.add(1, 'week');
                         }
 
-                        // Always update if we found holidays, or if it was previously auto-set
-                        if (calculatedNonEffective > 0) {
-                            return {
-                                ...m,
-                                nonEffectiveWeeks: calculatedNonEffective,
-                                keterangan: holidaynotes.join(', '),
-                                isAuto: true
-                            };
-                        }
-                        return m;
+                        return {
+                            ...m,
+                            totalWeeks: totalWeeksCount > 0 ? totalWeeksCount : m.totalWeeks,
+                            nonEffectiveWeeks: calculatedNonEffective > 0 ? calculatedNonEffective : (m.isAuto ? 0 : m.nonEffectiveWeeks),
+                            nonEffectiveWeekIndices: nonEffectiveWeekIndices.sort((a, b) => a - b),
+                            keterangan: calculatedNonEffective > 0 ? holidaynotes.join(', ') : (m.keterangan || ''),
+                            isAuto: true
+                        };
                     });
                 });
-
             } catch (error) {
                 console.error("Error fetching Pekan Efektif:", error);
             } finally {
@@ -815,6 +824,8 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                     
                     let totalWeeksCount = 0;
                     let nonEffectiveCount = 0;
+                    let nonEffectiveIndices = [];
+                    let weekIndexInMonth = 0;
                     let holidayNotes = [];
 
                     // Iterate through every possible week block that overlaps this month
@@ -841,6 +852,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                         // A week is only counted as a "Calendar Week" for this month if it has enough school days
                         if (schoolDaysInMonth >= threshold) {
                             totalWeeksCount++;
+                            weekIndexInMonth++;
 
                             // 2. Check if this specific week is non-effective (Blocked by Agenda)
                             const blockingHoliday = allHolidays.find(h => {
@@ -856,9 +868,12 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
 
                             if (blockingHoliday) {
                                 nonEffectiveCount++;
+                                nonEffectiveIndices.push(weekIndexInMonth);
                                 const title = blockingHoliday.name || blockingHoliday.title;
                                 if (title && !holidayNotes.includes(title)) holidayNotes.push(title);
                             }
+                        } else {
+                            weekIndexInMonth++;
                         }
                         currentWeek.add(1, 'week');
                     }
@@ -867,6 +882,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                         ...m,
                         totalWeeks: totalWeeksCount,
                         nonEffectiveWeeks: nonEffectiveCount,
+                        nonEffectiveWeekIndices: nonEffectiveIndices.sort((a, b) => a - b),
                         keterangan: holidayNotes.join(', '),
                         isAuto: true
                     };
@@ -1965,8 +1981,10 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 const calData = (calRes.data.data || calRes.data || [])[0] || {};
                 const progData = (progRes.data.data || progRes.data || [])[0] || {};
 
-                // Calendar Structure (Shared -> Fallback to Doc -> Template)
-                if (calData.pekan_efektif) {
+                // Calendar Structure (Shared -> API fallback -> Template)
+                if (sharedEfektifData && sharedEfektifData.pekanEfektif && sharedEfektifData.pekanEfektif.length > 0) {
+                    setPekanEfektifSource(sharedEfektifData.pekanEfektif);
+                } else if (calData.pekan_efektif) {
                     setPekanEfektifSource(calData.pekan_efektif);
                 } else if (progData.pekan_efektif) {
                     setPekanEfektifSource(progData.pekan_efektif);
@@ -1990,43 +2008,76 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
         };
         fetchData();
         return () => { ignore = true; };
-    }, [grade, subject, semester, year, activeTab, subjects]);
+    }, [grade, subject, semester, year, activeTab, subjects, sharedEfektifData]);
 
     const getHolidayForWeek = (monthName, wIndex) => {
         const monthNum = MONTH_MAP[monthName];
         if (!monthNum) return null;
 
-        // Determine actual year for this month based on Academic Year (e.g., 2025/2026)
         const years = year.split('/');
         const actualYear = monthNum >= 7 ? years[0] : years[1];
+        const monthStart = moment(`${actualYear}-${monthNum}-01`, 'YYYY-MM-DD');
+        const monthEnd = monthStart.clone().endOf('month');
 
-        // Approximate week dates (Basic logic: 1-7, 8-14, 15-21, 22-end)
-        const weekStart = moment(`${actualYear}-${monthNum}-${(wIndex * 7) + 1}`, 'YYYY-MM-D').startOf('day');
-        const weekEnd = weekStart.clone().add(6, 'days').endOf('day');
+        const schoolDaysCount = parseInt(userProfile?.school_days || 6);
+        const threshold = schoolDaysCount === 5 ? 3 : 4;
+
+        // Find the wIndex-th valid ISO week (one with enough school days in this month)
+        let validCount = 0;
+        let weekStart = monthStart.clone().startOf('isoWeek');
+        let targetWeekStart = null;
+
+        while (weekStart.isBefore(monthEnd) && validCount <= wIndex) {
+            const weekEnd = weekStart.clone().endOf('isoWeek');
+
+            // Count school days in this week within this month
+            let schoolDaysInMonth = 0;
+            let dayIter = weekStart.clone();
+            while (dayIter.isSameOrBefore(weekEnd)) {
+                if (dayIter.month() === monthNum - 1) {
+                    const d = dayIter.day();
+                    if (schoolDaysCount === 5) {
+                        if (d >= 1 && d <= 5) schoolDaysInMonth++;
+                    } else {
+                        if (d >= 1 && d <= 6) schoolDaysInMonth++;
+                    }
+                }
+                dayIter.add(1, 'day');
+            }
+
+            if (schoolDaysInMonth >= threshold) {
+                if (validCount === wIndex) {
+                    targetWeekStart = weekStart.clone();
+                    break;
+                }
+                validCount++;
+            }
+
+            weekStart.add(1, 'week');
+        }
+
+        if (!targetWeekStart) return null;
+
+        const weekEnd = targetWeekStart.clone().endOf('isoWeek');
 
         const holiday = (userHolidays || []).find(h => {
-            // CRITICAL: Only include manual school agendas (semester breaks, exams, etc.)
-            // as requested by the user. National/Public holidays are ignored in Promes.
             if (h.type !== 'manual') return false;
-
             const hStart = moment(h.startDate || h.date).startOf('day');
             const hEnd = moment(h.endDate || h.date).endOf('day');
-            // Overlaps if hStart <= weekEnd AND hEnd >= weekStart
-            return hStart.isSameOrBefore(weekEnd) && hEnd.isSameOrAfter(weekStart);
+            return hStart.isSameOrBefore(weekEnd) && hEnd.isSameOrAfter(targetWeekStart);
         });
 
         if (!holiday) return null;
 
-        // Calculate overlap duration to determine if it should block the week
         const hStart = moment(holiday.startDate || holiday.date).startOf('day');
         const hEnd = moment(holiday.endDate || holiday.date).endOf('day');
-        const overlapStart = moment.max(weekStart, hStart);
+        const overlapStart = moment.max(targetWeekStart, hStart);
         const overlapEnd = moment.min(weekEnd, hEnd);
         const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
 
         return {
             ...holiday,
-            isBlocking: overlapDays >= (parseInt(userProfile?.school_days || 6) === 5 ? 3 : 4)
+            isBlocking: overlapDays >= threshold
         };
     };
 
@@ -2547,51 +2598,18 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 while (currentM < pekanEfektifSource.length) {
                     const month = pekanEfektifSource[currentM];
                     const totalWeeks = parseInt(month.totalWeeks || 4);
-                    // Critical: Get the user-inputted non-effective count (or auto-calculated)
-                    const allowedNonEffective = parseInt(month.nonEffectiveWeeks || 0);
 
-                    // Check if this SPECIFIC week is a holiday
+                    // Check if this SPECIFIC week is a holiday or non-effective (from Pekan Efektif tab)
                     const holiday = getHolidayForWeek(month.name, currentW);
                     const isHolidayWeek = holiday && holiday.isBlocking;
 
-                    // ADVANCED LOGIC:
-                    // 1. If it's a specific holiday week -> SKIP IT (Primary Rule)
-                    // 2. If we need to skip MORE weeks to match "allowedNonEffective" count (e.g. user manually added buffer),
-                    //    we fall back to skipping from the end.
+                    // Use nonEffectiveWeekIndices array if available, else fallback to end-of-month heuristic
+                    const hasNonEffectiveIndices = Array.isArray(month.nonEffectiveWeekIndices) && month.nonEffectiveWeekIndices.length > 0;
+                    const isNonEffectiveWeek = hasNonEffectiveIndices
+                        ? month.nonEffectiveWeekIndices.includes(currentW + 1)
+                        : (currentW >= (totalWeeks - parseInt(month.nonEffectiveWeeks || 0)));
 
-                    // But first, let's count how many specific holidays exist in this month
-                    let specificHolidaysCount = 0;
-                    for (let w = 0; w < totalWeeks; w++) {
-                        if (getHolidayForWeek(month.name, w)?.isBlocking) specificHolidaysCount++;
-                    }
-
-                    // Determine if current week should be skipped
-                    let shouldSkip = false;
-
-                    if (isHolidayWeek) {
-                        shouldSkip = true;
-                    } else {
-                        // If no specific holiday here, do we still need to skip to meet the quota?
-                        // Only if we haven't found enough specific holidays to explain the "nonEffectiveWeeks" count
-                        // We treat extra non-effective weeks as "End of Month" buffers (Cadangan/TryOut/Ujian)
-
-                        // Example: User inputs 3 non-effective weeks. Calendar has 1 holiday.
-                        // specificHolidaysCount = 1
-                        // extraNonEffective = 3 - 1 = 2
-                        // We need to skip 2 extra weeks from the end.
-
-                        const extraNonEffective = Math.max(0, allowedNonEffective - specificHolidaysCount);
-
-                        // Logic to skip from end:
-                        // If totalWeeks = 5, extra = 2. We skip week 3 and 4 (indices 3, 4).
-                        // wait, weeks are 0-indexed. Indices: 0, 1, 2, 3, 4.
-                        // Target indices to skip: 3, 4.
-                        // Condition: currentW >= (5 - 2) => currentW >= 3. Correct.
-
-                        if (currentW >= (totalWeeks - extraNonEffective)) {
-                            shouldSkip = true;
-                        }
-                    }
+                    const shouldSkip = isHolidayWeek || isNonEffectiveWeek;
 
                     if (!shouldSkip) {
                         break; // Found a clean effective week
@@ -2772,12 +2790,13 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                 const isHoliday = !!holiday;
                                                 const isBlockingHoliday = isHoliday && holiday.isBlocking;
 
-                                                // Determine if it's a non-effective week from the counter (Tab 1)
-                                                const isManualNonEffective = !isHoliday && wIndex >= (totalWeeks - nonEffectiveWeeks);
+                                                // Determine if it's a non-effective week using explicit indices only
+                                                const isManualNonEffective = !isHoliday && monthData.nonEffectiveWeekIndices?.includes(wIndex + 1);
 
                                                 // Determine Background Color
-                                                // Selective highlighting for school agendas (type: manual)
-                                                let cellBg = '';
+                                                // Highlight non-effective weeks
+                                                let cellBg = isManualNonEffective ? 'bg-red-50 dark:bg-red-900/40' : '';
+                                                // Additional styling for values later may override
 
                                                 if (hasValue) {
                                                     cellBg = 'bg-green-50 dark:bg-green-900/30';
@@ -2798,18 +2817,18 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                         title={holiday ? holiday.name : isManualNonEffective ? 'Pekan Tidak Efektif (Manual)' : ''}
                                                         className={`border border-gray-200 dark:border-gray-700 p-0 hover:bg-gray-50 group relative ${cellBg}`}
                                                     >
-                                                        {!isBlockingHoliday ? (
-                                                            <input
-                                                                id={`promes-input-${index}-${mIndex}-${wIndex}`}
-                                                                type="text"
-                                                                value={val}
-                                                                onChange={(e) => updateCell(row.id, mIndex, wIndex, e.target.value)}
-                                                                onKeyDown={(e) => handleKeyDown(e, index, mIndex, wIndex)}
-                                                                className="w-full h-8 text-center bg-transparent focus:ring-1 focus:ring-blue-500 outline-none font-medium text-[11px]"
-                                                            />
-                                                        ) : (
-                                                            <div className="w-full h-8 flex items-center justify-center font-bold text-[10px] text-gray-400">OFF</div>
-                                                        )}
+                                                    {!isBlockingHoliday && !isManualNonEffective ? (
+                                                        <input
+                                                            id={`promes-input-${index}-${mIndex}-${wIndex}`}
+                                                            type="text"
+                                                            value={val}
+                                                            onChange={(e) => updateCell(row.id, mIndex, wIndex, e.target.value)}
+                                                            onKeyDown={(e) => handleKeyDown(e, index, mIndex, wIndex)}
+                                                            className="w-full h-8 text-center bg-transparent focus:ring-1 focus:ring-blue-500 outline-none font-medium text-[11px]"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-full h-8 flex items-center justify-center font-bold text-[10px] text-gray-400">OFF</div>
+                                                    )}
                                                         {/* Tooltip hint for all holidays (even short ones) is handled by the 'title' attribute on <td> */}
                                                     </td>
                                                 );

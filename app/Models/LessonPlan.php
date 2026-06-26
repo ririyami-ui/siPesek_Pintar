@@ -25,4 +25,9 @@ class LessonPlan extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function kktpAssessments()
+    {
+        return $this->hasMany(KktpAssessment::class, 'rpp_id');
+    }
 }

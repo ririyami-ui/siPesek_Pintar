@@ -1,0 +1,374 @@
+{
+  "bookId": "sma-informatika-11",
+  "isbn": "",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Informatika SMA Kelas XI",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Berpikir Komputasional",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu menerapkan berpikir komputasional untuk menghasilkan beberapa solusi dalam menyelesaikan persoalan dengan data diskrit bervolume kecil dan mendisposisikan berpikir komputasional dalam bidang lain terutama dalam literasi, numerasi, dan literasi sains (computationally literate)",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Ganjil"
+    },
+    {
+      "no": 2,
+      "title": "Teknologi Informasi dan Komunikasi",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu menerapkan praktik baik dalam memanfaatkan aplikasi surel untuk berkomunikasi, aplikasi peramban untuk pencarian informasi di internet, content management system (CMS) untuk pengelolaan konten digital, dan memanfaatkan perkakas TIK untuk mendukung pembuatan laporan, presentasi serta analisis dan interpretasi data",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Ganjil"
+    },
+    {
+      "no": 3,
+      "title": "Jaringan Komputer dan Internet",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu memahami konektivitas jaringan lokal, komunikasi data via ponsel, konektivitas internet melalui jaringan kabel dan nirkabel (bluetooth, wifi, internet)",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Ganjil"
+    },
+    {
+      "no": 4,
+      "title": "Analisis Data",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu mengakses, mengolah, mengelola, dan menganalisis data secara efisien, terstruktur, dan sistematis untuk menginterpretasi dan memprediksi sekumpulan data dari situasi konkret sehari-hari yang berasal dari suatu sumber data dengan menggunakan perkakas TIK atau manual",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Genap"
+    },
+    {
+      "no": 5,
+      "title": "Algoritma dan Pemrograman",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu memahami objek-objek dan instruksi dalam sebuah lingkungan pemrograman blok (visual) untuk mengembangkan program visual sederhana berdasarkan contoh-contoh yang diberikan, mengembangkan karya digital kreatif (game, animasi, atau presentasi), menerapkan aturan translasi konsep dari satu bahasa visual ke bahasa visual lainnya, dan mengenal pemrograman tekstual sederhana",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Genap"
+    },
+    {
+      "no": 6,
+      "title": "Dampak Sosial Informatika",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pada akhir fase D, peserta didik mampu memahami ketersediaan data dan informasi lewat aplikasi media sosial, memahami keterbukaan informasi, memilih informasi yang bersifat publik atau privat, menerapkan etika dan menjaga keamanan dirinya dalam masyarakat digital",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 2",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 3",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        },
+        {
+          "name": "Placeholder 4",
+          "bloom_level": "MOTS",
+          "suggested_jp": 2
+        }
+      ],
+      "key_terms": [],
+      "visual_hints": "",
+      "semester": "Genap"
+    }
+  ],
+  "atp": [
+    {
+      "chapter_no": 1,
+      "materi": "Dekomposisi Masalah",
+      "tp": "Dekomposisi Masalah",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 1,
+      "materi": "Pengenalan Pola",
+      "tp": "Pengenalan Pola",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 1,
+      "materi": "Abstraksi",
+      "tp": "Abstraksi",
+      "jp": 1,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 1,
+      "materi": "Algoritma Sederhana",
+      "tp": "Algoritma Sederhana",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 2,
+      "materi": "Antarmuka dan Manajemen File",
+      "tp": "Antarmuka dan Manajemen File",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 2,
+      "materi": "Aplikasi Perkantoran",
+      "tp": "Aplikasi Perkantoran",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 2,
+      "materi": "Komunikasi Daring",
+      "tp": "Komunikasi Daring",
+      "jp": 1,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 2,
+      "materi": "Produksi Dokumen Digital",
+      "tp": "Produksi Dokumen Digital",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 3,
+      "materi": "Jaringan Lokal (LAN)",
+      "tp": "Jaringan Lokal (LAN)",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 3,
+      "materi": "Internet dan Routing Dasar",
+      "tp": "Internet dan Routing Dasar",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 3,
+      "materi": "Keamanan Jaringan",
+      "tp": "Keamanan Jaringan",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 4,
+      "materi": "Data Terstruktur dan Spreadsheet",
+      "tp": "Data Terstruktur dan Spreadsheet",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 4,
+      "materi": "Pengolahan Data Dasar",
+      "tp": "Pengolahan Data Dasar",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 4,
+      "materi": "Visualisasi Data",
+      "tp": "Visualisasi Data",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 4,
+      "materi": "Kesimpulan dari Data",
+      "tp": "Kesimpulan dari Data",
+      "jp": 1,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 5,
+      "materi": "Logika Pemrograman Dasar",
+      "tp": "Logika Pemrograman Dasar",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 5,
+      "materi": "Struktur Kontrol (Perulangan, Percabangan)",
+      "tp": "Struktur Kontrol (Perulangan, Percabangan)",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 5,
+      "materi": "Array dan Fungsi Sederhana",
+      "tp": "Array dan Fungsi Sederhana",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 5,
+      "materi": "Proyek Pemrograman",
+      "tp": "Proyek Pemrograman",
+      "jp": 2,
+      "kesulitan": "MOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 6,
+      "materi": "Rekam Jejak Digital",
+      "tp": "Rekam Jejak Digital",
+      "jp": 1,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 6,
+      "materi": "Etika Bermedia Digital",
+      "tp": "Etika Bermedia Digital",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 6,
+      "materi": "Cyberbullying dan Keamanan",
+      "tp": "Cyberbullying dan Keamanan",
+      "jp": 1,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    },
+    {
+      "chapter_no": 6,
+      "materi": "Kewargaan Digital",
+      "tp": "Kewargaan Digital",
+      "jp": 2,
+      "kesulitan": "LOTS",
+      "profilLulusan": null
+    }
+  ]
+}

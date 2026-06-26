@@ -18,4 +18,39 @@ class SchoolClass extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'class_id');
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class, 'class_id');
+    }
+
+    public function journals()
+    {
+        return $this->hasMany(Journal::class, 'class_id');
+    }
+
+    public function grades()
+    {
+        return $this->hasMany(Grade::class, 'class_id');
+    }
+
+    public function teachingPrograms()
+    {
+        return $this->hasMany(TeachingProgram::class, 'class_id');
+    }
+
+    public function teacherAssignments()
+    {
+        return $this->hasMany(TeacherAssignment::class, 'class_id');
+    }
+
+    public function classAgreements()
+    {
+        return $this->hasMany(ClassAgreement::class, 'class_id');
+    }
 }

@@ -1,0 +1,102 @@
+{
+    "bookId": "smp-kepercayaan-9",
+    "isbn": "",
+    "publisher": "Pusat Perbukuan Kemendikbudristek",
+    "title": "Pendidikan Kepercayaan terhadap Tuhan YME SMP Kelas IX",
+    "chapters": [
+        {
+            "no": 1,
+            "title": "Sejarah",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 2,
+            "title": "Keyakinan",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Keyakinan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Ganjil"
+        },
+        {
+            "no": 3,
+            "title": "Ritual",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Ritual",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Genap"
+        },
+        {
+            "no": 4,
+            "title": "Budaya",
+            "pages": "",
+            "sub_topics": [
+                {
+                    "name": "Konsep Budaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [],
+            "visual_hints": "",
+            "semester": "Genap"
+        }
+    ],
+    "atp": [
+        {
+            "chapter_no": 1,
+            "materi": "Konsep Sejarah",
+            "tp": "Konsep Sejarah",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        },
+        {
+            "chapter_no": 2,
+            "materi": "Konsep Keyakinan",
+            "tp": "Konsep Keyakinan",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        },
+        {
+            "chapter_no": 3,
+            "materi": "Konsep Ritual",
+            "tp": "Konsep Ritual",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        },
+        {
+            "chapter_no": 4,
+            "materi": "Konsep Budaya",
+            "tp": "Konsep Budaya",
+            "jp": 1,
+            "kesulitan": "LOTS",
+            "profilLulusan": null
+        }
+    ]
+}
