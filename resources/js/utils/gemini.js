@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import BSKAP_DATA from './bskap_2025_intel.json';
-import VERBATIM_BSKAP_DATA from './bskap_2025_intel.json';
+import CP_FULL from './bskap_full_cp.json';
 import api from '../lib/axios';
 // HMR Trigger Comment
 
@@ -1040,7 +1040,7 @@ export const generateLessonPlan = async (data) => {
 
     const level = getLevel(data.gradeLevel);
     const subjectKey = getSubjectKey(data.subject);
-    const verbatimEntry = VERBATIM_BSKAP_DATA.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+    const verbatimEntry = CP_FULL.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
     const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
 
     onProgress("Generating Single-Stage RPP (BSKP 46/2025)...");
@@ -2084,7 +2084,7 @@ export async function generateATP(data) {
   const subjectData = (gradeData && gradeData[subjectKey])
     || levelData?.[subjectKey];
 
-  const verbatimEntry = VERBATIM_BSKAP_DATA.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+  const verbatimEntry = CP_FULL.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
   const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
 
   onProgress({ stage: 'analyzing', message: 'Menganalisis Capaian Pembelajaran (CP) & Karakteristik Sekolah...', percentage: 20 });

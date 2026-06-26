@@ -405,7 +405,7 @@ class AiGeneratorService extends GeminiService
         $modelName = $context['modelName'] ?? $this->model;
         $imageData = $context['imageData'] ?? null;
         
-        $bskapData = $this->bskapIntel;
+        $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
         $philosophy = $bskapData['standards']['philosophy']['name'] ?? 'Deep Learning';
 
@@ -488,7 +488,7 @@ class AiGeneratorService extends GeminiService
         $className = $data['className'] ?? 'Kelas';
         $isConcise = $data['isConcise'] ?? false;
         
-        $bskapData = $this->bskapIntel;
+        $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
 
         // Summarize data to keep prompt size manageable
@@ -1337,8 +1337,15 @@ class AiGeneratorService extends GeminiService
         $totalBatches = $data['totalBatches'] ?? 1;
         $allQuestions = $data['allQuestions'] ?? [];
         
-        $bskapData = $this->bskapIntel;
+        $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
+        $profileLulusan = $bskapData['standards']['profile_lulusan_2025'] ?? [];
+        $profilLulusanList = '';
+        foreach ($profileLulusan as $d) {
+            if (isset($d['dimensi'])) {
+                $profilLulusanList .= ($profilLulusanList ? ', ' : '') . $d['dimensi'];
+            }
+        }
 
         // Calculate total questions for this batch
         $batchTotal = 0;
@@ -1353,6 +1360,24 @@ class AiGeneratorService extends GeminiService
         $alreadyCovered = !empty($allQuestions) 
             ? "- **TOPIK YANG SUDAH DICAKUP**: [" . implode(', ', array_map(fn($q) => $q['pedagogical_materi'] ?? '', $allQuestions)) . "] (HINDARI pengulangan materi yang sama)\n"
             : "";
+
+        // Build JSON structures only for selected types
+        $allTypeStructures = [
+            'pg' => '- **pg**: {\"type\": \"pg\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"A...\", \"B...\"], \"answer\": \"A...\", \"explanation\": \"...\"}',
+            'pg_complex' => '- **pg_complex**: {\"type\": \"pg_complex\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"1...\", \"2...\"], \"answer\": [\"1...\", \"3...\"], \"explanation\": \"...\"}',
+            'pg_matrix' => '- **pg_matrix**: {\"type\": \"pg_matrix\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"rows\": [\"Pernyataan 1\", \"Pernyataan 2\"], \"columns\": [\"Kategori A\", \"Kategori B\"], \"answer\": [{\"row\": \"Pernyataan 1\", \"column\": \"Kategori A\"}], \"explanation\": \"...\"}',
+            'matching' => '- **matching**: {\"type\": \"matching\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"left_side\": [\"A\", \"B\"], \"right_side\": [\"1\", \"2\", \"3\"], \"pairs\": [{\"left\": \"A\", \"right\": \"1\"}], \"explanation\": \"...\"}',
+            'true_false' => '- **true_false**: {\"type\": \"true_false\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"statements\": [{\"text\": \"Pernyataan 1\", \"isCorrect\": true}, {\"text\": \"Pernyataan 2\", \"isCorrect\": false}], \"explanation\": \"...\"}',
+            'short_answer' => '- **short_answer**: {\"type\": \"short_answer\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (Singkat 1-3 kata)\", \"explanation\": \"...\"}',
+            'sequencing' => '- **sequencing**: {\"type\": \"sequencing\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"items\": [\"Langkah A\", \"Langkah B\", \"Langkah C\"], \"correct_order\": [\"Langkah B\", \"Langkah A\", \"Langkah C\"], \"explanation\": \"...\"}',
+            'essay' => '- **essay/uraian**: {\"type\": \"essay\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (WAJIB SINGKAT & PADAT)\", \"grading_guide\": \"Pedoman penskoran ringkas\", \"explanation\": \"Penjelasan singkat\"}',
+        ];
+        $typeStructures = '';
+        foreach ($typeCounts as $type => $count) {
+            if (isset($allTypeStructures[$type])) {
+                $typeStructures .= "\n" . $allTypeStructures[$type];
+            }
+        }
 
         return "
         LANDASAN REGULASI: **{$regulation}** (Standar Nasional Kurikulum Merdeka).
@@ -1388,22 +1413,17 @@ class AiGeneratorService extends GeminiService
              List Resmi: {$profilLulusanList}
              - **WAJIB**: Cantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi yang diperkuat melalui kuis ini.
         
-        STRUKTUR JSON PER TIPE (INPUT HARUS SESUAI):
-        - **Wajib Ada di Setiap Soal (MANDATORY SINGKAT)**: 
-          \"pedagogical_materi\": \"Materi spesifik (max 3 kata)\",
-          \"competency\": \"Intisari CP (max 5 kata)\", 
-          \"indicator\": \"Indikator (max 8 kata)\", 
-          \"cognitive_level\": \"L1/L2/L3/L4/L5/L6\",
-          \"stimulus\": \"Narasi kaya, studi kasus, atau data riil (3-5 kalimat, WAJIB DETAIL)\",
-          \"image_hint\": \"Instruksi gambar (Opsional, gunakan [] jika ada)\"
-        - **pg**: {\"type\": \"pg\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"A...\", \"B...\"], \"answer\": \"A...\", \"explanation\": \"...\"}
-        - **pg_complex**: {\"type\": \"pg_complex\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"1...\", \"2...\"], \"answer\": [\"1...\", \"3...\"], \"explanation\": \"...\"}
-         - **pg_matrix**: {\"type\": \"pg_matrix\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"rows\": [\"Pernyataan 1\", \"Pernyataan 2\"], \"columns\": [\"Kategori A\", \"Kategori B\"], \"answer\": [{\"row\": \"Pernyataan 1\", \"column\": \"Kategori A\"}], \"explanation\": \"...\"}
-         - **matching**: {\"type\": \"matching\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"left_side\": [\"A\", \"B\"], \"right_side\": [\"1\", \"2\", \"3\"], \"pairs\": [{\"left\": \"A\", \"right\": \"1\"}], \"explanation\": \"...\"}
-         - **true_false**: {\"type\": \"true_false\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"statements\": [{\"text\": \"Pernyataan 1\", \"isCorrect\": true}, {\"text\": \"Pernyataan 2\", \"isCorrect\": false}], \"explanation\": \"...\"}
-         - **short_answer**: {\"type\": \"short_answer\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (Singkat 1-3 kata)\", \"explanation\": \"...\"}
-         - **sequencing**: {\"type\": \"sequencing\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"items\": [\"Langkah A\", \"Langkah B\", \"Langkah C\"], \"correct_order\": [\"Langkah B\", \"Langkah A\", \"Langkah C\"], \"explanation\": \"...\"}
-         - **essay/uraian**: {\"type\": \"essay\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (WAJIB SINGKAT & PADAT)\", \"grading_guide\": \"Pedoman penskoran ringkas\", \"explanation\": \"Penjelasan singkat\"}
+         STRUKTUR JSON PER TIPE (INPUT HARUS SESUAI):
+         - **Wajib Ada di Setiap Soal (MANDATORY SINGKAT)**: 
+           \"pedagogical_materi\": \"Materi spesifik (max 3 kata)\",
+           \"competency\": \"Intisari CP (max 5 kata)\", 
+           \"indicator\": \"Indikator (max 8 kata)\", 
+           \"cognitive_level\": \"L1/L2/L3/L4/L5/L6\",
+           \"stimulus\": \"Narasi kaya, studi kasus, atau data riil (3-5 kalimat, WAJIB DETAIL)\",
+           \"image_hint\": \"Instruksi gambar (Opsional, gunakan [] jika ada)\"
+         {$typeStructures}
+ 
+         INSTRUKSI WAJIB: Anda HANYA boleh menghasilkan soal dengan tipe-tipe yang tercantum di atas. DILARANG membuat soal dengan tipe di luar daftar.
 
         FORMAT OUTPUT TOTAL (JSON ONLY):
         {
@@ -1430,8 +1450,15 @@ class AiGeneratorService extends GeminiService
         $teacherName = $data['teacherName'] ?? 'Guru Smart School';
         $teacherTitle = $data['teacherTitle'] ?? 'Bapak/Ibu';
         
-        $bskapData = $this->bskapIntel;
+        $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
+        $profileLulusan = $bskapData['standards']['profile_lulusan_2025'] ?? [];
+        $profilLulusanList = '';
+        foreach ($profileLulusan as $d) {
+            if (isset($d['dimensi'])) {
+                $profilLulusanList .= ($profilLulusanList ? ', ' : '') . $d['dimensi'];
+            }
+        }
 
         return "
         Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Bahan Ajar (Handout/Modul)** yang inovatif, mendalam, dan selaras dengan administrasi guru.
@@ -1518,7 +1545,7 @@ class AiGeneratorService extends GeminiService
         $assessmentModel = $data['assessmentModel'] ?? 'Rubrik';
         $studentNames = $data['studentNames'] ?? [];
         
-        $bskapData = $this->bskapIntel;
+        $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
 
         $studentListText = !empty($studentNames)

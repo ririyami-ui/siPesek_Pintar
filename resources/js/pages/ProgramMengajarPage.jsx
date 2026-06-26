@@ -506,8 +506,8 @@ const SignatureSection = ({ userProfile, signingLocation }) => {
                 <p>Mengetahui,</p>
                 <p>Kepala Sekolah</p>
                 <div className="h-24"></div>
-                <p className="font-bold underline uppercase">{userProfile?.principalName || '.....................................'}</p>
-                <p>NIP. {userProfile?.principalNip || '.....................................'}</p>
+                <p className="font-bold underline uppercase">{userProfile?.principalName || userProfile?.principal_name || '.....................................'}</p>
+                <p>NIP. {userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</p>
             </div>
             <div className="flex flex-col items-center">
                 <p>{signingLocation || 'Jakarta'}, {moment().format('DD MMMM YYYY')}</p>
@@ -946,7 +946,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
             // 1. Header & Metadata Section
             const header = [
                 ['DISTRIBUSI ALOKASI WAKTU (PEKAN EFEKTIF)'],
-                [`Satuan Pendidikan: ${userProfile?.school || userProfile?.schoolName || '-'}`],
+                [`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}`],
                 [`Mata Pelajaran: ${subject}`],
                 [`Kelas: ${grade}`],
                 [`Tahun Ajaran: ${year}`],
@@ -1016,7 +1016,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
             let yPos = margins.top + 10;
             const lineHeight = 5;
 
-            doc.text(`Satuan Pendidikan: ${userProfile?.school || userProfile?.schoolName || '-'}`, margins.left, yPos); yPos += lineHeight;
+            doc.text(`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}`, margins.left, yPos); yPos += lineHeight;
             doc.text(`Mata Pelajaran: ${subject}`, margins.left, yPos); yPos += lineHeight;
             doc.text(`Kelas / Semester: ${grade} / ${semester}`, margins.left, yPos); yPos += lineHeight;
             doc.text(`Tahun Ajaran: ${year}`, margins.left, yPos); yPos += lineHeight + 5;
@@ -1082,9 +1082,9 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
             doc.text('Mengetahui,', leftColX, finalY, { align: 'center' });
             doc.text('Kepala Sekolah', leftColX, finalY + 5, { align: 'center' });
             doc.setFont('helvetica', 'bold');
-            doc.text(userProfile?.principalName || '( ..................................... )', leftColX, finalY + 30, { align: 'center' });
+            doc.text(userProfile?.principalName || userProfile?.principal_name || '( ..................................... )', leftColX, finalY + 30, { align: 'center' });
             doc.setFont('helvetica', 'normal');
-            doc.text(`NIP. ${userProfile?.principalNip || '.....................................'}`, leftColX, finalY + 35, { align: 'center' });
+            doc.text(`NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}`, leftColX, finalY + 35, { align: 'center' });
 
             // Right Column (Teacher)
             const location = signingLocation || 'Jakarta';
@@ -1135,7 +1135,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                 <tr>
                     <td style="border: none; width: 150px;">Satuan Pendidikan</td>
                     <td style="border: none; width: 10px;">:</td>
-                    <td style="border: none;">${userProfile?.school || userProfile?.schoolName || '-'}</td>
+                    <td style="border: none;">${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}</td>
                 </tr>
                 <tr>
                     <td style="border: none;">Mata Pelajaran</td>
@@ -1180,11 +1180,11 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                     <td>
                         Mengetahui,<br>
                         Kepala Sekolah<br>
-                        <div class="signature-name">${userProfile?.principalName || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.principalNip || '.....................................'}</div>
+                        <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
+                        <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
                     <td>
-                        ${signingLocation || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
+                        ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
                         Guru Mata Pelajaran<br>
                         <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.nip || '.....................................'}</div>
@@ -1560,7 +1560,7 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
                 <tr>
                     <td style="border: none; width: 150px;">Satuan Pendidikan</td>
                     <td style="border: none; width: 10px;">:</td>
-                    <td style="border: none;">${userProfile?.school || userProfile?.schoolName || '-'}</td>
+                    <td style="border: none;">${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}</td>
                 </tr>
                 <tr>
                     <td style="border: none;">Mata Pelajaran</td>
@@ -1605,11 +1605,11 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
                     <td>
                         Mengetahui,<br>
                         Kepala Sekolah<br>
-                        <div class="signature-name">${userProfile?.principalName || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.principalNip || '.....................................'}</div>
+                        <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
+                        <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
                     <td>
-                        ${signingLocation || userProfile?.school?.split(' ')[1] || 'Jakarta'}, ${moment().format('DD MMMM YYYY')}<br>
+                        ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Jakarta'}, ${moment().format('DD MMMM YYYY')}<br>
                         Guru Mata Pelajaran<br>
                         <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.nip || '.....................................'}</div>
@@ -1678,7 +1678,7 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
             doc.text('PROGRAM TAHUNAN (PROTA)', 105, 15, { align: 'center' });
 
             doc.setFontSize(10);
-            doc.text(`Satuan Pendidikan: ${userProfile?.school || userProfile?.schoolName || '-'}`, 14, 25);
+            doc.text(`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}`, 14, 25);
             doc.text(`Mata Pelajaran: ${subject}`, 14, 30);
             doc.text(`Kelas: ${grade}`, 14, 35);
             doc.text(`Tahun Ajaran: ${year}`, 14, 40);
@@ -2205,7 +2205,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 <tr>
                     <td style="border: none; width: 150px;">Satuan Pendidikan</td>
                     <td style="border: none; width: 10px;">:</td>
-                    <td style="border: none;">${userProfile?.school || userProfile?.schoolName || '-'}</td>
+                    <td style="border: none;">${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}</td>
                 </tr>
                 <tr>
                     <td style="border: none;">Mata Pelajaran</td>
@@ -2275,11 +2275,11 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                     <td>
                         Mengetahui,<br>
                         Kepala Sekolah<br>
-                        <div class="signature-name">${userProfile?.principalName || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.principalNip || '.....................................'}</div>
+                        <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
+                        <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
                     <td>
-                        ${signingLocation || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
+                        ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
                         Guru Mata Pelajaran<br>
                         <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.nip || '.....................................'}</div>
@@ -2297,7 +2297,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
             // 1. Header Section
             const headerInfo = [
                 ['PROGRAM SEMESTER (PROMES)'],
-                [`Satuan Pendidikan: ${userProfile?.school || userProfile?.schoolName || '-'}`],
+                [`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}`],
                 [`Mata Pelajaran: ${subject}`],
                 [`Kelas: ${grade}`],
                 [`Tahun Ajaran: ${year}`],
@@ -2386,7 +2386,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
             let yPos = margins.top + 10;
             const lineHeight = 5;
 
-            doc.text(`Satuan Pendidikan: ${userProfile?.school || userProfile?.schoolName || '-'}`, margins.left, yPos);
+            doc.text(`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || userProfile?.schoolName || '-'}`, margins.left, yPos);
             doc.text(`Mata Pelajaran: ${subject}`, margins.left, yPos + lineHeight);
             doc.text(`Kelas / Semester: ${grade} / ${semester}`, pageWidth / 2, yPos);
             doc.text(`Tahun Ajaran: ${year}`, pageWidth / 2, yPos + lineHeight);
@@ -2507,11 +2507,11 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
             doc.text('Mengetahui,', leftColX, finalY, { align: 'center' });
             doc.text('Kepala Sekolah', leftColX, finalY + 5, { align: 'center' });
             doc.setFont('helvetica', 'bold');
-            doc.text(userProfile?.principalName || '( ..................................... )', leftColX, finalY + 30, { align: 'center' });
+            doc.text(userProfile?.principalName || userProfile?.principal_name || '( ..................................... )', leftColX, finalY + 30, { align: 'center' });
             doc.setFont('helvetica', 'normal');
-            doc.text(`NIP. ${userProfile?.principalNip || '.....................................'}`, leftColX, finalY + 35, { align: 'center' });
+            doc.text(`NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}`, leftColX, finalY + 35, { align: 'center' });
 
-            const location = signingLocation || userProfile?.school?.split(' ')[1] || 'Jakarta';
+            const location = signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Jakarta';
             doc.text(`${location}, ${moment().format('DD MMMM YYYY')}`, rightColX, finalY, { align: 'center' });
             doc.text('Guru Mata Pelajaran', rightColX, finalY + 5, { align: 'center' });
             doc.setFont('helvetica', 'bold');
@@ -2801,8 +2801,8 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                 // Determine Background Color (blocked/non-effective always wins)
                                                 let cellBg = '';
                                                 let inputClass = 'w-full h-8 text-center bg-transparent focus:ring-1 focus:ring-blue-500 outline-none font-medium text-[11px]';
-                                                let holidayCat = '';
-                                                let holidayName = '';
+                                                var holidayCat = '';
+                                                var holidayName = '';
 
                                                 if (isBlockingHoliday) {
                                                     holidayCat = holiday ? (holiday.category || '').toLowerCase() : '';
@@ -3157,7 +3157,7 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
             doc.text('ALUR TUJUAN PEMBELAJARAN (ATP)', 148, 15, { align: 'center' });
 
             doc.setFontSize(10);
-            doc.text(`Satuan Pendidikan: ${userProfile?.school || '-'}`, 14, 25);
+            doc.text(`Satuan Pendidikan: ${userProfile?.school_name || userProfile?.school || '-'}`, 14, 25);
             doc.text(`Mata Pelajaran: ${subject}`, 14, 30);
             doc.text(`Kelas / Fase: ${grade}`, 14, 35);
             doc.text(`Tahun Ajaran: ${year}`, 14, 40);
@@ -3204,9 +3204,9 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
             doc.text('Mengetahui,', 40, finalY);
             doc.text('Kepala Sekolah', 40, finalY + 5);
             doc.setFont('helvetica', 'bold');
-            doc.text(userProfile?.principalName || '................', 40, finalY + 25);
+            doc.text(userProfile?.principalName || userProfile?.principal_name || '................', 40, finalY + 25);
             doc.setFont('helvetica', 'normal');
-            doc.text(`NIP. ${userProfile?.principalNip || '.......'}`, 40, finalY + 30);
+            doc.text(`NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.......'}`, 40, finalY + 30);
 
             const rightX = 220;
             doc.text(`${signingLocation}, ${new Date().toLocaleDateString('id-ID')}`, rightX, finalY);
@@ -3242,7 +3242,7 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
                 <h2 style="text-align: center;">ALUR TUJUAN PEMBELAJARAN (ATP)</h2>
                 <h3 style="text-align: center;">SEMESTER ${semester.toUpperCase()}</h3>
                 <div style="margin-bottom: 20px;">
-                    <p><strong>Satuan Pendidikan:</strong> ${userProfile?.school || '-'}</p>
+                    <p><strong>Satuan Pendidikan:</strong> ${userProfile?.school_name || userProfile?.school || '-'}</p>
                     <p><strong>Mata Pelajaran:</strong> ${subject}</p>
                     <p><strong>Kelas / Fase:</strong> ${grade}</p>
                     <p><strong>Tahun Ajaran:</strong> ${year}</p>
@@ -3278,8 +3278,8 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
                     <tr>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
                             Mengetahui,<br>Kepala Sekolah<br><br><br><br>
-                            <strong>${userProfile?.principalName || '................'}</strong><br>
-                            NIP. ${userProfile?.principalNip || '.......'}
+                            <strong>${userProfile?.principalName || userProfile?.principal_name || '................'}</strong><br>
+                            NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.......'}
                         </td>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
                             ${signingLocation}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Guru Mata Pelajaran<br><br><br><br>

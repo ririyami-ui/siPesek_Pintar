@@ -47,9 +47,9 @@ class GeminiService
                 $this->model = $adminProfile->gemini_model ?? $this->model;
             } 
             // IF TEACHER/ADMIN: Use their own key if available, else fallback to master admin
-            else if ($userProfile) {
-                $this->apiKey = $userProfile->google_ai_api_key ?: ($adminProfile->google_ai_api_key ?? $this->apiKey);
-                $this->model = $userProfile->gemini_model ?: ($adminProfile->gemini_model ?? '');
+    else if ($userProfile) {
+        $this->apiKey = $userProfile->google_ai_api_key ?: ($adminProfile?->google_ai_api_key ?? $this->apiKey);
+        $this->model = $userProfile->gemini_model ?: ($adminProfile?->gemini_model ?? '');
             }
         }
 

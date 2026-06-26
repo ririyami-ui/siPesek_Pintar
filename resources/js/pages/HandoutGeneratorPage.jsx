@@ -313,14 +313,20 @@ const HandoutGeneratorPage = () => {
                 rppContent: sourceType === 'rpp' ? selectedRPP?.content : null,
                 teacherName: userProfile?.name || 'Guru Si Pesek Pintar',
                 teacherTitle: userProfile?.title || 'Bapak/Ibu',
-                modelName: userProfile?.geminiModel // Pass user's preferred model if set
+                modelName: geminiModel // Pass user's preferred model if set
             });
 
             const result = (response.data.data || response.data).content;
+            if (!result || result.trim().length === 0) {
+                toast.error("Konten bahan ajar kosong. Coba periksa koneksi API atau model yang digunakan.");
+                setIsGenerating(false);
+                return;
+            }
             setGeneratedContent(result);
             toast.success("Bahan Ajar berhasil dibuat!");
         } catch (error) {
             console.error("Generate Handout Error:", error);
+            console.error("Error Response:", error.response?.data);
             const msg = error.response?.data?.error || error.response?.data?.message || error.message;
             toast.error("Gagal membuat bahan ajar: " + msg);
         } finally {

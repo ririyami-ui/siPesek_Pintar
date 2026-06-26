@@ -152,6 +152,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/handout-history', [App\Http\Controllers\AiFeaturesController::class, 'getHandoutHistory']);
         Route::delete('/handout-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteHandout']);
 
+        Route::post('/generate-worksheet', [App\Http\Controllers\AiFeaturesController::class, 'generateWorksheet']);
+        Route::post('/save-worksheet', [App\Http\Controllers\AiFeaturesController::class, 'saveWorksheet']);
+        Route::get('/worksheet-history', [App\Http\Controllers\AiFeaturesController::class, 'getWorksheetHistory']);
+        Route::delete('/worksheet-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteWorksheet']);
+
         Route::post('/generate-atp', [App\Http\Controllers\AiFeaturesController::class, 'generateAtp']);
         
         Route::post('/analyze-student', [GeminiController::class, 'analyzeStudent']);

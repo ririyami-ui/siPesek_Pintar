@@ -254,9 +254,17 @@ class AiFeaturesController extends Controller
             $data['materi'] = $materi;
 
             $result = $this->aiService->generateHandout($data);
+            if (!$result) {
+                Log::warning("Handout generation returned empty content for subject: {$data['subject']}, grade: {$data['gradeLevel']}");
+                return response()->json(['error' => 'Gagal menghasilkan konten. Periksa koneksi API Gemini atau model yang digunakan.'], 500);
+            }
             return response()->json(['content' => $result]);
         } catch (\Exception $e) {
-            Log::error("Error generating Handout: " . $e->getMessage());
+            Log::error("Error generating Handout: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'subject' => $data['subject'] ?? 'N/A',
+                'grade' => $data['gradeLevel'] ?? 'N/A',
+            ]);
             return response()->json(['error' => 'Gagal membuat Bahan Ajar: ' . $e->getMessage()], 500);
         }
     }
