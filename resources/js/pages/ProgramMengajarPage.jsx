@@ -1994,10 +1994,10 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 if (progData.prota) setProtaSource(progData.prota);
                 if (progData.promes) setPromesData(progData.promes);
 
-                // Holidays (Store only MANUAL ones for highlighting/blocking in Promes)
+                // Holidays (include manual + system holidays that affect non‑effective weeks)
                 const allHolidays = hRes.data.data || hRes.data || [];
-                const manualHolidays = allHolidays.filter(h => h.type === 'manual');
-                setUserHolidays(manualHolidays);
+                const relevantHolidays = allHolidays.filter(h => h.is_holiday !== false || h.category?.includes('semester') || h.type === 'manual');
+                setUserHolidays(relevantHolidays);
 
             } catch (error) {
                 console.error("Error fetching Promes data:", error);
@@ -2022,13 +2022,14 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
         const schoolDaysCount = parseInt(userProfile?.school_days || 6);
         const threshold = schoolDaysCount === 5 ? 3 : 4;
 
-        // Find the wIndex-th valid ISO week (one with enough school days in this month)
+        // Find the wIndex-th valid week (one with enough school days in this month)
+        // Must use startOf('week') (locale-based) to match PekanEfektifView
         let validCount = 0;
-        let weekStart = monthStart.clone().startOf('isoWeek');
+        let weekStart = monthStart.clone().startOf('week');
         let targetWeekStart = null;
 
         while (weekStart.isBefore(monthEnd) && validCount <= wIndex) {
-            const weekEnd = weekStart.clone().endOf('isoWeek');
+            const weekEnd = weekStart.clone().endOf('week');
 
             // Count school days in this week within this month
             let schoolDaysInMonth = 0;
@@ -2058,26 +2059,23 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
         if (!targetWeekStart) return null;
 
-        const weekEnd = targetWeekStart.clone().endOf('isoWeek');
+        const weekEnd = targetWeekStart.clone().endOf('week');
 
         const holiday = (userHolidays || []).find(h => {
-            if (h.type !== 'manual') return false;
-            const hStart = moment(h.startDate || h.date).startOf('day');
-            const hEnd = moment(h.endDate || h.date).endOf('day');
-            return hStart.isSameOrBefore(weekEnd) && hEnd.isSameOrAfter(targetWeekStart);
+            const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
+            const hEnd   = moment(h.endDate   || h.end_date   || h.date).endOf('day');
+            const overlapStart = moment.max(targetWeekStart, hStart);
+            const overlapEnd   = moment.min(weekEnd, hEnd);
+            if (overlapEnd.isBefore(overlapStart)) return false;
+            const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
+            return overlapDays >= threshold;
         });
 
         if (!holiday) return null;
 
-        const hStart = moment(holiday.startDate || holiday.date).startOf('day');
-        const hEnd = moment(holiday.endDate || holiday.date).endOf('day');
-        const overlapStart = moment.max(targetWeekStart, hStart);
-        const overlapEnd = moment.min(weekEnd, hEnd);
-        const overlapDays = overlapEnd.diff(overlapStart, 'days') + 1;
-
         return {
             ...holiday,
-            isBlocking: overlapDays >= threshold
+            isBlocking: true
         };
     };
 
@@ -2112,7 +2110,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
         setLoading(true);
         try {
-            // Cleanup: remove values in blocked weeks (manual agendas) before saving
+            // Cleanup: remove values in blocked weeks (manual agendas + non-effective) before saving
             const cleanedData = { ...promesData };
             protaSource.forEach(row => {
                 pekanEfektifSource.forEach((month, mIndex) => {
@@ -2122,8 +2120,13 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                         const cellKey = `${row.id}_${mIndex}_${w}`;
                         const holiday = getHolidayForWeek(month.name, w);
 
-                        // Blocking trigger: Only school agendas (holidays) that cover significant part of week
-                        if (holiday?.isBlocking && cleanedData[cellKey]) {
+                        // Remove values from holiday-blocked weeks
+                        const isBlocked = holiday?.isBlocking;
+
+                        // Also remove from manual non-effective weeks
+                        const isManualNonEffective = !isBlocked && month.nonEffectiveWeekIndices?.includes(w + 1);
+
+                        if ((isBlocked || isManualNonEffective) && cleanedData[cellKey]) {
                             delete cleanedData[cellKey];
                         }
                     }
@@ -2603,11 +2606,11 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                     const holiday = getHolidayForWeek(month.name, currentW);
                     const isHolidayWeek = holiday && holiday.isBlocking;
 
-                    // Use nonEffectiveWeekIndices array if available, else fallback to end-of-month heuristic
-                    const hasNonEffectiveIndices = Array.isArray(month.nonEffectiveWeekIndices) && month.nonEffectiveWeekIndices.length > 0;
-                    const isNonEffectiveWeek = hasNonEffectiveIndices
+                    // Use nonEffectiveWeekIndices if available (saved from Pekan Efektif tab)
+                    // No fallback — if indices absent, treat all weeks as effective (holiday check still works)
+                    const isNonEffectiveWeek = Array.isArray(month.nonEffectiveWeekIndices)
                         ? month.nonEffectiveWeekIndices.includes(currentW + 1)
-                        : (currentW >= (totalWeeks - parseInt(month.nonEffectiveWeeks || 0)));
+                        : false;
 
                     const shouldSkip = isHolidayWeek || isNonEffectiveWeek;
 
@@ -2793,43 +2796,51 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                 // Determine if it's a non-effective week using explicit indices only
                                                 const isManualNonEffective = !isHoliday && monthData.nonEffectiveWeekIndices?.includes(wIndex + 1);
 
-                                                // Determine Background Color
-                                                // Highlight non-effective weeks
-                                                let cellBg = isManualNonEffective ? 'bg-red-50 dark:bg-red-900/40' : '';
-                                                // Additional styling for values later may override
+                                                const isOff = isBlockingHoliday || isManualNonEffective;
 
-                                                if (hasValue) {
+                                                // Determine Background Color (blocked/non-effective always wins)
+                                                let cellBg = '';
+                                                let inputClass = 'w-full h-8 text-center bg-transparent focus:ring-1 focus:ring-blue-500 outline-none font-medium text-[11px]';
+                                                let holidayCat = '';
+                                                let holidayName = '';
+
+                                                if (isBlockingHoliday) {
+                                                    holidayCat = holiday ? (holiday.category || '').toLowerCase() : '';
+                                                    holidayName = holiday ? (holiday.name || '').toLowerCase() : '';
+
+                                                    if (holidayCat.includes('semester') || holidayName.includes('semester'))
+                                                        cellBg = 'bg-red-100 dark:bg-red-900/50 border-red-300 dark:border-red-700';
+                                                    else if (holidayCat.includes('ujian') || holidayName.includes('ujian'))
+                                                        cellBg = 'bg-orange-100 dark:bg-orange-900/50 border-orange-300 dark:border-orange-700';
+                                                    else if (holidayCat === 'tengah_semester' || holidayName.includes('tengah semester'))
+                                                        cellBg = 'bg-purple-100 dark:bg-purple-900/50 border-purple-300 dark:border-purple-700';
+                                                    else
+                                                        cellBg = 'bg-sky-100 dark:bg-sky-900/40 border-sky-300 dark:border-sky-700';
+                                                } else if (isManualNonEffective) {
+                                                    cellBg = 'bg-red-50 dark:bg-red-900/40 border-red-200 dark:border-red-800';
+                                                } else if (hasValue) {
                                                     cellBg = 'bg-green-50 dark:bg-green-900/30';
-                                                } else if (isHoliday) {
-                                                    // Only school agendas (from dropdown categories) trigger OFF blocking
-                                                    const holidayCat = holiday ? (holiday.category || '').toLowerCase() : '';
-                                                    const holidayName = isHoliday ? (holiday.name || '').toLowerCase() : '';
-
-                                                    if (holidayCat.includes('semester') || holidayName.includes('semester')) cellBg = 'bg-red-50 dark:bg-red-900/40 opacity-80';
-                                                    else if (holidayCat.includes('ujian') || holidayName.includes('ujian')) cellBg = 'bg-orange-100 dark:bg-orange-900/40 opacity-80';
-                                                    else if (holidayCat === 'tengah_semester' || holidayName.includes('tengah semester')) cellBg = 'bg-purple-50 dark:bg-purple-900/40 opacity-80';
-                                                    else cellBg = 'bg-blue-50 dark:bg-blue-900/30 opacity-80'; // Default for other manual activities
                                                 }
+
 
                                                 return (
                                                     <td
                                                         key={cellKey}
-                                                        title={holiday ? holiday.name : isManualNonEffective ? 'Pekan Tidak Efektif (Manual)' : ''}
-                                                        className={`border border-gray-200 dark:border-gray-700 p-0 hover:bg-gray-50 group relative ${cellBg}`}
+                                                        title={holiday ? holiday.name || holiday.title : isManualNonEffective ? 'Pekan Tidak Efektif' : ''}
+                                                        className={`border border-gray-200 dark:border-gray-700 p-0 group relative ${cellBg}`}
                                                     >
-                                                    {!isBlockingHoliday && !isManualNonEffective ? (
+                                                    {!isOff ? (
                                                         <input
                                                             id={`promes-input-${index}-${mIndex}-${wIndex}`}
                                                             type="text"
                                                             value={val}
                                                             onChange={(e) => updateCell(row.id, mIndex, wIndex, e.target.value)}
                                                             onKeyDown={(e) => handleKeyDown(e, index, mIndex, wIndex)}
-                                                            className="w-full h-8 text-center bg-transparent focus:ring-1 focus:ring-blue-500 outline-none font-medium text-[11px]"
+                                                            className={inputClass}
                                                         />
                                                     ) : (
-                                                        <div className="w-full h-8 flex items-center justify-center font-bold text-[10px] text-gray-400">OFF</div>
+                                                        <div className="w-full h-8"></div>
                                                     )}
-                                                        {/* Tooltip hint for all holidays (even short ones) is handled by the 'title' attribute on <td> */}
                                                     </td>
                                                 );
                                             });
@@ -2847,22 +2858,30 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 <div className="flex flex-col md:flex-row justify-between gap-6">
                     <div className="flex-1">
                         <h4 className="font-bold mb-3 text-gray-700 dark:text-gray-300 uppercase tracking-wider">Legenda Warna & Status:</h4>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
                             <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 bg-green-50 dark:bg-green-900/30 border border-green-200 rounded-md"></div>
+                                <div className="w-6 h-6 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-md shrink-0"></div>
                                 <span className="text-gray-600 dark:text-gray-400">Belajar Efektif (Tatap Muka)</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 bg-red-50 dark:bg-red-900/40 border border-red-200 rounded-md opacity-80 flex items-center justify-center font-bold text-[10px] text-red-600">OFF</div>
-                                <span className="text-gray-600 dark:text-gray-400">Pekan Tidak Efektif (Libur/Agenda)</span>
+                                <div className="w-6 h-6 bg-red-100 dark:bg-red-900/50 border border-red-300 dark:border-red-700 rounded-md shrink-0"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Libur Semester / Akhir Tahun</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 bg-purple-50 dark:bg-purple-900/40 border border-purple-200 rounded-md opacity-80"></div>
+                                <div className="w-6 h-6 bg-orange-100 dark:bg-orange-900/50 border border-orange-300 dark:border-orange-700 rounded-md shrink-0"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Penilaian Akhir (PAS/PAT)</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/50 border border-purple-300 dark:border-purple-700 rounded-md shrink-0"></div>
                                 <span className="text-gray-600 dark:text-gray-400">Penilaian Tengah Semester (PTS)</span>
                             </div>
                             <div className="flex items-center gap-3">
-                                <div className="w-6 h-6 bg-orange-100 dark:bg-orange-900/40 border border-orange-200 rounded-md opacity-80"></div>
-                                <span className="text-gray-600 dark:text-gray-400">Penilaian Akhir Semester (PAS/PAT)</span>
+                                <div className="w-6 h-6 bg-sky-100 dark:bg-sky-900/40 border border-sky-300 dark:border-sky-700 rounded-md shrink-0"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Agenda Sekolah Lainnya <span className="text-gray-400 italic font-normal">(MPLS, LDKS, dll.)</span></span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <div className="w-6 h-6 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-md shrink-0"></div>
+                                <span className="text-gray-600 dark:text-gray-400">Pekan Tidak Efektif (Manual)</span>
                             </div>
                         </div>
                     </div>
