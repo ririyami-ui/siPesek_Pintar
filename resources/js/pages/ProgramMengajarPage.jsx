@@ -1295,14 +1295,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                                     />
                                 </td>
                                 <td className="px-4 py-2 border-r text-center">
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={month.nonEffectiveWeeks || 0}
-                                        onChange={(e) => updateMonth(index, 'nonEffectiveWeeks', e.target.value)}
-                                        className={`w-16 p-1 text-center border rounded focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${month.isAuto ? 'border-green-400 bg-green-50 dark:bg-green-900/20' : ''}`}
-                                        title={month.isAuto ? "Terisi otomatis dari Kalender" : ""}
-                                    />
+                                    <span className="font-medium text-gray-700 dark:text-gray-300">{month.nonEffectiveWeeks || 0}</span>
                                 </td>
                                 <td className="px-6 py-4 text-center font-bold text-blue-600 border-r">
                                     {(parseInt(month.totalWeeks || 0) - parseInt(month.nonEffectiveWeeks || 0))}
@@ -2121,12 +2114,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                         const holiday = getHolidayForWeek(month.name, w);
 
                         // Remove values from holiday-blocked weeks
-                        const isBlocked = holiday?.isBlocking;
-
-                        // Also remove from manual non-effective weeks
-                        const isManualNonEffective = !isBlocked && month.nonEffectiveWeekIndices?.includes(w + 1);
-
-                        if ((isBlocked || isManualNonEffective) && cleanedData[cellKey]) {
+                        if (holiday?.isBlocking && cleanedData[cellKey]) {
                             delete cleanedData[cellKey];
                         }
                     }
@@ -2607,12 +2595,8 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                     const isHolidayWeek = holiday && holiday.isBlocking;
 
                     // Use nonEffectiveWeekIndices if available (saved from Pekan Efektif tab)
-                    // No fallback — if indices absent, treat all weeks as effective (holiday check still works)
-                    const isNonEffectiveWeek = Array.isArray(month.nonEffectiveWeekIndices)
-                        ? month.nonEffectiveWeekIndices.includes(currentW + 1)
-                        : false;
-
-                    const shouldSkip = isHolidayWeek || isNonEffectiveWeek;
+                    // Only holiday-blocked weeks are skipped — no manual non-effective
+                    const shouldSkip = isHolidayWeek;
 
                     if (!shouldSkip) {
                         break; // Found a clean effective week
@@ -2793,10 +2777,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                 const isHoliday = !!holiday;
                                                 const isBlockingHoliday = isHoliday && holiday.isBlocking;
 
-                                                // Determine if it's a non-effective week using explicit indices only
-                                                const isManualNonEffective = !isHoliday && monthData.nonEffectiveWeekIndices?.includes(wIndex + 1);
-
-                                                const isOff = isBlockingHoliday || isManualNonEffective;
+                                                const isOff = isBlockingHoliday;
 
                                                 // Determine Background Color (blocked/non-effective always wins)
                                                 let cellBg = '';
@@ -2816,8 +2797,6 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                         cellBg = 'bg-purple-100 dark:bg-purple-900/50 border-purple-300 dark:border-purple-700';
                                                     else
                                                         cellBg = 'bg-sky-100 dark:bg-sky-900/40 border-sky-300 dark:border-sky-700';
-                                                } else if (isManualNonEffective) {
-                                                    cellBg = 'bg-red-50 dark:bg-red-900/40 border-red-200 dark:border-red-800';
                                                 } else if (hasValue) {
                                                     cellBg = 'bg-green-50 dark:bg-green-900/30';
                                                 }
@@ -2826,7 +2805,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                                                 return (
                                                     <td
                                                         key={cellKey}
-                                                        title={holiday ? holiday.name || holiday.title : isManualNonEffective ? 'Pekan Tidak Efektif' : ''}
+                                                        title={holiday ? holiday.name || holiday.title : ''}
                                                         className={`border border-gray-200 dark:border-gray-700 p-0 group relative ${cellBg}`}
                                                     >
                                                     {!isOff ? (
@@ -2881,7 +2860,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="w-6 h-6 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-md shrink-0"></div>
-                                <span className="text-gray-600 dark:text-gray-400">Pekan Tidak Efektif (Manual)</span>
+                                <span className="text-gray-600 dark:text-gray-400">Pekan Tidak Efektif (dari Kalender)</span>
                             </div>
                         </div>
                     </div>
