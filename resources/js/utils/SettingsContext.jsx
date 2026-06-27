@@ -273,52 +273,6 @@ export const SettingsProvider = ({ children }) => {
         }
     }, [settings.userProfile]);
 
-    // [NEW] Precision Background Refresher
-    // This ensures audio bells trigger exactly on time regardless of current page
-    useEffect(() => {
-        const precisionTimer = setInterval(() => {
-            const now = moment();
-            const data = monitoringDataRef.current;
-            if (!data || settings.userProfile?.role?.toLowerCase() !== 'admin') return;
-            
-            const currentSecond = now.format('HH:mm:ss');
-            const dateStr = now.format('YYYY-MM-DD');
-            let shouldTriggerRefresh = false;
-
-            // Trigger precisely at the 00 second mark of any activity change
-            if (data.non_teaching_schedules) {
-                data.non_teaching_schedules.forEach(act => {
-                    if (currentSecond === `${act.start_time}:00` || currentSecond === `${act.end_time}:00`) {
-                        shouldTriggerRefresh = true;
-                    }
-                });
-            }
-            
-            if (data.data) {
-                data.data.forEach(item => {
-                    if (!item.time) return;
-                    const times = item.time.split(' - ');
-                    // [TRANSITION FIX] Trigger sync 2 seconds BEFORE and AT the boundary
-                    [times[0], times[1]].forEach(t => {
-                        const triggerTime = t?.length === 5 ? `${t}:00` : t;
-                        const triggerMoment = moment(triggerTime, 'HH:mm:ss');
-                        const diffSec = now.diff(triggerMoment, 'seconds');
-                        
-                        if (diffSec >= -2 && diffSec <= 0) {
-                            shouldTriggerRefresh = true;
-                        }
-                    });
-                });
-            }
-
-            if (shouldTriggerRefresh) {
-                console.log('Audio Assistant: Precision sync triggered for global bell.');
-                fetchMonitoringData();
-            }
-        }, 1000);
-
-        return () => clearInterval(precisionTimer);
-    }, [settings.userProfile?.role, settings.activeSemester, settings.academicYear]);
 
     // Ref to keep track of monitoring data without restarting the interval
     const monitoringDataRef = useRef(settings.monitoringData);
