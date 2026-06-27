@@ -18,7 +18,7 @@ Route::post('/install', [InstallController::class, 'postInstall'])->name('instal
 // Management Routes (Admin Only)
 Route::middleware(['auth', 'admin'])->group(function () {
     // Emergency migration route for production (No SSH)
-    Route::get('/run-migrations', function() {
+    Route::post('/run-migrations', function() {
         try {
             Artisan::call('migrate', ['--force' => true]);
             return "Database berhasil diupdate ke versi terbaru!";
@@ -28,7 +28,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 
     // Emergency cache clear for production
-    Route::get('/clear-cache', function() {
+    Route::post('/clear-cache', function() {
         try {
             Artisan::call('config:clear');
             Artisan::call('cache:clear');
@@ -41,7 +41,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 
     // Emergency storage link route
-    Route::get('/storage-link', function() {
+    Route::post('/storage-link', function() {
         try {
             $link = public_path('storage');
             $target = storage_path('app/public');
