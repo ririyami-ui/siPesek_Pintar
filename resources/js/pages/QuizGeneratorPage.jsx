@@ -93,7 +93,7 @@ const QuizGeneratorPage = () => {
 
                 // Backend already filters based on role and assignments
                 const filteredClasses = classesData.sort((a, b) => (a.rombel || '').localeCompare(b.rombel || ''));
-                
+
                 let finalSubjects = subjectsData;
                 if (userData.role === 'teacher' && currentTeacher?.assignments?.length > 0) {
                     const assignedSubjectIds = new Set(currentTeacher.assignments.map(a => a.subject_id));
@@ -144,11 +144,11 @@ const QuizGeneratorPage = () => {
         );
 
         const filtered = classes.filter(c => assignedClassIds.has(c.id));
-        
+
         // If teacher teaches this subject but maybe classes list hasn't caught up, 
         // fallback to all levels teaching that subject
         if (filtered.length === 0) {
-             return [...new Set(classes.map(c => c.level).filter(Boolean))].sort((a, b) => {
+            return [...new Set(classes.map(c => c.level).filter(Boolean))].sort((a, b) => {
                 const numA = parseInt(String(a).replace(/\D/g, '')) || 0;
                 const numB = parseInt(String(b).replace(/\D/g, '')) || 0;
                 return numA - numB;
@@ -524,7 +524,7 @@ const QuizGeneratorPage = () => {
 
             for (let bIdx = 0; bIdx < totalBatches; bIdx++) {
                 const currentBatchTypes = batches[bIdx];
-                
+
                 // Construct typeCounts for this specific batch
                 const batchTypeCounts = {};
                 currentBatchTypes.forEach(t => {
@@ -532,10 +532,10 @@ const QuizGeneratorPage = () => {
                 });
 
                 const currentPercentage = Math.round((bIdx / totalBatches) * 100);
-                setGenerationProgress({ 
-                    stage: 'generating', 
-                    message: `Memproses Batch ${bIdx + 1} dari ${totalBatches} (${currentBatchTypes.length} soal)...`, 
-                    percentage: currentPercentage 
+                setGenerationProgress({
+                    stage: 'generating',
+                    message: `Memproses Batch ${bIdx + 1} dari ${totalBatches} (${currentBatchTypes.length} soal)...`,
+                    percentage: currentPercentage
                 });
 
                 const response = await api.post('/ai/generate-quiz', {
@@ -553,7 +553,7 @@ const QuizGeneratorPage = () => {
 
                 const rawData = response.data;
                 let batchResult;
-                
+
                 if (rawData.data) {
                     batchResult = rawData.data;
                 } else if (rawData.content && typeof rawData.content === 'object') {
@@ -1339,7 +1339,7 @@ const QuizGeneratorPage = () => {
                                                 const s = subjects.find(sub => String(sub.id) === String(e.target.value));
                                                 const newSubjectName = s ? s.name : e.target.value;
                                                 setSubject(newSubjectName);
-                                                
+
                                                 // Reset selected context if subject changes and it doesn't match
                                                 if (selectedContextId) {
                                                     const currentContext = sourceData.find(d => String(d.id) === String(selectedContextId));

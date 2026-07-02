@@ -112,7 +112,11 @@ class GeminiService
 
                 if ($response->successful()) {
                     $data = $response->json();
-                    return $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                    $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                    if ($text === null) {
+                        throw new \App\Exceptions\GeminiException('Gemini response empty (possibly blocked)');
+                    }
+                    return $text;
                 }
 
                 $status = $response->status();
@@ -142,11 +146,11 @@ class GeminiService
                     continue;
                 }
                 Log::error('Gemini API Fatal Error', ['error' => $lastError]);
-                return null;
+                throw new \App\Exceptions\GeminiException($lastError);
             }
         }
 
-        return null;
+        throw new \App\Exceptions\GeminiException($lastError ?? 'Gemini API failed after all retries');
     }
 
 
@@ -378,3 +382,4 @@ class GeminiService
                "3. Rekomendasi strategi pembelajaran individual";
     }
 }
+

@@ -22,11 +22,11 @@ export default function ProfileEditor() {
     principalNip: '',
     academic_year: '',
     active_semester: 'Ganjil',
-    gemini_model: 'gemini-3.1-flash-lite-preview',
+    gemini_model: 'gemini-3.5-flash',
     google_ai_api_key: '',
     schedule_notifications_enabled: true,
     school_days: 6,
-    audio_language: 'id-ID', // New: Audio language setting
+    audio_language: 'id-ID',
   });
 
   const [logoFile, setLogoFile] = useState(null);
@@ -49,13 +49,13 @@ export default function ProfileEditor() {
         principalNip: userProfile.principalNip || '',
         academic_year: userProfile.academic_year || userProfile.academicYear || '',
         active_semester: userProfile.active_semester || userProfile.activeSemester || 'Ganjil',
-        gemini_model: userProfile.gemini_model || userProfile.geminiModel || 'gemini-3.1-flash-lite-preview',
+        gemini_model: userProfile.gemini_model || userProfile.geminiModel || 'gemini-3.5-flash',
         google_ai_api_key: userProfile.google_ai_api_key || userProfile.googleAiApiKey || '',
         schedule_notifications_enabled: userProfile.schedule_notifications_enabled !== undefined ? !!userProfile.schedule_notifications_enabled : true,
         school_days: userProfile.school_days || 6,
         audio_language: userProfile.audio_language || 'id-ID',
       });
-      
+
       if (userProfile.logoUrl) {
         setLogoPreview(userProfile.logoUrl);
       }
@@ -136,7 +136,7 @@ export default function ProfileEditor() {
 
     try {
       const data = new FormData();
-      
+
       // If admin, send all data. If teacher, only send AI settings
       if (isAdmin) {
         data.append('school_name', formData.school_name || '');
@@ -156,17 +156,17 @@ export default function ProfileEditor() {
           data.append('signature', signatureFile);
         }
       }
-      
-      data.append('gemini_model', formData.gemini_model || 'gemini-3.1-flash-lite-preview');
+
+      data.append('gemini_model', formData.gemini_model || 'gemini-3.5-flash');
       data.append('google_ai_api_key', formData.google_ai_api_key || '');
       data.append('schedule_notifications_enabled', formData.schedule_notifications_enabled ? '1' : '0');
       data.append('audio_language', formData.audio_language || 'id-ID');
-      
+
       // Use _method spoofing for multipart PUT
       data.append('_method', 'PUT');
 
       await updateProfile(data);
-      
+
       // Sync with localStorage for compatibility
       localStorage.setItem('GEMINI_MODEL', formData.gemini_model);
       if (formData.google_ai_api_key && !formData.google_ai_api_key.includes('****')) {
@@ -196,7 +196,7 @@ export default function ProfileEditor() {
 
   const testConnection = async () => {
     let keyToTest = formData.google_ai_api_key.trim();
-    
+
     if (!keyToTest) {
       toast.error('Masukkan API Key terlebih dahulu.');
       return;
@@ -247,7 +247,7 @@ export default function ProfileEditor() {
     <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
       <h3 className="text-xl font-bold mb-6 text-purple-800 dark:text-purple-300">Pengaturan Profil & AI</h3>
       <form onSubmit={handleUpdateProfile} className="space-y-8">
-        
+
         {/* SECTION: FOTO PROFIL PENGGUNA */}
         <div className="space-y-4 pb-6 border-b dark:border-gray-700">
           <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2 flex items-center gap-2">
@@ -287,7 +287,7 @@ export default function ProfileEditor() {
         {/* SECTION: INFORMASI SEKOLAH */}
         <div className="space-y-6">
           <h4 className="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">Informasi Sekolah</h4>
-          
+
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* Upload Area */}
             <div className="w-full md:w-48 space-y-6 flex-shrink-0">
@@ -436,13 +436,13 @@ export default function ProfileEditor() {
                 placeholder="Misal: 2025/2026"
                 value={formData.academic_year}
                 onChange={(e) => {
-                  let val = e.target.value.replace(/\D/g, ''); // Ambil hanya angka
+                  let val = e.target.value.replace(/\D/g, '');
                   if (val.length > 4) {
-                    val = val.substring(0, 4) + '/' + val.substring(4, 8); // Tambah slash otomatis
+                    val = val.substring(0, 4) + '/' + val.substring(4, 8);
                   }
                   handleInputChange('academic_year', val);
                 }}
-                maxLength={9} // Batasi maksimal 9 karakter (YYYY/YYYY)
+                maxLength={9}
                 required
                 disabled={!isAdmin}
               />
@@ -522,20 +522,16 @@ export default function ProfileEditor() {
               value={formData.gemini_model}
               onChange={(e) => handleInputChange('gemini_model', e.target.value)}
             >
-              <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite (Lite & Fast)</option>
-              <option value="gemini-3-flash-preview">Gemini 3 Flash (Tercepat & Terbaru)</option>
-              <option value="gemini-3-pro-preview">Gemini 3 Pro (Paling Cerdas)</option>
+              <option value="gemini-3.5-flash">✨ Gemini 3.5 Flash (Terbaru, Paling Cerdas 2026)</option>
+              <option value="gemini-3.1-flash-lite">⚡ Gemini 3.1 Flash-Lite (Ringan & Cepat)</option>
+              <option value="gemini-3-flash-preview">🧪 Gemini 3 Flash Preview (Eksperimental)</option>
 
-              {![
-                'gemini-3.1-flash-lite-preview',
-                'gemini-3-flash-preview',
-                'gemini-3-pro-preview'
-              ].includes(formData.gemini_model) && (
+              {!['gemini-3.5-flash','gemini-3.1-flash-lite','gemini-3-flash-preview'].includes(formData.gemini_model) && (
                   <option value={formData.gemini_model}>{formData.gemini_model} (Aktif)</option>
                 )}
             </StyledSelect>
             <p className="text-[10px] text-gray-400 mt-1 italic">
-              *Model akan digunakan untuk semua fitur AI di aplikasi.
+              *Model akan digunakan untuk semua fitur AI di aplikasi. ✨ Paling direkomendasikan: Gemini 3.5 Flash (stable, frontier performance).
             </p>
           </div>
         </div>

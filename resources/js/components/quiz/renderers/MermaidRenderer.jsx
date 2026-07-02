@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import mermaid from 'mermaid';
 
 const MermaidRenderer = ({ config }) => {
-  const content = config?.diagram || config?.code;
+  const content = typeof config === 'string' ? config : (config?.diagram || config?.code);
   const containerRef = useRef(null);
   const elementId = useRef('mermaid-' + Math.random().toString(36).substr(2, 9)).current;
 

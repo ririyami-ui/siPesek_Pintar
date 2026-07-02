@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Teacher;
 
+use App\Exceptions\GeminiException;
 use App\Http\Controllers\Controller;
 use App\Models\Portfolio;
 use Illuminate\Http\Request;
@@ -52,15 +53,14 @@ class PortfolioController extends Controller
                 $currentContent = $currentContent['chapters'];
             }
 
-            // Gunakan data dari request untuk AI
-            $aiContent = $this->geminiService->generatePortfolioChapter([
-                'chapter_id' => $request->chapter_id,
-                'context' => $request->context ?? [],
-                'user' => Auth::user(),
-                'subject' => $request->subject
-            ]);
+            try {
+                $aiContent = $this->geminiService->generatePortfolioChapter([
+                    'chapter_id' => $request->chapter_id,
+                    'context' => $request->context ?? [],
+                    'user' => Auth::user(),
+                    'subject' => $request->subject
+                ]);
 
-            if ($aiContent) {
                 $currentContent[$request->chapter_id] = [
                     'content' => $aiContent,
                     'status' => 'done',
@@ -68,9 +68,9 @@ class PortfolioController extends Controller
                 ];
                 $portfolio->content = $currentContent;
                 $portfolio->save();
-            } else {
+            } catch (GeminiException $e) {
                 return response()->json([
-                    'message' => 'AI (Gemini) gagal merespon. Mohon periksa API Key Anda di menu Profil atau coba ganti model ke "Gemini 1.5 Flash".'
+                    'message' => 'AI (Gemini) gagal merespon: ' . $e->getMessage() . '. Mohon periksa API Key Anda di menu Profil atau coba ganti model ke "Gemini 1.5 Flash".'
                 ], 422);
             }
         }

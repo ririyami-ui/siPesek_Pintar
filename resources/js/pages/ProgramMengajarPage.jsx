@@ -533,11 +533,28 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
         return semesterMonths.map(m => {
             const mNum = MONTH_MAP[m];
             const actualYear = mNum >= 7 ? years[0] : years[1];
-            // Logika: Jika hari > 28 (semua bulan kecuali Februari non-kabisat), maka 5 pekan (Kolom P1-P5)
-            const daysInMonth = moment(`${actualYear}-${mNum}`, 'YYYY-M').daysInMonth();
-            const totalWeeks = daysInMonth > 28 ? 5 : 4;
+            const monthStart = moment(`${actualYear}-${mNum}-01`, 'YYYY-MM-DD');
 
-            return { name: m, totalWeeks: totalWeeks, nonEffectiveWeeks: 0, keterangan: '' };
+            // Hitung pekan: ISO (Sen-Ming), hitung ≥4 hari sekolah dalam bulan ini
+            let totalWeeks = 0;
+            const sdCount = parseInt(userProfile?.school_days || userProfile?.schoolDays || 6);
+            let weekStart = monthStart.clone().startOf('isoWeek');
+            while (weekStart.isBefore(monthStart.clone().endOf('month'))) {
+                const weekEnd = weekStart.clone().endOf('isoWeek');
+                let schoolDaysInMonth = 0;
+                let d = weekStart.clone();
+                while (d.isSameOrBefore(weekEnd)) {
+                    if (d.month() === mNum - 1) {
+                        const dow = d.day(); // 0=Sun
+                        if (dow >= 1 && dow <= sdCount) schoolDaysInMonth++;
+                    }
+                    d.add(1, 'day');
+                }
+                if (schoolDaysInMonth >= 4) totalWeeks++;
+                weekStart.add(1, 'week');
+            }
+
+            return { name: m, totalWeeks, nonEffectiveWeeks: 0, keterangan: '' };
         });
     };
 
@@ -649,32 +666,28 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                         let weekIndexInMonth = 0;
 
                         const schoolDaysCount = parseInt(userProfile?.school_days || userProfile?.schoolDays || 6);
-                        const threshold = schoolDaysCount === 5 ? 3 : 4;
+                        const threshold = 4;
 
                         // Iterate ISO weeks that intersect the month
                         let weekStart = monthStart.clone().startOf('isoWeek');
                         while (weekStart.isBefore(monthEnd)) {
                             const weekEnd = weekStart.clone().endOf('isoWeek');
 
-                            // Count school days in THIS week that fall WITHIN this month
+                            // Count school days in THIS week within THIS month
                             let schoolDaysInMonth = 0;
                             let dayIter = weekStart.clone();
                             while (dayIter.isSameOrBefore(weekEnd)) {
                                 if (dayIter.month() === mNum - 1) {
-                                    const d = dayIter.day();
-                                    if (schoolDaysCount === 5) {
-                                        if (d >= 1 && d <= 5) schoolDaysInMonth++;
-                                    } else {
-                                        if (d >= 1 && d <= 6) schoolDaysInMonth++;
-                                    }
+                                    const d = dayIter.day(); // 0=Sun
+                                    if (d >= 1 && d <= schoolDaysCount) schoolDaysInMonth++;
                                 }
                                 dayIter.add(1, 'day');
                             }
 
                             // Only count as "calendar week" if it has enough school days in this month
                             if (schoolDaysInMonth >= threshold) {
-                                totalWeeksCount++;
                                 weekIndexInMonth++;
+                                totalWeeksCount++;
 
                                 const blockingHoliday = allHolidays.find(h => {
                                     const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');
@@ -694,8 +707,6 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                                         holidaynotes.push(holidayTitle);
                                     }
                                 }
-                            } else {
-                                weekIndexInMonth++;
                             }
 
                             weekStart.add(1, 'week');
@@ -703,7 +714,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
 
                         return {
                             ...m,
-                            totalWeeks: totalWeeksCount > 0 ? totalWeeksCount : m.totalWeeks,
+                            totalWeeks: totalWeeksCount,
                             nonEffectiveWeeks: calculatedNonEffective > 0 ? calculatedNonEffective : (m.isAuto ? 0 : m.nonEffectiveWeeks),
                             nonEffectiveWeekIndices: nonEffectiveWeekIndices.sort((a, b) => a - b),
                             keterangan: calculatedNonEffective > 0 ? holidaynotes.join(', ') : (m.keterangan || ''),
@@ -851,8 +862,8 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
 
                         // A week is only counted as a "Calendar Week" for this month if it has enough school days
                         if (schoolDaysInMonth >= threshold) {
-                            totalWeeksCount++;
                             weekIndexInMonth++;
+                            totalWeeksCount++;
 
                             // 2. Check if this specific week is non-effective (Blocked by Agenda)
                             const blockingHoliday = allHolidays.find(h => {
@@ -872,8 +883,6 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                                 const title = blockingHoliday.name || blockingHoliday.title;
                                 if (title && !holidayNotes.includes(title)) holidayNotes.push(title);
                             }
-                        } else {
-                            weekIndexInMonth++;
                         }
                         currentWeek.add(1, 'week');
                     }
@@ -2013,28 +2022,23 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
         const monthEnd = monthStart.clone().endOf('month');
 
         const schoolDaysCount = parseInt(userProfile?.school_days || 6);
-        const threshold = schoolDaysCount === 5 ? 3 : 4;
+        const threshold = 4;
 
-        // Find the wIndex-th valid week (one with enough school days in this month)
-        // Must use startOf('week') (locale-based) to match PekanEfektifView
+        // Find the wIndex-th valid week (ISO week, Mon-Sun)
         let validCount = 0;
-        let weekStart = monthStart.clone().startOf('week');
+        let weekStart = monthStart.clone().startOf('isoWeek');
         let targetWeekStart = null;
 
         while (weekStart.isBefore(monthEnd) && validCount <= wIndex) {
-            const weekEnd = weekStart.clone().endOf('week');
+            const weekEnd = weekStart.clone().endOf('isoWeek');
 
             // Count school days in this week within this month
             let schoolDaysInMonth = 0;
             let dayIter = weekStart.clone();
             while (dayIter.isSameOrBefore(weekEnd)) {
                 if (dayIter.month() === monthNum - 1) {
-                    const d = dayIter.day();
-                    if (schoolDaysCount === 5) {
-                        if (d >= 1 && d <= 5) schoolDaysInMonth++;
-                    } else {
-                        if (d >= 1 && d <= 6) schoolDaysInMonth++;
-                    }
+                    const d = dayIter.day(); // 0=Sun
+                    if (d >= 1 && d <= schoolDaysCount) schoolDaysInMonth++;
                 }
                 dayIter.add(1, 'day');
             }
@@ -2052,7 +2056,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
         if (!targetWeekStart) return null;
 
-        const weekEnd = targetWeekStart.clone().endOf('week');
+        const weekEnd = targetWeekStart.clone().endOf('isoWeek');
 
         const holiday = (userHolidays || []).find(h => {
             const hStart = moment(h.startDate || h.start_date || h.date).startOf('day');

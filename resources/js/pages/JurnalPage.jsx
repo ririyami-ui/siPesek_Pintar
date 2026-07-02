@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Save, Trash, RefreshCw } from 'lucide-react';
+import { Save, Trash, RefreshCw, AlertCircle, CheckCircle, XCircle, Info, Sparkles } from 'lucide-react';
 import api from '../lib/axios';
 import moment from 'moment';
 import toast from 'react-hot-toast';
@@ -33,6 +33,9 @@ export default function JurnalPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [editingJournalId, setEditingJournalId] = useState(null);
   const [filterClass, setFilterClass] = useState('');
+  const [attendanceSummary, setAttendanceSummary] = useState([]);
+  const [loadingAttendance, setLoadingAttendance] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [filterTeacher, setFilterTeacher] = useState('');
   const [holidays, setHolidays] = useState([]);
   const [activeHoliday, setActiveHoliday] = useState(null);
@@ -182,9 +185,91 @@ export default function JurnalPage() {
     }
   }, []);
 
+  // Fetch attendance for selected class/subject/date
+  const fetchAttendance = useCallback(async () => {
+    if (!selectedClass || !selectedSubject || !currentDate) return;
+    setLoadingAttendance(true);
+    try {
+      const resp = await api.get('/attendances', {
+        params: {
+          class_id: selectedClass,
+          subject_id: selectedSubject,
+          date: currentDate,
+        },
+      });
+      const data = resp.data.data || [];
+      setAttendanceSummary(data.filter(a => a.status !== 'hadir'));
+    } catch (e) {
+      if (e?.response?.status !== 404) {
+        console.error('Error fetch attendance', e);
+      }
+    } finally {
+      setLoadingAttendance(false);
+    }
+  }, [selectedClass, selectedSubject, currentDate]);
+
   useEffect(() => {
-    fetchJournalEntries();
-  }, [fetchJournalEntries, activeSemester, academicYear]);
+    fetchAttendance();
+  }, [fetchAttendance]);
+
+  const handleAutoFillJournal = async () => {
+    if (!selectedClass || !selectedSubject) {
+      toast.error('Pilih kelas dan mata pelajaran terlebih dahulu.');
+      return;
+    }
+    if (!currentDate) {
+      toast.error('Pilih tanggal terlebih dahulu.');
+      return;
+    }
+    setIsGenerating(true);
+    try {
+      const classData = classes.find(c => c.id == selectedClass);
+      const subjData = subjects.find(s => s.id == selectedSubject);
+
+      // Find program mengajar for context
+      const program = programs.find(p =>
+        p.class_id == selectedClass &&
+        (p.subject == subjData?.name || p.subject_id == selectedSubject)
+      );
+
+      // Find latest journal for same class+subject
+      const prevJournals = journals
+        .filter(j => j.class_id == selectedClass && j.subject_id == selectedSubject && j.id !== editingJournalId)
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+      const prev = prevJournals[0];
+
+      const prompt = {
+        action: 'auto_fill_journal',
+        subject: subjData?.name || '',
+        className: classData?.rombel || '',
+        date: currentDate,
+        programMengajar: program ? {
+          materi: program.materi || '',
+          pekanEfektif: program.pekan_efektif,
+        } : null,
+        previousJournal: prev ? {
+          topic: prev.topic,
+          learningObjectives: prev.learning_objectives,
+          learningActivities: prev.learning_activities,
+        } : null,
+      };
+
+      const res = await api.post('/ai/auto-fill-journal', prompt);
+      const result = res.data;
+
+      if (result.topic) setTopic(result.topic);
+      if (result.learningObjectives) setLearningObjectives(result.learningObjectives);
+      if (result.learningActivities) setLearningActivities(result.learningActivities);
+      if (result.reflection) setReflection(result.reflection);
+
+      toast.success('Jurnal berhasil diisi otomatis! Silakan review.');
+    } catch (error) {
+      const msg = error?.response?.data?.message || 'Gagal mengisi jurnal otomatis. Coba lagi.';
+      toast.error(msg);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleSaveJournal = async () => {
     if (!selectedClass || !selectedSubject || !topic) {
@@ -194,6 +279,14 @@ export default function JurnalPage() {
 
     const classData = classes.find(cls => cls.id == selectedClass);
     const subjectData = subjects.find(sub => sub.id == selectedSubject);
+
+    // If AI auto‑fill in progress, prevent double submit
+    if (isGenerating) return;
+
+    // If attendance summary not loaded yet, load it (fallback)
+    if (!attendanceSummary.length) {
+      await fetchAttendance();
+    }
 
     if (!classData || !subjectData) {
       toast.error('Kelas atau Mata Pelajaran tidak ditemukan.');
@@ -276,6 +369,31 @@ export default function JurnalPage() {
 
   return (
     <div className="space-y-6">
+      {/* Attendance summary */}
+      {loadingAttendance ? (
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <Info size={16} /> Memuat ringkasan absensi...
+        </div>
+      ) : attendanceSummary.length > 0 ? (
+        <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200 font-semibold">
+            <AlertCircle size={18} /> Ringkasan Absensi Hari Ini
+          </div>
+          {attendanceSummary.map(item => (
+            <div key={item.id} className="flex items-center gap-2 text-sm">
+              {item.status === 'sakit' && <XCircle size={14} className="text-yellow-600" />}
+              {item.status === 'izin' && <XCircle size={14} className="text-blue-600" />}
+              {item.status === 'alpa' && <XCircle size={14} className="text-red-600" />}
+              <span className="font-medium">{item.student?.name || 'Siswa'}:</span>
+              <span className="capitalize">{item.status}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+          <CheckCircle size={16} /> Semua siswa hadir hari ini.
+        </div>
+      )}
       <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Jurnal Mengajar</h2>
       
       <JournalReminder
@@ -305,12 +423,14 @@ export default function JurnalPage() {
                 label="Tanggal"
                 value={currentDate}
                 onChange={(e) => setCurrentDate(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <StyledSelect
                 label="Kelas"
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
+                disabled={activeHoliday}
               >
                 <option value="">Pilih Kelas</option>
                 {classes.map(cls => (
@@ -322,6 +442,7 @@ export default function JurnalPage() {
                 label="Mata Pelajaran"
                 value={selectedSubject}
                 onChange={(e) => setSelectedSubject(e.target.value)}
+                disabled={activeHoliday}
               >
                 <option value="">Pilih Mata Pelajaran</option>
                 {subjects.map(sub => (
@@ -330,10 +451,11 @@ export default function JurnalPage() {
               </StyledSelect>
 
               {isAdmin && (
-                <StyledSelect
+                  <StyledSelect
                   label="Guru (Admin Only)"
                   value={selectedTeacher}
                   onChange={(e) => setSelectedTeacher(e.target.value)}
+                  disabled={activeHoliday}
                 >
                   <option value="">Pilih Guru</option>
                   {teachers.map(t => (
@@ -348,6 +470,7 @@ export default function JurnalPage() {
                 placeholder="Materi yang diajarkan"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <StyledInput
@@ -357,6 +480,7 @@ export default function JurnalPage() {
                 voiceEnabled={true}
                 value={learningObjectives}
                 onChange={(e) => setLearningObjectives(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <StyledInput
@@ -366,6 +490,7 @@ export default function JurnalPage() {
                 voiceEnabled={true}
                 value={learningActivities}
                 onChange={(e) => setLearningActivities(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <StyledInput
@@ -375,12 +500,14 @@ export default function JurnalPage() {
                 voiceEnabled={true}
                 value={reflection}
                 onChange={(e) => setReflection(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <StyledSelect
                 label="Keterlaksanaan Pembelajaran"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
+                disabled={activeHoliday}
               >
                 <option value="Terlaksana">Terlaksana</option>
                 <option value="Terlaksana Sebagian">Terlaksana Sebagian</option>
@@ -394,6 +521,7 @@ export default function JurnalPage() {
                 voiceEnabled={true}
                 value={followUp}
                 onChange={(e) => setFollowUp(e.target.value)}
+                disabled={activeHoliday}
               />
 
               <div className="flex items-center gap-2">
@@ -402,15 +530,20 @@ export default function JurnalPage() {
                   id="isAssignment"
                   checked={isAssignment}
                   onChange={(e) => setIsAssignment(e.target.checked)}
-                  className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  disabled={activeHoliday}
+                  className="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <label htmlFor="isAssignment" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                   Dinas Luar / Berikan Tugas Mandiri
                 </label>
               </div>
 
-              <div className="mt-6 flex gap-2">
-                <StyledButton onClick={handleSaveJournal} className="flex-1">
+              <div className="mt-6 flex flex-col sm:flex-row gap-2">
+                <StyledButton onClick={handleAutoFillJournal} disabled={isGenerating || activeHoliday} className="flex-1 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border-indigo-200 dark:border-indigo-700">
+                  <Sparkles size={16} className="mr-2" />
+                  {isGenerating ? 'Mengisi...' : 'Isi Otomatis AI'}
+                </StyledButton>
+                <StyledButton onClick={handleSaveJournal} disabled={activeHoliday} className="flex-1">
                   <Save size={16} className="mr-2" />
                   {editingJournalId ? 'Simpan Perubahan' : 'Simpan Jurnal'}
                 </StyledButton>

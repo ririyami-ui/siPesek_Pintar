@@ -22,6 +22,10 @@ const AbsensiPage = () => {
   const [previousLearningActivities, setPreviousLearningActivities] = useState(null);
   const { activeSemester, academicYear, userProfile, refreshMonitoringData } = useSettings();
   const isAdmin = userProfile?.role?.toLowerCase() === 'admin';
+  const [holidays, setHolidays] = useState([]);
+  const [activityCategories, setActivityCategories] = useState([]);
+  const [activityPoints, setActivityPoints] = useState({}); // { studentId: [catId, ...] }
+  const [showActivityInput, setShowActivityInput] = useState(false);
 
   const autoSaveTimeout = useRef(null);
 
@@ -30,6 +34,30 @@ const AbsensiPage = () => {
       try {
         const now = moment();
         const targetDate = dateFromUrl || now.format('YYYY-MM-DD');
+
+        // Check if target date is a holiday
+        try {
+          const holidaysRes = await api.get('/holidays');
+          const fetched = holidaysRes.data.data || holidaysRes.data || [];
+          setHolidays(fetched);
+          const selected = moment(targetDate).startOf('day');
+          const isHoliday = fetched.some(h => {
+            if (h.start_date && h.end_date) {
+              const start = moment(h.start_date).startOf('day');
+              const end = moment(h.end_date).startOf('day');
+              return selected.isBetween(start, end, null, '[]');
+            }
+            return moment(h.date).isSame(selected, 'day');
+          });
+          if (isHoliday) {
+            setActiveSchedule({ isHoliday: true });
+            setStudents([]);
+            setAttendance({});
+            return;
+          }
+        } catch (e) {
+          console.error('Error fetch holidays', e);
+        }
         const dayMap = {
           'Sunday': 'Minggu',
           'Monday': 'Senin',
@@ -225,6 +253,24 @@ const AbsensiPage = () => {
               return newAttendance;
             });
           }
+
+          // Fetch activity categories & existing points
+          try {
+            const catRes = await api.get('/activity-categories');
+            setActivityCategories(catRes.data.data || []);
+          } catch (e) {
+            // categories not required
+          }
+          try {
+            const pointRes = await api.get('/activity-points', {
+              params: { class_id: foundActiveSchedule.classId, subject_id: foundActiveSchedule.subjectId, date: targetDate }
+            });
+            const pointData = pointRes.data.data || {};
+            // Convert { studentId: [catId, ...], ... } -> setActivityPoints
+            setActivityPoints(pointData);
+          } catch (e) {
+            // points not required
+          }
         } else {
           setStudents([]);
           setAttendance({});
@@ -251,6 +297,16 @@ const AbsensiPage = () => {
     setAttendance(prev => ({ ...prev, [studentId]: status }));
   };
 
+  const handleToggleActivityPoint = (studentId, catId) => {
+    setActivityPoints(prev => {
+      const current = prev[studentId] || [];
+      if (current.includes(catId)) {
+        return { ...prev, [studentId]: current.filter(id => id !== catId) };
+      }
+      return { ...prev, [studentId]: [...current, catId] };
+    });
+  };
+
   const handleSaveAttendance = useCallback(async (scheduleToSave, studentsToSave, attendanceToSave) => {
     if (!scheduleToSave || !studentsToSave || studentsToSave.length === 0) {
       toast.error('Tidak ada jadwal aktif atau siswa untuk disimpan.');
@@ -271,6 +327,23 @@ const AbsensiPage = () => {
         subject_id: scheduleToSave.subjectId,
         attendances: attendanceData,
       });
+
+      // Save activity points in bulk
+      try {
+        const pointsPayload = studentsToSave.map(student => ({
+          student_id: student.id,
+          activity_category_ids: activityPoints[student.id] || [],
+        }));
+        await api.post('/activity-points/bulk', {
+          date: attendanceDate,
+          class_id: scheduleToSave.classId,
+          subject_id: scheduleToSave.subjectId,
+          points: pointsPayload,
+        });
+      } catch (pointErr) {
+        console.error('Error saving activity points:', pointErr);
+        // Don't block attendance save for points failure
+      }
 
       toast.success(`Absensi untuk kelas ${scheduleToSave.class} berhasil disimpan!`);
 
@@ -364,6 +437,33 @@ const AbsensiPage = () => {
         </div>
       ),
     },
+    // Activity Points Column (only if categories exist and toggle is on)
+    ...(activityCategories.length > 0 ? [{
+      header: { label: '✨ Keaktifan', className: 'min-w-[160px]' },
+      cellClassName: 'min-w-[160px]',
+      accessor: row => (
+        <div className="flex flex-wrap gap-1">
+          {activityCategories.map(cat => {
+            const isActive = (activityPoints[row.id] || []).includes(cat.id);
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleToggleActivityPoint(row.id, cat.id)}
+                className={`text-xs px-2 py-1 rounded-full border transition-all ${
+                  isActive
+                    ? 'bg-emerald-100 border-emerald-400 text-emerald-800 dark:bg-emerald-900/40 dark:border-emerald-600 dark:text-emerald-300'
+                    : 'bg-gray-50 border-gray-200 text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-500'
+                } hover:scale-110 active:scale-95`}
+                title={cat.name}
+              >
+                {cat.icon || '⭐'} {cat.name.split(' ')[0]}
+              </button>
+            );
+          })}
+        </div>
+      ),
+    }] : []),
   ];
 
   return (
@@ -434,7 +534,17 @@ const AbsensiPage = () => {
         )}
       </div>
 
-      {activeSchedule ? (
+      {activeSchedule?.isHoliday ? (
+        <div className="p-6 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-3xl shadow-lg flex items-center gap-4">
+          <div className="bg-white/20 p-2 rounded-xl">
+            <span className="text-2xl">📅</span>
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">Hari Libur / Agenda Sekolah</h3>
+            <p className="text-sm opacity-90">Absensi tidak dapat dilakukan karena tanggal ini merupakan hari libur atau agenda sekolah.</p>
+          </div>
+        </div>
+      ) : activeSchedule ? (
         <>
           <div className="overflow-x-auto bg-surface-light dark:bg-surface-dark rounded-lg shadow-md">
             <StyledTable headers={columns.map(col => col.header)}>

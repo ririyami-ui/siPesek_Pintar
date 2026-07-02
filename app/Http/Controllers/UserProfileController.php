@@ -92,7 +92,7 @@ class UserProfileController extends Controller
                 [
                     'school_level' => 'SD',
                     'active_semester' => 'Ganjil',
-                    'gemini_model' => 'gemini-3.1-flash-lite-preview',
+                    'gemini_model' => 'gemini-3.5-flash',
                     'schedule_notifications_enabled' => true,
                     'school_days' => 6,
                 ]
@@ -105,7 +105,7 @@ class UserProfileController extends Controller
                 [
                     'school_level' => $adminProfile->school_level ?? 'SD',
                     'active_semester' => $adminProfile->active_semester ?? 'Ganjil',
-                    'gemini_model' => $adminProfile->gemini_model ?? 'gemini-3.1-flash-lite-preview',
+                    'gemini_model' => $adminProfile->gemini_model ?? 'gemini-3.5-flash',
                     'schedule_notifications_enabled' => true,
                 ]
             );

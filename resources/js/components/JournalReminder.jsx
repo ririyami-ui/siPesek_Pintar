@@ -5,6 +5,12 @@ import { Link } from 'react-router-dom';
 import { useSettings } from '../utils/SettingsContext';
 import moment from 'moment';
 
+const normalizeHoliday = (h) => {
+    const startDate = h.start_date || h.date;
+    const endDate = h.end_date || h.date;
+    return { ...h, startDate: moment(startDate), endDate: moment(endDate) };
+};
+
 const simplify = (str) => String(str || '').toLowerCase().replace(/\s+/g, '');
 
 const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount }) => {
@@ -17,14 +23,39 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
             // Silent refresh (don't show spinner on subsequent poll calls)
             setIsLoading(true);
             try {
-                // 1. Get Routine Schedules & Teachers (for assignments)
-                const [scheduleRes, teachersRes] = await Promise.all([
+                // Helper: compute semester date range from academicYear + semester
+                const years = (academicYear || '').split('/');
+                const year1 = years[0] || new Date().getFullYear();
+                const year2 = years[1] || (parseInt(year1) + 1);
+                let semesterStart, semesterEnd;
+                if (activeSemester === 'Ganjil') {
+                    semesterStart = `${year1}-07-01`;
+                    semesterEnd = `${year1}-12-31`;
+                } else {
+                    semesterStart = `${year2}-01-01`;
+                    semesterEnd = `${year2}-06-30`;
+                }
+
+                // 1. Get Routine Schedules, Teachers, and Holidays
+                const [scheduleRes, teachersRes, holidaysRes] = await Promise.all([
                     api.get('/schedules'),
-                    api.get('/teachers')
+                    api.get('/teachers'),
+                    api.get('/holidays').catch(() => ({ data: { data: [] } }))
                 ]);
                 
                 const schedules = scheduleRes.data.data || scheduleRes.data || [];
                 const teacherList = teachersRes.data.data || teachersRes.data || [];
+                const holidayList = holidaysRes.data.data || holidaysRes.data || [];
+
+                // Build Set of holiday date strings (YYYY-MM-DD) including multi-day ranges
+                const holidayDates = new Set();
+                holidayList.forEach(h => {
+                    const nh = normalizeHoliday(h);
+                    const diff = nh.endDate.diff(nh.startDate, 'days');
+                    for (let d = 0; d <= diff; d++) {
+                        holidayDates.add(nh.startDate.clone().add(d, 'days').format('YYYY-MM-DD'));
+                    }
+                });
                 
                 // Get admins to check if a teacher_id is an admin
                 // (Actually we just want the ACTUAL teacher assigned to class/subject)
@@ -60,11 +91,22 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
                     const checkDate = moment().subtract(i, 'days');
                     if (checkDate.isAfter(today)) continue;
 
-                    const dayNameIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][checkDate.day()];
+                    // Skip dates outside active semester range
+                    if (checkDate.isBefore(moment(semesterStart)) || checkDate.isAfter(moment(semesterEnd))) continue;
+
+                    // Determine Indonesian day name
+                    const dayNameIndo = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][checkDate.day()];
+
+                    // Skip weekends (Saturday, Sunday)
+                    if (dayNameIndo === 'Sabtu' || dayNameIndo === 'Minggu') continue;
+
+                    // Skip holiday / libur dates
+                    const dateCheck = checkDate.format('YYYY-MM-DD');
+                    if (holidayDates.has(dateCheck)) continue;
 
                     const daySchedules = schedules.filter(s =>
-                        s.day === dayNameIndo && (s.type === 'teaching' || !s.type)
-                    );
+                         s.day === dayNameIndo && (s.type === 'teaching' || !s.type)
+                     );
 
                     for (const sched of daySchedules) {
                         const originalClassName = sched.class_name || (typeof sched.class === 'object' && sched.class !== null ? sched.class.rombel : sched.class);

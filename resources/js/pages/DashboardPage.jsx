@@ -143,10 +143,12 @@ export default function DashboardPage() {
       const infractionsResponse = await api.get('/infractions', {
         params: { semester: activeSemester, academic_year: academicYear }
       });
-      const infractions = infractionsResponse.data.data || infractionsResponse.data;
+      const infractions = Array.isArray(infractionsResponse.data.data) ? infractionsResponse.data.data 
+        : Array.isArray(infractionsResponse.data) ? infractionsResponse.data 
+        : [];
 
       const ranked = students.map(s => {
-        const penalty = infractions
+        const penalty = infractions.length > 0
           ? infractions.filter(inf => inf.student_id === s.id).reduce((acc, curr) => acc + curr.points, 0)
           : 0;
         return { ...s, score: 100 - penalty };

@@ -32,7 +32,7 @@ class CalendarService
         $allHolidays = Holiday::whereBetween('date', [$yearStart, $yearEnd])->get();
 
         $schoolDaysCount = 6; // default, can be overridden per school
-        $threshold = $schoolDaysCount === 5 ? 3 : 4;
+        $threshold = 4;
 
         foreach ($months as $month) {
             $year = ($month >= 7) ? $years[0] : $years[1];
@@ -55,11 +55,7 @@ class CalendarService
                 while ($dayIter->lessThanOrEqualTo($weekEnd)) {
                     if ($dayIter->month === $month) {
                         $d = $dayIter->dayOfWeek; // 0=Sun, 1=Mon...6=Sat
-                        if ($schoolDaysCount === 5) {
-                            if ($d >= 1 && $d <= 5) $schoolDaysInMonth++;
-                        } else {
-                            if ($d >= 1 && $d <= 6) $schoolDaysInMonth++;
-                        }
+                        if ($d >= 1 && $d <= $schoolDaysCount) $schoolDaysInMonth++;
                     }
                     $dayIter->addDay();
                 }

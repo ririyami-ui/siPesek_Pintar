@@ -26,7 +26,9 @@ class AiGeneratorService extends GeminiService
             $indexPath = base_path('resources/json/books/index.json');
             if (!file_exists($indexPath)) return null;
 
-            $index = json_decode(file_get_contents($indexPath), true);
+            $indexContent = file_get_contents($indexPath);
+            $index = json_decode($this->stripBom($indexContent), true);
+            if (!$index) return null;
             
             // 1. Cari buku yang pas (Jenjang + Mapel + Kelas)
             $bookInfo = collect($index)->filter(function($b) use ($level, $gradeLevel, $subjectKey) {
@@ -41,7 +43,8 @@ class AiGeneratorService extends GeminiService
             $bookPath = base_path('resources/json/books/' . $bookInfo['path']);
             if (!file_exists($bookPath)) return null;
 
-            $book = json_decode(file_get_contents($bookPath), true);
+            $bookContent = file_get_contents($bookPath);
+            $book = json_decode($this->stripBom($bookContent), true);
             if (!isset($book['chapters'])) return null;
 
             // 3. Filter bab berdasarkan semester jika diberikan
@@ -1363,14 +1366,14 @@ class AiGeneratorService extends GeminiService
 
         // Build JSON structures only for selected types
         $allTypeStructures = [
-            'pg' => '- **pg**: {\"type\": \"pg\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"A...\", \"B...\"], \"answer\": \"A...\", \"explanation\": \"...\"}',
-            'pg_complex' => '- **pg_complex**: {\"type\": \"pg_complex\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"1...\", \"2...\"], \"answer\": [\"1...\", \"3...\"], \"explanation\": \"...\"}',
-            'pg_matrix' => '- **pg_matrix**: {\"type\": \"pg_matrix\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"rows\": [\"Pernyataan 1\", \"Pernyataan 2\"], \"columns\": [\"Kategori A\", \"Kategori B\"], \"answer\": [{\"row\": \"Pernyataan 1\", \"column\": \"Kategori A\"}], \"explanation\": \"...\"}',
-            'matching' => '- **matching**: {\"type\": \"matching\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"left_side\": [\"A\", \"B\"], \"right_side\": [\"1\", \"2\", \"3\"], \"pairs\": [{\"left\": \"A\", \"right\": \"1\"}], \"explanation\": \"...\"}',
-            'true_false' => '- **true_false**: {\"type\": \"true_false\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"statements\": [{\"text\": \"Pernyataan 1\", \"isCorrect\": true}, {\"text\": \"Pernyataan 2\", \"isCorrect\": false}], \"explanation\": \"...\"}',
-            'short_answer' => '- **short_answer**: {\"type\": \"short_answer\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (Singkat 1-3 kata)\", \"explanation\": \"...\"}',
-            'sequencing' => '- **sequencing**: {\"type\": \"sequencing\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"items\": [\"Langkah A\", \"Langkah B\", \"Langkah C\"], \"correct_order\": [\"Langkah B\", \"Langkah A\", \"Langkah C\"], \"explanation\": \"...\"}',
-            'essay' => '- **essay/uraian**: {\"type\": \"essay\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (WAJIB SINGKAT & PADAT)\", \"grading_guide\": \"Pedoman penskoran ringkas\", \"explanation\": \"Penjelasan singkat\"}',
+            'pg' => '- **pg**: {\"type\": \"pg\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"A...\", \"B...\"], \"answer\": \"A...\", \"explanation\": \"...\", \"visualization\": null}',
+            'pg_complex' => '- **pg_complex**: {\"type\": \"pg_complex\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"1...\", \"2...\"], \"answer\": [\"1...\", \"3...\"], \"explanation\": \"...\", \"visualization\": null}',
+            'pg_matrix' => '- **pg_matrix**: {\"type\": \"pg_matrix\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"rows\": [\"Pernyataan 1\", \"Pernyataan 2\"], \"columns\": [\"Kategori A\", \"Kategori B\"], \"answer\": [{\"row\": \"Pernyataan 1\", \"column\": \"Kategori A\"}], \"explanation\": \"...\", \"visualization\": null}',
+            'matching' => '- **matching**: {\"type\": \"matching\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"left_side\": [\"A\", \"B\"], \"right_side\": [\"1\", \"2\", \"3\"], \"pairs\": [{\"left\": \"A\", \"right\": \"1\"}], \"explanation\": \"...\", \"visualization\": null}',
+            'true_false' => '- **true_false**: {\"type\": \"true_false\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"statements\": [{\"text\": \"Pernyataan 1\", \"isCorrect\": true}, {\"text\": \"Pernyataan 2\", \"isCorrect\": false}], \"explanation\": \"...\", \"visualization\": null}',
+            'short_answer' => '- **short_answer**: {\"type\": \"short_answer\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (Singkat 1-3 kata)\", \"explanation\": \"...\", \"visualization\": null}',
+            'sequencing' => '- **sequencing**: {\"type\": \"sequencing\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"items\": [\"Langkah A\", \"Langkah B\", \"Langkah C\"], \"correct_order\": [\"Langkah B\", \"Langkah A\", \"Langkah C\"], \"explanation\": \"...\", \"visualization\": null}',
+            'essay' => '- **essay/uraian**: {\"type\": \"essay\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (WAJIB SINGKAT & PADAT)\", \"grading_guide\": \"Pedoman penskoran ringkas\", \"explanation\": \"Penjelasan singkat\", \"visualization\": null}',
         ];
         $typeStructures = '';
         foreach ($typeCounts as $type => $count) {
@@ -1403,9 +1406,9 @@ class AiGeneratorService extends GeminiService
            - **Mindful**: Mengajak siswa menyadari fenomena/masalah secara utuh.
            - **Meaningful**: Menunjukkan relevansi materi dengan kehidupan nyata atau isu global/lokal.
         5. **TRUE/FALSE MULTI-STATEMENT (MANDATORY)**: Khusus tipe \"true_false\", Anda WAJIB membuat minimal 3-5 pernyataan dalam satu nomor soal untuk dianalisis siswa.
-        6. **VISUALIZATION (OPTIONAL - 5% OF QUESTIONS)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, tambahkan field \"visualization\" dengan config yang sesuai. HANYA lakukan ini jika benar-benar menambah nilai edukatif. Jika tidak, set ke null.
-        7. 6. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
-        7. **PRINSIP DEEP LEARNING (WAJIB)**:
+        6. **VISUALIZATION (WAJIB - MINIMAL 1 SOAL PER BATCH)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, WAJIB isi field \"visualization\" dengan config sesuai tipe visual (chart/mermaid/image/diagram). Minimal 1 soal batch ini punya visualization bermakna. Jika tidak ada visual, set \"visualization\": null.
+        7. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
+        8. **PRINSIP DEEP LEARNING (WAJIB)**:
            - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
            - **Reflektif**: Ajak siswa melihat kembali apa yang dipelajari dan proses belajarnya.
            - **Eksploratif**: Berikan ruang untuk berbagai kemungkinan jawaban atau solusi kreatif.
@@ -1819,5 +1822,15 @@ class AiGeneratorService extends GeminiService
             }
         }
         return $output;
+    }
+
+    /**
+     * Remove UTF-8 BOM from JSON file content before parsing
+     */
+    protected function stripBom($content) {
+        if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
+            return substr($content, 3);
+        }
+        return $content;
     }
 }

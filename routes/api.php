@@ -121,7 +121,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Dashboard & Analytics Routes
     Route::apiResource('holidays', App\Http\Controllers\HolidayController::class);
-    Route::apiResource('infractions', App\Http\Controllers\InfractionController::class);
+    Route::apiResource('activity-categories', \App\Http\Controllers\ActivityCategoryController::class);
+    Route::get('activity-points', [\App\Http\Controllers\ActivityPointController::class, 'index']);
+    Route::post('activity-points/bulk', [\App\Http\Controllers\ActivityPointController::class, 'bulkStore']);
     Route::post('/grades/batch', [App\Http\Controllers\GradeController::class, 'storeBatch']);
     Route::delete('/grades/batch', [App\Http\Controllers\GradeController::class, 'destroyBatch']);
     Route::get('/grades/materials', [App\Http\Controllers\GradeController::class, 'getMaterials']);
@@ -133,10 +135,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('student-notes', App\Http\Controllers\StudentNoteController::class);
     Route::post('/infraction-types/bulk', [App\Http\Controllers\InfractionTypeController::class, 'bulkStore']);
     Route::apiResource('infraction-types', App\Http\Controllers\InfractionTypeController::class);
+    Route::apiResource('infractions', App\Http\Controllers\InfractionController::class);
 
     // AI Services
     Route::group(['prefix' => 'ai'], function () {
         Route::post('/analyze-journal', [GeminiController::class, 'analyzeJournal']);
+        Route::post('/auto-fill-journal', [GeminiController::class, 'autoFillJournal']);
         Route::post('/generate-lesson-plan', [App\Http\Controllers\AiFeaturesController::class, 'generateRpp']);
         Route::post('/save-rpp', [App\Http\Controllers\AiFeaturesController::class, 'saveRpp']);
         Route::get('/rpp-history', [App\Http\Controllers\AiFeaturesController::class, 'getRppHistory']);

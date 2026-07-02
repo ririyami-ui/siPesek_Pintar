@@ -32,6 +32,19 @@ class JournalController extends Controller
             $query->whereDate('date', $request->date);
         }
 
+        // Filter otomatis berdasarkan semester + tahun ajaran
+        if ($request->has('semester') && $request->has('academic_year')) {
+            $years = explode('/', $request->academic_year);
+            $year1 = $years[0] ?? date('Y');
+            $year2 = $years[1] ?? (int)$year1 + 1;
+
+            if ($request->semester === 'Ganjil') {
+                $query->whereBetween('date', ["{$year1}-07-01", "{$year1}-12-31"]);
+            } else {
+                $query->whereBetween('date', ["{$year2}-01-01", "{$year2}-06-30"]);
+            }
+        }
+
         return response()->json(['data' => $query->orderBy('date', 'desc')->get()]);
     }
 
