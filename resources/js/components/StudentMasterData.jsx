@@ -13,6 +13,7 @@ import Modal from './Modal';
 import StudentEditor from './StudentEditor';
 import PrintStudentCardModal from './PrintStudentCardModal';
 import PromoteClassModal from './PromoteClassModal';
+import PromoteBatchModal from './PromoteBatchModal';
 import { useSettings } from '../utils/SettingsContext';
 
 export default function StudentMasterData() {
@@ -39,6 +40,7 @@ export default function StudentMasterData() {
   const [selectedStudentsForPrint, setSelectedStudentsForPrint] = useState([]);
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false);
+  const [isBatchPromoteModalOpen, setIsBatchPromoteModalOpen] = useState(false);
   const { userProfile } = useSettings();
   
   // Photo ZIP Upload States
@@ -112,8 +114,15 @@ export default function StudentMasterData() {
         data = data.filter(s => s.rombel === selectedRombelFilter);
       }
 
-      // Sort by code or name
-      data.sort((a, b) => (a.code || '').localeCompare(b.code || ''));
+      // Sort by rombel then absen (numeric)
+      data.sort((a, b) => {
+        const rA = (a.rombel || '').localeCompare(b.rombel || '');
+        if (rA !== 0) return rA;
+        const absenA = parseInt(a.absen) || 0;
+        const absenB = parseInt(b.absen) || 0;
+        if (absenA !== absenB) return absenA - absenB;
+        return (a.name || '').localeCompare(b.name || '');
+      });
 
       setStudents(data);
       // Reset selected students when filter changes
@@ -434,6 +443,31 @@ export default function StudentMasterData() {
     document.body.removeChild(link);
   };
 
+  const downloadCSV = () => {
+    const headers = ['No.Absen','NIS','NISN','Nama','Jenis Kelamin','Tempat Lahir','Tanggal Lahir','Alamat','Rombel'];
+    const rows = students.map(s => [
+      s.absen || '',
+      s.nis || '',
+      s.nisn || '',
+      `"${(s.name||'').replace(/"/g,'""')}"`,
+      s.gender || '',
+      `"${(s.birth_place||'').replace(/"/g,'""')}"`,
+      s.birth_date || '',
+      `"${(s.address||'').replace(/"/g,'""')}"`,
+      s.rombel || ''
+    ]);
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `data_siswa_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const formatDisplayDate = (dateString) => {
     if (!dateString) return '';
     try {
@@ -660,7 +694,15 @@ export default function StudentMasterData() {
                 onClick={() => setIsPromoteModalOpen(true)}
                 className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-blue-600/30 transition-all"
               >
-                🚀 Proses Kenaikan Kelas
+                🚀 Kenaikan Manual
+              </button>
+            )}
+            {isAdmin && (
+              <button 
+                onClick={() => setIsBatchPromoteModalOpen(true)}
+                className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-purple-600/30 transition-all"
+              >
+                🎨 Naik Kelas Acak Rata
               </button>
             )}
             {selectedStudentsForPrint.length > 0 && (
@@ -671,6 +713,12 @@ export default function StudentMasterData() {
                 <Printer size={16} /> Cetak {selectedStudentsForPrint.length} Kartu
               </button>
             )}
+            <button
+              onClick={downloadCSV}
+              className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-lg shadow-gray-600/30 transition-all"
+            >
+              <Download size={16} /> CSV
+            </button>
             <span className="text-xs font-bold text-gray-400">Filter Rombel:</span>
             <StyledSelect
               className="!w-40"
@@ -806,6 +854,15 @@ export default function StudentMasterData() {
         <PromoteClassModal
           isOpen={isPromoteModalOpen}
           onClose={() => setIsPromoteModalOpen(false)}
+          classes={classes}
+          students={students}
+          onSuccess={getStudents}
+        />
+      )}
+      {isAdmin && (
+        <PromoteBatchModal
+          isOpen={isBatchPromoteModalOpen}
+          onClose={() => setIsBatchPromoteModalOpen(false)}
           classes={classes}
           students={students}
           onSuccess={getStudents}

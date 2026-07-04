@@ -10,6 +10,7 @@ class AiGeneratorService extends GeminiService
 {
     protected $bskapIntel;
     protected $bskapVerbatim;
+    protected $bskapFullCp;
 
     public function __construct()
     {
@@ -29,7 +30,7 @@ class AiGeneratorService extends GeminiService
             $indexContent = file_get_contents($indexPath);
             $index = json_decode($this->stripBom($indexContent), true);
             if (!$index) return null;
-            
+
             // 1. Cari buku yang pas (Jenjang + Mapel + Kelas)
             $bookInfo = collect($index)->filter(function($b) use ($level, $gradeLevel, $subjectKey) {
                 return strtoupper($b['jenjang']) === strtoupper($level) && 
@@ -51,10 +52,10 @@ class AiGeneratorService extends GeminiService
             $chapters = collect($book['chapters']);
             if ($semester) {
                 $semLabel = $this->getSemesterLabel($semester);
-                
+
                 // Cek apakah ada satupun chapter yang punya field semester
                 $hasSemesterData = $chapters->contains(fn($ch) => isset($ch['semester']));
-                
+
                 if ($hasSemesterData) {
                     $chapters = $chapters->filter(fn($ch) => ($ch['semester'] ?? '') === $semLabel);
                 }
@@ -107,7 +108,7 @@ class AiGeneratorService extends GeminiService
     }
 
     /**
-     * Infer level Bloom dari nama sub-topik berdasarkan kata kunci operasional
+ * Infer level Bloom dari nama sub-topik berdasarkan kata kunci operasional
      */
     private function inferBloomLevel($topic)
     {
@@ -150,12 +151,36 @@ class AiGeneratorService extends GeminiService
                 $this->bskapIntel = json_decode(file_get_contents($intelPath), true);
             }
 
-            // Also check storage as fallback or for verbatim
-            if (Storage::exists('json/bskap_2025_intel.json') && !$this->bskapIntel) {
-                $this->bskapIntel = json_decode(Storage::get('json/bskap_2025_intel.json'), true);
+            // Load full CP verbatim from bskap_full_cp.json (frontend-compatible path)
+            $fullCpPath = resource_path('js/utils/bskap_full_cp.json');
+            if (file_exists($fullCpPath)) {
+                $raw = json_decode($this->stripBom(file_get_contents($fullCpPath)), true);
+                // Transform from {SD: {1: {Matematika: {ganjil: {cp_full: ...}}}}} 
+                // to {subjects: {SD: {1: {Matematika: {cp_full: ...}}}}}
+                $transformed = ['subjects' => []];
+                foreach ($raw as $level => $grades) {
+                    foreach ($grades as $grade => $subjects) {
+                        foreach ($subjects as $subject => $semesters) {
+                            // Take whichever semester has cp_full
+                            $cpFull = null;
+                            foreach (['ganjil', 'genap'] as $sem) {
+                                if (!empty($semesters[$sem]['cp_full'])) {
+                                    $cpFull = $semesters[$sem]['cp_full'];
+                                    break;
+                                }
+                            }
+                            if ($cpFull) {
+                                $transformed['subjects'][$level][$grade][$subject] = ['cp_full' => $cpFull];
+                            }
+                        }
+                    }
+                }
+                $this->bskapVerbatim = $transformed;
+                Log::info("BSKAP Full CP loaded from bskap_full_cp.json");
             }
-            
-            if (Storage::exists('json/bskap_2025_verbatim.json')) {
+
+            // Also check storage as fallback
+            if (Storage::exists('json/bskap_2025_verbatim.json') && !$this->bskapVerbatim) {
                 $this->bskapVerbatim = json_decode(Storage::get('json/bskap_2025_verbatim.json'), true);
             }
         } catch (\Exception $e) {
@@ -169,7 +194,7 @@ class AiGeneratorService extends GeminiService
         $level = $this->getLevel($data['gradeLevel']);
         $subjectKey = $this->getSubjectKey($data['subject']);
         $part = $data['part'] ?? 'all'; // all, main, attachments
-        
+
         // Ensure BSKAP data is loaded
         if (!$this->bskapVerbatim) {
             $this->loadBskapData();
@@ -183,7 +208,7 @@ class AiGeneratorService extends GeminiService
             $cpFullVerbatim = $verbatimEntry['cp_full'] ?? null;
 
             if (!$cpFullVerbatim) {
-                $cpFullVerbatim = "Data Capaian Pembelajaran untuk Elemen \"{$data['elemen']}\" tidak ditemukan di database nasional.";
+                $cpFullVerbatim = "Data Capaian Pembelajaran untuk Elemen \"" . ($data['elemen'] ?? '') . "\" tidak ditemukan di database nasional.";
             }
         }
 
@@ -204,7 +229,8 @@ class AiGeneratorService extends GeminiService
             if ($bookData['chapter']) {
                 $bookPrompt .= "- Bab: {$bookData['chapter']['title']}\n";
                 $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
-                $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
+
+$bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             }
             $bookPrompt .= "\nWAJIB: Gunakan data materi di atas untuk menyusun konten RPP agar akurat sesuai buku pemerintah.";
             $prompt .= $bookPrompt;
@@ -218,7 +244,7 @@ class AiGeneratorService extends GeminiService
         $modelName = $data['modelName'] ?? $this->model;
         $level = $this->getLevel($data['gradeLevel']);
         $subjectKey = $this->getSubjectKey($data['subject']);
-        
+
         $prompt = $this->buildQuizPrompt($data);
 
         // INJEKSI DATA BUKU UNTUK KUIS
@@ -234,7 +260,7 @@ class AiGeneratorService extends GeminiService
         }
 
         $response = $this->callGeminiApi($prompt, $modelName, 8192);
-        
+
         return $this->extractJson($response);
     }
 
@@ -243,7 +269,7 @@ class AiGeneratorService extends GeminiService
         $modelName = $data['modelName'] ?? $this->model;
         $level = $this->getLevel($data['gradeLevel']);
         $subjectKey = $this->getSubjectKey($data['subject']);
-        
+
         $prompt = $this->buildHandoutPrompt($data);
 
         // INJEKSI DATA BUKU UNTUK BAHAN AJAR
@@ -266,7 +292,7 @@ class AiGeneratorService extends GeminiService
         $level = $this->getLevel($data['gradeLevel']);
         $subjectKey = $this->getSubjectKey($data['subject']);
         $semester = $data['semester'] ?? 'Ganjil';
-        
+
         $prompt = $this->buildATPPrompt($data);
 
         // --- ANALISA TINGKAT KESULITAN ELEMEN BSKAP ---
@@ -274,7 +300,7 @@ class AiGeneratorService extends GeminiService
         $bskapSubject = $this->bskapIntel['subjects'][$level][$data['gradeLevel']][$subjectKey] ?? [];
         $cpSnippet = $bskapSubject[$semesterKey]['cp_snippet'] ?? '';
         $officialElemen = $bskapSubject[$semesterKey]['elemen'] ?? [];
-        
+
         $difficultyAnalysis = "";
         if (!empty($officialElemen)) {
             $difficultyAnalysis .= "\n**ANALISA TINGKAT KESULITAN ELEMEN (BERDASARKAN CP):**\n";
@@ -293,7 +319,8 @@ class AiGeneratorService extends GeminiService
         if ($bookData) {
             $bookPrompt = "\n\n**REFERENSI STRUKTUR BUKU TEKS (SEMESTER " . strtoupper($semester) . "):**\n";
             $bookPrompt .= "Judul Buku: {$bookData['book_title']}\n";
-            $bookPrompt .= "Penerbit: {$bookData['publisher']}\n";
+
+$bookPrompt .= "Penerbit: {$bookData['publisher']}\n";
             $bookPrompt .= "ISBN: {$bookData['isbn']}\n";
             if (isset($bookData['all_chapters'])) {
                 $bookPrompt .= "Daftar Bab & Detail Materi:\n";
@@ -324,13 +351,13 @@ class AiGeneratorService extends GeminiService
         if (is_array($atp)) {
             $rawValid = $this->bskapIntel['standards']['profile_lulusan_2025'] ?? [];
             $validDimensions = collect($rawValid)->map(fn($p) => $p['dimensi'])->toArray();
-            
+
             // Ambil elemen resmi untuk validasi (Issue 3 fix)
             $gradeLevel = $data['gradeLevel'] ?? '7';
             $level = $this->getLevel($gradeLevel);
             $subjectKey = $this->getSubjectKey($data['subject'] ?? '');
             $semesterKey = $this->getSemesterKey($data['semester'] ?? 'Ganjil');
-            
+
             $officialElemen = $this->bskapIntel['subjects'][$level][$gradeLevel][$subjectKey][$semesterKey]['elemen'] 
                               ?? $this->bskapIntel['subjects'][$level][$subjectKey][$semesterKey]['elemen'] 
                               ?? [];
@@ -369,8 +396,9 @@ class AiGeneratorService extends GeminiService
                 // Jika < 2 dimensi, genapi dari list resmi yang belum ada
                 if (count($dims) < 2) {
                     $needed = 2 - count($dims);
-                    $available = array_diff($validDimensions, $dims);
-                    
+
+$available = array_diff($validDimensions, $dims);
+
                     if (!empty($available)) {
                         $randomExtras = collect($available)->random(min($needed, count($available)))->toArray();
                         $dims = array_merge($dims, $randomExtras);
@@ -407,7 +435,7 @@ class AiGeneratorService extends GeminiService
     {
         $modelName = $context['modelName'] ?? $this->model;
         $imageData = $context['imageData'] ?? null;
-        
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
         $philosophy = $bskapData['standards']['philosophy']['name'] ?? 'Deep Learning';
@@ -423,7 +451,7 @@ class AiGeneratorService extends GeminiService
         **Gaya Bicara (TONE & STYLE):**
         - **Santai & Akrab**: Panggil user dengan \"Bapak/Ibu\" atau \"Pak/Bu\". Gunakan kata-kata seperti \"Siap!\", \"Beres!\", \"Mantap!\", \"Gini loh...\".
         - **To The Point**: Langsung ke inti masalah.
-        - **Emoji**: Pakai emoji secukupnya (ðŸ˜Š, ðŸ‘, âœ…, ðŸš€).
+        - **Emoji**: Pakai emoji secukupnya (😊, 👍, ✅, 🚀).
 
         **Keahlian Khusus:**
         - Membantu menyusun RPP, Kuis, Bahan Ajar, dan LKPD sesuai standar nasional.
@@ -439,7 +467,7 @@ class AiGeneratorService extends GeminiService
         foreach ($history as $msg) {
             $role = ($msg['role'] === 'user') ? 'user' : 'model';
             $parts = [];
-            
+
             if (isset($msg['parts'][0]['text'])) {
                 $parts[] = ['text' => $msg['parts'][0]['text']];
             } elseif (isset($msg['content'])) {
@@ -488,15 +516,16 @@ class AiGeneratorService extends GeminiService
     public function analyzeClass($data)
     {
         $modelName = $data['modelName'] ?? $this->model;
-        $className = $data['className'] ?? 'Kelas';
+
+$className = $data['className'] ?? 'Kelas';
         $isConcise = $data['isConcise'] ?? false;
-        
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
 
         // Summarize data to keep prompt size manageable
         $studentsCount = count($data['students'] ?? []);
-        
+
         // Summarize attendance (Robust counting)
         $attendanceData = $data['attendanceSummary'] ?? [];
         $attSummaryStr = "Data tidak tersedia";
@@ -545,20 +574,20 @@ class AiGeneratorService extends GeminiService
         ### INSTRUKSI OUTPUT:
         Gunakan format Markdown yang sangat rapi untuk laporan ini. Berikan jawaban dalam struktur berikut:
 
-        # ðŸ“Š INFOGRAFIS CAPAIAN KELAS
+        # 📊 INFOGRAFIS CAPAIAN KELAS
         [Berikan ringkasan eksekutif 2-3 kalimat]
 
-        ## ðŸ† KEKUATAN UTAMA (Strengths)
+        ## 🏆 KEKUATAN UTAMA (Strengths)
         - [Poin kekuatan 1]
         - [Poin kekuatan 2]
         - [Poin kekuatan 3]
 
-        ## âš ï¸ KELEMAHAN & TANTANGAN (Weaknesses)
+        ## ⚠️ KELEMAHAN & TANTANGAN (Weaknesses)
         - [Poin kelemahan 1]
         - [Poin kelemahan 2]
         - [Poin kelemahan 3]
 
-        ## ðŸ’¡ SARAN PERBAIKAN (Action Plan)
+        ## 💡 SARAN PERBAIKAN (Action Plan)
         - [Saran 1]
         - [Saran 2]
         - [Saran 3]
@@ -580,22 +609,23 @@ class AiGeneratorService extends GeminiService
             **2. Poin Utama Perilaku & Kehadiran**
             - (1-2 poin menonjol)
             **3. Tiga Rekomendasi Teratas**
+
             - (3 saran praktis)
             ";
         } else {
             $prompt .= "
             FORMAT LAPORAN (LENGKAP):
             ### Laporan Analisis Mendalam Kelas: {$className}
-            
+
             **I. GAMBARAN UMUM AKADEMIK**
             (Analisis tren nilai, penguasaan materi, dan identifikasi siswa yang butuh perhatian/remedial).
-            
+
             **II. POLA KEHADIRAN & KEDISIPLINAN**
             (Analisis tingkat kehadiran dan pola pelanggaran jika ada).
-            
+
             **III. ANALISIS PEDAGOGIS (BERDASARKAN JURNAL)**
             (Bagaimana proses belajar mengajar berlangsung dan hambatan yang sering muncul).
-            
+
             **IV. REKOMENDASI STRATEGIS (DEEP LEARNING)**
             (Saran spesifik untuk meningkatkan kualitas pembelajaran di kelas ini).
             ";
@@ -621,7 +651,7 @@ class AiGeneratorService extends GeminiService
         $distributionCount = is_array($distribution) ? count($distribution) : 1;
         $distributionText = is_array($distribution) ? implode(', ', $distribution) : (string)$distribution;
         $assessmentModel = $data['assessmentModel'] ?? 'Rubrik';
-        
+
         $bskapData = $this->bskapIntel ?? ['standards' => [], 'pedagogis' => [], 'subjects' => [], 'textbooks' => []];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
         $philosophy = $bskapData['standards']['philosophy']['name'] ?? 'Deep Learning';
@@ -668,7 +698,8 @@ class AiGeneratorService extends GeminiService
         // Textbook info (real from JSON books folder)
         $bookRefData = $this->getRelevantBookContent($level, $gradeLevel, $subjectKey, $materi);
         $bookRefTitle = $bookRefData['book_title'] ?? "Buku Siswa {$subject} Kelas {$gradeLevel} Kurikulum Merdeka";
-        $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
+
+$bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
         $bookRefChaptersJson = json_encode(
             $bookRefData['all_chapters'] ?? [],
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
@@ -680,12 +711,12 @@ class AiGeneratorService extends GeminiService
         // Build the prompt using the structure from prompt rpp.txt
         $prompt = "
       Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bekerja berdasarkan repositori data resmi **BSKAP_DATA**. DILARANG memberikan informasi yang bertentangan atau di luar cakupan data JSON tersebut.
-      
+
       **OFFICIAL KNOWLEDGE ENGINE (BSKAP_DATA):**
       - Regulasi Dasar: **{$regulation}**
       - Filosofi Operasional: **{$philosophy}**
       - Standar Kompetensi: Terlampir dalam elemen per-mata pelajaran di database.
-      
+
       Tugas Anda: Susun RPP/Modul Ajar lengkap yang **OTORITATIF** dan **PRESIISI** dengan parameter ini:
       - Sekolah: {$schoolName}
       - Guru: {$teacherName}
@@ -693,32 +724,32 @@ class AiGeneratorService extends GeminiService
       - KD/CP: {$kd}
       - Materi Pokok: {$materi}
       " . ($data['studentCharacteristics'] ? "- Karakteristik Peserta Didik (Manual): {$data['studentCharacteristics']}" : "") . "
-      
+
       **SMART CP EXTRACTION (MANDATORY - BSKAP 46/2025 COMPLIANCE):**
       Berikut adalah CP LENGKAP untuk referensi: 
       {$cpFullVerbatim}
-      
+
       TUGAS ANDA: Dari CP lengkap di atas, ekstrak HANYA bagian/elemen yang RELEVAN dengan Elemen \"{$elemen}\" dan Materi \"{$materi}\".
       - **WAJIB gunakan EXACT TEXT** dari CP (verbatim, NO paraphrase, NO summary)
       - Fokus pada kalimat yang benar-benar menggambarkan kompetensi untuk materi ini.
       - Jika tidak yakin elemen mana yang relevan, gunakan elemen yang setara dengan konten \"{$materi}\".
-      
+
       **FORMAT CP DI RPP (MANDATORY):**
       - HAPUS nomor elemen (mis. \"2.1.\", \"2.2.\", \"3.1.\") dari teks CP
       - MULAI dengan konteks Fase: \"Pada akhir Fase [X], peserta didik mampu...\"
       - Gunakan exact text CP tanpa nomor elemen
       - Jika multiple elemen, gabungkan menjadi paragraf natural dengan konektor yang sesuai
-      
+
       Contoh Format yang BENAR:
       \"Pada akhir Fase B, peserta didik mampu mengidentifikasi makna sila-sila Pancasila dan penerapannya dalam kehidupan sehari-hari.\"
-      
+
       Contoh Format yang SALAH:
       \"2.1. Pancasila Mengidentifikasi makna sila-sila Pancasila...\"
       - **PROFIL LULUSAN (8 DIMENSI 2025)**:
       List Resmi: {$profileLulusanText}
       - **INSTRUKSI (MANDATORY)**: Pilih **MINIMAL 2** dan **MAKSIMAL 3** dimensi dari list di atas yang paling relevan dengan materi ini. Cantumkan di bagian Identitas RPP.
       " . (($data['sourceType'] ?? '') === 'atp' ? "- **SUMBER UTAMA (ATP)**: RPP ini HARUS diturunkan secara spesifik dari butir Tujuan Pembelajaran (TP) yang tercantum di Alur Tujuan Pembelajaran (ATP). Gunakan Elemen {$elemen} sebagai jangkar kompetensi." : "") . "
-      
+
       " . ($regionalLanguage ? "
       **INSTRUKSI BAHASA DAERAH ({$regionalLanguage})**:
       - Karena mata pelajaran ini adalah Bahasa Daerah, Anda **WAJIB** menggunakan **Bahasa {$regionalLanguage}** untuk seluruh isi konten pembelajaran (Tujuan Pembelajaran, Langkah Kegiatan, Materi Ajar, dsb).
@@ -726,7 +757,7 @@ class AiGeneratorService extends GeminiService
       " . (str_contains(strtolower($regionalLanguage), 'jawa') || str_contains(strtolower($regionalLanguage), 'madura') ? "- Sertakan penggunaan **Aksara Hanacaraka (Aksara Jawa/Madura)** pada bagian yang relevan (terutama di bagian Materi Ajar Mendetail dan Latihan LKPD)." : "") . "
       - Tetap gunakan Bahasa Indonesia HANYA untuk instruksi struktural dan label header dokumen.
       " : "") . "
-      
+
       **INTELIGENSI SEMESTER (WAJIB):**
       - Semester Aktif: **{$semesterLabel}**
       - Fokus: **{$semesterFocus}**
@@ -738,7 +769,8 @@ class AiGeneratorService extends GeminiService
       **PRINSIP PENYUSUNAN:**
       1. **KESELARASAN KOGNITIF:** Pastikan level KKO (Kata Kerja Operasional) konsisten dari TP hingga KKTP.
       2. **FOKUS MATERI:** Pembahasan harus terpusat pada \"{$materi}\" tanpa melebar.
-      3. **KESESUAIAN JENJANG:** Sesuaikan bahasa, contoh, dan kegiatan dengan tingkat perkembangan Kelas {$gradeLevel}.
+
+3. **KESESUAIAN JENJANG:** Sesuaikan bahasa, contoh, dan kegiatan dengan tingkat perkembangan Kelas {$gradeLevel}.
       4. **INDIKATOR OPERASIONAL:** Turunkan TP menjadi beberapa IKTP yang spesifik dan terukur.
 
       **PENTING - DETAIL LANGKAH PEMBELAJARAN (DEEP LEARNING):**
@@ -749,7 +781,7 @@ class AiGeneratorService extends GeminiService
         *   **(Mindful)**: Untuk kegiatan yang membangun fokus, kesadaran, atau empati.
         *   **(Meaningful)**: Untuk kegiatan yang menghubungkan materi dengan dunia nyata atau pemahaman mendalam.
         *   **(Joyful)**: Untuk kegiatan yang membangkitkan antusiasme, kreativitas, atau kegembiraan belajar.
-      
+
       Contoh: \"Guru memberikan pertanyaan pemantik tentang fenomena alam di sekitar siswa (Meaningful).\" atau \"Kegiatan Inti: Diskusi Kelompok (Joyful).\"
 
       **PENTING - OPERASIONALISASI TUJUAN (IKTP):**
@@ -791,12 +823,13 @@ class AiGeneratorService extends GeminiService
       4. **STRUKTUR DATA RESMI (SEMESTER " . strtoupper($semesterLabel) . "):**
       " . json_encode($subjectData, JSON_UNESCAPED_UNICODE) . "
       5. **AKURASI FASE**: Gunakan pemetaan Fase: {$phasesText}.
-      6. **FORMAT**: Gunakan format Markdown standar (* atau -).
+
+6. **FORMAT**: Gunakan format Markdown standar (* atau -).
 
       **PENTING - REFERENSI BUKU PEMERINTAH (WAJIB):**
-      
+
       Anda WAJIB mereferensikan buku teks resmi yang diterbitkan oleh **Kemendikdasmen (Kementerian Pendidikan Dasar dan Menengah)** sesuai dengan jenjang dan mata pelajaran. Berikut panduan lengkapnya:
-      
+
       **WAJIB HUKUMNYA**: Seluruh konten RPP, materi, dan instrumen harus merujuk pada buku dan pedoman dari Kemendikdasmen.
 
       **1. SUMBER BUKU RESMI PEMERINTAH:**
@@ -805,15 +838,15 @@ class AiGeneratorService extends GeminiService
       - **Status**: Buku yang telah dinilai dan ditetapkan oleh Kemendikbudristek
 
       **2. IDENTIFIKASI BUKU YANG TEPAT:**
-      
+
       Untuk **{$subject}** Kelas **{$gradeLevel}**, Anda harus:
-      
+
       a) **Tentukan Jenjang dengan Benar:**
          - SD/MI: Kelas 1-6
          - SMP/MTs: Kelas 7-9
          - SMA/MA: Kelas 10-12
          - SMK/MAK: Kelas 10-12 (sesuai program keahlian)
-      
+
       **PENTING - PROFIL LULUSAN (8 DIMENSI RESMI):**
       DILARANG KERAS memasukkan \"Literasi AI\", \"Adaptabilitas\", atau \"EQ\" ke dalam daftar Profil Lulusan. Mereka adalah Kompetensi Industri, bukan Dimensi Profil Lulusan.
       " . (($data['sourceType'] ?? '') === 'atp' && !empty($data['profilLulusan']) ? "
@@ -829,22 +862,22 @@ class AiGeneratorService extends GeminiService
       b) **Identifikasi Kurikulum:**
          - **Kurikulum Merdeka** (prioritas utama untuk tahun 2025/2026)
          - Kurikulum 2013 (jika sekolah masih menggunakan)
-      
+
       c) **Nama Buku yang Akurat:**
          - Format: \"[Nama Mata Pelajaran] untuk [Jenjang] Kelas [X]\"
          - Contoh: \"Matematika untuk SMP Kelas VII\", \"Bahasa Indonesia untuk SD Kelas 4\"
          - Untuk Kurikulum Merdeka: Sebutkan \"Buku Siswa\" atau \"Buku Guru\"
-      
+
       d) **Penulis dan Tahun Terbit:**
          - Sebutkan nama penulis jika memungkinkan
          - Tahun terbit (prioritas: 2022-2025 untuk Kurikulum Merdeka)
          - Contoh: \"Tim Penulis Kemendikdasmen, 2022\"
-      
+
       **3. PANDUAN REFERENSI PER MATA PELAJARAN:**
-      
+
       **Untuk Jenjang SD:**
       - **Mata Pelajaran**: Pendidikan Agama dan Budi Pekerti, Pendidikan Pancasila, Bahasa Indonesia, Matematika, IPAS (Ilmu Pengetahuan Alam dan Sosial - dimulai Kelas III), PJOK, Seni dan Budaya (Musik, Rupa, Teater, atau Tari), Bahasa Inggris (pilihan/mulok).
-      
+
       **Untuk Jenjang SMP:**
       - **Mata Pelajaran Wajib**: Pendidikan Agama, Pendidikan Pancasila, Bahasa Indonesia, Matematika, IPA, IPS, Bahasa Inggris, PJOK, Seni, dan **Informatika** (WAJIB).
       - **Muatan Lokal**: Sesuai potensi daerah.
@@ -859,48 +892,48 @@ class AiGeneratorService extends GeminiService
       - Contoh SMA: \"Fisika untuk SMA Kelas XI Kurikulum Merdeka\"
 
       **4. CARA MENGGUNAKAN REFERENSI DALAM RPP:**
-      
+
       a) **Di Bagian \"Buku Sumber\" (Kartu Soal/RPP):**
          - Tulis nama lengkap buku
          - Format: \"Buku Siswa [Mapel] Kelas [X], Kemendikbudristek, [Tahun]\"
          - Contoh: \"Buku Siswa Matematika Kelas VII, Kemendikbudristek, 2022\"
-      
+
       b) **Di Bagian \"Daftar Pustaka\":**
          - Format APA atau format standar Indonesia
          - Contoh: Kemendikdasmen. (2022). Buku Siswa Matematika untuk SMP Kelas VII Kurikulum Merdeka. Jakarta: Pusat Kurikulum dan Perbukuan.
-      
-       c) **Di Bagian \"Materi Ajar Mendetail\":**
+
+c) **Di Bagian \"Materi Ajar Mendetail\":**
           - Rujuk halaman spesifik jika memungkinkan
           - Contoh: \"Sesuai Buku Siswa [Mapel] Kemendikdasmen Halaman...\"
-        
+
         **5. VALIDASI KESESUAIAN MATERI:**
-        
+
         Pastikan materi yang Anda ambil:
-        - âœ… Sesuai dengan CP yang tercantum di BSKAP 046/2025
-        - âœ… Sesuai dengan fase pembelajaran (A-F)
-        - âœ… Sesuai dengan tingkat kognitif peserta didik
-        - âœ… Menggunakan terminologi yang sama dengan buku teks pemerintah Kemendikdasmen
-        - âœ… Tidak bertentangan dengan nilai-nilai Pancasila dan UUD 1945
-  
+        - ✅ Sesuai dengan CP yang tercantum di BSKAP 046/2025
+        - ✅ Sesuai dengan fase pembelajaran (A-F)
+        - ✅ Sesuai dengan tingkat kognitif peserta didik
+        - ✅ Menggunakan terminologi yang sama dengan buku teks pemerintah Kemendikdasmen
+        - ✅ Tidak bertentangan dengan nilai-nilai Pancasila dan UUD 1945
+
         **6. JIKA BUKU SPESIFIK TIDAK TERSEDIA:**
-        
+
         Jika Anda tidak memiliki akses ke buku spesifik:
         - Gunakan referensi umum: \"Buku Siswa [Mapel] Kelas [X] Kurikulum Merdeka, Kemendikdasmen\"
         - Tambahkan catatan: \"Guru dapat menyesuaikan dengan buku teks yang digunakan di sekolah (Kemendikdasmen)\"
         - JANGAN membuat referensi fiktif atau tidak resmi
         - Tetap gunakan materi yang akurat sesuai CP and standar nasional Kemendikdasmen
-  
+
         **7. CONTOH PENERAPAN LENGKAP:**
-        
+
         Untuk Matematika Kelas 7, materi \"Bilangan Bulat\":
         Buku Sumber:
       - Buku Siswa Matematika untuk SMP Kelas VII Kurikulum Merdeka, Kemendikdasmen, 2022
         - Buku Guru Matematika untuk SMP Kelas VII Kurikulum Merdeka, Kemendikdasmen, 2022
-        
+
         Materi Ajar Mendetail:
         Berdasarkan Buku Siswa Matematika Kelas VII(Bab 2: Bilangan Bulat, hal. 45 - 68):
       [Isi materi yang diambil dari buku tersebut sesuai standar Kemendikdasmen]
-        
+
         Daftar Pustaka:
       Kemendikdasmen. (2022). Buku Siswa Matematika untuk SMP Kelas VII Kurikulum Merdeka.
         Jakarta: Pusat Kurikulum dan Perbukuan, Badan Standar, Kurikulum, dan Asesmen Pendidikan.
@@ -910,7 +943,7 @@ class AiGeneratorService extends GeminiService
       - **JANGAN SALAH LEVEL:** Jangan memasukkan materi yang terlalu sulit (milik kelas lebih tinggi) atau terlalu mudah (milik kelas lebih rendah).
       - **RUJUKAN RESMI:** Seluruh pengembangan materi, definisi, dan langkah pembelajaran **HARUS MENGACU PADA BUKU TEKS PELAJARAN RESMI KEMDIKBUD** untuk mapel {$subject} Kelas {$gradeLevel} yang beredar saat ini.
       - **KOREKSI OTOMATIS:** Jika input KD/Materi dari user terasa \"kurang pas\" dengan kelasnya, **SESUAIKAN** kedalaman dan cakupannya agar cocok untuk siswa kelas {$gradeLevel}.
-      
+
       - Referensi buku pemerintah ini WAJIB dicantumkan di bagian \"Media Belajar\" and \"Daftar Pustaka\"
       - Materi yang diambil harus akurat and tidak menyimpang dari buku sumber
       - Jika ada perbedaan antara buku lama dan CP 2025, prioritaskan CP 2025
@@ -946,7 +979,8 @@ class AiGeneratorService extends GeminiService
       | **NIP Guru** | {$teacherNip} |
 
       ## I. KOMPETENSI INTI (CP & TP)
-      **1. Capaian Pembelajaran (CP):**
+
+**1. Capaian Pembelajaran (CP):**
       (Tuliskan kompetensi utama yang harus dicapai peserta didik sesuai dengan fase and materi pokok ini).
 
       **2. Tujuan Pembelajaran (TP):**
@@ -954,7 +988,7 @@ class AiGeneratorService extends GeminiService
       DILARANG membuat terlalu banyak TP agar tidak memberatkan \"tagihan nilai\" (asesmen) di rapor. Fokuslah pada kompetensi utama yang ingin dicapai dalam seluruh rangkaian pertemuan ini.
       **WAJIB MENGGUNAKAN FORMULA A-B-C-D (Audience, Behavior, Condition, Degree)**
       Setiap poin tujuan pembelajaran HARUS memuat 4 unsur ini secara eksplisit namun mengalir.
-      
+
       **INSTRUKSI VARIASI KALIMAT (PENTING: JANGAN TULIS LABEL HURUFNYA):** 
       Gunakan variasi kalimat di bawah ini, tapi **JANGAN** menampilkan tanda (A), (B), (C), atau (D) di hasil akhir. Biarkan mengalir sebagai kalimat narasi yang utuh.
 
@@ -965,7 +999,7 @@ class AiGeneratorService extends GeminiService
       **Pastikan 4 unsur (A, B, C, D) selalu ada dalam kalimat, namun TERSEMBUNYI (implisit).**
 
       **JANGAN GUNAKAN FORMAT INI (SALAH):**
-      *âŒ \"Menyimpulkan sifat-sifat magnet.\" (Tidak ada Condition, Audience, and Degree)*
+      *❌ \"Menyimpulkan sifat-sifat magnet.\" (Tidak ada Condition, Audience, and Degree)*
 
       **3. Kesiapan Peserta Didik:**
       " . ($data['studentCharacteristics']
@@ -977,11 +1011,11 @@ class AiGeneratorService extends GeminiService
 
       **5. Dimensi Profil Lulusan (8 Dimensi):**
       Tuliskan Dimensi Profil Lulusan yang relevan dan **BERIKAN DESKRIPSI DETAIL** bagaimana dimensi tersebut diwujudkan dalam aktivitas pembelajaran ini.
-      
+
       " . (!empty($data['profilLulusan']) ? "
       **WAJIB GUNAKAN DIMENSI INI (SESUAI PERENCANAAN):**
       {$data['profilLulusan']}
-      
+
       (Instruksi: Jelaskan penerapan konkret untuk setiap dimensi di atas dalam konteks materi {$materi}).
       " : "
       Pilihlah minimal 1, maksimal 3 dimensi yang paling relevan dari standar berikut dan jelaskan penerapannya:
@@ -994,23 +1028,24 @@ class AiGeneratorService extends GeminiService
       - **Kesehatan**: (Contoh: Menjaga well-being, keseimbangan diri, atau kesehatan fisik).
       - **Komunikasi**: (Contoh: Menyampaikan ide secara efektif atau membangun relasi).
       ") . "
-      
+
       **FORMAT OUTPUT PROFIL LULUSAN:**
       - [Nama Dimensi]: [Penjelasan mendetail mengenai bagaimana peserta didik melatih dimensi ini melalui aktivitas spesifik di RPP ini].
 
-      
+
       ## II. LANGKAH-LANGKAH PEMBELAJARAN
       **PENTING - ALOKASI WAKTU:**
       Durasi total menit wajib dicantumkan dalam tabel Identifikasi. Standar Durasi:
 {$durationText}
-      
+
       HITUNGLAH durasi total menit dengan mengalikan total JP ({$jp}) sesuai jenjang Kelas {$gradeLevel}.
 
       **STRUKTUR PER PERTEMUAN:**
       Setiap pertemuan **WAJIB** memiliki rincian durasi yang jika dijumlahkan HASILNYA HARUS SAMA dengan alokasi JP per pertemuan tersebut.
 
       " . ($distributionCount > 1
-    ? "Materi ini telah dialokasikan dalam Progam Semester (Promes) menjadi **{$distributionCount} pertemuan** dengan rincian JP per pertemuan: [{$distributionText}]. Anda WAJIB menyusun langkah pembelajaran sesuai dengan jumlah pertemuan dan alokasi JP tersebut."
+
+? "Materi ini telah dialokasikan dalam Progam Semester (Promes) menjadi **{$distributionCount} pertemuan** dengan rincian JP per pertemuan: [{$distributionText}]. Anda WAJIB menyusun langkah pembelajaran sesuai dengan jumlah pertemuan dan alokasi JP tersebut."
     : "Materi ini disusun untuk **1 pertemuan** dengan total {$jp} JP.") . "
 
       **PRINSIP UTAMA - DEEP LEARNING & DIFERENSIASI:**
@@ -1029,10 +1064,10 @@ class AiGeneratorService extends GeminiService
       " . ($distributionCount > 0
     ? "Berdasarkan data Program Semester (Promes), materi ini telah dijadwalkan untuk **{$distributionCount} KALI PERTEMUAN**. Anda **WAJIB** membuat rincian untuk **{$distributionCount} pertemuan** tersebut. Jangan kurang, jangan lebih."
     : "Jika materi ini sangat luas dan JP mencukupi, Anda boleh membaginya menjadi maksimal 2 pertemuan. Jika tidak, cukup 1 pertemuan.") . "
-      
+
       ### PERTEMUAN [X] (Topik Spesifik: ...)
       *(Catatan: Anda WAJIB mengulangi struktur di bawah ini untuk SETIAP pertemuan yang dijadwalkan)*
-      
+
       **1. Pendahuluan (Mindful Connection) - [10 menit]:**
       *   **Ritual Pembuka (Mindful):** Salam pembuka, **Berdoa bersama**, **Presensi/Mengabsen peserta didik**, dan Menanyakan Kabar untuk membangun koneksi awal yang hangat, rasa syukur, and kesadaran penuh.
       *   **Apersepsi (Meaningful):** Hubungkan materi baru dengan pengalaman atau pengetahuan siswa yang relevan dengan kehidupan nyata mereka.
@@ -1040,11 +1075,11 @@ class AiGeneratorService extends GeminiService
       *   **Pemantik (Hook - Joyful):** Berikan pemicu rasa ingin tahu seperti video menarik, pertanyaan tantangan, cerita pendek, atau fenomena mengejutkan yang membuat siswa excited untuk belajar.
 
       **2. Kegiatan Inti (Penerapan Model & Deep Learning):**
-      
+
       *PENTING (MODEL PEMBELAJARAN):* 
       - Jika input Model Pembelajaran adalah \"Otomatis\", Anda **WAJIB MEMILIH** dari standar preferred_models: " . json_encode(array_map(fn($m) => $m['name'], $bskapData['pedagogis']['preferred_models'] ?? []), JSON_UNESCAPED_UNICODE) . ".
       - **DILARANG KERAS** menggunakan istilah di luar standar tersebut atau menulis kata \"Otomatis\". Gunakan sintaks spesifik sebagaimana didefinisikan dalam pedagogis operasional.
-      
+
       **INSTRUKSI SANGAT PENTING (NARATIF & MENDALAM):** 
       - Bagian kegiatan inti per pertemuan harus **TEBAL, NARATIF, and MENDETAIL**. 
       - **KERANGKA PROGRESIVITAS (WAJIB UNTUK 2+ PERTEMUAN):**
@@ -1057,18 +1092,19 @@ class AiGeneratorService extends GeminiService
       - Pastikan urutannya logis sesuai sintaks model pembelajaran.
 
       Jalin sintaks/tahapan model tersebut secara harmonis ke dalam 3 level Deep Learning berikut untuk setiap pertemuan:
-      
+
       *   **Memahami (Understanding - Mindful + Meaningful):** 
           - Tuliskan langkah-langkah fase awal model (seperti Orientasi pada masalah, Pemberian Stimulus, atau Identifikasi Masalah).
-          - **Contoh Detail:** \"Guru menampilkan slide berisi gambar pencemaran lingkungan. Peserta didik secara bergiliran memberikan pendapat satu kata tentang gambar tersebut. Guru mencatat kata kunci di papan tulis.\"
+
+- **Contoh Detail:** \"Guru menampilkan slide berisi gambar pencemaran lingkungan. Peserta didik secara bergiliran memberikan pendapat satu kata tentang gambar tersebut. Guru mencatat kata kunci di papan tulis.\"
           - Sertakan estimasi waktu untuk setiap langkah, misal: \"Orientasi Masalah [15 menit]\".
-          
+
       *   **Mengaplikasi (Applying - Meaningful + Joyful) - (BAGIAN TERPANJANG):** 
           - Tuliskan langkah-langkah fase aksi model (seperti Penyelidikan Mandiri/Kelompok, Pengumpulan Data, atau Pembuatan Produk/Karya).
           - **Wajib Detil:** Jelaskan bagaimana pembagian kelompok dilakukan, apa instruksi spesifik LKPD, bagaimana guru memonitor, and bagaimana siswa berkolaborasi.
           - Sertakan estimasi waktu untuk setiap langkah, misal: \"Penyelidikan Kelompok [40 menit]\".
           - Aktivitas harus menantang (Joyful) and memiliki dampak nyata (Meaningful).
-          
+
       *   **Merefleksi (Reflecting - Mindful + Meaningful):** 
           - Tuliskan langkah-langkah fase akhir model (seperti Pembuktian, Presentasi hasil, atau Menarik Kesimpulan).
           - Jelaskan mekanisme presentasi (misal: \"Gallery Walk\" atau \"Presentasi Panel\").
@@ -1090,102 +1126,103 @@ class AiGeneratorService extends GeminiService
       - **TOKEN MANAGEMENT (CRITICAL)**: Hindari kalimat basa-basi. Langsung ke inti teknis. 
       - **LKPD & MATERI**: Gunakan format yang padat. Jika materi sangat panjang (800 kata), fokuskan pada poin-poin analisis yang mendalam agar tidak memakan seluruh kuota token.
       - **CUT-OFF PREVENTION**: Jika Anda merasa token akan habis, prioritaskan penyelesaian **Tabel KKTP** dan **Glosarium** sebagai penutup wajib.
-      
+
       **STRUKTUR LAMPIRAN (MANDATORY):**
       - **LKPD**: Fokus pada instruksi kerja yang spesifik dan menantang (HOTS).
       - **MATERI**: Sajikan dalam 4-5 paragraf yang sangat padat informasi teknis/teoritis.
       - **KKTP**: Wajib TABEL, namun gunakan kata-kata yang efisien agar tabel tidak terlalu lebar.
-      
+
       **INSTRUKSI VERIFIKASI:** Sebelum mengakhiri respon, pastikan Anda telah menuliskan bagian **GLOSARIUM** dan **DAFTAR PUSTAKA** secara lengkap.
-      
+
       ## III. MEDIA BELAJAR
       (Sebutkan secara spesifik media yang akan digunakan: nama video/platform, jenis infografis, alat peraga konkret, dll. Jangan hanya menulis \"video interaktif\" tapi sebutkan topik/judulnya).
 
       ## IV. LAMPIRAN
-      
+
       ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
-      
+
       **LKPD - {$materi} (KONSISTENSI TP)**
       **PENTING UNTUK AI:** Soal-soal di bawah ini **HARUS** merupakan turunan langsung dari Tujuan Pembelajaran (TP). Setiap aktivitas LKPD adalah sarana latihan untuk mencapai TP.
 
-      
+
       ---
-      
+
       **Identitas Peserta Didik:**
       | Komponen | Keterangan |
       | :--- | :--- |
       | Nama | : _________________________________ |
       | Kelas | : _________________________________ |
       | Tanggal | : _________________________________ |
-      
+
       **Tujuan Pembelajaran:**
+
       (Tuliskan maksimal 3 tujuan pembelajaran yang akan dicapai peserta didik melalui LKPD ini, harus konsisten dengan bagian I di atas, menggunakan bahasa yang mudah dipahami peserta didik).
-      
+
       **Petunjuk Penggunaan:**
       1. Bacalah setiap instruksi dengan cermat sebelum mengerjakan.
       2. Kerjakan secara mandiri atau berkelompok sesuai arahan guru.
       3. Tuliskan jawaban dengan jelas dan lengkap.
       4. Tanyakan kepada guru jika ada yang kurang jelas.
-      
+
       ---
-      
+
       **KEGIATAN 1: MENGAMATI & MEMAHAMI**
       (Berikan stimulus berupa gambar, teks pendek, video, atau fenomena yang relevan dengan materi. Ajukan 3-4 pertanyaan pemantik yang mendorong peserta didik untuk mengamati and memahami konsep dasar).
-      
+
       **Ruang Jawaban:**
-      
+
       ___________________________________________________________________________
       ___________________________________________________________________________
       ___________________________________________________________________________
-      
+
       ---
-      
+
       **KEGIATAN 2: MENGANALISIS & BERDISKUSI**
       (Berikan kasus, masalah, atau data yang perlu dianalisis peserta didik. Ajukan pertanyaan yang mendorong berpikir kritis and diskusi kelompok).
-      
+
       **Ruang Jawaban:**
-      
+
       ___________________________________________________________________________
       ___________________________________________________________________________
       ___________________________________________________________________________
-      
+
       ---
-      
+
       **KEGIATAN 3: MENCOBA & BERKREASI**
       (Berikan tugas praktik, eksperimen sederhana, atau proyek kreatif yang memungkinkan peserta didik menerapkan pemahaman mereka).
-      
+
       **Ruang Jawaban/Hasil Karya:**
-      
+
       ___________________________________________________________________________
       ___________________________________________________________________________
       ___________________________________________________________________________
-      
+
       ---
-      
+
       **REFLEKSI PEMBELAJARAN & PENILAIAN DIRI**
-      
+
       1. Apa hal paling menarik yang kamu pelajari hari ini?
          ___________________________________________________________________________
       2. Apa yang masih sulit kamu pahami?
          ___________________________________________________________________________
-      
+
       **Penilaian Diri:**
       | Aspek | Sudah Paham | Cukup Paham | Perlu Bimbingan |
       | :--- | :---: | :---: | :---: |
-      | Saya memahami tujuan pembelajaran | â˜ | â˜ | â˜ |
-      | Saya dapat menjelaskan konsep utama | â˜ | â˜ | â˜ |
-      | Saya aktif dalam kegiatan | â˜ | â˜ | â˜ |
-      
+      | Saya memahami tujuan pembelajaran | ☐ | ☐ | ☐ |
+      | Saya dapat menjelaskan konsep utama | ☐ | ☐ | ☐ |
+      | Saya aktif dalam kegiatan | ☐ | ☐ | ☐ |
+
       ---
 
       ### 2. INSTRUMEN PENILAIAN (ASESMEN & KKTP)
-      
+
       **A. ASESMEN DIAGNOSTIK (ASESMEN AWAL)**
       (Buatlah minimal 3-5 pertanyaan singkat atau aktivitas sederhana untuk memetakan kemampuan awal peserta didik terkait materi ini. Tujuannya untuk mengetahui kesiapan belajar).
-      
+
       **B. KRITERIA KETERCAPAIAN TUJUAN PEMBELAJARAN (KKTP)**
       *Pendekatan yang digunakan: {$assessmentModel}*
-      
+
       > **Catatan:** Penentuan kriteria ketercapaian tujuan pembelajaran dalam modul ini merujuk pada standar penilaian dalam **Permendikbudristek No. 21 Th 2022** dan kompetensi pada **Keputusan Kepala BSKAP No. 046/H/KR/2025**.
 
       **ATURAN WAJIB KORELASI:** 
@@ -1195,7 +1232,7 @@ class AiGeneratorService extends GeminiService
       **B.1. DESKRIPSI KRITERIA (Checklist)**
       Guru menetapkan kriteria ketuntasan yang spesifik. Peserta didik dianggap mencapai tujuan pembelajaran jika memenuhi minimal jumlah kriteria tertentu (misal 3 dari 4).
 
-      | Kriteria (Indikator Ketercapaian) | Sudah Muncul (âœ”) | Belum Muncul (âŒ) |
+      | Kriteria (Indikator Ketercapaian) | Sudah Muncul (✔) | Belum Muncul (❌) |
       | :--- | :---: | :---: |
       | 1. [Indikator 1 - turunan TP] | | |
       | 2. [Indikator 2 - turunan TP] | | |
@@ -1208,7 +1245,8 @@ class AiGeneratorService extends GeminiService
 
       | Rentang Nilai | Keterangan & Tindak Lanjut |
       | :--- | :--- |
-      | **0 - 40%** | **Belum Mencapai Ketuntasan (Remedial Seluruh Bagian)** <br> Siswa belum memahami konsep dasar and memerlukan bimbingan intensif dari awal. |
+
+| **0 - 40%** | **Belum Mencapai Ketuntasan (Remedial Seluruh Bagian)** <br> Siswa belum memahami konsep dasar and memerlukan bimbingan intensif dari awal. |
       | **41 - 65%** | **Belum Mencapai Ketuntasan (Remedial Bagian Tertentu)** <br> Siswa sudah memahami sebagian konsep namun masih kesulitan di bagian [Sebutkan bagian sulit]. Perlu remedial pada indikator yang belum tuntas. |
       | **66 - 85%** | **Sudah Mencapai Ketuntasan (Tidak Perlu Remedial)** <br> Siswa sudah menguasai materi dengan baik. Dapat diberikan latihan pemantapan. |
       | **86 - 100%** | **Sudah Mencapai Ketuntasan (Pengayaan)** <br> Siswa sangat mahir. Berikan tantangan lebih kompleks atau menjadi tutor sebaya. |
@@ -1231,7 +1269,7 @@ class AiGeneratorService extends GeminiService
       "))) . "
 
       ---
-      
+
       **C. ASESMEN FORMATIF & SUMATIF (INSTRUMEN)**
       **C.1. Asesmen Formatif (Selama Proses)**
       | Komponen | Teknik Penilaian | Instrumen |
@@ -1263,7 +1301,8 @@ class AiGeneratorService extends GeminiService
       - **[Istilah]**: Definisi...
 
       ### 5. DAFTAR PUSTAKA
-      **WAJIB DIISI!** Minimal 3-5 referensi kredibel (Buku, Jurnal, Sumber Digital).
+
+**WAJIB DIISI!** Minimal 3-5 referensi kredibel (Buku, Jurnal, Sumber Digital).
 
       &nbsp;
       &nbsp;
@@ -1290,39 +1329,39 @@ class AiGeneratorService extends GeminiService
         $subject = $data['subject'];
         $materi = $data['materi'];
         $gradeLevel = $data['gradeLevel'];
-        
+
         $prompt = "
         TUGAS: Lanjutkan penyusunan MODUL AJAR untuk materi \"{$materi}\" (Mapel: {$subject}, Kelas: {$gradeLevel}).
-        
+
         Anda HANYA boleh menghasilkan bagian **LAMPIRAN** yang mendalam dan kompleks.
-        
+
         **STRUKTUR LAMPIRAN YANG HARUS DIHASILKAN (Gunakan Format Markdown):**
-        
+
         ## IV. LAMPIRAN
-        
+
         ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
         - Buatlah LKPD yang sangat mendalam dan menantang (HOTS).
         - Wajib mencakup 3 kegiatan utama:
           1. **Kegiatan 1: Mengamati & Memahami** (Stimulus kaya, 4-5 pertanyaan analitis).
           2. **Kegiatan 2: Menganalisis & Berdiskusi** (Studi kasus nyata/fenomena).
           3. **Kegiatan 3: Mencoba & Berkreasi** (Tugas praktik/proyek nyata).
-        
+
         ### 2. INSTRUMEN PENILAIAN (ASESMEN & KKTP)
         - **Asesmen Diagnostik**: 5 pertanyaan pemetaan kemampuan awal.
         - **KKTP (TABEL)**: Wajib menghasilkan TABEL KKTP (Rubrik/Interval) yang sangat detail.
         - **Asesmen Formatif & Sumatif**: Instrumen lengkap (soal, rubrik, lembar observasi).
-        
+
         ### 3. MATERI AJAR MENDETAIL
         - Sajikan materi akademik yang sangat kompleks dan komprehensif (minimal 800-1000 kata).
         - Harus mencakup: Konsep, Fakta, Prinsip, Prosedur, dan Analisis Kontekstual.
         - Penjelasan harus selevel isi bab buku teks berkualitas tinggi.
-        
+
         ### 4. GLOSARIUM & 5. DAFTAR PUSTAKA
         - Daftar istilah penting dan referensi resmi Kemendikdasmen.
-        
+
         **PRINSIP**: Output harus sangat substantif, tidak boleh ringkas. Gunakan seluruh kapasitas token untuk bagian ini saja.
         ";
-        
+
         return $prompt;
     }
 
@@ -1334,12 +1373,12 @@ class AiGeneratorService extends GeminiService
         $context = $data['context'] ?? '';
         $difficulty = $data['difficulty'] ?? 50;
         $typeCounts = $data['typeCounts'] ?? ['pg' => 10];
-        
+
         // Batching context
         $batchNum = $data['batchNum'] ?? 1;
         $totalBatches = $data['totalBatches'] ?? 1;
         $allQuestions = $data['allQuestions'] ?? [];
-        
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
         $profileLulusan = $bskapData['standards']['profile_lulusan_2025'] ?? [];
@@ -1356,24 +1395,25 @@ class AiGeneratorService extends GeminiService
         foreach ($typeCounts as $type => $count) {
             $batchTotal += $count;
             for($i=0; $i<$count; $i++) {
-                $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
+
+$batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
             }
         }
-        
+
         $alreadyCovered = !empty($allQuestions) 
             ? "- **TOPIK YANG SUDAH DICAKUP**: [" . implode(', ', array_map(fn($q) => $q['pedagogical_materi'] ?? '', $allQuestions)) . "] (HINDARI pengulangan materi yang sama)\n"
             : "";
 
         // Build JSON structures only for selected types
         $allTypeStructures = [
-            'pg' => '- **pg**: {\"type\": \"pg\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"A...\", \"B...\"], \"answer\": \"A...\", \"explanation\": \"...\", \"visualization\": null}',
-            'pg_complex' => '- **pg_complex**: {\"type\": \"pg_complex\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"options\": [\"1...\", \"2...\"], \"answer\": [\"1...\", \"3...\"], \"explanation\": \"...\", \"visualization\": null}',
-            'pg_matrix' => '- **pg_matrix**: {\"type\": \"pg_matrix\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"rows\": [\"Pernyataan 1\", \"Pernyataan 2\"], \"columns\": [\"Kategori A\", \"Kategori B\"], \"answer\": [{\"row\": \"Pernyataan 1\", \"column\": \"Kategori A\"}], \"explanation\": \"...\", \"visualization\": null}',
-            'matching' => '- **matching**: {\"type\": \"matching\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"left_side\": [\"A\", \"B\"], \"right_side\": [\"1\", \"2\", \"3\"], \"pairs\": [{\"left\": \"A\", \"right\": \"1\"}], \"explanation\": \"...\", \"visualization\": null}',
-            'true_false' => '- **true_false**: {\"type\": \"true_false\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"statements\": [{\"text\": \"Pernyataan 1\", \"isCorrect\": true}, {\"text\": \"Pernyataan 2\", \"isCorrect\": false}], \"explanation\": \"...\", \"visualization\": null}',
-            'short_answer' => '- **short_answer**: {\"type\": \"short_answer\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (Singkat 1-3 kata)\", \"explanation\": \"...\", \"visualization\": null}',
-            'sequencing' => '- **sequencing**: {\"type\": \"sequencing\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"items\": [\"Langkah A\", \"Langkah B\", \"Langkah C\"], \"correct_order\": [\"Langkah B\", \"Langkah A\", \"Langkah C\"], \"explanation\": \"...\", \"visualization\": null}',
-            'essay' => '- **essay/uraian**: {\"type\": \"essay\", \"pedagogical_materi\": \"...\", \"competency\": \"...\", \"indicator\": \"...\", \"cognitive_level\": \"...\", \"stimulus\": \"...\", \"question\": \"...\", \"answer\": \"Kunci jawaban (WAJIB SINGKAT & PADAT)\", \"grading_guide\": \"Pedoman penskoran ringkas\", \"explanation\": \"Penjelasan singkat\", \"visualization\": null}',
+            'pg' => '- **pg**: {"type": "pg", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "options": ["A...", "B..."], "answer": "A...", "explanation": "...", "visualization": null}',
+            'pg_complex' => '- **pg_complex**: {"type": "pg_complex", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "options": ["1...", "2..."], "answer": ["1...", "3..."], "explanation": "...", "visualization": null}',
+            'pg_matrix' => '- **pg_matrix**: {"type": "pg_matrix", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "rows": ["Pernyataan 1", "Pernyataan 2"], "columns": ["Kategori A", "Kategori B"], "answer": [{"row": "Pernyataan 1", "column": "Kategori A"}], "explanation": "...", "visualization": null}',
+            'matching' => '- **matching**: {"type": "matching", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "left_side": ["A", "B"], "right_side": ["1", "2", "3"], "pairs": [{"left": "A", "right": "1"}], "explanation": "...", "visualization": null}',
+            'true_false' => '- **true_false**: {"type": "true_false", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "statements": [{"text": "Pernyataan 1", "isCorrect": true}, {"text": "Pernyataan 2", "isCorrect": false}], "explanation": "...", "visualization": null}',
+            'short_answer' => '- **short_answer**: {"type": "short_answer", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "answer": "Kunci jawaban (Singkat 1-3 kata)", "explanation": "...", "visualization": null}',
+            'sequencing' => '- **sequencing**: {"type": "sequencing", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "items": ["Langkah A", "Langkah B", "Langkah C"], "correct_order": ["Langkah B", "Langkah A", "Langkah C"], "explanation": "...", "visualization": null}',
+            'essay' => '- **essay/uraian**: {"type": "essay", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "answer": "Kunci jawaban (WAJIB SINGKAT & PADAT)", "grading_guide": "Pedoman penskoran ringkas", "explanation": "Penjelasan singkat", "visualization": null}',
         ];
         $typeStructures = '';
         foreach ($typeCounts as $type => $count) {
@@ -1385,7 +1425,7 @@ class AiGeneratorService extends GeminiService
         return "
         LANDASAN REGULASI: **{$regulation}** (Standar Nasional Kurikulum Merdeka).
         STANDAR PEDAGOGIS: **Buku Teks Utama Kemendikbudristek** (Mindful, Meaningful, Joyful).
-        
+
         TUGAS: Buatlah {$batchTotal} butir soal (Batch {$batchNum} dari {$totalBatches}) untuk:
         - Mapel: {$subject} | Kelas: {$gradeLevel} | Topik: {$topic}
         - Konteks: \"{$context}\" 
@@ -1393,8 +1433,9 @@ class AiGeneratorService extends GeminiService
         - HOTS Meter: {$difficulty}%
         {$alreadyCovered}
 
-        TUGAS UTAMA: 
-        1. Analisis materi dalam \"Konteks\" yang belum dicakup di batch sebelumnya.
+        TUGAS UTAMA:
+
+1. Analisis materi dalam \"Konteks\" yang belum dicakup di batch sebelumnya.
         2. Buatlah soal yang spesifik dan mendalam.
         {$batchInstructions}
 
@@ -1415,7 +1456,7 @@ class AiGeneratorService extends GeminiService
            - **PROFIL LULUSAN (8 DIMENSI 2025)**:
              List Resmi: {$profilLulusanList}
              - **WAJIB**: Cantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi yang diperkuat melalui kuis ini.
-        
+
          STRUKTUR JSON PER TIPE (INPUT HARUS SESUAI):
          - **Wajib Ada di Setiap Soal (MANDATORY SINGKAT)**: 
            \"pedagogical_materi\": \"Materi spesifik (max 3 kata)\",
@@ -1425,7 +1466,7 @@ class AiGeneratorService extends GeminiService
            \"stimulus\": \"Narasi kaya, studi kasus, atau data riil (3-5 kalimat, WAJIB DETAIL)\",
            \"image_hint\": \"Instruksi gambar (Opsional, gunakan [] jika ada)\"
          {$typeStructures}
- 
+
          INSTRUKSI WAJIB: Anda HANYA boleh menghasilkan soal dengan tipe-tipe yang tercantum di atas. DILARANG membuat soal dengan tipe di luar daftar.
 
         FORMAT OUTPUT TOTAL (JSON ONLY):
@@ -1452,7 +1493,7 @@ class AiGeneratorService extends GeminiService
         $elemen = $data['elemen'] ?? '';
         $teacherName = $data['teacherName'] ?? 'Guru Smart School';
         $teacherTitle = $data['teacherTitle'] ?? 'Bapak/Ibu';
-        
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
         $profileLulusan = $bskapData['standards']['profile_lulusan_2025'] ?? [];
@@ -1464,11 +1505,12 @@ class AiGeneratorService extends GeminiService
         }
 
         return "
-        Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Bahan Ajar (Handout/Modul)** yang inovatif, mendalam, dan selaras dengan administrasi guru.
-        
+
+Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Bahan Ajar (Handout/Modul)** yang inovatif, mendalam, dan selaras dengan administrasi guru.
+
         **OFFICIAL KNOWLEDGE ENGINE (BSKAP_DATA):**
         - Regulasi Dasar: **{$regulation}**
-        
+
         Tugas Anda: Susun Bahan Ajar (Handout) yang **OTORITATIF** dan **MENYENANGKAN** berdasarkan parameter ini:
         - Mapel: {$subject}
         - Jenjang/Kelas: {$gradeLevel}
@@ -1478,64 +1520,64 @@ class AiGeneratorService extends GeminiService
 
         **STRUKTUR MODUL (WAJIB IKUTI FORMAT INI):**
 
-        # ðŸ“˜ MODUL BELAJAR: [JUDUL MATERI DI SINI]
-        
+        # 📘 MODUL BELAJAR: [JUDUL MATERI DI SINI]
+
         > \"Belajar itu bukan tentang menjadi pintar, tapi tentang peka terhadap sekitarmu.\" - Smart Teaching
-        
+
         **PROFIL LULUSAN (8 DIMENSI 2025):**
         List Resmi: {$profilLulusanList}
         - **WAJIB**: Cantumkan **MINIMAL 2** dan **MAKSIMAL 3** dimensi yang dikembangkan melalui modul ini.
-        
+
         ---
 
-        ## ðŸŽ¯ TARGET BELAJAR KITA HARI INI
+        ## 🎯 TARGET BELAJAR KITA HARI INI
         Di akhir modul ini, kamu bakal jago dalam:
         - [Tujuan 1 bahasa siswa]
         - [Tujuan 2 bahasa siswa]
-        
+
         ---
 
-        ## ðŸ—ºï¸ PETA KONSEP (MIND MAP)
+        ## 🗺️ PETA KONSEP (MIND MAP)
         *(Sajikan ringkasan alur materi menggunakan diagram Mermaid `graph TD` agar siswa mudah membayangkan peta perjalanan belajarnya).*
-        
+
         ---
 
-        ## ðŸš€ APERSEPSI: TAHUKAH KAMU?
+        ## 🚀 APERSEPSI: TAHUKAH KAMU?
         (Berikan paragraf pembuka yang menarik dan relevan dengan dunia nyata).
 
         ---
 
-        ## ðŸ“š MATERI INTI (DAGINGNYA!)
+        ## 📚 MATERI INTI (DAGINGNYA!)
         *(Bagian ini harus menjadi bagian TERPANJANG. Jangan hanya poin-poin. Jelaskan konsep selengkap-lengkapnya layaknya Anda mengajar di depan kelas dengan bahasa yang mengalir).*
-        
+
         ### 1. [Sub-Bab 1]
-        
+
         ### 2. [Sub-Bab 2]
-        
-        > **ðŸ’¡ TIPS JITU:**
+
+        > **💡 TIPS JITU:**
         > (Masukkan tips atau cara cepat memahami konsep ini).
 
-        ### ðŸ”¦ STUDI KASUS / POJOK LITERASI
+        ### 🔦 STUDI KASUS / POJOK LITERASI
         (Tambahkan satu cerita pendek, fakta menarik, atau kasus nyata untuk dianalisis).
 
         ---
 
-        ## ðŸ§ª CONTOH SOAL & BEDAH JAWABAN (WAJIB)
+        ## 🧪 CONTOH SOAL & BEDAH JAWABAN (WAJIB)
         *(Berikan minimal 2 contoh soal dengan tingkat kesulitan berbeda beserta penjelasan logikanya).*
 
         ---
 
-        ## ðŸ“ TANTANGAN MINIMU (LATIHAN) - WAJIB MUNCUL
+        ## 📝 TANTANGAN MINIMU (LATIHAN) - WAJIB MUNCUL
         *(Berikan tepat 5 soal latihan bervariasi: pilihan ganda atau esai singkat).*
 
         ---
 
-        ## ðŸ“– KAMUS MINI (GLOSARIUM) - WAJIB MUNCUL
+        ## 📖 KAMUS MINI (GLOSARIUM) - WAJIB MUNCUL
         *(Berikan minimal 5-10 istilah penting beserta definisinya).*
-        
+
         ---
         *Disusun dengan penuh dedikasi oleh {$teacherTitle} {$teacherName}*
-        
+
         **SIKAP KERJA & VERIFIKASI AKHIR (WAJIB):**
         1. **KOMPLITNYA STRUKTUR**: Jangan berhenti sebelum bagian \"KAMUS MINI\" selesai ditulis.
         2. **FORMAT**: Langsung format Markdown tanpa komentar basa-basi.
@@ -1547,7 +1589,7 @@ class AiGeneratorService extends GeminiService
         $rppContent = $data['rppContent'];
         $assessmentModel = $data['assessmentModel'] ?? 'Rubrik';
         $studentNames = $data['studentNames'] ?? [];
-        
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
 
@@ -1557,13 +1599,13 @@ class AiGeneratorService extends GeminiService
 
         return "
         Anda adalah \"Mesin Intelijen Kurikulum Nasional\" spesialis penyusunan **Lembar Kerja Peserta Didik (LKPD)** yang presisi.
-        
+
         **OFFICIAL KNOWLEDGE ENGINE (BSKAP_DATA):**
         - Regulasi Dasar: **{$regulation}**
         - Standar Asesmen: Metode **{$assessmentModel}**
-        
+
         Tugas Anda: Turunkan materi dari RPP terlampir menjadi LKPD yang **OTORITATIF** dan **BERDIFERENSIASI**.
-        
+
         **DATA RPP SUMBER:**
         " . substr($rppContent, 0, 15000) . "
 
@@ -1572,7 +1614,8 @@ class AiGeneratorService extends GeminiService
         2. **GAMIFIKASI & PERAN:** Mulailah dengan **PENGANTAR YANG MENARIK**. Ajak peserta didik bermain peran (Role Playing).
         3. **AKTIVITAS BERBASIS TABEL & KASUS:**
            - Sajikan **KASUS NYATA** atau **DATA** untuk dianalisis.
-           - Gunakan **TABEL KOSONG** untuk ruang jawab siswa agar terstruktur.
+
+- Gunakan **TABEL KOSONG** untuk ruang jawab siswa agar terstruktur.
         4. **PENTING: FORMAT PENILAIAN / KKTP (Tabel Utuh):**
         Di bagian paling akhir LKPD, Anda WAJIB menyertakan **TABEL UTAMA ASESMEN KKTP**.
         {$studentListText}
@@ -1580,71 +1623,71 @@ class AiGeneratorService extends GeminiService
         **STRUKTUR LKPD YANG HARUS DIHASILKAN (Gunakan Format Markdown Ini):**
 
         ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
-        
+
         **LKPD - [TOPIK DARI RPP] (KONSISTENSI TP)**
         **PENTING UNTUK AI:** Soal-soal di bawah ini **HARUS** merupakan turunan langsung dari Tujuan Pembelajaran (TP) yang ada di RPP. Setiap aktivitas LKPD adalah sarana latihan untuk mencapai TP tersebut.
 
         ---
-        
+
         **Identitas Peserta Didik:**
         | Komponen | Keterangan |
         | :--- | :--- |
         | Nama | : _________________________________ |
         | Kelas | : _________________________________ |
         | Tanggal | : _________________________________ |
-        
+
         **Tujuan Pembelajaran:**
         (Tuliskan maksimal 3 tujuan pembelajaran yang akan dicapai peserta didik melalui LKPD ini, harus konsisten dengan RPP, menggunakan bahasa yang mudah dipahami peserta didik).
-        
+
         **Petunjuk Penggunaan:**
         1. Bacalah setiap instruksi dengan cermat sebelum mengerjakan.
         2. Kerjakan secara mandiri atau berkelompok sesuai arahan guru.
         3. Tuliskan jawaban dengan jelas dan lengkap.
         4. Tanyakan kepada guru jika ada yang kurang jelas.
-        
+
         ---
-        
+
         **KEGIATAN 1: MENGAMATI & MEMAHAMI**
         (Berikan stimulus berupa gambar, teks pendek, video, atau fenomena yang relevan dengan materi. Ajukan 3-4 pertanyaan pemantik yang mendorong peserta didik untuk mengamati and memahami konsep dasar).
-        
+
         **Ruang Jawaban:**
         ___________________________________________________________________________
         ___________________________________________________________________________
-        
+
         ---
-        
+
         **KEGIATAN 2: MENGANALISIS & BERDISKUSI**
         (Berikan kasus, masalah, atau data yang perlu dianalisis peserta didik. Ajukan pertanyaan yang mendorong berpikir kritis and diskusi kelompok).
-        
+
         **Ruang Jawaban:**
         ___________________________________________________________________________
         ___________________________________________________________________________
-        
+
         ---
-        
+
         **KEGIATAN 3: MENCOBA & BERKREASI**
         (Berikan tugas praktik, eksperimen sederhana, atau proyek kreatif yang memungkinkan peserta didik menerapkan pemahaman mereka).
-        
+
         **Ruang Jawaban/Hasil Karya:**
         ___________________________________________________________________________
         ___________________________________________________________________________
-        
+
         ---
-        
+
         **REFLEKSI PEMBELAJARAN & PENILAIAN DIRI**
-        
+
         1. Apa hal paling menarik yang kamu pelajari hari ini?
            ___________________________________________________________________________
         2. Apa yang masih sulit kamu pahami?
            ___________________________________________________________________________
-        
+
         **Penilaian Diri:**
         | Aspek | Sudah Paham | Cukup Paham | Perlu Bimbingan |
         | :--- | :---: | :---: | :---: |
-        | Saya memahami tujuan pembelajaran | â˜ | â˜ | â˜ |
-        | Saya dapat menjelaskan konsep utama | â˜ | â˜ | â˜ |
-        | Saya aktif dalam kegiatan | â˜ | â˜ | â˜ |
-        
+        | Saya memahami tujuan pembelajaran | ☐ | ☐ | ☐ |
+        | Saya dapat menjelaskan konsep utama | ☐ | ☐ | ☐ |
+        | Saya aktif dalam kegiatan | ☐ | ☐ | ☐ |
+
         ---
 
         **FORMAT PENILAIAN / KKTP (MANDATORY):**
@@ -1663,18 +1706,19 @@ class AiGeneratorService extends GeminiService
         $semester = $data['semester'] ?? 'Ganjil';
         $totalJP = $data['totalJP'] ?? 0;
         $jpPerWeek = $data['jpPerWeek'] ?? 0;
-        
+
         $level = $this->getLevel($gradeLevel);
         $regulation = $this->bskapIntel['standards']['regulation'] ?? 'BSKAP No. 46 Tahun 2025';
 
         // --- AMBIL DATA ELEMEN & MATERI DARI BSKAP INTEL ---
         $subjectKey = $this->getSubjectKey($subject);
         $semesterKey = $this->getSemesterKey($semester);
-        
-        $bskapSubject = $this->bskapIntel['subjects'][$level][$gradeLevel][$subjectKey] 
-                        ?? $this->bskapIntel['subjects'][$level][$subjectKey] 
+
+        $bskapSubject = $this->bskapIntel['subjects'][$level][$gradeLevel][$subjectKey]
+
+?? $this->bskapIntel['subjects'][$level][$subjectKey] 
                         ?? [];
-        
+
         $officialElemen = $bskapSubject[$semesterKey]['elemen'] ?? [];
         $officialMateri = $bskapSubject[$semesterKey]['materi_inti'] ?? [];
 
@@ -1740,7 +1784,7 @@ class AiGeneratorService extends GeminiService
 
         // Simple JSON extractor
         $text = trim($text);
-        
+
         // Remove markdown code blocks if present
         if (preg_match('/^```(?:json)?\s*([\s\S]*?)\s*```$/i', $text, $matches)) {
             $text = $matches[1];
@@ -1748,14 +1792,14 @@ class AiGeneratorService extends GeminiService
             // Try to find the first { and last }
             $start = strpos($text, '{');
             $end = strrpos($text, '}');
-            
+
             if ($start !== false && $end !== false) {
                 $text = substr($text, $start, $end - $start + 1);
             }
         }
-        
+
         $decoded = json_decode($text, true);
-        
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             // Try to fix common truncation issues by adding missing closing braces
             $fixedText = $text;
@@ -1763,10 +1807,10 @@ class AiGeneratorService extends GeminiService
             $closeBraces = substr_count($fixedText, '}');
             $openBrackets = substr_count($fixedText, '[');
             $closeBrackets = substr_count($fixedText, ']');
-            
+
             for ($i = 0; $i < ($openBrackets - $closeBrackets); $i++) $fixedText .= ']';
             for ($i = 0; $i < ($openBraces - $closeBraces); $i++) $fixedText .= '}';
-            
+
             $decoded = json_decode($fixedText, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 return $decoded;
@@ -1776,10 +1820,11 @@ class AiGeneratorService extends GeminiService
                 'error' => json_last_error_msg(),
                 'text_preview' => substr($text, 0, 1000),
                 'text_length' => strlen($text)
-            ]);
+
+]);
             return [];
         }
-        
+
         return $decoded ?? [];
     }
 
@@ -1793,13 +1838,13 @@ class AiGeneratorService extends GeminiService
 
     protected function getSubjectKey($subject) {
         if (!$subject) return "";
-        
+
         // Remove suffixes like "(Wajib)", "(Peminatan)", etc.
         $clean = preg_replace('/\s*\(.*?\)\s*/', '', $subject);
         $clean = trim($clean);
 
         if (str_starts_with($clean, "Bahasa Daerah")) return "Bahasa Daerah";
-        
+
         return $clean;
     }
 
@@ -1813,7 +1858,7 @@ class AiGeneratorService extends GeminiService
     protected function getSemesterLabel($semester) {
         return $this->getSemesterKey($semester) === 'ganjil' ? 'Ganjil' : 'Genap';
     }
-    
+
     protected function formatProfilLulusan($profiles) {
         $output = "";
         foreach ($profiles as $p) {

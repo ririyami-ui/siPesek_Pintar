@@ -315,6 +315,11 @@ export const SettingsProvider = ({ children }) => {
             const data = monitoringDataRef.current;
             if (!data) return;
 
+            // [HOTFIX] Skip all audio announcements on holidays or weekends
+            if (data.school_agenda?.is_holiday || data.is_weekend) {
+                return;
+            }
+
             // [NEW] Clear announced IDs on new day
             if (lastDateRef.current !== date) {
                 announcedIdsRef.current.clear();

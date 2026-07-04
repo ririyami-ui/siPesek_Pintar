@@ -154,6 +154,36 @@ class StudentDashboardController extends Controller
             ->where('is_holiday', true)
             ->first();
 
+        // [HOTFIX] Holiday override — skip all schedule processing
+        if ($holiday) {
+            $graduateProfile = $this->loadGraduateProfileFromBskap($student);
+
+            return response()->json([
+                'school_name'      => $this->getSchoolName(),
+                'student'          => [
+                    'id'        => $student->id,
+                    'name'      => $student->name,
+                    'class'     => $student->class->rombel ?? '-',
+                    'absen'     => $student->absen ?? '-',
+                    'nis'       => $student->nis ?? '-',
+                    'nisn'      => $student->nisn ?? '-',
+                    'photo_url' => $student->user->photo_url ?? null,
+                    'gender'    => $student->gender ?? 'L',
+                    'class_id'  => $student->class_id,
+                ],
+                'holiday'          => [
+                    'title'       => $holiday->title ?: $holiday->name,
+                    'description' => $holiday->description
+                ],
+                'current_session'  => null,
+                'upcoming_session' => null,
+                'today_schedule'   => [],
+                'graduate_profile' => $graduateProfile,
+                'server_time'      => $now->toIso8601String(),
+                'day'              => $dayName,
+            ]);
+        }
+
         // Fetch all schedules for the student's class today
         $schedules = Schedule::with(['subject', 'teacher'])
             ->where('class_id', $student->class_id)

@@ -297,6 +297,8 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
   useEffect(() => {
     const triggerNotifications = async () => {
       if (permissionGranted !== true) return;
+      // Jangan kirim notifikasi jadwal saat hari libur/agenda khusus aktif
+      if (holiday && isBlockingHoliday(holiday)) return;
 
       schedules.forEach(async (schedule) => {
         const { status } = getScheduleStatus(schedule);
@@ -326,7 +328,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
     };
 
     triggerNotifications();
-  }, [schedules, currentTime, notifiedSchedules]);
+  }, [schedules, currentTime, notifiedSchedules, holiday]);
 
   // Helper to determine if holiday blocks routine schedule
   const isBlockingHoliday = (h) => {

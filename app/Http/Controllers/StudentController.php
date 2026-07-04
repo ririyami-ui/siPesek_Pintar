@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\User;
+use App\Services\StudentDistributionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -66,7 +67,13 @@ class StudentController extends Controller
             });
         }
 
-        $students = $query->with('class')->get();
+        $students = $query
+            ->select('students.*')
+            ->join('classes', 'students.class_id', '=', 'classes.id')
+            ->orderBy('classes.rombel')
+            ->orderByRaw('CAST(students.absen AS UNSIGNED)')
+            ->with('class')
+            ->get();
         return response()->json(['data' => $students]);
     }
 
@@ -256,6 +263,15 @@ class StudentController extends Controller
                 foreach ($students as $student) {
                     $student->update(['class_id' => $targetClassId]);
                 }
+                // Reset absen sequentially sorted A-Z
+                $promoted = Student::where('class_id', $targetClassId)
+                    ->whereNull('deleted_at')
+                    ->orderBy('name')
+                    ->get();
+                $no = 1;
+                foreach ($promoted as $s) {
+                    $s->update(['absen' => $no++]);
+                }
                 return response()->json(['message' => count($studentIds) . ' siswa berhasil dipindahkan ke kelas baru.']);
             } else {
                 // Graduate (Soft Delete)
@@ -272,6 +288,42 @@ class StudentController extends Controller
                 return response()->json(['message' => $count . ' siswa berhasil diluluskan dan diarsipkan.']);
             }
         });
+    }
+
+    /**
+     * Promote students across multiple classes with fair random distribution.
+     */
+    public function promoteDistribution(Request $request, StudentDistributionService $distService)
+    {
+        if (!auth()->user()->isAdmin()) {
+            abort(403, 'Hanya Admin yang dapat memproses kenaikan kelas.');
+        }
+
+        $validatedData = $request->validate([
+            'source_class_ids' => 'required|array|min:1',
+            'source_class_ids.*' => 'exists:classes,id',
+            'target_class_ids' => 'required|array|min:1',
+            'target_class_ids.*' => 'exists:classes,id',
+            'preview' => 'boolean',
+        ]);
+
+        $preview = $validatedData['preview'] ?? true;
+
+        if ($preview) {
+            // Preview only - don't persist
+            $result = $distService->previewDistribution(
+                $validatedData['source_class_ids'],
+                $validatedData['target_class_ids']
+            );
+        } else {
+            // Execute and persist
+            $result = $distService->executeDistribution(
+                $validatedData['source_class_ids'],
+                $validatedData['target_class_ids']
+            );
+        }
+
+        return response()->json($result);
     }
 
     /**

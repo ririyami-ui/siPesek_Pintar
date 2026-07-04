@@ -82,6 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Class Promotion
         Route::post('/admin/students/promote', [App\Http\Controllers\StudentController::class, 'promote']);
+        Route::post('/admin/students/promote-distribution', [App\Http\Controllers\StudentController::class, 'promoteDistribution']);
     });
 
     // Student Portal Routes (Accessible by Students)

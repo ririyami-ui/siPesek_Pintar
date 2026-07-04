@@ -107,6 +107,7 @@ export default function StudentDashboard() {
       )}
 
       {/* Main Focus: Current Learning */}
+      {!data?.holiday && (
       <div className="space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
             <MonitorPlay size={14} /> Sedang Berlangsung
@@ -146,6 +147,7 @@ export default function StudentDashboard() {
             </div>
         )}
       </div>
+      )}
 
       {/* Dimensi Profil Lulusan */}
       {data?.graduate_profile && data.graduate_profile.length > 0 && (
@@ -190,6 +192,7 @@ export default function StudentDashboard() {
       )}
 
       {/* Today's Schedule List */}
+      {!data?.holiday && (
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
             <CalendarDays size={14} /> Agenda Hari Ini
@@ -216,6 +219,7 @@ export default function StudentDashboard() {
             </div>
         </div>
       </div>
+      )}
 
       {/* Minimal Footer */}
       <div className="py-6 text-center">
