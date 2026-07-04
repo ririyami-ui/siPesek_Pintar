@@ -18,6 +18,7 @@ const NAV_ITEMS = [
     { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai', hideOnMobile: true },
     { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib', hideOnMobile: true },
     { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital', hideOnMobile: true },
+    { path: '/siswa/laporan',      icon: FileText,        label: 'Laporan',         desc: 'Laporan perkembangan' },
   ];
 
   const PARENT_NAV = [
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
     { path: '/orangtua/tugas',         icon: ClipboardList,   label: 'Tugas',          desc: 'Tugas belum selesai', hideOnMobile: true },
     { path: '/orangtua/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',    desc: 'Catatan poin tatib', hideOnMobile: true },
     { path: '/orangtua/perpustakaan',  icon: Library,         label: 'Perpustakaan',   desc: 'Katalog buku digital', hideOnMobile: true },
+    { path: '/orangtua/laporan',      icon: FileText,        label: 'Laporan',        desc: 'Laporan perkembangan' },
   ];
 
 export default function StudentLayout({ user, onLogout, children }) {

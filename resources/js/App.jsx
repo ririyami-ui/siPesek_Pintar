@@ -43,6 +43,8 @@ import StudentTasks from './pages/StudentTasks.jsx';
 import StudentInfractions from './pages/StudentInfractions.jsx';
 import StudentLibraryPage from './pages/StudentLibraryPage.jsx';
 import StudentSchedule from './pages/StudentSchedule.jsx';
+import StudentParentReports from './pages/StudentParentReports.jsx';
+import MonitoringLaporanOrtu from './pages/MonitoringLaporanOrtu.jsx';
 import { ChatProvider } from './utils/ChatContext.jsx';
 import { SettingsProvider } from './utils/SettingsContext.jsx';
 import InstallPwaCard from './components/InstallPwaCard.jsx';
@@ -229,6 +231,7 @@ function App() {
             <Route path="/orangtua/tugas"     element={<StudentTasks />} />
             <Route path="/orangtua/pelanggaran" element={<StudentInfractions />} />
             <Route path="/orangtua/perpustakaan" element={<StudentLibraryPage />} />
+            <Route path="/orangtua/laporan" element={<StudentParentReports />} />
             <Route path="*"                element={<Navigate to="/orangtua" replace />} />
           </Routes>
         </StudentLayout>
@@ -246,6 +249,7 @@ function App() {
             <Route path="/siswa/tugas"     element={<StudentTasks />} />
             <Route path="/siswa/pelanggaran" element={<StudentInfractions />} />
             <Route path="/siswa/perpustakaan" element={<StudentLibraryPage />} />
+            <Route path="/siswa/laporan" element={<StudentParentReports />} />
             <Route path="*"                element={<Navigate to="/siswa" replace />} />
           </Routes>
         </StudentLayout>
@@ -306,6 +310,7 @@ function App() {
           <Route path="/wali-kelas" element={<WaliKelasPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/kartu-kendali" element={<KartuKendaliPage />} />
+          <Route path="/monitoring-laporan-ortu" element={<MonitoringLaporanOrtu />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>

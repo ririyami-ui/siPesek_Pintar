@@ -1,0 +1,214 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  FileText, Search, Filter, RefreshCw, CalendarDays,
+  Eye, EyeOff, CheckCircle2, Loader2, School,
+  ChevronDown, ChevronUp, Users, BarChart3, Download
+} from 'lucide-react';
+import api from '../lib/axios';
+
+const TYPE_LABELS = { weekly: 'Mingguan', monthly: 'Bulanan' };
+
+export default function MonitoringLaporanOrtu() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+  const [expanded, setExpanded] = useState(null);
+  const [stats, setStats] = useState({ total: 0, sent: 0, unread: 0 });
+
+  const fetchReports = useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = {};
+      if (filter !== 'all') params.type = filter;
+      const res = await api.get('/parent-reports/admin/all', { params });
+      const data = res.data.data || [];
+      setReports(data);
+      setStats({
+        total: data.length,
+        sent: data.filter(r => r.is_sent).length,
+        unread: data.filter(r => !r.read_at).length,
+      });
+    } catch (err) {
+      console.error('Failed to fetch reports:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [filter]);
+
+  useEffect(() => { fetchReports(); }, [fetchReports]);
+
+  const handleRegenerate = async (studentId) => {
+    if (!confirm('Regenerasi laporan untuk siswa ini? Proses ini akan memanggil AI kembali.')) return;
+    try {
+      await api.post(`/parent-reports/admin/regenerate/${studentId}`);
+      fetchReports();
+    } catch (err) {
+      console.error('Failed to regenerate:', err);
+    }
+  };
+
+  const filtered = reports.filter(r => 
+    search === '' || 
+    (r.student?.name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (r.period_label || '').toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+            <FileText className="text-emerald-600" size={24} />
+            Monitoring Laporan Orang Tua
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Pantau laporan perkembangan periodik yang dikirim ke wali murid
+          </p>
+        </div>
+        <button onClick={fetchReports} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors text-sm font-medium">
+          <RefreshCw size={16} /> Refresh
+        </button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: 'Total Laporan', value: stats.total, color: 'bg-slate-100 dark:bg-slate-700', textColor: 'text-slate-700 dark:text-white', icon: FileText },
+          { label: 'Terkirim', value: stats.sent, color: 'bg-emerald-50 dark:bg-emerald-900/30', textColor: 'text-emerald-700', icon: CheckCircle2 },
+          { label: 'Belum Dibaca', value: stats.unread, color: 'bg-amber-50 dark:bg-amber-900/30', textColor: 'text-amber-600', icon: EyeOff },
+        ].map(s => (
+          <div key={s.label} className={`${s.color} rounded-2xl p-4 flex items-center gap-3`}>
+            <s.icon size={24} className={s.textColor} />
+            <div>
+              <p className={`text-2xl font-bold ${s.textColor}`}>{s.value}</p>
+              <p className="text-xs text-slate-500">{s.label}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex gap-2">
+          {['all', 'weekly', 'monthly'].map(t => (
+            <button key={t} onClick={() => setFilter(t)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                filter === t ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+              }`}
+            >{t === 'all' ? 'Semua' : TYPE_LABELS[t]}</button>
+          ))}
+        </div>
+        <div className="flex-1 max-w-xs">
+          <div className="relative">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input type="text" placeholder="Cari siswa..." value={search} onChange={e => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      {loading ? (
+        <div className="flex justify-center py-20"><Loader2 size={32} className="animate-spin text-emerald-600" /></div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-20 text-slate-400">
+          <FileText size={48} className="mx-auto mb-3 opacity-40" />
+          <p>Tidak ada laporan ditemukan</p>
+        </div>
+      ) : (
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-300">
+                <tr>
+                  <th className="text-left px-4 py-3 font-medium">Siswa</th>
+                  <th className="text-left px-4 py-3 font-medium">Tipe</th>
+                  <th className="text-left px-4 py-3 font-medium">Periode</th>
+                  <th className="text-center px-4 py-3 font-medium">Nilai Akhir</th>
+                  <th className="text-center px-4 py-3 font-medium">Keaktifan</th>
+                  <th className="text-center px-4 py-3 font-medium">Status</th>
+                  <th className="text-center px-4 py-3 font-medium">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
+                {filtered.map(r => (
+                  <React.Fragment key={r.id}>
+                    <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer"
+                      onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                      <td className="px-4 py-3">
+                        <p className="font-medium text-slate-800 dark:text-white">{r.student?.name || '-'}</p>
+                        <p className="text-xs text-slate-400">{r.student?.class?.rombel || '-'}</p>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                          r.type === 'weekly' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
+                        }`}>{TYPE_LABELS[r.type]}</span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs">{r.period_label}</td>
+                      <td className="px-4 py-3 text-center font-semibold text-slate-700 dark:text-white">
+                        {r.stats?.avg_nilai_akhir !== null ? Math.round(r.stats?.avg_nilai_akhir) : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {r.stats?.total_keaktifan > 0 ? (
+                          <span className="text-blue-600 font-semibold">+{r.stats.total_keaktifan}</span>
+                        ) : <span className="text-slate-300">-</span>}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex justify-center gap-2">
+                          {r.is_sent ? <CheckCircle2 size={16} className="text-emerald-500" /> : <Clock size={16} className="text-slate-300" />}
+                          {r.read_at ? <Eye size={16} className="text-blue-500" /> : <EyeOff size={16} className="text-amber-400" />}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button onClick={e => { e.stopPropagation(); handleRegenerate(r.student_id); }}
+                          className="text-xs text-emerald-600 hover:text-emerald-800 font-medium">Regen</button>
+                      </td>
+                    </tr>
+                    {expanded === r.id && (
+                      <tr className="bg-slate-50 dark:bg-slate-700/20">
+                        <td colSpan={7} className="px-6 py-4">
+                          <div className="space-y-3 max-h-80 overflow-y-auto">
+                            {r.sections ? (
+                              <>
+                                {renderSection('Akademik', r.sections.academic, 'emerald')}
+                                {renderSection('Kehadiran', r.sections.attendance, 'blue')}
+                                {renderSection('Perilaku', r.sections.behavior, 'amber')}
+                                {renderSection('Keaktifan', r.sections.activity, 'purple')}
+                                {renderSection('Rekomendasi', r.sections.recommendation, 'teal')}
+                              </>
+                            ) : (
+                              <p className="text-sm text-slate-400">Detail belum tersedia (klik "Regen" untuk generate ulang)</p>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function renderSection(title, content, color) {
+  if (!content) return null;
+  const colorMap = {
+    emerald: 'border-l-emerald-400 bg-emerald-50/50 dark:bg-emerald-900/10',
+    blue: 'border-l-blue-400 bg-blue-50/50 dark:bg-blue-900/10',
+    amber: 'border-l-amber-400 bg-amber-50/50 dark:bg-amber-900/10',
+    purple: 'border-l-purple-400 bg-purple-50/50 dark:bg-purple-900/10',
+    teal: 'border-l-teal-400 bg-teal-50/50 dark:bg-teal-900/10',
+  };
+  return (
+    <div className={`border-l-4 rounded-r-xl p-3 ${colorMap[color] || colorMap.emerald}`}>
+      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{title}</p>
+      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{content}</p>
+    </div>
+  );
+}
