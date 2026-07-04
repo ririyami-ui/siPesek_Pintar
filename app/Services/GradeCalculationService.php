@@ -6,6 +6,7 @@ use App\Models\Attendance;
 use App\Models\ClassAgreement;
 use App\Models\Infraction;
 use App\Models\Student;
+use App\Models\StudentActivityPoint;
 use Illuminate\Support\Collection;
 
 /**
@@ -61,8 +62,13 @@ class GradeCalculationService
         $wa = ($agreement?->academic_weight ?? 50) / 100;
         $ws = ($agreement?->attitude_weight ?? 50) / 100;
 
+        // ── Keaktifan Points ──
+        $totalKeaktifanPoints = StudentActivityPoint::where('student_id', $student->id)->sum('point');
+        $maxKeaktifanPoints = 50; // 50 poin = 100% (dapat disesuaikan)
+        $keaktifanPct = $maxKeaktifanPoints > 0 ? min(100, ($totalKeaktifanPoints / $maxKeaktifanPoints) * 100) : 0;
+
         // 4. Group by subject and calculate scores
-        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws) {
+        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws, $keaktifanPct) {
             $subject = $records->first()->subject;
             $avg     = round($records->avg('score'), 2);
 
@@ -83,7 +89,12 @@ class GradeCalculationService
 
             $base_attitude = $attitudeScores->count() > 0 ? $attitudeScores->avg('score') : 100;
             $nilai_sikap   = max(0, $base_attitude - $penalty);
-            $nilai_akhir   = round(($nilai_akademik * $wa) + ($nilai_sikap * $ws), 2);
+
+            // Integrasi keaktifan: bobot 10% dari nilai akhir
+            $wk_act = 0.10; // 10% — proporsional mengurangi wa & ws
+            $wa_adj = $wa * (1 - $wk_act); // 0.5 * 0.9 = 0.45
+            $ws_adj = $ws * (1 - $wk_act); // 0.5 * 0.9 = 0.45
+            $nilai_akhir   = round(($nilai_akademik * $wa_adj) + ($nilai_sikap * $ws_adj) + ($keaktifanPct * $wk_act), 2);
 
             $byType = $records->groupBy('type')->map(function ($typeRecords, $type) {
                 return [
@@ -120,6 +131,12 @@ class GradeCalculationService
                 'nilai_akhir'     => $nilai_akhir,
                 'trend'           => $trend,
                 'total_input'     => $records->count(),
+                'keaktifan'       => [
+                    'total_points' => $totalKeaktifanPoints,
+                    'max_points'   => $maxKeaktifanPoints,
+                    'percentage'   => round($keaktifanPct, 2),
+                    'weight'       => $wk_act * 100,
+                ],
                 'by_type'         => $byType,
             ];
         })->values();

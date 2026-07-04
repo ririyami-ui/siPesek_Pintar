@@ -173,7 +173,8 @@ export default function StudentGrades() {
               Sistem Penilaian {weights.is_custom ? '(Kesepakatan Kelas)' : '(Standar)'}
             </p>
             <p className="text-blue-600 dark:text-blue-300 text-xs mt-0.5">
-              Nilai Akhir: <b>{weights.academic}% Akademik</b> + <b>{weights.attitude}% Sikap.</b><br/>
+              Nilai Akhir: <b>{weights.academic}% Akademik</b> + <b>{weights.attitude}% Sikap</b>{' '}
+              + <b>10% Keaktifan</b>.<br/>
               Khusus Akademik: <b>{weights.knowledge}% Pengetahuan</b> + <b>{weights.practice}% Praktik.</b>
             </p>
           </div>
@@ -417,7 +418,8 @@ export default function StudentGrades() {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-slate-800 dark:text-white text-sm truncate">{subj.subject_name}</p>
                     <p className="text-xs text-slate-500 mt-0.5">
-                      Akademik <b>{subj.nilai_akademik}</b> <span className="opacity-50">/</span> Sikap <b>{subj.nilai_sikap}</b>
+                      Akademik <b>{subj.nilai_akademik}</b> <span className="opacity-50">/</span> Sikap <b>{subj.nilai_sikap}</b>{' '}
+                      <span className="opacity-50">/</span> Keaktifan <b>{subj.keaktifan?.percentage ?? 0}%</b>
                     </p>
                   </div>
                   <ChevronDown size={16} className={`text-slate-400 transition-transform shrink-0 ${expanded === i ? 'rotate-180' : ''}`} />
@@ -434,6 +436,10 @@ export default function StudentGrades() {
                       <div className="flex-1 text-center px-2">
                         <p className="text-[10px] uppercase font-bold text-blue-600/70 dark:text-blue-400/70 tracking-wider">Praktik</p>
                         <p className="text-sm font-semibold text-blue-800 dark:text-blue-300 mt-0.5">{subj.avg_practice}</p>
+                      </div>
+                      <div className="flex-1 text-center px-2">
+                        <p className="text-[10px] uppercase font-bold text-emerald-600/70 dark:text-emerald-400/70 tracking-wider">Keaktifan</p>
+                        <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-300 mt-0.5">{subj.keaktifan?.percentage ?? 0}%</p>
                       </div>
                     </div>
 
