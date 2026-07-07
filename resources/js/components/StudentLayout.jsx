@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { 
+import {
   MonitorPlay, BookOpen, BarChart2, ClipboardList,
   LogOut, Menu, X, School, ChevronRight, User, Loader2,
-  ShieldAlert, CalendarDays, Library
+  ShieldAlert, CalendarDays, Library, FileText
+
 } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
@@ -11,32 +12,32 @@ import StudentChatWidget from './StudentChatWidget';
 import { useSettings } from '../utils/SettingsContext';
 
 const NAV_ITEMS = [
-    { path: '/siswa',               icon: MonitorPlay,    label: 'Pantau Belajar',  desc: 'Realtime & hari ini' },
-    { path: '/siswa/jadwal',        icon: CalendarDays,   label: 'Jadwal',          desc: 'Jadwal Mingguan' },
-    { path: '/siswa/kehadiran',     icon: BookOpen,        label: 'Presensi',        desc: 'Rekap presensi' },
-    { path: '/siswa/nilai',         icon: BarChart2,       label: 'Nilai',           desc: 'Laporan nilai' },
-    { path: '/siswa/tugas',         icon: ClipboardList,   label: 'Tugas',           desc: 'Tugas belum selesai', hideOnMobile: true },
-    { path: '/siswa/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',     desc: 'Catatan poin tatib', hideOnMobile: true },
-    { path: '/siswa/perpustakaan',  icon: Library,         label: 'Perpustakaan',    desc: 'Katalog buku digital', hideOnMobile: true },
-    { path: '/siswa/laporan',      icon: FileText,        label: 'Laporan',         desc: 'Laporan perkembangan' },
-  ];
+  { path: '/siswa', icon: MonitorPlay, label: 'Pantau Belajar', desc: 'Realtime & hari ini' },
+  { path: '/siswa/jadwal', icon: CalendarDays, label: 'Jadwal', desc: 'Jadwal Mingguan' },
+  { path: '/siswa/kehadiran', icon: BookOpen, label: 'Presensi', desc: 'Rekap presensi' },
+  { path: '/siswa/nilai', icon: BarChart2, label: 'Nilai', desc: 'Laporan nilai' },
+  { path: '/siswa/tugas', icon: ClipboardList, label: 'Tugas', desc: 'Tugas belum selesai', hideOnMobile: true },
+  { path: '/siswa/pelanggaran', icon: ShieldAlert, label: 'Pelanggaran', desc: 'Catatan poin tatib', hideOnMobile: true },
+  { path: '/siswa/perpustakaan', icon: Library, label: 'Perpustakaan', desc: 'Katalog buku digital', hideOnMobile: true },
+  { path: '/siswa/laporan', icon: FileText, label: 'Laporan', desc: 'Laporan perkembangan' },
+];
 
-  const PARENT_NAV = [
-    { path: '/orangtua',               icon: MonitorPlay,    label: 'Pantauan Anak',  desc: 'Belajar hari ini' },
-    { path: '/orangtua/jadwal',        icon: CalendarDays,   label: 'Jadwal',         desc: 'Jadwal mingguan' },
-    { path: '/orangtua/kehadiran',     icon: BookOpen,        label: 'Presensi',       desc: 'Rekap presensi' },
-    { path: '/orangtua/nilai',         icon: BarChart2,       label: 'Nilai',          desc: 'Laporan nilai' },
-    { path: '/orangtua/tugas',         icon: ClipboardList,   label: 'Tugas',          desc: 'Tugas belum selesai', hideOnMobile: true },
-    { path: '/orangtua/pelanggaran',   icon: ShieldAlert,     label: 'Pelanggaran',    desc: 'Catatan poin tatib', hideOnMobile: true },
-    { path: '/orangtua/perpustakaan',  icon: Library,         label: 'Perpustakaan',   desc: 'Katalog buku digital', hideOnMobile: true },
-    { path: '/orangtua/laporan',      icon: FileText,        label: 'Laporan',        desc: 'Laporan perkembangan' },
-  ];
+const PARENT_NAV = [
+  { path: '/orangtua', icon: MonitorPlay, label: 'Pantauan Anak', desc: 'Belajar hari ini' },
+  { path: '/orangtua/jadwal', icon: CalendarDays, label: 'Jadwal', desc: 'Jadwal mingguan' },
+  { path: '/orangtua/kehadiran', icon: BookOpen, label: 'Presensi', desc: 'Rekap presensi' },
+  { path: '/orangtua/nilai', icon: BarChart2, label: 'Nilai', desc: 'Laporan nilai' },
+  { path: '/orangtua/tugas', icon: ClipboardList, label: 'Tugas', desc: 'Tugas belum selesai', hideOnMobile: true },
+  { path: '/orangtua/pelanggaran', icon: ShieldAlert, label: 'Pelanggaran', desc: 'Catatan poin tatib', hideOnMobile: true },
+  { path: '/orangtua/perpustakaan', icon: Library, label: 'Perpustakaan', desc: 'Katalog buku digital', hideOnMobile: true },
+  { path: '/orangtua/laporan', icon: FileText, label: 'Laporan', desc: 'Laporan perkembangan' },
+];
 
 export default function StudentLayout({ user, onLogout, children }) {
   const { userProfile } = useSettings();
-  const [mobileOpen, setMobileOpen]   = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [studentInfo, setStudentInfo] = useState(null);
-  const [schoolName, setSchoolName]   = useState('Sekolah');
+  const [schoolName, setSchoolName] = useState('Sekolah');
   const navigate = useNavigate();
   const isParent = user?.role === 'parent';
   const navItems = isParent ? PARENT_NAV : NAV_ITEMS;
@@ -50,13 +51,13 @@ export default function StudentLayout({ user, onLogout, children }) {
           setSchoolName(res.data.school_name);
         }
       })
-      .catch(() => {/* silently fail — sidebar shows fallback */});
+      .catch(() => {/* silently fail — sidebar shows fallback */ });
   }, []);
 
   const handleLogout = async () => {
     try {
       await api.post('/logout');
-    } catch (_) {}
+    } catch (_) { }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     onLogout();
@@ -107,10 +108,9 @@ export default function StudentLayout({ user, onLogout, children }) {
             end={item.path.endsWith('orangtua') || item.path.endsWith('siswa')}
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                isActive
-                  ? 'bg-white text-emerald-700 shadow-md font-semibold'
-                  : 'text-white/80 hover:bg-white/10 hover:text-white'
+              `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                ? 'bg-white text-emerald-700 shadow-md font-semibold'
+                : 'text-white/80 hover:bg-white/10 hover:text-white'
               }`
             }
           >
@@ -167,10 +167,10 @@ export default function StudentLayout({ user, onLogout, children }) {
           </button>
           <div className="flex items-center gap-3 min-w-0 flex-1 px-2">
             {userProfile?.logoUrl ? (
-              <img 
-                src={userProfile.logoUrl} 
-                alt="School Logo" 
-                className="h-10 w-10 object-contain rounded-lg bg-white p-1 shadow-sm shrink-0" 
+              <img
+                src={userProfile.logoUrl}
+                alt="School Logo"
+                className="h-10 w-10 object-contain rounded-lg bg-white p-1 shadow-sm shrink-0"
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-md shrink-0">
@@ -185,7 +185,7 @@ export default function StudentLayout({ user, onLogout, children }) {
               {studentInfo && <p className="text-[10px] text-white/60 mt-0.5">{isParent ? 'Anak: Kelas ' : 'Kelas '}{studentInfo.class}</p>}
             </div>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="p-2 rounded-lg hover:bg-white/10 text-white/80"
             title="Keluar"
@@ -210,23 +210,20 @@ export default function StudentLayout({ user, onLogout, children }) {
               to={item.path}
               end={item.path.endsWith('orangtua') || item.path.endsWith('siswa')}
               className={({ isActive }) =>
-                `relative flex flex-col items-center gap-1.5 py-3 px-1 transition-all duration-500 group ${
-                  isActive ? 'text-emerald-700 scale-110' : 'text-slate-400 hover:text-slate-600'
+                `relative flex flex-col items-center gap-1.5 py-3 px-1 transition-all duration-500 group ${isActive ? 'text-emerald-700 scale-110' : 'text-slate-400 hover:text-slate-600'
                 }`
               }
             >
               {({ isActive }) => (
                 <>
-                  <div className={`p-2 rounded-2xl transition-all duration-500 ${
-                    isActive 
-                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' 
+                  <div className={`p-2 rounded-2xl transition-all duration-500 ${isActive
+                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
                       : 'bg-transparent group-hover:bg-slate-100'
-                  }`}>
+                    }`}>
                     <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
                   </div>
-                  <span className={`text-[9px] font-black tracking-widest uppercase transition-all duration-300 ${
-                    isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
-                  }`}>
+                  <span className={`text-[9px] font-black tracking-widest uppercase transition-all duration-300 ${isActive ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
+                    }`}>
                     {item.label.split(' ')[0]}
                   </span>
                   {isActive && (

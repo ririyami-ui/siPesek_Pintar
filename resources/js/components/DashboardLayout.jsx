@@ -102,6 +102,7 @@ const NAV_CATEGORIES = [
       { name: 'Sistem Peringatan Dini', icon: <ShieldAlert size={20} />, path: '/sistem-peringatan' },
       { name: 'Portofolio Guru', icon: <BookMarked size={20} />, path: '/portfolio' },
       { name: 'Kartu Kendali Tugas', icon: <ClipboardCheck size={20} />, path: '/kartu-kendali' },
+      { name: 'Laporan Orang Tua', icon: <FileText size={20} />, path: '/monitoring-laporan-ortu' },
     ]
   },
   {
@@ -165,6 +166,7 @@ const TEACHER_NAV_CATEGORIES = [
       { name: 'Sistem Peringatan Dini', icon: <ShieldAlert size={20} />, path: '/sistem-peringatan' },
       { name: 'Portofolio Guru', icon: <BookMarked size={20} />, path: '/portfolio' },
       { name: 'Kartu Kendali Tugas', icon: <ClipboardCheck size={20} />, path: '/kartu-kendali' },
+      { name: 'Laporan Orang Tua', icon: <FileText size={20} />, path: '/monitoring-laporan-ortu' },
     ]
   },
   {

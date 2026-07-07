@@ -57,7 +57,7 @@ export default function StudentParentReports() {
             Laporan Perkembangan
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Ringkasan perkembangan ananda secara periodik — dihasilkan otomatis oleh AI
+            Ringkasan perkembangan ananda secara periodik
           </p>
         </div>
       </div>
