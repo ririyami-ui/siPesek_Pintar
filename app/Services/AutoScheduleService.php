@@ -1,4 +1,5 @@
 <?php
+if (function_exists('opcache_reset')) { opcache_reset(); }
 
 namespace App\Services;
 
@@ -162,28 +163,45 @@ class AutoScheduleService
         $classNames = [];
         $availableDaysCount = count($this->teachingSlots);
 
+        // Group assignments by teacher + subject + class for validation
+        $groupedHours = [];
         foreach ($assignments as $as) {
-            $h = $as->subject->weekly_hours;
-            $tId = $as->teacher->auth_user_id;
-            $cId = $as->class_id;
+            $key = $as->teacher->auth_user_id . '_' . $as->subject_id . '_' . $as->class_id;
+            if (!isset($groupedHours[$key])) {
+                $groupedHours[$key] = [
+                    'total_hours' => 0,
+                    'subject_name' => $as->subject->name,
+                    'class_id' => $as->class_id,
+                    'teacher_id' => $as->teacher->auth_user_id,
+                    'teacher_name' => $as->teacher->name,
+                ];
+            }
+            $groupedHours[$key]['total_hours'] += $as->subject->weekly_hours;
+        }
+
+        foreach ($groupedHours as $g) {
+            $h = $g['total_hours'];
+            $tId = $g['teacher_id'];
+            $cId = $g['class_id'];
 
             // Periksa apakah jam pelajaran terlalu tinggi untuk hari-hari yang tersedia
             $neededDays = 0;
             if ($h <= 3) $neededDays = 1;
-            elseif ($h <= 6) $neededDays = 2;
+            elseif ($h <= 5) $neededDays = 2;
+            elseif ($h == 6) $neededDays = 3;
             else $neededDays = ceil($h / 3);
 
             if ($neededDays > $availableDaysCount) {
                 $cName = SchoolClass::find($cId)->rombel ?? "Kelas ID:{$cId}";
                 return [
                     'success' => false,
-                    'message' => "KEGAGALAN MATEMATIS: Mapel '{$as->subject->name}' di kelas '{$cName}' butuh {$neededDays} hari ({$h} JP), tapi hanya ada {$availableDaysCount} hari aktif."
+                    'message' => "KEGAGALAN MATEMATIS: Mapel '{$g['subject_name']}' di kelas '{$cName}' butuh {$neededDays} hari ({$h} JP), tapi hanya ada {$availableDaysCount} hari aktif."
                 ];
             }
 
             $teacherHours[$tId] = ($teacherHours[$tId] ?? 0) + $h;
             $classHours[$cId] = ($classHours[$cId] ?? 0) + $h;
-            $teacherNames[$tId] = $as->teacher->name;
+            $teacherNames[$tId] = $g['teacher_name'];
             $classNames[$cId] = SchoolClass::find($cId)->rombel ?? "Kelas ID:{$cId}";
         }
 
@@ -353,8 +371,39 @@ class AutoScheduleService
     protected function transformAssignmentsToBlocks($assignments, $allClasses)
     {
         $blocks = [];
+
+        // Group assignments by teacher_id + subject_id + class_id, then split total hours
+        $groups = [];
         foreach ($assignments as $as) {
-            $hours = $as->subject->weekly_hours;
+            $key = $as->teacher_id . '_' . $as->subject_id . '_' . $as->class_id;
+            if (!isset($groups[$key])) {
+                $groups[$key] = [
+                    'total_hours' => 0,
+                    'class_id' => $as->class_id,
+                    'subject_id' => $as->subject_id,
+                    'teacher_id' => $as->teacher_id,
+                    'teacher_name' => $as->teacher->name ?? 'Guru',
+                    'subject_name' => $as->subject->name,
+                    'class_name' => $allClasses[$as->class_id]->rombel ?? '?',
+                ];
+            }
+            $groups[$key]['total_hours'] += $as->subject->weekly_hours;
+        }
+
+        // Resolve teacher auth_user_id once per teacher
+        $teacherAuthCache = [];
+        foreach ($groups as &$g) {
+            $tId = $g['teacher_id'];
+            if (!isset($teacherAuthCache[$tId])) {
+                $t = Teacher::find($tId);
+                $teacherAuthCache[$tId] = $t ? ($t->auth_user_id ?? $tId) : $tId;
+            }
+            $g['teacher_auth_user_id'] = $teacherAuthCache[$tId];
+        }
+        unset($g);
+
+        foreach ($groups as $g) {
+            $hours = $g['total_hours'];
             $split = [];
 
             // Logika Pemisahan Blok (Split) berdasarkan aturan penggunaan:
@@ -362,16 +411,16 @@ class AutoScheduleService
             // 3h -> [3]
             // 4h -> [2, 2]
             // 5h -> [3, 2]
-            // 6h -> [3, 3]
+            // 6h -> [2, 2, 2]
             // Pemisahan Optimal:
             if ($hours == 6) {
-                $split = [3, 3]; 
+                $split = [2, 2, 2];
             } elseif ($hours == 5) {
-                $split = [3, 2]; 
+                $split = [3, 2];
             } elseif ($hours == 4) {
                 $split = [2, 2]; // Pemisahan wajib untuk fleksibilitas jadwal
             } elseif ($hours == 3) {
-                $split = [3]; 
+                $split = [3];
             } elseif ($hours == 2) {
                 $split = [2];
             } else {
@@ -379,15 +428,16 @@ class AutoScheduleService
             }
 
             foreach ($split as $blockSize) {
+                \Illuminate\Support\Facades\Log::info("transformAssignmentsToBlocks: total_hours={$hours}, split=" . json_encode($split) . ", blockSize={$blockSize}, subject={$g['subject_name']}, class={$g['class_id']}");
                 $blocks[] = [
-                    'assignment_id' => $as->id,
-                    'class_id' => $as->class_id,
-                    'subject_id' => $as->subject_id,
-                    'teacher_id' => $as->teacher->auth_user_id, // Penting: gunakan auth_user_id untuk tabel schedules
-                    'teacher_name' => $as->teacher->name,
-                    'subject_name' => $as->subject->name,
-                    'class_name' => $allClasses[$as->class_id]->rombel ?? '?',
-                    'size' => $blockSize
+                    'assignment_id' => 0,
+                    'class_id' => $g['class_id'],
+                    'subject_id' => $g['subject_id'],
+                    'teacher_id' => $g['teacher_auth_user_id'],
+                    'teacher_name' => $g['teacher_name'],
+                    'subject_name' => $g['subject_name'],
+                    'class_name' => $g['class_name'],
+                    'size' => $blockSize,
                 ];
             }
         }

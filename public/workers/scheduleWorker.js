@@ -194,7 +194,7 @@ class ScheduleGenerator {
             if (hours <= 0) return;
 
             let split = [];
-            if (hours === 6) split = [3, 3];
+            if (hours === 6) split = [2, 2, 2];
             else if (hours === 5) split = [3, 2];
             else if (hours === 4) split = [2, 2];
             else if (hours > 3) split = [3, hours - 3];

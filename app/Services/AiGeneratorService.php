@@ -415,6 +415,7 @@ $available = array_diff($validDimensions, $dims);
 
                 $item['profilLulusan'] = implode(', ', $dims);
             }
+
         }
 
         return $atp;
@@ -1726,6 +1727,8 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
             ->map(fn($p) => $p['dimensi'])
             ->implode(', ');
 
+        $exampleJp = $jpPerWeek * 2;
+
         return "
         Anda adalah **Sistem Pakar Kurikulum Nasional & Auditor Administrasi Guru** dari Kemendikbudristek yang sangat canggih.
         Tugas Anda: Menyusun **Alur Tujuan Pembelajaran (ATP)** yang memiliki kecerdasan analisa tinggi dan presisi matematis 100%.
@@ -1749,7 +1752,12 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         1. **Materi SULIT (HOTS)**: Konsep abstrak, analisis mendalam, atau materi baru. Alokasikan JP MAKSIMAL (misal: 3-4 minggu).
         2. **Materi SEDANG**: Pemahaman konsep dan aplikasi dasar. Alokasikan JP MEDIAN (misal: 2 minggu).
         3. **Materi MUDAH (LOTS)**: Pengenalan istilah, sejarah singkat, atau review. Alokasikan JP MINIMAL (misal: 1 minggu).
-        *Total JP kumulatif wajib presisi {$totalJP} JP.*
+
+        **RUMUS JP (WAJIB):**
+        - JP per Baris = Jumlah Minggu × {$jpPerWeek} JP
+        - Contoh: 2 minggu × {$jpPerWeek} JP = \"jp\": {$exampleJp}
+        - Total seluruh baris WAJIB = {$totalJP} JP.
+        - Jangan pernah memberi JP yang bukan kelipatan {$jpPerWeek}.
 
         **ALIGNMENT RULES (MANDATORY):**
         - Kolom 'elemen' HARUS diambil dari list Elemen Resmi di atas.
@@ -1763,7 +1771,7 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
             \"elemen\": \"Elemen BSKAP\",
             \"materi\": \"Judul Bab/Materi Buku\",
             \"tp\": \"Tujuan Pembelajaran (A-B-C-D)\",
-            \"jp\": 8, 
+            \"jp\": {$jpPerWeek}, 
             \"kesulitan\": \"Sulit/Sedang/Mudah\",
             \"profilLulusan\": \"Dimensi 1, Dimensi 2\"
           }
@@ -1773,6 +1781,7 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         - HANYA keluarkan JSON. Tanpa Markdown, tanpa teks pembuka/penutup.
         - Jika total JP ({$totalJP}) tidak habis dibagi rata, berikan sisa JP ke materi yang berlabel 'Sulit'.
         - Pastikan urutan mengikuti alur bab di buku agar sistematis.
+        - **KETAT**: Setiap nilai 'jp' HARUS kelipatan {$jpPerWeek}. Tidak boleh ada angka 3, 9, 15, dst jika {$jpPerWeek} = 6.
         ";
     }
 

@@ -2143,13 +2143,14 @@ export async function generateATP(data) {
        - ❌ **DILARANG KERAS** mengulang Judul Materi yang sama di baris berbeda.
        - ✅ **WAJIB**: Jika "LINGKUP MATERI RESMI" hanya berisi sedikit item, Anda **HARUS** memecahnya menjadi sub-topik spesifik yang sekuensial (misal: "Pengenalan Topic X", "Analisis Detail Topic X", "Implementasi Topic X", "Evaluasi Topic X").
        - Setiap baris harus menggambarkan progres pembelajaran yang unik.
-    4. **MATHEMATICAL PRECISION & STRUCTURE (STRICT)**:
-       - **JUMLAH BARIS**: Anda **WAJIB** menghasilkan antara **10 hingga 15 baris**.
-       - **PROSEDUR HITUNG (MANDATORY)**:
-         1. Cari TotalMinggu = ${data.totalJP} / ${data.jpPerWeek}.
-         2. Berikan durasi 1, 2, atau 3 Minggu untuk setiap baris.
-         3. JP per Baris = Durasi (Minggu) * ${data.jpPerWeek}.
-         4. **SUM CHECK**: Total seluruh 'jp' MUST EXACTLY EQUAL ${data.totalJP}.
+     4. **MATHEMATICAL PRECISION & STRUCTURE (STRICT)**:
+        - **JUMLAH BARIS**: Anda **WAJIB** menghasilkan antara **10 hingga 15 baris**.
+        - **🚨 KETAT**: Setiap nilai 'jp' HARUS kelipatan **${data.jpPerWeek}**. DILARANG output angka 3, 9, 15, atau angka lain yang bukan kelipatan ${data.jpPerWeek}.
+        - **PROSEDUR HITUNG (MANDATORY)**:
+          1. Cari TotalMinggu = ${data.totalJP} / ${data.jpPerWeek}.
+          2. Berikan durasi 1, 2, atau 3 Minggu untuk setiap baris.
+          3. JP per Baris = Durasi (Minggu) * ${data.jpPerWeek}.
+          4. **SUM CHECK**: Total seluruh 'jp' MUST EXACTLY EQUAL ${data.totalJP}.
     5. **CHRONOLOGICAL TIMELINE ENFORCER (LINEARITY)**:
        - Penempatan 'Elemen' dan 'Lingkup Materi' **WAJIB** mengikuti urutan logis/linier sesuai alur buku teks atau urutan yang diberikan pada parameter input.
        - DILARANG melompat-lompat elemen (Elemen harus berkelompok secara berurutan).
@@ -2244,6 +2245,18 @@ export async function generateATP(data) {
 
         item.profilLulusan = dims.join(', ');
       });
+
+      // Paksa setiap nilai 'jp' sebagai kelipatan jpPerWeek
+      const jpPerWeek = data.jpPerWeek || 6;
+      if (jpPerWeek > 0) {
+        output.forEach(item => {
+          const raw = parseInt(item.jp) || 0;
+          if (raw > 0 && raw % jpPerWeek !== 0) {
+            const nearest = Math.round(raw / jpPerWeek) * jpPerWeek;
+            item.jp = nearest || jpPerWeek;
+          }
+        });
+      }
 
       onProgress({ stage: 'completed', message: 'ATP berhasil disusun!', percentage: 100 });
       return output;
