@@ -43,7 +43,10 @@ class HolidayController extends Controller
             'type' => 'nullable|string',
             'category' => 'nullable|string',
             'description' => 'nullable|string',
-            'is_holiday' => 'boolean'
+            'is_holiday' => 'boolean',
+            'is_emergency' => 'boolean',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
         ]);
 
         $holiday = Holiday::create([
@@ -69,7 +72,10 @@ class HolidayController extends Controller
             'type' => 'nullable|string',
             'category' => 'nullable|string',
             'description' => 'nullable|string',
-            'is_holiday' => 'boolean'
+            'is_holiday' => 'boolean',
+            'is_emergency' => 'boolean',
+            'start_time' => 'nullable|date_format:H:i',
+            'end_time' => 'nullable|date_format:H:i',
         ]);
 
         $holiday->update($validated);

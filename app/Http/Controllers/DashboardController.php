@@ -9,6 +9,7 @@ use App\Models\TeachingProgram;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\Attendance;
+use App\Models\User;
 use App\Models\TeacherAssignment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -611,6 +612,55 @@ class DashboardController extends Controller
             ];
         });
 
+
+
+        // Compute compliance data per class
+        $complianceData = $classes->map(function ($class) use ($allAssignments, $journalsThisWeek) {
+            $assignments = $allAssignments->get($class->id, collect());
+            $subjects = $assignments->map(function ($as) use ($class, $journalsThisWeek) {
+                $target = $as->subject->weekly_hours ?? 0;
+                $key = $class->id . '-' . $as->subject_id;
+                
+                $realization = 0;
+                if ($journalsThisWeek->has($key)) {
+                    foreach ($journalsThisWeek->get($key) as $journal) {
+                        if ($journal->schedule) {
+                            $realization += ($journal->schedule->end_period - $journal->schedule->start_period + 1);
+                        } else {
+                            $realization += 2; 
+                        }
+                    }
+                }
+
+                $diff = $realization - $target;
+                $status = 'exact';
+                if ($realization === 0) $status = 'not_started';
+                elseif ($realization < $target) $status = 'under_target';
+                elseif ($realization > $target) $status = 'over_target';
+
+                return [
+                    'subject_name' => $as->subject->name ?? '?',
+                    'teacher_name' => $as->teacher->name ?? '?',
+                    'target' => (int)$target,
+                    'realization' => (int)$realization,
+                    'diff' => $diff,
+                    'status' => $status,
+                ];
+            })->values();
+
+            $totalTarget = $subjects->sum('target');
+            $totalRealization = $subjects->sum('realization');
+
+            return [
+                'class_id' => $class->id,
+                'rombel' => $class->rombel,
+                'total_target' => $totalTarget,
+                'total_realization' => $totalRealization,
+                'compliance_rate' => $totalTarget > 0 ? round(($totalRealization / $totalTarget) * 100, 1) : 0,
+                'subjects' => $subjects
+            ];
+        });
+
         return response()->json([
             'period' => "{$startOfWeek} s/d {$endOfWeek}",
             'data' => $complianceData,
@@ -620,5 +670,48 @@ class DashboardController extends Controller
                 'total_jp_realization' => $complianceData->sum('total_realization'),
             ]
         ]);
+    }
+
+    /**
+     * Get online students & parents based on Sanctum token last_used_at (activity in last 5 min)
+     */
+    public function onlineUsers()
+    {
+        $recentTokens = DB::table('personal_access_tokens')
+            ->select('tokenable_id', DB::raw('MAX(last_used_at) as last_active'))
+            ->where('last_used_at', '>=', now()->subMinutes(5))
+            ->groupBy('tokenable_id')
+            ->get();
+
+        $userIdMap = $recentTokens->pluck('last_active', 'tokenable_id');
+
+        if ($userIdMap->isEmpty()) {
+            return response()->json(['online' => []]);
+        }
+
+        $users = User::whereIn('id', $userIdMap->keys())
+            ->whereIn('role', ['student', 'parent'])
+            ->get();
+
+        $studentUserIds = $users->where('role', 'student')->pluck('id');
+        $students = Student::whereIn('auth_user_id', $studentUserIds)
+            ->with('class:id,rombel')
+            ->get()
+            ->keyBy('auth_user_id');
+
+        $result = $users->map(function ($user) use ($userIdMap, $students) {
+            $student = $students->get($user->id);
+            return [
+                'id'          => $user->id,
+                'name'        => $user->name,
+                'role'        => $user->role,
+                'photo_url'   => $user->photo_url,
+                'class'       => $student ? $student->class?->rombel : null,
+                'nisn'        => $student ? $student->nisn : null,
+                'last_active' => $userIdMap->get($user->id),
+            ];
+        })->sortByDesc('last_active')->values();
+
+        return response()->json(['online' => $result]);
     }
 }

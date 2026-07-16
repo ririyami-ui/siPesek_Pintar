@@ -2,10 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   MonitorPlay, Clock, CheckCircle2, XCircle, AlertCircle,
   BookOpen, User, RefreshCw, Wifi, WifiOff,
-  CalendarDays, School, Bot
+  CalendarDays, School, Award, BarChart3, ShieldAlert, Bot, Ban
 } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
+
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const STATUS_MAP = {
   hadir: { label: 'Hadir',   color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
@@ -30,13 +35,38 @@ function StatusBadge({ status }) {
 export default function StudentDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [summary, setSummary] = useState(null);
 
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const response = await api.get('/student/realtime');
-      setData(response.data);
+      const [realtimeRes, attendanceRes, gradesRes, infractionsRes] = await Promise.all([
+        api.get('/student/realtime'),
+        api.get('/student/attendance'),
+        api.get('/student/grades'),
+        api.get('/student/infractions'),
+      ]);
+
+      setData(realtimeRes.data);
+
+      const attOverall = attendanceRes.data?.overall ?? {};
+      const totalSesi = attOverall.total || 0;
+      const kehadiranPct = totalSesi > 0
+        ? Math.round((attOverall.hadir / totalSesi) * 100)
+        : null;
+
+      setSummary({
+        kehadiran_pct: kehadiranPct,
+        hadir: attOverall.hadir ?? 0,
+        sakit: attOverall.sakit ?? 0,
+        izin: attOverall.izin ?? 0,
+        alpa: attOverall.alpa ?? 0,
+        total_sesi: totalSesi,
+        rata_nilai: gradesRes.data?.overall_nilai_akhir ?? null,
+        by_subject: gradesRes.data?.by_subject ?? [],
+        total_pelanggaran: infractionsRes.data?.total_points ?? 0,
+        total_kejadian: infractionsRes.data?.total_count ?? 0,
+      });
     } catch (err) {
       if (!silent) toast.error('Gagal memuat data terbaru.');
     } finally {
@@ -61,33 +91,67 @@ export default function StudentDashboard() {
   const current = data?.current_session;
   const schedule = data?.today_schedule ?? [];
 
+  const chartOptions = {
+    cutout: '78%',
+    plugins: { tooltip: { enabled: true }, legend: { display: false } },
+    maintainAspectRatio: false,
+  };
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6 bg-gradient-to-b from-slate-50 to-emerald-50/10 dark:from-slate-900 dark:to-emerald-900/10 backdrop-blur-sm p-4 rounded-2xl shadow-lg">
-      {/* Small Header Section */}
-      <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/5 pb-2">
-        <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+    <div className="max-w-3xl mx-auto space-y-6">
+      {/* Identity Card - Compact Student Info */}
+      <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl border border-emerald-100/50 dark:border-emerald-900/20 shadow-sm overflow-hidden">
+        <div className="p-3.5 sm:p-5">
+          <div className="flex items-center gap-3">
+            {/* Avatar small */}
+            <div className="relative shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/40 dark:to-teal-900/40 flex items-center justify-center overflow-hidden ring-2 ring-emerald-200/50 dark:ring-emerald-700/30">
                 {student?.photo_url ? (
-                    <img src={student.photo_url} className="w-full h-full object-cover" alt="Student" />
+                  <img src={student.photo_url} className="w-full h-full object-cover" alt="" />
                 ) : (
-                    <User size={16} className="text-slate-400" />
+                  <User size={18} className="text-emerald-500 dark:text-emerald-400" />
                 )}
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-emerald-500 border-[1.5px] border-white dark:border-slate-800 flex items-center justify-center">
+                <span className="text-[6px] text-white font-black">{student?.absen || '?'}</span>
+              </div>
             </div>
-            <div className="min-w-0">
-                <h1 className="text-sm font-bold text-slate-800 dark:text-white leading-tight truncate">{student?.name}</h1>
-                <p className="text-[10px] font-medium text-slate-500 truncate">
-                    Kelas {student?.class} · Absen {student?.absen}
-                </p>
-                <p className="text-[9px] font-medium text-slate-400 truncate mt-0.5">
-                    NIS: {student?.nis || '-'} · NISN: {student?.nisn || '-'}
-                </p>
+
+            {/* Name + meta */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-sm sm:text-base font-black text-slate-800 dark:text-white leading-tight">
+                {student?.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
+                <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+                  Kelas {student?.class}
+                </span>
+                <span className="text-[8px] text-slate-300 dark:text-slate-600">·</span>
+                <span className="text-[9px] font-medium text-slate-400">
+                  {student?.gender === 'L' ? 'Laki-laki' : student?.gender === 'P' ? 'Perempuan' : '-'}
+                </span>
+              </div>
             </div>
-        </div>
-        <div className="text-right shrink-0">
-            <div className="text-lg font-mono font-black text-emerald-600 dark:text-emerald-400 leading-none">
+
+            {/* Tiny clock */}
+            <div className="text-right shrink-0">
+              <div className="text-sm font-mono font-black text-emerald-600 dark:text-emerald-400 leading-none">
                 {new Date(data?.server_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+              </div>
+              <div className="text-[7px] font-bold text-slate-400 uppercase tracking-[0.15em] mt-0.5">LIVE</div>
             </div>
-            <div className="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-0.5">LIVE</div>
+          </div>
+
+          {/* Compact detail row */}
+          <div className="mt-2.5 pt-2.5 border-t border-emerald-100/40 dark:border-emerald-900/20">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px]">
+              <span className="text-slate-400">NIS: <strong className="text-slate-700 dark:text-slate-200 font-mono">{student?.nis || '-'}</strong></span>
+              <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-400">NISN: <strong className="text-slate-700 dark:text-slate-200 font-mono">{student?.nisn || '-'}</strong></span>
+              <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">|</span>
+              <span className="text-slate-400">Lahir: <strong className="text-slate-700 dark:text-slate-200">{student?.birth_place ? `${student.birth_place}, ${student.birth_date}` : (student?.birth_date || '-')}</strong></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -106,8 +170,24 @@ export default function StudentDashboard() {
         </div>
       )}
 
+      {/* Emergency Banner */}
+      {data?.emergency_holiday && (
+        <div className="bg-red-50/80 dark:bg-red-950/40 backdrop-blur-md rounded-2xl p-4 border border-red-200 dark:border-red-900/30 flex items-center gap-3">
+          <div className="p-2 bg-red-100 dark:bg-red-900/50 rounded-xl shrink-0">
+            <AlertCircle size={16} className="text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-red-700 dark:text-red-300">Peringatan: {data.emergency_holiday.title}</p>
+            <p className="text-[10px] font-medium text-red-600/80 dark:text-red-400/70">
+              {data.emergency_holiday.description ? `${data.emergency_holiday.description} · ` : ''}
+              Blokir jam {data.emergency_holiday.start_time} - {data.emergency_holiday.end_time}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main Focus: Current Learning */}
-      {!data?.holiday && (
+      {(!data?.holiday || data?.emergency_holiday) && (
       <div className="space-y-4">
         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
             <MonitorPlay size={14} /> Sedang Berlangsung
@@ -149,50 +229,8 @@ export default function StudentDashboard() {
       </div>
       )}
 
-      {/* Dimensi Profil Lulusan */}
-      {data?.graduate_profile && data.graduate_profile.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
-            <Bot size={14} /> Dimensi Profil Lulusan
-            <span className="text-[9px] text-slate-400 font-normal normal-case">(BSKAP 2025)</span>
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {data.graduate_profile.map((dim, idx) => (
-              <div key={idx} className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                    {idx + 1}
-                  </div>
-                  <h4 className="text-xs font-black text-slate-700 dark:text-slate-200 uppercase tracking-wider">
-                    {dim.nama_dimensi}
-                  </h4>
-                </div>
-
-                {/* Rincian / evidence */}
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed mb-3 italic border-l-2 border-indigo-200 dark:border-indigo-800 pl-3">
-                  {dim.rincian}
-                </p>
-
-                {/* Sumber data */}
-                <div className="pt-2 border-t border-slate-50 dark:border-white/5">
-                  <p className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">Sumber Data:</p>
-                  <ul className="space-y-1">
-                    {dim.sumber.map((s, si) => (
-                      <li key={si} className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed flex items-start gap-1.5">
-                        <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 mt-1.5 shrink-0" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Today's Schedule List */}
-      {!data?.holiday && (
+      {(!data?.holiday || data?.emergency_holiday) && (
       <div className="space-y-3">
         <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
             <CalendarDays size={14} /> Agenda Hari Ini
@@ -201,24 +239,193 @@ export default function StudentDashboard() {
         <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden shadow-sm">
             <div className="divide-y divide-slate-50 dark:divide-white/5">
                 {schedule.map((s, idx) => (
-                    <div key={idx} className={`p-4 flex items-center gap-4 ${s.status === 'ongoing' ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : (s.status === 'completed' ? 'opacity-50' : '')}`}>
+                    <div key={idx} className={`p-4 flex items-center gap-4 ${s.status === 'ongoing' ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : (s.status === 'completed' ? 'opacity-50' : '')} ${s.is_blocked ? 'bg-red-50/80 dark:bg-red-950/30' : ''}`}>
                         <div className="w-16 shrink-0 text-right">
-                            <p className="text-[11px] font-bold text-slate-700 dark:text-slate-200">{s.start_time}</p>
-                            <p className="text-[9px] text-slate-400 font-medium">{s.end_time}</p>
+                            <p className={`text-[11px] font-bold ${s.is_blocked ? 'text-red-500 dark:text-red-400 line-through' : 'text-slate-700 dark:text-slate-200'}`}>{s.start_time}</p>
+                            <p className={`text-[9px] ${s.is_blocked ? 'text-red-400 dark:text-red-500 line-through' : 'text-slate-400 font-medium'}`}>{s.end_time}</p>
                         </div>
-                        <div className={`w-1 h-8 rounded-full ${s.status === 'ongoing' ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700'}`} />
+                        <div className={`w-1 h-8 rounded-full ${s.is_blocked ? 'bg-red-400' : (s.status === 'ongoing' ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700')}`} />
                         <div className="flex-1 min-w-0">
-                            <p className="font-bold text-sm text-slate-800 dark:text-white truncate">{s.subject_name}</p>
-                            <p className="text-[10px] text-slate-400 font-medium truncate italic">{s.teacher_name}</p>
+                            <p className={`font-bold text-sm truncate ${s.is_blocked ? 'text-red-600 dark:text-red-400 line-through' : 'text-slate-800 dark:text-white'}`}>{s.subject_name}</p>
+                            <p className={`text-[10px] font-medium truncate italic ${s.is_blocked ? 'text-red-500/60 dark:text-red-400/60' : 'text-slate-400'}`}>{s.teacher_name}</p>
                         </div>
                         <div className="shrink-0">
-                            <StatusBadge status={s.attendance_status} />
+                            {s.is_blocked ? (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400">
+                                <Ban size={10} />
+                                Diblokir
+                              </div>
+                            ) : (
+                              <StatusBadge status={s.attendance_status} />
+                            )}
                         </div>
                     </div>
                 ))}
             </div>
         </div>
       </div>
+      )}
+
+      {/* Daily Narrative */}
+      {data?.daily_narrative && (
+        <div className="bg-indigo-50/80 dark:bg-indigo-950/40 backdrop-blur-md rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex gap-4 items-start">
+            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl shrink-0">
+                <Bot size={18} className="text-indigo-600 dark:text-indigo-400" />
+            </div>
+            <div>
+                <h5 className="text-[10px] font-bold uppercase tracking-widest text-indigo-500 mb-1">Analisis Belajar Hari Ini</h5>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                    {data.daily_narrative.replace(/\*\*/g, '')}
+                </p>
+            </div>
+        </div>
+      )}
+
+      {/* Overall Summary Cards */}
+      {summary && (
+        <div className="space-y-3">
+          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
+            <BarChart3 size={14} /> Ringkasan Belajar
+          </h3>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Kehadiran - Doughnut */}
+            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
+                  <BookOpen size={14} className="text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Kehadiran</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 shrink-0">
+                  {summary.total_sesi > 0 ? (
+                    <Doughnut
+                      data={{
+                        labels: ['Hadir', 'Sakit', 'Izin', 'Alpa'],
+                        datasets: [{
+                          data: [
+                            Math.round((summary.hadir / summary.total_sesi) * 100),
+                            Math.round((summary.sakit / summary.total_sesi) * 100),
+                            Math.round((summary.izin / summary.total_sesi) * 100),
+                            Math.round((summary.alpa / summary.total_sesi) * 100),
+                          ],
+                          backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
+                          borderWidth: 0,
+                        }]
+                      }}
+                      options={chartOptions}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                      <BookOpen size={24} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-2xl font-black text-slate-800 dark:text-white">
+                    {summary.kehadiran_pct !== null ? `${summary.kehadiran_pct}%` : 'N/A'}
+                  </p>
+                  <div className="mt-1.5 space-y-0.5">
+                    <div className="flex items-center gap-1.5 text-[9px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      <span className="text-slate-500 dark:text-slate-400">{summary.hadir} Hadir</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[9px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      <span className="text-slate-500 dark:text-slate-400">{summary.sakit} Sakit</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[9px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                      <span className="text-slate-500 dark:text-slate-400">{summary.izin} Izin</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[9px]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                      <span className="text-slate-500 dark:text-slate-400">{summary.alpa} Alpa</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Nilai - Per Subject */}
+            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm sm:col-span-2">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/40">
+                  <Award size={14} className="text-blue-600 dark:text-blue-400" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rata Nilai Per Mapel</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-24 h-24 shrink-0">
+                  {summary.by_subject?.length > 0 ? (
+                    <Doughnut
+                      data={{
+                        labels: summary.by_subject.map(s => s.subject_name),
+                        datasets: [{
+                          data: summary.by_subject.map(s => s.nilai_akhir),
+                          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
+                          borderWidth: 0,
+                        }]
+                      }}
+                      options={{
+                        cutout: '72%',
+                        plugins: { tooltip: { enabled: true }, legend: { display: false } },
+                        maintainAspectRatio: false,
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                      <Award size={24} />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0 grid grid-cols-2 gap-x-3 gap-y-1">
+                  {summary.by_subject?.map((s, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-[10px]">
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i % 8] }} />
+                      <span className="text-slate-500 dark:text-slate-400 truncate">{s.subject_name}</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-200 ml-auto">{s.nilai_akhir}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Pelanggaran - Doughnut */}
+            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-900/40">
+                  <ShieldAlert size={14} className="text-rose-600 dark:text-rose-400" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pelanggaran</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 shrink-0">
+                  <Doughnut
+                    data={{
+                      labels: ['Point', 'Sisa'],
+                      datasets: [{
+                        data: [Math.min(summary.total_pelanggaran, 100), Math.max(100 - summary.total_pelanggaran, 0)],
+                        backgroundColor: ['#ef4444', '#fee2e2'],
+                        borderWidth: 0,
+                      }]
+                    }}
+                    options={chartOptions}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-2xl font-black text-slate-800 dark:text-white">
+                    {summary.total_pelanggaran > 0 ? summary.total_pelanggaran : 0}
+                  </p>
+                  <p className="text-[10px] text-slate-400 font-medium mt-1">
+                    {summary.total_kejadian} kejadian tercatat
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Minimal Footer */}

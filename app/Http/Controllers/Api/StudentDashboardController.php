@@ -154,8 +154,8 @@ class StudentDashboardController extends Controller
             ->where('is_holiday', true)
             ->first();
 
-        // [HOTFIX] Holiday override — skip all schedule processing
-        if ($holiday) {
+        // [HOTFIX] Full-day holiday override — skip all schedule processing
+        if ($holiday && !$holiday->is_emergency) {
             $graduateProfile = $this->loadGraduateProfileFromBskap($student);
 
             return response()->json([
@@ -170,14 +170,18 @@ class StudentDashboardController extends Controller
                     'photo_url' => $student->user->photo_url ?? null,
                     'gender'    => $student->gender ?? 'L',
                     'class_id'  => $student->class_id,
+                    'birth_place' => $student->birth_place ?? '-',
+                    'birth_date'  => $student->birth_date ? \Carbon\Carbon::parse($student->birth_date)->format('d F Y') : '-',
                 ],
                 'holiday'          => [
                     'title'       => $holiday->title ?: $holiday->name,
                     'description' => $holiday->description
                 ],
+                'emergency_holiday' => null,
                 'current_session'  => null,
                 'upcoming_session' => null,
                 'today_schedule'   => [],
+                'daily_narrative'  => null,
                 'graduate_profile' => $graduateProfile,
                 'server_time'      => $now->toIso8601String(),
                 'day'              => $dayName,
@@ -239,7 +243,7 @@ class StudentDashboardController extends Controller
             ->keyBy('subject_id');
 
         // Build today's full schedule with attendance status
-        $scheduleWithStatus = $schedules->map(function ($schedule) use ($todayAttendances, $assignments, $now) {
+        $scheduleWithStatus = $schedules->map(function ($schedule) use ($todayAttendances, $assignments, $now, $holiday) {
             $attendance = isset($schedule->subject_id)
                 ? $todayAttendances->get($schedule->subject_id)
                 : null;
@@ -249,19 +253,33 @@ class StudentDashboardController extends Controller
             $currentTime = Carbon::createFromFormat('H:i', $now->format('H:i'));
 
             $status = 'upcoming';
+            $isBlocked = false;
+            $blockReason = null;
+
             if ($currentTime > $endTime) {
                 $status = 'completed';
             } elseif ($currentTime >= $startTime && $currentTime <= $endTime) {
                 $status = 'ongoing';
             }
 
-            // [FIX] Resolve actual teacher name: Prioritize the teacher explicitly set in the Schedule table
-            // This ensures manual changes in Master Data Jadwal are reflected in the student portal.
+            // Check if this session is blocked by emergency holiday
+            if ($holiday && $holiday->is_emergency && $holiday->start_time && $holiday->end_time) {
+                $blockStart = Carbon::createFromFormat('H:i', substr($holiday->start_time, 0, 5));
+                $blockEnd = Carbon::createFromFormat('H:i', substr($holiday->end_time, 0, 5));
+
+                // Check if schedule overlaps with emergency window
+                // Overlap exists if: start < blockEnd AND end > blockStart
+                if ($startTime < $blockEnd && $endTime > $blockStart) {
+                    $isBlocked = true;
+                    $status = 'blocked';
+                    $blockReason = $holiday->title ?: 'Kegiatan Sekolah';
+                }
+            }
+
+            // [FIX] Resolve actual teacher name
             $teacherName = '-';
             if (($schedule->type ?? 'teaching') === 'teaching' && isset($schedule->subject_id)) {
                 $teacherName = $schedule->teacher?->name;
-                
-                // Fallback to assignment teacher only if schedule table has no teacher_id
                 if (!$teacherName) {
                     $assignment = $assignments->get($schedule->subject_id);
                     $teacherName = $assignment?->teacher?->name ?? '-';
@@ -280,8 +298,10 @@ class StudentDashboardController extends Controller
                 'end_period'     => $schedule->end_period,
                 'type'           => $schedule->type ?? 'teaching',
                 'status'         => $status,
-                'attendance_status' => $attendance?->status ?? null,
-                'attendance_note'   => $attendance?->note ?? null,
+                'is_blocked'     => $isBlocked,
+                'block_reason'   => $blockReason,
+                'attendance_status' => $isBlocked ? null : ($attendance?->status ?? null),
+                'attendance_note'   => $isBlocked ? null : ($attendance?->note ?? null),
             ];
         });
 
@@ -312,6 +332,11 @@ class StudentDashboardController extends Controller
 
         $graduateProfile = $this->loadGraduateProfileFromBskap($student);
 
+        // Narrative only if there are teaching sessions today
+        $dailyNarrative = $schedules->isNotEmpty()
+            ? $this->generateDailyNarrative($student, $todayAttendance, $currentSessionData)
+            : null;
+
         return response()->json([
             'school_name'     => $this->getSchoolName(),
             'student'         => [
@@ -324,10 +349,18 @@ class StudentDashboardController extends Controller
                 'photo_url' => $student->user->photo_url ?? null,
                 'gender'    => $student->gender ?? 'L',
                 'class_id'  => $student->class_id,
+                'birth_place' => $student->birth_place ?? '-',
+                'birth_date'  => $student->birth_date ? \Carbon\Carbon::parse($student->birth_date)->format('d F Y') : '-',
             ],
             'holiday'         => $holiday ? [
                 'title' => $holiday->title ?: $holiday->name,
                 'description' => $holiday->description
+            ] : null,
+            'emergency_holiday' => ($holiday && $holiday->is_emergency) ? [
+                'title'       => $holiday->title ?: $holiday->name,
+                'description' => $holiday->description,
+                'start_time'  => $holiday->start_time ? substr($holiday->start_time, 0, 5) : null,
+                'end_time'    => $holiday->end_time ? substr($holiday->end_time, 0, 5) : null,
             ] : null,
             'current_session' => $currentSession ? [
                 'subject_id'    => $currentSession->subject_id,
@@ -354,6 +387,7 @@ class StudentDashboardController extends Controller
                 $s['planned_material'] = isset($s['subject_id']) ? $this->getPlannedMaterial($student, $s['subject_id'], $today, $profile) : null;
                 return $s;
             }),
+            'daily_narrative' => $dailyNarrative,
             'graduate_profile' => $graduateProfile,
             'server_time'     => $now->toIso8601String(),
             'day'             => $dayName,
@@ -672,6 +706,111 @@ class StudentDashboardController extends Controller
         $class = $student->class;
         if (!$class) return '-';
         return $class->rombel ?? $class->code ?? '-';
+    }
+
+    /**
+     * Generate a descriptive narrative of the student's learning progress today.
+     * Uses template variations to provide a 'Smart AI' feel without token costs.
+     */
+    private function generateDailyNarrative($student, $attendance, $current)
+    {
+        $name = explode(' ', $student->name)[0];
+        $today = Carbon::today();
+        
+        // [AUDIT] Comprehensive Attendance Check for Today
+        $todayAttendances = Attendance::where('student_id', $student->id)
+            ->whereDate('date', $today)
+            ->get();
+            
+        $hasAlpa = $todayAttendances->contains(fn($a) => in_array(strtolower($a->status), ['alpa', 'alpha']));
+        $hasIzin = $todayAttendances->contains(fn($a) => in_array(strtolower($a->status), ['izin', 'ijin']));
+        $hasSakit = $todayAttendances->contains(fn($a) => strtolower($a->status) === 'sakit');
+        $allHadir = $todayAttendances->count() > 0 && $todayAttendances->every(fn($a) => strtolower($a->status) === 'hadir');
+        
+        // Increased variability range (up to 10 unique combinations per día)
+        $seed = ($student->id + date('z')) % 10; 
+
+        $openings = [
+            0 => "Hari ini, pemantauan belajar **{$name}** sedang berlangsung dengan baik. ",
+            1 => "Berikut adalah sekilas progres belajar **{$name}** untuk hari ini. ",
+            2 => "Kami senang mengabarkan bahwa agenda belajar **{$name}** berjalan lancar hari ini. ",
+            3 => "**{$name}** sedang mengikuti rangkaian kegiatan di sekolah dengan penuh antusias. ",
+            4 => "Pantauan belajar **{$name}** menunjukkan aktivitas yang positif di sekolah. ",
+            5 => "Semoga hari Ayah/Bunda menyenangkan! Berikut kabar terbaru dari **{$name}** di sekolah. ",
+            6 => "Laporan harian **{$name}** hari ini telah tersedia. Mari kita lihat bersama progresnya. ",
+            7 => "Kabar gembira! Agenda pendidikan **{$name}** terpantau berlangsung kondusif hari ini. ",
+            8 => "Progres belajar **{$name}** hari ini menunjukkan semangat yang sangat baik. ",
+            9 => "Halo Ayah/Bunda! Kami ingin berbagi ringkasan aktivitas **{$name}** selama di sekolah hari ini. ",
+        ];
+
+        $closings = [
+            0 => "Secara keseluruhan, progres hari ini berjalan lancar. Terus berikan dukungan untuk Ananda!",
+            1 => "Ananda menunjukkan partisipasi yang baik. Mari kita apresiasi upayanya hari ini.",
+            2 => "Semoga pembelajaran hari ini menjadi bekal ilmu yang bermanfaat bagi {$name}.",
+            3 => "Kami akan terus memantau dan memberikan yang terbaik untuk pendidikan {$name}.",
+            4 => "Terima kasih atas kepercayaan Ayah/Bunda dalam mendampingi tumbuh kembang Ananda.",
+            5 => "Mari terus bersinergis demi masa depan terbaik bagi Ananda. Selamat melanjutkan aktivitas!",
+            6 => "Pendidikan adalah perjalanan panjang, mari kita nikmati setiap progres kecil **{$name}** hari ini.",
+            7 => "Dukungan kecil dari rumah adalah semangat besar bagi **{$name}** di sekolah. Terima kasih!",
+            8 => "Sampai jumpa di kabar progres esok hari. Semoga hari Anda menyenangkan!",
+            9 => "Setiap hari adalah kesempatan baru bagi **{$name}** untuk tumbuh. Mari kita dampingi bersama.",
+        ];
+
+        $narrative = $openings[$seed];
+
+        // Status for report-mode detection
+        $isSchoolOver = !$current;
+
+        // Part 1: Attendance Context (Improved with multi-subject awareness)
+        if ($hasAlpa) {
+            $narrative .= "Namun, kami mencatat Ananda **tidak hadir (Alpa)** pada sesi tertentu hari ini. Mohon perhatian Ayah/Bunda untuk mengonfirmasi hal ini. ";
+        } elseif ($hasSakit || $hasIzin) {
+            $type = $hasSakit ? 'sedang beristirahat (Sakit)' : 'berhalangan hadir (Izin)';
+            $narrative .= "Ananda tercatat **{$type}** pada agenda belajar hari ini. Semoga Ananda sehat selalu. ";
+        } elseif ($allHadir) {
+            $narrative .= "Ananda telah **hadir tepat waktu** di seluruh jam pelajaran. ";
+        } elseif ($todayAttendances->count() === 0) {
+            $narrative .= "Sesi absensi untuk hari ini sedang dalam proses pembaruan oleh Bapak/Ibu guru. ";
+        }
+
+        // Part 2: Learning Progress (The Core)
+        if ($current) {
+            $subject = $current['subject_name'] ?? 'Mata Pelajaran';
+            $topic = $current['planned_material'] ?? 'materi pilihan';
+            $narrative .= "Saat ini, Ananda sedang mendalami topik **\"{$topic}\"** pada sesi **{$subject}**. ";
+        } elseif ($isSchoolOver) {
+            $statusFinish = $hasAlpa ? "sebagian besar agenda" : "seluruh rangkaian pembelajaran";
+            $narrative .= "Agenda belajar hari ini telah **{$statusFinish}** selesai dilaksanakan. ";
+        } else {
+            $narrative .= "Sesi pembelajaran saat ini dialokasikan untuk kegiatan mandiri atau transisi mata pelajaran. ";
+        }
+
+        // Part 3: Achievement Check (Recent Grade Today)
+        $todayGrade = Grade::where('student_id', $student->id)
+            ->whereDate('date', $today)
+            ->whereNotNull('score')
+            ->first();
+            
+        if ($todayGrade) {
+            $type = $todayGrade->type ?? 'Evaluasi';
+            $scoreStr = $todayGrade->score >= 75 ? "hasil yang sangat memuaskan" : "proses yang perlu terus didukung";
+            $narrative .= "Selain itu, {$name} baru saja menuntaskan {$type} dengan {$scoreStr}. ";
+        }
+
+        // Part 4: Infractions (Violations)
+        $todayInfractions = Infraction::where('student_id', $student->id)
+            ->whereDate('date', $today)
+            ->get();
+            
+        if ($todayInfractions->count() > 0) {
+            $totalPoints = $todayInfractions->sum('points');
+            $categories = $todayInfractions->pluck('category')->unique()->implode(', ');
+            $narrative .= "Hari ini tercatat ada **{$totalPoints} poin pelanggaran** terkait *{$categories}*. Harap Ayah/Bunda memberikan bimbingan khusus di rumah agar kejadian serupa tidak terulang. ";
+        } elseif ($isSchoolOver && !$hasAlpa) {
+            $narrative .= "Kami juga senang menginformasikan bahwa **tidak ada catatan pelanggaran** hari ini. ";
+        }
+
+        return $narrative . ($isSchoolOver ? "Semoga istirahat Ananda menyenangkan. " : "") . $closings[$seed];
     }
 
     /**

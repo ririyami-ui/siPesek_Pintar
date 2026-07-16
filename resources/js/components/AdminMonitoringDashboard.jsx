@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Activity, Clock, User, BookOpen, CheckCircle2, AlertCircle, PlayCircle, Loader2, School, BellRing, Zap, Volume2 } from 'lucide-react';
+import { Activity, Clock, User, BookOpen, CheckCircle2, AlertCircle, PlayCircle, Loader2, School, BellRing, Zap, Volume2, Wifi, WifiOff } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 import moment from 'moment';
+import api from '../lib/axios';
 
 const AdminMonitoringDashboard = ({ holiday }) => {
     const [loading, setLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [showOnlyMissing, setShowOnlyMissing] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(moment());
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const [onlineLoading, setOnlineLoading] = useState(true);
     const { 
         userProfile, 
         monitoringData,
@@ -49,6 +52,23 @@ const AdminMonitoringDashboard = ({ holiday }) => {
             setCurrentTime(moment());
         }, 1000);
         return () => clearInterval(timer);
+    }, []);
+
+    // Fetch online users every 1 minute
+    useEffect(() => {
+        const fetchOnline = async () => {
+            try {
+                const { data } = await api.get('/admin/online-users');
+                setOnlineUsers(data.online || []);
+            } catch (_) {
+                // silent fail
+            } finally {
+                setOnlineLoading(false);
+            }
+        };
+        fetchOnline();
+        const interval = setInterval(fetchOnline, 60_000);
+        return () => clearInterval(interval);
     }, []);
 
     const data = monitoringData?.data || [];
@@ -468,6 +488,51 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                             </div>
                         )}
                     </>
+                )}
+            </div>
+
+            {/* Online Users Panel */}
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-[2.5rem] shadow-lg border border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-5">
+                    <h2 className="text-xl font-black tracking-tight flex items-center gap-2">
+                        <Wifi size={20} className="text-emerald-500" />
+                        <span>Siswa / Wali Murid Online</span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold ml-1">
+                            {onlineUsers.length}
+                        </span>
+                    </h2>
+                    {onlineLoading && <Loader2 size={16} className="animate-spin text-slate-400" />}
+                </div>
+
+                {onlineUsers.length === 0 && !onlineLoading ? (
+                    <div className="flex flex-col items-center justify-center py-8 text-slate-400">
+                        <WifiOff size={32} className="mb-3 opacity-50" />
+                        <p className="text-sm font-bold">Tidak ada siswa/wali online</p>
+                        <p className="text-xs mt-1 opacity-60">Data diperbarui setiap 1 menit</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                        {onlineUsers.map((u) => (
+                            <div key={u.id} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-800 transition-all group">
+                                <div className="relative shrink-0">
+                                    {u.photo_url ? (
+                                        <img src={u.photo_url} alt={u.name} className="w-10 h-10 rounded-full object-cover" />
+                                    ) : (
+                                        <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+                                            <User size={18} className="text-slate-400" />
+                                        </div>
+                                    )}
+                                    <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-gray-900 rounded-full" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-bold truncate leading-tight">{u.name}</p>
+                                    <p className="text-[10px] font-medium text-slate-400 truncate">
+                                        {u.role === 'student' ? (u.class ? `Kelas ${u.class}` : 'Siswa') : 'Wali Murid'}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
         </div>

@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('admins', App\Http\Controllers\AdminController::class);
         Route::get('/admin/dashboard/monitoring', [App\Http\Controllers\DashboardController::class, 'getMonitoringData']);
         Route::get('/admin/grades/monitoring', [App\Http\Controllers\DashboardController::class, 'getGradeMonitoringData']);
+        Route::get('/admin/online-users', [App\Http\Controllers\DashboardController::class, 'onlineUsers']);
         
         // Database Management
         Route::get('/admin/database/tables', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'getTables']);

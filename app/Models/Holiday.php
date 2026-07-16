@@ -19,7 +19,10 @@ class Holiday extends Model
         'description',
         'type',
         'category',
-        'is_holiday'
+        'is_holiday',
+        'is_emergency',
+        'start_time',
+        'end_time'
     ];
 
     protected $casts = [
@@ -27,6 +30,7 @@ class Holiday extends Model
         'end_date' => 'date',
         'date' => 'date',
         'is_holiday' => 'boolean',
+        'is_emergency' => 'boolean',
     ];
 
     public function user()

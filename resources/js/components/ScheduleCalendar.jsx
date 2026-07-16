@@ -53,13 +53,15 @@ const ScheduleCalendar = () => {
     const [editingScheduleId, setEditingScheduleId] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Modal states
     const [showHolidayModal, setShowHolidayModal] = useState(false);
     const [holidayForm, setHolidayForm] = useState({
         title: '',
         start_date: '',
         end_date: '',
-        category: 'semester_ganjil'
+        category: 'semester_ganjil',
+        is_emergency: false,
+        start_time: '',
+        end_time: ''
     });
     const [editingHolidayId, setEditingHolidayId] = useState(null);
     const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
@@ -275,7 +277,9 @@ const ScheduleCalendar = () => {
         try {
             const payload = {
                 ...holidayForm,
-                date: holidayForm.start_date
+                date: holidayForm.start_date,
+                // Ensure time fields only sent when emergency is true
+                ...(holidayForm.is_emergency ? { start_time: holidayForm.start_time, end_time: holidayForm.end_time } : {}),
             };
 
             if (editingHolidayId) {
@@ -1190,6 +1194,23 @@ const ScheduleCalendar = () => {
                                         <option value="keagamaan">Hari Besar Keagamaan</option>
                                         <option value="lainnya">Lainnya</option>
                                     </StyledSelect>
+                                    {/* Emergency toggle */}
+                                    <div className="flex items-center mt-2">
+                                        <input type="checkbox" id="emergencyToggle" checked={holidayForm.is_emergency} onChange={(e) => setHolidayForm({ ...holidayForm, is_emergency: e.target.checked })} className="mr-2" />
+                                        <label htmlFor="emergencyToggle" className="text-[10px] font-bold text-gray-600">Darurat (Blokir Parsial)</label>
+                                    </div>
+                                    {holidayForm.is_emergency && (
+                                        <div className="grid grid-cols-2 gap-2 mt-2">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 ml-1">Jam Mulai</label>
+                                                <StyledInput type="time" value={holidayForm.start_time} onChange={(e) => setHolidayForm({ ...holidayForm, start_time: e.target.value })} required />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 ml-1">Jam Selesai</label>
+                                                <StyledInput type="time" value={holidayForm.end_time} onChange={(e) => setHolidayForm({ ...holidayForm, end_time: e.target.value })} required />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-[10px] font-bold text-gray-400 ml-1">Nama Agenda</label>

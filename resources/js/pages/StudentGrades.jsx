@@ -256,9 +256,9 @@ export default function StudentGrades() {
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden p-6">
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <div className="flex-1">
-                <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">Profil Pelajar Pancasila</h3>
+                <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">Dimensi Profil Lulusan</h3>
                 <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                  Analisis ini mencakup 8 dimensi karakter siswa berdasarkan integrasi data akademik, kedisiplinan, dan presensi di sekolah.
+                  Analisis ini mencakup 8 dimensi profil lulusan berdasarkan integrasi data akademik, kedisiplinan, dan presensi di sekolah.
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   {Object.entries(data?.radar_data || {}).map(([key, val]) => (

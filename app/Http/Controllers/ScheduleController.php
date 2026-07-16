@@ -135,10 +135,13 @@ class ScheduleController extends Controller
                 $status = 'assignment';
             }
 
-            // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
+            // [OVERRIDE] If there is a School Agenda (non-holiday), suspend normal activity logic
             if ($agenda) {
-                $status = $agenda->is_holiday ? 'libur' : 'agenda';
+                $status = 'agenda';
             }
+
+            // Emergency holiday: do NOT override — keep original status but mark if blocked by emergency window
+            // The actual block detection is done in StudentDashboardController::getRealtimeLearning
 
             $s->status = $status;
             return $s;
