@@ -99,10 +99,10 @@ function App() {
 
     checkAuth();
 
-    // [PUSH NOTIFICATION] Register Service Worker for PWA (HTTPS only)
-    // php artisan serve is HTTP-only → skip registration to prevent "Unsupported SSL request" spam
+    // [PUSH NOTIFICATION] Register Service Worker for PWA (secure context only)
     const swPath = (window.Laravel?.basePath || '') + '/sw.js';
-    if ('serviceWorker' in navigator && 'PushManager' in window && window.location.protocol === 'https:') {
+    const isSecure = window.isSecureContext; // true for localhost & HTTPS
+    if ('serviceWorker' in navigator && 'PushManager' in window && isSecure) {
       navigator.serviceWorker.register(swPath)
         .then(registration => {
           console.log('Service Worker registered:', registration);
@@ -153,7 +153,7 @@ function App() {
       }
     };
 
-    if (user && user.role === 'student' && window.location.protocol === 'https:') {
+    if (user && !['admin', 'adminer', 'librarian'].includes(user.role) && window.isSecureContext) {
       subscribeToPush();
     }
   }, [user]);

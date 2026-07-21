@@ -205,17 +205,19 @@ class GeminiController extends Controller
                 $prompt .= "\n";
             }
 
-            $prompt .= "Buat dalam Bahasa Indonesia:\n";
+            $prompt .= "Buat dalam Bahasa Indonesia, singkat tanpa markdown:\n";
             $prompt .= "1. Materi/Topic (singkat, sesuai ATP)\n";
             $prompt .= "2. Tujuan Pembelajaran (1-2 kalimat)\n";
             $prompt .= "3. Kegiatan Pembelajaran (3-4 poin: pendahuluan, inti, penutup)\n";
-            $prompt .= "4. Refleksi (1 kalimat)\n\n";
+            $prompt .= "4. Refleksi (1 kalimat)\n";
+            $prompt .= "5. Tindak Lanjut (1 kalimat singkat)\n\n";
             $prompt .= "Format JSON:\n";
             $prompt .= '{
   "topic": "...",
   "learningObjectives": "...",
   "learningActivities": "...",
-  "reflection": "..."
+  "reflection": "...",
+  "follow_up": "..."
 }';
 
             $response = $this->geminiService->chat($prompt, [], []);
@@ -236,6 +238,7 @@ class GeminiController extends Controller
                     'learningObjectives' => '',
                     'learningActivities' => '',
                     'reflection' => '',
+                    'follow_up' => '',
                 ]);
             }
 

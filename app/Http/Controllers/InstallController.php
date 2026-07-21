@@ -10,22 +10,23 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class InstallController extends Controller
 {
     public function index()
     {
-        // If already installed, redirect to home
         if (File::exists(storage_path('installed.lock'))) {
             return redirect('/');
         }
-
         return view('install.index');
     }
 
     public function postInstall(Request $request)
     {
-        $request->validate([
+        header('Content-Type: application/json; charset=utf-8');
+
+        $validator = \Validator::make($request->all(), [
             'db_host' => 'required',
             'db_port' => 'required',
             'db_name' => 'required',
@@ -34,17 +35,19 @@ class InstallController extends Controller
             'admin_email' => 'required|email',
             'admin_password' => 'required|min:8',
         ]);
+        if ($validator->fails()) {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => $validator->errors()->first()]);
+            exit;
+        }
 
         try {
-            // 1. Try to connect to MySQL (without database first)
             $dsn = "mysql:host={$request->db_host};port={$request->db_port}";
             $pdo = new \PDO($dsn, $request->db_user, $request->db_password);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            // 2. Create database if not exists
             $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$request->db_name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-            // 3. Temporarily update database config for the current process
             config([
                 'database.connections.mysql.host' => $request->db_host,
                 'database.connections.mysql.port' => $request->db_port,
@@ -55,10 +58,9 @@ class InstallController extends Controller
             DB::purge('mysql');
             DB::reconnect('mysql');
 
-            // 4. Run migrations (Update instead of Fresh)
-            Artisan::call('migrate', ['--force' => true]);
+            // Safe migration — no DROP
+            $this->runSafeMigration();
 
-            // 5. Create or Update Admin User
             $user = User::updateOrCreate(
                 ['email' => $request->admin_email],
                 [
@@ -67,7 +69,6 @@ class InstallController extends Controller
                     'role' => 'admin',
                 ]
             );
-
             Admin::updateOrCreate(
                 ['auth_user_id' => $user->id],
                 [
@@ -77,15 +78,11 @@ class InstallController extends Controller
                     'username' => $request->admin_email,
                 ]
             );
-
             UserProfile::updateOrCreate(
                 ['user_id' => $user->id],
-                [
-                    'full_name' => $request->admin_name,
-                ]
+                ['full_name' => $request->admin_name]
             );
 
-            // 6. Update .env file (DO THIS LAST to avoid premature server restart)
             $this->updateEnv([
                 'DB_HOST' => $request->db_host,
                 'DB_PORT' => $request->db_port,
@@ -97,17 +94,77 @@ class InstallController extends Controller
                 'APP_DEBUG' => 'false',
             ]);
 
-            // 7. Generate App Key if empty (also updates .env)
             if (empty(config('app.key')) || config('app.key') === 'base64:...') {
                 Artisan::call('key:generate', ['--force' => true]);
             }
 
-            // 8. Create lock file
             File::put(storage_path('installed.lock'), date('Y-m-d H:i:s'));
 
-            return response()->json(['success' => true, 'message' => 'Instalasi/Pembaruan Berhasil!']);
+            echo json_encode(['success' => true, 'message' => 'Instalasi/Pembaruan Berhasil!']);
+            exit;
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Gagal: ' . $e->getMessage()], 500);
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => 'Gagal: ' . $e->getMessage()]);
+            exit;
+        }
+    }
+
+    private function runSafeMigration()
+    {
+        $diskFiles = collect(\File::files(database_path('migrations')))
+            ->map(fn($f) => $f->getFilenameWithoutExtension())
+            ->values();
+
+        if (!Schema::hasTable('migrations')) {
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+            } catch (\Exception $e) {
+                if (str_contains($e->getMessage(), 'already exists')) {
+                    Schema::create('migrations', function ($table) {
+                        $table->id();
+                        $table->string('migration', 255);
+                        $table->integer('batch');
+                    });
+                    $batch = 1;
+                    foreach ($diskFiles as $name) {
+                        DB::table('migrations')->insert([
+                            'migration' => $name,
+                            'batch' => $batch,
+                        ]);
+                    }
+                    Artisan::call('migrate', ['--force' => true]);
+                } else {
+                    throw $e;
+                }
+            }
+            return;
+        }
+
+        // Migrations table exists — retry one-by-one
+        // Each iteration: try migrate, catch 'already exists', mark that file done, repeat
+        $attempts = 0;
+        $maxAttempts = $diskFiles->count();
+        while ($attempts < $maxAttempts) {
+            try {
+                Artisan::call('migrate', ['--force' => true]);
+                break; // all remaining files ran successfully
+            } catch (\Exception $e) {
+                if (!str_contains($e->getMessage(), 'already exists')) {
+                    throw $e; // real error
+                }
+                $dbEntries = DB::table('migrations')->pluck('migration');
+                $pending = $diskFiles->diff($dbEntries);
+                if ($pending->isEmpty()) break;
+
+                // Mark the failing file as done and retry
+                $failingFile = $pending->first();
+                $maxBatch = DB::table('migrations')->max('batch') ?? 0;
+                DB::table('migrations')->insert([
+                    'migration' => $failingFile,
+                    'batch' => $maxBatch + 1,
+                ]);
+                $attempts++;
+            }
         }
     }
 
@@ -117,26 +174,20 @@ class InstallController extends Controller
         if (!File::exists($path)) {
             File::copy(base_path('.env.example'), $path);
         }
-
         $content = File::get($path);
-
         foreach ($data as $key => $value) {
-            // Quote value and escape double quotes
-            $escapedValue = str_replace('"', '\"', $value);
+            $escapedValue = str_replace('"', '\\"', $value);
             $quotedValue = "\"{$escapedValue}\"";
-
             if (preg_match("/^{$key}=/m", $content)) {
-                // Use a safe replacement that doesn't interpret $ or \ as backreferences
-                $content = preg_replace_callback("/^{$key}=.*/m", function() use ($key, $quotedValue) {
+                $content = preg_replace_callback("/^{$key}=.*/m", function () use ($key, $quotedValue) {
                     return "{$key}={$quotedValue}";
                 }, $content);
             } else {
                 $content .= "\n{$key}={$quotedValue}";
             }
         }
-
         if (!File::put($path, $content)) {
-            throw new \Exception("Gagal menulis ke file .env. Pastikan file tersebut memiliki izin tulis.");
+            throw new \Exception('Gagal menulis ke file .env. Pastikan file tersebut memiliki izin tulis.');
         }
     }
 }

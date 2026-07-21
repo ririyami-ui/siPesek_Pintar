@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Save, Trash, RefreshCw, AlertCircle, CheckCircle, XCircle, Info, Sparkles } from 'lucide-react';
+import { Save, Trash, RefreshCw, AlertCircle, CheckCircle, XCircle, Info, Sparkles, X, Copy } from 'lucide-react';
 import api from '../lib/axios';
 import moment from 'moment';
 import toast from 'react-hot-toast';
@@ -40,6 +40,10 @@ export default function JurnalPage() {
   const [holidays, setHolidays] = useState([]);
   const [activeHoliday, setActiveHoliday] = useState(null);
   const { activeSemester, academicYear, userProfile } = useSettings();
+  const [showUnfinishedPopup, setShowUnfinishedPopup] = useState(false);
+  const [unfinishedJournals, setUnfinishedJournals] = useState([]);
+  const [showMatchPopup, setShowMatchPopup] = useState(false);
+  const [matchingJournals, setMatchingJournals] = useState([]);
 
   const [searchParams] = useSearchParams();
   const classIdFromUrl = searchParams.get('classId');
@@ -117,6 +121,15 @@ export default function JurnalPage() {
         } else if (userProfile?.id) {
           setSelectedTeacher(userProfile.id);
         }
+
+        // Fetch journal entries after initial data loaded
+        try {
+          const journalsRes = await api.get('/journals');
+          const fetchedJournals = journalsRes.data.data || journalsRes.data || [];
+          setJournals(fetchedJournals);
+        } catch (journalErr) {
+          console.error('Error fetching journal entries:', journalErr);
+        }
       } catch (error) {
         console.error("Error fetching initial data:", error);
         toast.error('Gagal memuat data pendukung.');
@@ -171,6 +184,39 @@ export default function JurnalPage() {
     }
   }, [currentDate, holidays]);
 
+  // Detect unfinished journals (status !== Terlaksana)
+  useEffect(() => {
+    if (journals.length > 0 && !showUnfinishedPopup) {
+      const unfinished = journals.filter(j => j.status && j.status !== 'Terlaksana');
+      if (unfinished.length > 0) {
+        setUnfinishedJournals(unfinished);
+        // Only auto-show once per data load (no localStorage to avoid hiding legitimate data)
+        setShowUnfinishedPopup(true);
+      }
+    }
+  }, [journals]);
+
+  // Detect matching topic from existing journals (same subject)
+  useEffect(() => {
+    if (topic && topic.length > 3 && selectedSubject && journals.length > 0) {
+      const matches = journals.filter(j =>
+        j.subject_id == selectedSubject &&
+        j.topic &&
+        j.topic.toLowerCase().trim() === topic.toLowerCase().trim() &&
+        j.learning_objectives
+      );
+      if (matches.length > 0) {
+        setMatchingJournals(matches);
+        setShowMatchPopup(true);
+      }
+    } else {
+      if (!topic || topic.length <= 3) {
+        setShowMatchPopup(false);
+        setMatchingJournals([]);
+      }
+    }
+  }, [topic, selectedSubject, journals]);
+
   const fetchJournalEntries = useCallback(async (silent = false) => {
     if (!silent) setIsLoading(true);
     try {
@@ -211,6 +257,30 @@ export default function JurnalPage() {
   useEffect(() => {
     fetchAttendance();
   }, [fetchAttendance]);
+
+  const copyFromJournal = (journal) => {
+    // Populate fields with data from selected journal
+    setTopic(journal.topic || '');
+    setLearningObjectives(journal.learning_objectives || '');
+    setLearningActivities(journal.learning_activities || '');
+    setReflection(journal.reflection || '');
+    setFollowUp(journal.follow_up || '');
+    // Also set class/subject/date to match selected journal (optional)
+    if (journal.class_id) setSelectedClass(journal.class_id);
+    if (journal.subject_id) setSelectedSubject(journal.subject_id);
+    if (journal.date) setCurrentDate(moment(journal.date).format('YYYY-MM-DD'));
+    // Close popup after copying
+    setShowUnfinishedPopup(false);
+  };
+
+  const copyMatchingJournal = (journal) => {
+    setLearningObjectives(journal.learning_objectives || '');
+    setLearningActivities(journal.learning_activities || '');
+    setReflection(journal.reflection || '');
+    setFollowUp(journal.follow_up || '');
+    setShowMatchPopup(false);
+    setMatchingJournals([]);
+  };
 
   const handleAutoFillJournal = async () => {
     if (!selectedClass || !selectedSubject) {
@@ -261,6 +331,7 @@ export default function JurnalPage() {
       if (result.learningObjectives) setLearningObjectives(result.learningObjectives);
       if (result.learningActivities) setLearningActivities(result.learningActivities);
       if (result.reflection) setReflection(result.reflection);
+      if (result.follow_up) setFollowUp(result.follow_up);
 
       toast.success('Jurnal berhasil diisi otomatis! Silakan review.');
     } catch (error) {
@@ -314,7 +385,7 @@ export default function JurnalPage() {
 
     toast.promise(promise, {
       loading: editingJournalId ? 'Menyimpan perubahan...' : 'Menyimpan jurnal...',
-      success: () => {
+      success: async () => {
         setSelectedClass('');
         setSelectedSubject('');
         setLearningObjectives('');
@@ -325,10 +396,17 @@ export default function JurnalPage() {
         setNotes('');
         setIsAssignment(false);
         setEditingJournalId(null);
-        fetchJournalEntries(true);
+        try {
+          await fetchJournalEntries(true);
+        } catch (e) {
+          console.error('Refresh after save failed:', e);
+        }
         return editingJournalId ? 'Perubahan berhasil disimpan!' : 'Jurnal berhasil disimpan!';
       },
-      error: 'Gagal menyimpan jurnal.',
+      error: (err) => {
+        const msg = err?.response?.data?.message || 'Gagal menyimpan jurnal.';
+        return msg;
+      },
     });
   };
 
@@ -413,6 +491,56 @@ export default function JurnalPage() {
         </div>
       )}
 
+      {/* Unfinished Journals Popup */}
+      {showUnfinishedPopup && unfinishedJournals.length > 0 && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <AlertCircle size={20} className="text-amber-500" />
+                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Jurnal Tidak Terlaksana</h3>
+              </div>
+              <StyledButton onClick={() => setShowUnfinishedPopup(false)} size="sm" variant="outline">
+                <X size={16} />
+              </StyledButton>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Berikut jurnal dengan status <strong>belum terlaksana</strong>. Segera lengkapi tindak lanjut.
+            </p>
+            <div className="overflow-y-auto space-y-2 flex-1">
+              {unfinishedJournals.map(j => {
+                const cls = classes.find(c => c.id == j.class_id);
+                const sub = subjects.find(s => s.id == j.subject_id);
+                return (
+                  <div key={j.id} className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-700/50">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{cls?.rombel || '-'} — {sub?.name || '-'}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{moment(j.date).format('DD/MM/YYYY')} | <span className="font-medium">{j.topic}</span></p>
+                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                        j.status === 'Tidak Terlaksana' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                      }`}>{j.status}</span>
+                    </div>
+                    <StyledButton size="sm" onClick={() => copyFromJournal(j)}>
+                      Salin
+                    </StyledButton>
+                    <StyledButton size="sm" onClick={() => { handleEditJournal(j); setShowUnfinishedPopup(false); }}>
+                      Edit
+                    </StyledButton>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 text-right">
+              <StyledButton onClick={() => setShowUnfinishedPopup(false)} variant="outline" size="sm">
+                Tutup
+              </StyledButton>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
       <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Form Section */}
@@ -473,6 +601,42 @@ export default function JurnalPage() {
                 disabled={activeHoliday}
               />
 
+              {showMatchPopup && matchingJournals.length > 0 && (
+                <div className="p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg animate-fade-in">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Copy size={16} />
+                    <span className="font-semibold text-sm">Materi "{topic}" sudah ada di jurnal sebelumnya</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {matchingJournals.map(j => {
+                      const cls = classes.find(c => c.id == j.class_id);
+                      return (
+                        <div key={j.id} className="flex items-center justify-between bg-white/15 rounded-lg px-3 py-2">
+                          <div className="text-xs">
+                            <span className="font-medium">{cls?.rombel || '-'}</span>
+                            <span className="opacity-70 ml-2">{moment(j.date).format('DD/MM/YYYY')}</span>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => copyMatchingJournal(j)}
+                            className="text-xs font-bold bg-white text-indigo-700 px-3 py-1 rounded-full hover:bg-indigo-50 transition-colors"
+                          >
+                            Salin
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setShowMatchPopup(false); setMatchingJournals([]); }}
+                    className="mt-2 text-xs text-white/70 hover:text-white underline underline-offset-2"
+                  >
+                    Tutup
+                  </button>
+                </div>
+              )}
+
               <StyledInput
                 type="textarea"
                 label="Tujuan Pembelajaran"
@@ -523,6 +687,18 @@ export default function JurnalPage() {
                 onChange={(e) => setFollowUp(e.target.value)}
                 disabled={activeHoliday}
               />
+
+              {status !== 'Terlaksana' && (
+                <StyledInput
+                  type="textarea"
+                  label="Hambatan / Catatan"
+                  placeholder="Hambatan atau catatan pembelajaran"
+                  voiceEnabled={true}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  disabled={activeHoliday}
+                />
+              )}
 
               <div className="flex items-center gap-2">
                 <input
@@ -643,6 +819,17 @@ export default function JurnalPage() {
                           </span>
                         </td>
                         <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm flex gap-2">
+                          <StyledButton size="sm" onClick={() => {
+                            setTopic(journal.topic || '');
+                            setLearningObjectives(journal.learning_objectives || '');
+                            setLearningActivities(journal.learning_activities || '');
+                            setReflection(journal.reflection || '');
+                            setFollowUp(journal.follow_up || '');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            toast.success('Konten jurnal disalin. Silakan sesuaikan kelas/mapel jika perlu.');
+                          }}>
+                            Salin
+                          </StyledButton>
                           <StyledButton onClick={() => handleEditJournal(journal)} size="sm">Edit</StyledButton>
                           <StyledButton onClick={() => handleDeleteJournal(journal.id)} size="sm" variant="danger">
                             <Trash size={16} />

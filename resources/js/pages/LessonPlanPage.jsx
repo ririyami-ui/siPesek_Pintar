@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import mermaid from 'mermaid';
 import { useSettings } from '../utils/SettingsContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/axios';
@@ -33,6 +34,40 @@ import StyledButton from '../components/StyledButton';
 import toast from 'react-hot-toast';
 import Modal from '../components/Modal';
 import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
+
+// Initialize Mermaid
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'base' });
+
+// Local Mermaid Renderer Component
+const LocalMermaid = ({ content }) => {
+    const [svg, setSvg] = useState('');
+    const [error, setError] = useState(null);
+    const id = useRef(`mermaid-${Math.random().toString(36).substr(2, 9)}`).current;
+
+    useEffect(() => {
+        if (content) {
+            const renderDiagram = async () => {
+                try {
+                    setError(null);
+                    const { svg } = await mermaid.render(id, content);
+                    setSvg(svg);
+                } catch (err) {
+                    console.error('Mermaid error:', err);
+                    setError('Sintaks Mermaid tidak valid.');
+                }
+            };
+            renderDiagram();
+        }
+    }, [content, id]);
+
+    if (error) {
+        return <div className="my-4 p-4 bg-red-50 border border-red-100 rounded-xl text-xs text-red-600 font-mono">⚠️ {error}</div>;
+    }
+
+    return <div className="my-6 flex justify-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm" dangerouslySetInnerHTML={{ __html: svg }} />;
+};
+
+const InlineMermaid = ({ content }) => <LocalMermaid content={content} />;
 
 const LessonPlanPage = () => {
     const { activeSemester, academicYear, geminiModel } = useSettings();
@@ -150,17 +185,17 @@ const LessonPlanPage = () => {
     useEffect(() => {
         const fetchMasters = async () => {
             try {
-                const [classesRes, subjectsRes, userRes] = await Promise.all([
+                const [classesRes, subjectsRes, profileRes] = await Promise.all([
                     api.get('/classes'),
                     api.get('/subjects'),
-                    api.get('/me')
+                    api.get('/profile')
                 ]);
 
                 const classesData = classesRes.data.data || classesRes.data || [];
                 const subjectsData = subjectsRes.data.data || subjectsRes.data || [];
-                const userData = userRes.data;
+                const profile = profileRes.data.profile;
+                const userData = profileRes.data.user || {};
 
-                // Backend already filters based on role and assignments
                 const filteredLevels = [...new Set(classesData.map(c => c.level))].sort();
                 const filteredSubjects = subjectsData
                     .map(s => ({ id: String(s.id), name: s.name }))
@@ -172,12 +207,13 @@ const LessonPlanPage = () => {
                 if (filteredLevels.length > 0 && !selectedGrade) setSelectedGrade(filteredLevels[0]);
                 if (filteredSubjects.length > 0 && !selectedSubject) setSelectedSubject(filteredSubjects[0].id);
 
+                // profile table has principalName/principalNip; user.name/nip from user object
                 setUserProfile({
-                    name: userData.name || '',
-                    school: userData.school || '',
-                    nip: userData.nip || '',
-                    principalName: userData.principal_name || '',
-                    principalNip: userData.principal_nip || ''
+                    name: userData.name || profile.name || '',
+                    school: profile.school_name || '',
+                    nip: userData.nip || profile.nip || '',
+                    principalName: profile.principalName || profile.principal_name || '',
+                    principalNip: profile.principalNip || profile.principal_nip || ''
                 });
 
             } catch (error) {
@@ -499,17 +535,15 @@ const LessonPlanPage = () => {
                 
                 <table style="border: none; margin-top: 50px; width: 100%;">
                     <tr style="border: none;">
-                        <td align="center" style="border: none; width: 50%;">
+                        <td align="center" style="border: none; width: 50%; vertical-align: top;">
                             Mengetahui,<br/>
-                            Kepala Sekolah
-                            <br/><br/><br/><br/>
+                            Kepala Sekolah<br/><br/><br/><br/>
                             <strong>${userProfile.principalName || '.....................................'}</strong><br/>
                             NIP. ${userProfile.principalNip || '...................'}
                         </td>
-                        <td align="center" style="border: none; width: 50%;">
+                        <td align="center" style="border: none; width: 50%; vertical-align: top;">
                             ${signingLocation || 'Jakarta'}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br/>
-                            Guru Mata Pelajaran
-                            <br/><br/><br/><br/>
+                            Guru Mata Pelajaran<br/><br/><br/><br/>
                             <strong>${userProfile.name || '.....................................'}</strong><br/>
                             NIP. ${userProfile.nip || '...................'}
                         </td>
@@ -912,6 +946,10 @@ const LessonPlanPage = () => {
                                                 } catch (e) {
                                                     return <code className={className} {...props}>{children}</code>;
                                                 }
+                                            }
+                                            if (!inline && match && match[1] === 'mermaid') {
+                                                const content = String(children).replace(/\n$/, '');
+                                                return <InlineMermaid content={content} />;
                                             }
                                             return <code className={className} {...props}>{children}</code>;
                                         }

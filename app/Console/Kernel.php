@@ -16,6 +16,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('reminders:send')->everyMinute();
         $schedule->command('reports:send-parent --type=weekly')->weeklyOn(0, '19:00');
         $schedule->command('reports:send-parent --type=monthly')->monthlyOn(1, '07:00');
+        $schedule->command('substitution:detect')
+            ->twiceDaily(9, 13)
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/substitution-agent.log'));
     }
 
     /**

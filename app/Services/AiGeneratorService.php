@@ -11,11 +11,13 @@ class AiGeneratorService extends GeminiService
     protected $bskapIntel;
     protected $bskapVerbatim;
     protected $bskapFullCp;
+    protected $visualHints;
 
     public function __construct()
     {
         parent::__construct();
         $this->loadBskapData();
+        $this->loadVisualHints();
     }
 
     /**
@@ -93,7 +95,8 @@ class AiGeneratorService extends GeminiService
                     'title' => $relevantChapter['title'],
                     'sub_topics' => $enrichSubTopics($relevantChapter['sub_topics'] ?? []),
                     'key_terms' => $relevantChapter['key_terms'] ?? [],
-                    'pages' => $relevantChapter['pages'] ?? ''
+                    'pages' => $relevantChapter['pages'] ?? '',
+                    'visual_hints' => $relevantChapter['visual_hints'] ?? ''
                 ] : null,
                 'all_chapters' => $chapters->map(fn($c) => [
                     'title' => $c['title'],
@@ -188,6 +191,67 @@ class AiGeneratorService extends GeminiService
         }
     }
 
+    protected function loadVisualHints()
+    {
+        try {
+            $path = resource_path('json/visual_hints.json');
+            if (file_exists($path)) {
+                $this->visualHints = json_decode(file_get_contents($path), true);
+                Log::info("Visual hints loaded from visual_hints.json");
+            }
+        } catch (\Exception $e) {
+            Log::error("Failed to load visual hints: " . $e->getMessage());
+        }
+    }
+
+    protected function getVisualHintForSubject($subject, $materi)
+    {
+        if (empty($this->visualHints) || empty($this->visualHints['subjects'])) {
+            return null;
+        }
+
+        $subjectLower = strtolower($subject);
+        $materiLower = strtolower($materi);
+
+        // Cari berdasarkan nama mapel (match parsial)
+        $matchedSubject = null;
+        foreach ($this->visualHints['subjects'] as $subjectKey => $subjectData) {
+            if (stripos($subjectLower, $subjectKey) !== false || stripos($subjectKey, $subjectLower) !== false) {
+                $matchedSubject = $subjectData;
+                break;
+            }
+        }
+
+        if (!$matchedSubject) {
+            return null;
+        }
+
+        // Cari topik yang paling match dengan materi
+        $matchedTopic = null;
+        foreach ($matchedSubject['topics'] ?? [] as $topicKey => $topicData) {
+            if ($topicKey === 'default') continue;
+            if (stripos($materiLower, $topicKey) !== false || stripos($topicKey, $materiLower) !== false) {
+                $matchedTopic = $topicData;
+                break;
+            }
+        }
+
+        if ($matchedTopic) {
+            return $matchedTopic;
+        }
+
+        // Fallback ke default mapel
+        $default = $matchedSubject['topics']['default'] ?? null;
+        if ($default) {
+            return $default;
+        }
+
+        return [
+            'visual_type' => $matchedSubject['default_visual'] ?? 'graph_td',
+            'description' => $matchedSubject['description'] ?? ''
+        ];
+    }
+
     public function generateLessonPlan(array $data)
     {
         $modelName = $data['modelName'] ?? $this->model;
@@ -275,15 +339,37 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
         // INJEKSI DATA BUKU UNTUK BAHAN AJAR
         $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, $data['materi'] ?? $data['topic'] ?? '');
         if ($bookData && $bookData['chapter']) {
-            $bookPrompt = "\n\n**KONTEN MATERI UTAMA (DARI BUKU):**\n";
-            $bookPrompt .= "Gunakan struktur ini: {$bookData['chapter']['title']}\n";
+            $bookPrompt = "\n\n**KONTEN MATERI UTAMA (DARI BUKU TEKS KURIKULUM):**\n";
+            $bookPrompt .= "Judul Buku: {$bookData['book_title']}\n";
+            $bookPrompt .= "Bab: {$bookData['chapter']['title']}\n";
             $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
-            $bookPrompt .= "Detail Materi: {$subTopicNames}\n";
-            $bookPrompt .= "Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
+            $bookPrompt .= "Detail Sub-topik: {$subTopicNames}\n";
+            $bookPrompt .= "Key Terms/Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
+            $bookPrompt .= "Visual Hints: " . ($bookData['chapter']['visual_hints'] ?? 'Gunakan Mermaid untuk diagram alur') . "\n";
+            $bookPrompt .= "INSTRUKSI: Gunakan sub-topik sebagai kerangka modul. Visual Hints menentukan tipe visualisasi. Key terms wajib muncul di glosarium.\n";
             $prompt .= $bookPrompt;
         }
 
         return $this->callGeminiApi($prompt, $modelName, 8192);
+    }
+
+    protected function getVisualMermaidType($visualType)
+    {
+        $map = [
+            'mindmap' => 'mindmap',
+            'graph_td' => 'graph TD',
+            'graph_lr' => 'graph LR',
+            'flowchart_td' => 'flowchart TD',
+            'flowchart_lr' => 'flowchart LR',
+            'sequence' => 'sequenceDiagram',
+            'class' => 'classDiagram',
+            'venn' => 'flowchart LR',
+            'timeline' => 'gantt',
+            'entity' => 'erDiagram',
+            'state' => 'stateDiagram-v2',
+            'piperack' => 'flowchart LR',
+        ];
+        return $map[$visualType] ?? 'graph TD';
     }
 
     public function generateATP(array $data)
@@ -825,7 +911,38 @@ $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
       " . json_encode($subjectData, JSON_UNESCAPED_UNICODE) . "
       5. **AKURASI FASE**: Gunakan pemetaan Fase: {$phasesText}.
 
-6. **FORMAT**: Gunakan format Markdown standar (* atau -).
+      **VISUALISASI INTERAKTIF (WAJIB)**: Setiap bagian Materi/LKPD WAJIB mengandung minimal 1 blok visualisasi interaktif.
+
+      **PILIH TIPE VISUALISASI BERDASARKAN KONTEN MATERI**:
+      - **chart** (bar/line/pie) → hanya jika ada data numerik dalam materi (jumlah, persentase, tren). Gunakan data NYATA dari materi.
+      - **mermaid** → untuk diagram alur, flowchart, peta konsep, timeline, siklus. Ini pilihan terbaik jika materi berupa teks/konsep.
+      - **function** → grafik fungsi matematika (sin, cos, kuadrat)
+      - **chemistry** → struktur kimia via SMILES
+      - **music** → notasi musik ABC
+      - **mindmap** → peta konsep
+      - **map** → peta geografis
+      - **code** → blok kode
+      - **spreadsheet** → data grid
+      - **3d_model** → objek 3D
+      - **scratch** → blok Scratch
+      - **logic** → gerbang logika
+
+      **SUMBER MATERI WAJIB (BUKU TEKS KURIKULUM):**
+      - Buku: {$bookRefTitle} ({$bookRefPublisher})
+      - Bab: " . ($bookRefData['chapter']['title'] ?? 'Semua Bab') . "
+      - Sub-topik: " . implode(', ', array_column($bookRefData['chapter']['sub_topics'] ?? [], 'name')) . "
+      - Visual Hints: " . ($bookRefData['chapter']['visual_hints'] ?? 'Gunakan tipe visual paling sesuai') . "
+      - Key Terms: " . implode(', ', $bookRefData['chapter']['key_terms'] ?? []) . "
+
+      **INSTRUKSI MATERI**:
+      1. Gunakan sub-topik di atas sebagai kerangka materi ajar.
+      2. Visual Hints menunjukkan tipe visualisasi yang paling tepat untuk bab ini — ikuti rekomendasinya.
+      3. Key terms WAJIB muncul di Materi Ajar dan Glosarium.
+      4. JANGAN gunakan data, konsep, atau istilah di luar buku ini.
+
+      **KRUSIAL**: JANGAN gunakan data contoh. Extract data NYATA dari materi ajar. Jika materi tidak mengandung data numerik, maka JANGAN gunakan tipe chart, gunakan mermaid/mindmap/flowchart. Gunakan tipe visual yang disarankan oleh Visual Hints.
+
+
 
       **PENTING - REFERENSI BUKU PEMERINTAH (WAJIB):**
 
@@ -1331,12 +1448,33 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         $materi = $data['materi'];
         $gradeLevel = $data['gradeLevel'];
 
+        // Load book data
+        $bookData = $this->getRelevantBookContent($level, $gradeLevel, $subjectKey, $materi);
+        $bookTitle = $bookData['book_title'] ?? $subject;
+        $bookVisualHints = $bookData['chapter']['visual_hints'] ?? 'Pilih tipe visual paling sesuai';
+        $bookSubTopics = implode(', ', array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+
         $prompt = "
         TUGAS: Lanjutkan penyusunan MODUL AJAR untuk materi \"{$materi}\" (Mapel: {$subject}, Kelas: {$gradeLevel}).
 
         Anda HANYA boleh menghasilkan bagian **LAMPIRAN** yang mendalam dan kompleks.
 
         **STRUKTUR LAMPIRAN YANG HARUS DIHASILKAN (Gunakan Format Markdown):**
+
+        **VISUALISASI INTERAKTIF (WAJIB)**: Setiap LKPD/materi WAJIB minimal 1 blok visualisasi.
+
+        **SUMBER MATERI WAJIB (BUKU TEKS KURIKULUM):**
+        - Buku: {$bookTitle}
+        - Sub-topik: {$bookSubTopics}
+        - Visual Hints: {$bookVisualHints}
+
+        **PILIH TIPE BERDASARKAN ISI MATERI & VISUAL HINTS**:
+        - Ada data numerik? → chart (bar/line/pie) dengan data NYATA
+        - Hanya teks/konsep? → mermaid / mindmap / flowchart
+        - Rumus/fungsi? → function
+        - Struktur kimia? → chemistry
+
+        **KRUSIAL**: JANGAN buat chart jika tidak ada data numerik asli dari materi. JANGAN gunakan data contoh fiktif. Ikuti Visual Hints dari buku.
 
         ## IV. LAMPIRAN
 
@@ -1495,6 +1633,13 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
         $teacherName = $data['teacherName'] ?? 'Guru Smart School';
         $teacherTitle = $data['teacherTitle'] ?? 'Bapak/Ibu';
 
+        // Dapatkan visual hint dari JSON
+        $visualHint = $this->getVisualHintForSubject($subject, $materi);
+        $mermaidType = $visualHint ? $this->getVisualMermaidType($visualHint['visual_type'] ?? 'graph_td') : 'graph TD';
+        $visualDesc = $visualHint['description'] ?? 'Buat diagram Mermaid yang sesuai dengan konten materi.';
+        $visualExample = $visualHint['example'] ?? '';
+        $visualTopicHint = $visualDesc;
+
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
         $profileLulusan = $bskapData['standards']['profile_lulusan_2025'] ?? [];
@@ -1521,6 +1666,15 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
 
         **STRUKTUR MODUL (WAJIB IKUTI FORMAT INI):**
 
+        **FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**
+        - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**
+        - Inline math: Gunakan `$...$` (contoh: $a^2 + b^2 = c^2$)
+        - Display math (rumus baru di baris sendiri): Gunakan `$$...$$` (contoh: $$\int_{a}^{b} f(x) dx$$)
+        - Contoh penulisan benar: `$\frac{-b \pm \sqrt{b^2-4ac}}{2a}$`
+        - Contoh penulisan SALAH: `\frac{-b \pm \sqrt{b^2-4ac}}{2a}` (tanpa `$`)
+
+        ---
+
         # 📘 MODUL BELAJAR: [JUDUL MATERI DI SINI]
 
         > \"Belajar itu bukan tentang menjadi pintar, tapi tentang peka terhadap sekitarmu.\" - Smart Teaching
@@ -1539,7 +1693,10 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         ---
 
         ## 🗺️ PETA KONSEP (MIND MAP)
-        *(Sajikan ringkasan alur materi menggunakan diagram Mermaid `graph TD` agar siswa mudah membayangkan peta perjalanan belajarnya).*
+        *(WAJIB: {$visualDesc}
+        Tipe Mermaid yang harus digunakan: `{$mermaidType}`
+        {$visualExample}
+        - Pastikan node berisi kata kunci spesifik dari materi, BUKAN template umum)*
 
         ---
 
@@ -1552,6 +1709,7 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         *(Bagian ini harus menjadi bagian TERPANJANG. Jangan hanya poin-poin. Jelaskan konsep selengkap-lengkapnya layaknya Anda mengajar di depan kelas dengan bahasa yang mengalir).*
 
         ### 1. [Sub-Bab 1]
+        (WAJIB: {$visualTopicHint}. Jika sub-bab berisi proses, hubungan, data terstruktur, atau langkah - tambahkan diagram Mermaid yang relevan (`{$mermaidType}`) sesuai konten. Jangan buat diagram jika kontennya naratif/deskripsi saja.)
 
         ### 2. [Sub-Bab 2]
 
@@ -1598,6 +1756,12 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
             ? "Berikut adalah daftar nama peserta didik yang HARUS dimasukkan ke dalam tabel penilaian: \n" . implode(', ', $studentNames)
             : 'Buatlah satu baris kosong (...................) untuk nama peserta didik.';
 
+        // Extract subject info from RPP content
+        preg_match('/\*\*Mata Pelajaran\*\*\s*\|\s*([^\|]+)/', $rppContent, $subjectMatch);
+        $subjectName = trim($subjectMatch[1] ?? $data['subject'] ?? 'Unknown');
+        preg_match('/\*\*Kelas \/ Semester\*\*\s*\|\s*([^\|]+)/', $rppContent, $gradeMatch);
+        $gradeFromRpp = trim(explode('/', $gradeMatch[1] ?? '')[0] ?? $data['gradeLevel'] ?? '');
+
         return "
         Anda adalah \"Mesin Intelijen Kurikulum Nasional\" spesialis penyusunan **Lembar Kerja Peserta Didik (LKPD)** yang presisi.
 
@@ -1622,6 +1786,21 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         {$studentListText}
 
         **STRUKTUR LKPD YANG HARUS DIHASILKAN (Gunakan Format Markdown Ini):**
+
+        **VISUALISASI INTERAKTIF (WAJIB)**: Setiap LKPD WAJIB minimal 1 blok visualisasi di Kegiatan 1/2/3.
+
+        **SUMBER MATERI WAJIB (BUKU TEKS KURIKULUM):**
+        - Buku / RPP Sumber: {$subjectName} Kelas {$gradeFromRpp}
+        - Referensi utama adalah RPP di atas dan buku kurikulum resmi.
+        - Visual Hints: Pilih tipe visual paling sesuai dengan jenis aktivitas LKPD (chart untuk data numerik, mermaid untuk alur/proses).
+
+        **PILIH TIPE BERDASARKAN ISI MATERI**:
+        - Ada data numerik? → chart (bar/line/pie) dengan data NYATA
+        - Hanya teks/konsep? → mermaid / mindmap / flowchart
+        - Rumus/fungsi? → function
+        - Struktur kimia? → chemistry
+
+        **KRUSIAL**: JANGAN buat chart jika tidak ada data numerik asli. JANGAN gunakan data contoh fiktif.
 
         ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
 

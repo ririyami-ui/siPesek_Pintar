@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
 import mermaid from 'mermaid';
+import scratchblocks from 'scratchblocks';
 import api from '../lib/axios';
 import { useSettings } from '../utils/SettingsContext';
 import BSKAP_DATA from '../utils/bskap_2025_intel.json';
@@ -16,6 +17,29 @@ import { getRegionFromSubject } from '../utils/carakan';
 import { saveAs } from 'file-saver';
 import { asBlob } from 'html-docx-js-typescript';
 import Modal from '../components/Modal';
+
+// Lazy load external visual renderers (same pattern as LessonPlanPage)
+const ExternalMermaidRenderer = lazy(() => import('../components/quiz/renderers/MermaidRenderer'));
+const ExternalChartRenderer = lazy(() => import('../components/quiz/renderers/ChartRenderer'));
+const ExternalMusicRenderer = lazy(() => import('../components/quiz/renderers/MusicRenderer'));
+const ExternalChemistryRenderer = lazy(() => import('../components/quiz/renderers/ChemistryRenderer'));
+const ExternalLogicRenderer = lazy(() => import('../components/quiz/renderers/LogicRenderer'));
+const ExternalMapRenderer = lazy(() => import('../components/quiz/renderers/MapRenderer'));
+const ExternalGeometryRenderer = lazy(() => import('../components/quiz/renderers/GeometryRenderer'));
+const ExternalMindMapRenderer = lazy(() => import('../components/quiz/renderers/MindMapRenderer'));
+const ExternalSpreadsheetRenderer = lazy(() => import('../components/quiz/renderers/SpreadsheetRenderer'));
+const ExternalCodeRenderer = lazy(() => import('../components/quiz/renderers/CodeRenderer'));
+
+// Loading skeleton for lazy components
+const RenderingSkeleton = () => (
+  <div className="my-4 p-6 border-2 border-blue-100 dark:border-blue-900/30 rounded-2xl bg-white dark:bg-gray-900 animate-pulse flex flex-col items-center justify-center min-h-[200px] shadow-sm">
+    <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-950 flex items-center justify-center mb-3">
+      <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+    <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-36 mb-2"></div>
+    <div className="h-2 bg-gray-100 dark:bg-gray-900 rounded w-24"></div>
+  </div>
+);
 
 const HandoutGeneratorPage = () => {
     const { activeSemester, academicYear, geminiModel } = useSettings();
@@ -113,6 +137,35 @@ const HandoutGeneratorPage = () => {
     const MermaidRenderer = ({ children }) => {
         const code = String(children).replace(/\n$/, '');
         return <LocalMermaid content={code} />;
+    };
+
+    // Local Scratch Blocks Renderer
+    const ScratchRenderer = ({ children }) => {
+        const code = String(children).replace(/\n$/, '');
+        const ref = useRef(null);
+        const uniqueId = useRef(`scratch-${Math.random().toString(36).substr(2, 9)}`).current;
+
+        useEffect(() => {
+            if (ref.current && code) {
+                ref.current.textContent = code;
+                try {
+                    scratchblocks.renderMatching(`#${uniqueId}`, {
+                        style: 'scratch3',
+                        languages: ['en', 'id']
+                    });
+                } catch (e) {
+                    console.error("Scratch error", e);
+                }
+            }
+        }, [code, uniqueId]);
+
+        return (
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm overflow-x-auto my-6">
+                <div ref={ref} id={uniqueId} className="scratchblocks">
+                    {code}
+                </div>
+            </div>
+        );
     };
 
     // Data Sources
@@ -236,7 +289,8 @@ const HandoutGeneratorPage = () => {
 
         const selectedRPP = savedRPPs.find(rpp => String(rpp.id) === String(rppId));
         if (selectedRPP) {
-            const rppTopic = selectedRPP.topic || selectedRPP.materi || '';
+            const rawTopic = selectedRPP.topic || selectedRPP.materi || '';
+            const rppTopic = typeof rawTopic === 'string' ? rawTopic : (rawTopic?.materi || '');
             setTopic(rppTopic);
             
             // Auto match subject and grade if they exist in our lists
@@ -295,7 +349,8 @@ const HandoutGeneratorPage = () => {
             let effectiveMateri = topic;
             if (sourceType === 'atp') effectiveMateri = selectedAtpItem.materi;
             if (sourceType === 'rpp' && !effectiveMateri) {
-                effectiveMateri = selectedRPP?.topic || selectedRPP?.materi;
+                const rawMateri = selectedRPP?.topic || selectedRPP?.materi;
+                effectiveMateri = typeof rawMateri === 'string' ? rawMateri : (rawMateri?.materi || '');
             }
 
             if (!effectiveMateri) {
@@ -430,6 +485,17 @@ const HandoutGeneratorPage = () => {
             previewEl.querySelectorAll('.my-10').forEach(div => {
                 div.style.margin = '20px 0';
                 div.style.textAlign = 'center';
+            });
+
+            // Convert KaTeX rendered math back to LaTeX delimiters for Word compatibility
+            previewEl.querySelectorAll('.katex').forEach(el => {
+                const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+                if (annotation) {
+                    const tex = annotation.textContent.trim();
+                    const span = document.createElement('span');
+                    span.textContent = `$${tex}$`;
+                    el.parentNode.replaceChild(span, el);
+                }
             });
 
             const contentHtml = `
@@ -691,7 +757,7 @@ const HandoutGeneratorPage = () => {
                                                     })
                                                     .map((rpp) => (
                                                         <option key={rpp.id} value={rpp.id}>
-                                                            {rpp.topic || rpp.materi}
+                                                            {rpp.topic || (typeof rpp.materi === 'string' ? rpp.materi : (rpp.materi?.materi || ''))}
                                                         </option>
                                                     ))}
                                             </select>
@@ -913,12 +979,85 @@ const HandoutGeneratorPage = () => {
                                                 </thead>
                                             ),
                                             code({ node, inline, className, children, ...props }) {
-                                                const match = /language-mermaid/.exec(className || '');
-                                                return !inline && match ? (
-                                                    <MermaidRenderer>{children}</MermaidRenderer>
-                                                ) : (
+                                                if (inline) return (
                                                     <code className={`${className} bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-pink-600 dark:text-pink-400 font-mono text-sm`} {...props}>
                                                         {children}
+                                                    </code>
+                                                );
+                                                const lang = (className || '').replace('language-', '').trim();
+                                                const codeContent = String(children).replace(/\n$/, '');
+                                                // ── MERMAID ──
+                                                if (lang === 'mermaid') return <MermaidRenderer>{children}</MermaidRenderer>;
+                                                // ── SCRATCH ──
+                                                if (lang === 'scratch') return <ScratchRenderer>{children}</ScratchRenderer>;
+                                                // ── MUSIC / ABC NOTATION ──
+                                                if (lang === 'abc' || lang === 'music') {
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalMusicRenderer config={{ abc: codeContent }} />
+                                                    </Suspense>;
+                                                }
+                                                // ── CHEMISTRY / SMILES ──
+                                                if (lang === 'smiles' || lang === 'chemistry') {
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalChemistryRenderer config={{ smiles: codeContent }} />
+                                                    </Suspense>;
+                                                }
+                                                // ── LOGIC GATES ──
+                                                if (lang === 'logic') {
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalLogicRenderer config={{ code: codeContent }} />
+                                                    </Suspense>;
+                                                }
+                                                // ── MAP (Leaflet) - try parse JSON ──
+                                                if (lang === 'map') {
+                                                    let mapConfig = {};
+                                                    try { mapConfig = JSON.parse(codeContent); } catch (e) { mapConfig = { center: [-6.2088, 106.8456], zoom: 5, markers: [{ position: [-6.2088, 106.8456], popup: 'Lokasi' }] }; }
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalMapRenderer config={mapConfig} />
+                                                    </Suspense>;
+                                                }
+                                                // ── GEOMETRY - try parse JSON ──
+                                                if (lang === 'geometry') {
+                                                    let geoConfig = {};
+                                                    try { geoConfig = JSON.parse(codeContent); } catch (e) { geoConfig = { elements: [{ type: 'point', coords: [0, 0] }] }; }
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalGeometryRenderer config={geoConfig} />
+                                                    </Suspense>;
+                                                }
+                                                // ── MIND MAP (React Flow) - try parse JSON ──
+                                                if (lang === 'mindmap') {
+                                                    let mindConfig = {};
+                                                    try { mindConfig = JSON.parse(codeContent); } catch (e) { mindConfig = { nodes: [{ id: '1', label: 'Konsep' }], edges: [] }; }
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalMindMapRenderer config={mindConfig} />
+                                                    </Suspense>;
+                                                }
+                                                // ── CHART - try parse JSON ──
+                                                if (lang === 'chart') {
+                                                    let chartConfig = {};
+                                                    try { chartConfig = JSON.parse(codeContent); } catch (e) { chartConfig = {}; }
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalChartRenderer config={chartConfig} />
+                                                    </Suspense>;
+                                                }
+                                                // ── SPREADSHEET - try parse JSON ──
+                                                if (lang === 'spreadsheet') {
+                                                    let sheetConfig = {};
+                                                    try { sheetConfig = JSON.parse(codeContent); } catch (e) { sheetConfig = {}; }
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalSpreadsheetRenderer config={sheetConfig} />
+                                                    </Suspense>;
+                                                }
+                                                // ── CODE HIGHLIGHT ──
+                                                if (['code', 'js', 'javascript', 'python', 'php', 'java', 'cpp', 'c', 'html', 'css', 'sql', 'bash', 'json', 'xml', 'yaml', 'ruby', 'go', 'rust', 'typescript'].includes(lang)) {
+                                                    return <Suspense fallback={<RenderingSkeleton />}>
+                                                        <ExternalCodeRenderer config={{ language: lang, code: codeContent }} />
+                                                    </Suspense>;
+                                                }
+                                                // ── FALLBACK ──
+                                                return (
+                                                    <code className={`block bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-sm font-mono whitespace-pre-wrap my-4 ${className}`} {...props}>
+                                                        {codeContent}
                                                     </code>
                                                 );
                                             },

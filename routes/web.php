@@ -12,6 +12,8 @@ use App\Http\Controllers\InstallController;
 */
 
 // Installation Routes
+Route::get('/ping', [App\Http\Controllers\PingController::class, 'ping']);
+
 Route::get('/install', [InstallController::class, 'index'])->name('install.index');
 Route::post('/install', [InstallController::class, 'postInstall'])->name('install.post');
 

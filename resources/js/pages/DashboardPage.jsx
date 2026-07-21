@@ -14,6 +14,7 @@ import AnalyticsOverview from '../components/AnalyticsOverview';
 import AttendanceTrendChart from '../components/AttendanceTrendChart';
 import GradeDistributionChart from '../components/GradeDistributionChart';
 import AdminMonitoringDashboard from '../components/AdminMonitoringDashboard';
+import SubstitutionWidget from '../components/SubstitutionWidget';
 import api from '../lib/axios';
 
 export default function DashboardPage() {
@@ -324,6 +325,13 @@ export default function DashboardPage() {
       {userProfile?.role?.toLowerCase() === 'admin' && (
         <div className="mb-8">
           <AdminMonitoringDashboard holiday={todayHoliday} />
+        </div>
+      )}
+
+      {/* Substitution Agent Widget - Admin Only */}
+      {userProfile?.role?.toLowerCase() === 'admin' && (
+        <div className="mb-8">
+          <SubstitutionWidget />
         </div>
       )}
 

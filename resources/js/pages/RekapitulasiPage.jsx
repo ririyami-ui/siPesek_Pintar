@@ -47,7 +47,7 @@ const RekapitulasiPage = () => {
   const [endDate, setEndDate] = useState('');
   const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceDates, setAttendanceDates] = useState([]); // New state for detailed report
-  const [chartData, setChartData] = useState({ Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
+  const [chartData, setChartData] = useState({ Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0 });
   const [numDays, setNumDays] = useState(0);
   const [dailyAttendanceData, setDailyAttendanceData] = useState([]);
   const [rawAttendanceLogs, setRawAttendanceLogs] = useState([]);
@@ -218,7 +218,7 @@ const RekapitulasiPage = () => {
 
       let summary = {};
       sortedStudents.forEach(student => {
-        summary[student.id] = { absen: student.absen, nis: student.nisn || student.nis, name: student.name, gender: student.gender, Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
+        summary[student.id] = { absen: student.absen, nis: student.nisn || student.nis, name: student.name, gender: student.gender, Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0 };
       });
 
       let finalRawDocs = [];
@@ -239,7 +239,7 @@ const RekapitulasiPage = () => {
             if (summary[studentId]) {
               const sortedSessions = records.sort((a, b) => a.id - b.id);
               const firstRecord = sortedSessions[0];
-              const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
+              const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Izin': 'Izin', 'Alpa': 'Alpha' };
               const mappedStatus = statusMap[firstRecord.status] || firstRecord.status;
               
               if (summary[studentId][mappedStatus] !== undefined) {
@@ -256,7 +256,7 @@ const RekapitulasiPage = () => {
         // Mapel Spesifik (Menjumlahkan semua sesi dari mata pelajaran tersebut)
         rawDocs.forEach(record => {
           if (summary[record.studentId] && record.status) {
-            const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Ijin': 'Ijin', 'Alpa': 'Alpha' };
+            const statusMap = { 'Hadir': 'Hadir', 'Sakit': 'Sakit', 'Izin': 'Izin', 'Alpa': 'Alpha' };
             const mappedStatus = statusMap[record.status] || record.status;
             if (summary[record.studentId][mappedStatus] !== undefined) {
               summary[record.studentId][mappedStatus]++;
@@ -278,13 +278,13 @@ const RekapitulasiPage = () => {
       const totalSummary = tableData.reduce((acc, curr) => {
         acc.Hadir += curr.Hadir;
         acc.Sakit += curr.Sakit;
-        acc.Ijin += curr.Ijin;
+        acc.Izin += curr.Izin;
         acc.Alpha += curr.Alpha;
         return acc;
-      }, { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 });
+      }, { Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0 });
 
       // Calculate attendance percentage
-      const totalRecords = totalSummary.Hadir + totalSummary.Sakit + totalSummary.Ijin + totalSummary.Alpha;
+      const totalRecords = totalSummary.Hadir + totalSummary.Sakit + totalSummary.Izin + totalSummary.Alpha;
       const attendancePercentage = totalRecords > 0 
         ? ((totalSummary.Hadir / totalRecords) * 100).toFixed(1) 
         : 0;
@@ -306,7 +306,7 @@ const RekapitulasiPage = () => {
             date: record.date,
             hadir: 0,
             sakit: 0,
-            ijin: 0,
+            izin: 0,
             alpha: 0,
             total: 0,
             students: [],
@@ -317,14 +317,14 @@ const RekapitulasiPage = () => {
         const student = sortedStudents.find(s => String(s.id) === String(record.studentId));
         if (student) {
           dailyDataMap[record.date].total++;
-          const statusMap = { 'Hadir': 'hadir', 'Sakit': 'sakit', 'Izin': 'ijin', 'Alpa': 'alpha' };
+          const statusMap = { 'Hadir': 'hadir', 'Sakit': 'sakit', 'Izin': 'izin', 'Alpa': 'alpha' };
           const s = statusMap[record.status] || record.status.toLowerCase();
           if (dailyDataMap[record.date][s] !== undefined) dailyDataMap[record.date][s]++;
 
           dailyDataMap[record.date].students.push({
             name: student.name,
             absen: student.absen,
-            status: record.status === 'Izin' ? 'Ijin' : (record.status === 'Alpa' ? 'Alpha' : record.status)
+            status: record.status === 'Izin' ? 'Izin' : (record.status === 'Alpa' ? 'Alpha' : record.status)
           });
         }
       });
@@ -455,11 +455,12 @@ const RekapitulasiPage = () => {
     }
     setIsLoadingJurnal(true);
     try {
-      const response = await api.get('/teaching-journals', {
+      const response = await api.get('/journals', {
         params: {
           date_start: jurnalStartDate,
           date_end: jurnalEndDate,
-          all: true
+          class_id: selectedJurnalClass || undefined,
+          subject_id: selectedJurnalSubject || undefined,
         }
       });
       let journalList = response.data.data || response.data || [];
@@ -468,12 +469,16 @@ const RekapitulasiPage = () => {
         ...item,
         className: item.class?.rombel || '',
         subjectName: item.subject?.name || '',
+        classId: item.class_id,
+        subjectId: item.subject_id,
         material: item.topic || '',
-        learningObjectives: item.notes || '', // Map notes to objectives if needed, or check model
-        learningActivities: '', // These fields might be missing in new model
-        reflection: '',
-        isImplemented: true,
-        followUp: ''
+        learningObjectives: item.learning_objectives || '',
+        learningActivities: item.learning_activities || '',
+        reflection: item.reflection || '',
+        followUp: item.follow_up || '',
+        challenges: item.notes || '',
+        teacherName: item.teacher?.name || '',
+        isImplemented: item.status === 'Terlaksana',
       })).sort((a, b) => new Date(b.date) - new Date(a.date));
       setJurnalData(fetchedJournals);
     } catch (error) {
@@ -506,7 +511,7 @@ const RekapitulasiPage = () => {
       'Tujuan Pembelajaran': item.learningObjectives || '',
       'Kegiatan Pembelajaran': item.learningActivities || '',
       'Refleksi': item.reflection || '',
-      'Keterlaksanaan': item.isImplemented !== false ? 'Terlaksana' : 'Tidak Terlaksana',
+      'Keterlaksanaan': item.status || 'Terlaksana',
       'Tindak Lanjut': item.followUp || '',
     })));
     const workbook = XLSX.utils.book_new();
@@ -822,7 +827,7 @@ const RekapitulasiPage = () => {
     { header: { label: 'Nama Siswa' }, accessor: 'name' },
     { header: { label: 'Hadir' }, accessor: 'Hadir' },
     { header: { label: 'Sakit' }, accessor: 'Sakit' },
-    { header: { label: 'Ijin' }, accessor: 'Ijin' },
+    { header: { label: 'Izin' }, accessor: 'Izin' },
     { header: { label: 'Alpha' }, accessor: 'Alpha' },
   ];
 
@@ -976,7 +981,7 @@ const RekapitulasiPage = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <SummaryCard title="Hadir" value={chartData.Hadir} icon={<CheckCircle className="w-8 h-8 text-green-500" />} color="green" />
                     <SummaryCard title="Sakit" value={chartData.Sakit} icon={<TrendingUp className="w-8 h-8 text-blue-500" />} color="blue" />
-                    <SummaryCard title="Ijin" value={chartData.Ijin} icon={<Calendar className="w-8 h-8 text-yellow-500" />} color="yellow" />
+                    <SummaryCard title="Izin" value={chartData.Izin} icon={<Calendar className="w-8 h-8 text-yellow-500" />} color="yellow" />
                     <SummaryCard title="Alpha" value={chartData.Alpha} icon={<AlertTriangle className="w-8 h-8 text-red-500" />} color="red" />
                     <SummaryCard 
                       title="Rata-rata Kehadiran" 
@@ -1067,7 +1072,7 @@ const RekapitulasiPage = () => {
                                       <div className="flex gap-4 text-xs font-black">
                                         <span className="text-green-600">H: {dayData.hadir}</span>
                                         <span className="text-blue-600">S: {dayData.sakit}</span>
-                                        <span className="text-yellow-600">I: {dayData.ijin}</span>
+                                        <span className="text-yellow-600">I: {dayData.izin}</span>
                                         <span className="text-red-600">A: {dayData.alpha}</span>
                                       </div>
                                     </div>
@@ -1080,7 +1085,7 @@ const RekapitulasiPage = () => {
                                               ? 'bg-green-50/50 border-green-100 text-green-700 dark:bg-green-900/10 dark:border-green-900/20 dark:text-green-400'
                                               : student.status === 'Sakit'
                                                 ? 'bg-blue-50/50 border-blue-100 text-blue-700 dark:bg-blue-900/10 dark:border-blue-900/20 dark:text-blue-400'
-                                                : student.status === 'Ijin'
+                                                : student.status === 'Izin'
                                                   ? 'bg-yellow-50/50 border-yellow-100 text-yellow-700 dark:bg-yellow-900/10 dark:border-yellow-900/20 dark:text-yellow-400'
                                                   : 'bg-red-50/50 border-red-100 text-red-700 dark:bg-red-900/10 dark:border-red-900/20 dark:text-red-400'
                                               }`}
@@ -1187,18 +1192,13 @@ const RekapitulasiPage = () => {
                     <StyledTable headers={jurnalColumns.map(c => c.header)}>
                       {jurnalData
                         .filter(item => {
-                          const searchTermMatch = !jurnalSearchTerm ||
-                            item.material?.toLowerCase().includes(jurnalSearchTerm.toLowerCase()) ||
-                            item.className?.toLowerCase().includes(jurnalSearchTerm.toLowerCase()) ||
-                            item.subjectName?.toLowerCase().includes(jurnalSearchTerm.toLowerCase());
-
-                          const classObj = classes.find(c => String(c.id) === String(selectedJurnalClass));
-                          const classMatch = !selectedJurnalClass || item.classId === selectedJurnalClass || item.className === classObj?.rombel;
-
-                          const subjectObj = subjects.find(s => s.id === selectedJurnalSubject);
-                          const subjectMatch = !selectedJurnalSubject || item.subjectId === selectedJurnalSubject || item.subjectName === subjectObj?.name;
-
-                          return searchTermMatch && classMatch && subjectMatch;
+                          const searchMatch = !jurnalSearchTerm ||
+                            (item.material || '').toLowerCase().includes(jurnalSearchTerm.toLowerCase()) ||
+                            (item.className || '').toLowerCase().includes(jurnalSearchTerm.toLowerCase()) ||
+                            (item.subjectName || '').toLowerCase().includes(jurnalSearchTerm.toLowerCase());
+                          const classMatch = !selectedJurnalClass || String(item.class_id) === String(selectedJurnalClass) || item.className === (classes.find(c => String(c.id) === String(selectedJurnalClass))?.rombel || '');
+                          const subjectMatch = !selectedJurnalSubject || String(item.subject_id) === String(selectedJurnalSubject) || item.subjectName === (subjects.find(s => String(s.id) === String(selectedJurnalSubject))?.name || '');
+                          return searchMatch && classMatch && subjectMatch;
                         })
                         .map((row, index) => (
                           <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">

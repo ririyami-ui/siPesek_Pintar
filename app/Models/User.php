@@ -26,6 +26,7 @@ class User extends Authenticatable
         'role',
         'nip',
         'status',
+        'push_subscription',
     ];
 
     /**

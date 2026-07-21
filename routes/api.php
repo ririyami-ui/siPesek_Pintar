@@ -84,6 +84,13 @@ Route::middleware('auth:sanctum')->group(function () {
         // Class Promotion
         Route::post('/admin/students/promote', [App\Http\Controllers\StudentController::class, 'promote']);
         Route::post('/admin/students/promote-distribution', [App\Http\Controllers\StudentController::class, 'promoteDistribution']);
+
+        // Substitution Agent (Automatic Substitute Teacher Detection)
+        Route::post('/admin/substitutions/detect', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'detect']);
+        Route::get('/admin/substitutions', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'index']);
+        Route::get('/admin/substitutions/{substitution}/suggest', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'suggest']);
+        Route::post('/admin/substitutions/{substitution}/assign', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'assign']);
+        Route::post('/admin/substitutions/{substitution}/dismiss', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'dismiss']);
     });
 
     // Student Portal Routes (Accessible by Students)
@@ -183,6 +190,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/infractions', [StudentDashboardController::class, 'getInfractions']);
         Route::get('/library/loans',[StudentDashboardController::class, 'myLibraryLoans']);
         Route::post('/chat',       [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1');
+    });
+
+    // Parent Reports (accessible by students/parents)
+    Route::get('/parent-reports', [App\Http\Controllers\Api\ParentReportController::class, 'index']);
+    Route::get('/parent-reports/{id}', [App\Http\Controllers\Api\ParentReportController::class, 'show']);
+
+    // Admin: Parent Reports management
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin/parent-reports', [App\Http\Controllers\Api\ParentReportController::class, 'adminIndex']);
+        Route::post('/admin/parent-reports/regenerate/{studentId}', [App\Http\Controllers\Api\ParentReportController::class, 'regenerate']);
     });
 
     // Library Module

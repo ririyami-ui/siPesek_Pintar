@@ -282,7 +282,20 @@
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 });
 
-                const data = await response.json();
+                // Strip UTF-8 BOM before JSON parse (some PHP environments insert BOM)
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text.replace(/^\uFEFF+/, ''));
+                } catch (e) {
+                    // Response is not valid JSON (likely an HTML error page on 500)
+                    console.error('Parse error:', e, 'Response:', text.substring(0, 200));
+                    alert('Server error. Silakan lihat konsol untuk detail.');
+                    btn.disabled = false;
+                    btnText.innerText = 'INSTAL SEKARANG';
+                    loading.classList.add('hidden');
+                    return;
+                }
                 
                 // Wait a bit for dramatic effect
                 await new Promise(r => setTimeout(r, 1000));

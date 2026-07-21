@@ -84,6 +84,17 @@ class GradeController extends Controller
             array_merge($validated, ['user_id' => Auth::id()])
         );
 
+        // Push to student
+        $subjectName = $grade->subject?->name ?? 'Pelajaran';
+        $typeLabel = $request->type;
+        $topicName = $request->topic ?? 'Evaluasi';
+        \App\Services\PushNotificationService::sendToStudentParent(
+            $grade->student_id,
+            'Penilaian Baru',
+            "Nilai {$topicName} pada mapel {$subjectName} ({$typeLabel}) baru dicatat.",
+            '/siswa/nilai'
+        );
+
         return response()->json($grade, 201);
     }
 
@@ -275,6 +286,20 @@ class GradeController extends Controller
         ]);
 
         $grade->update($validated);
+
+        // Push to student
+        if ($request->has('score') || $request->has('notes')) {
+            $subjectName = $grade->subject?->name ?? 'Pelajaran';
+            $typeLabel = $grade->type;
+            $topicName = $grade->topic ?? 'Evaluasi';
+            \App\Services\PushNotificationService::sendToStudentParent(
+                $grade->student_id,
+                'Nilai Diperbarui',
+                "Nilai {$topicName} pada mapel {$subjectName} ({$typeLabel}) diperbarui.",
+                '/siswa/nilai'
+            );
+        }
+
         return response()->json($grade);
     }
 

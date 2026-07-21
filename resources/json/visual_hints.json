@@ -1,0 +1,1192 @@
+{
+  "version": "1.0",
+  "name": "Visual Hints Catalog - Si Pesek Pintar",
+  "description": "Mapping mata pelajaran & topik ke tipe visual yang paling akurat. Digunakan oleh AI prompt untuk memilih diagram Mermaid yang sesuai konteks materi.",
+  "last_updated": "2026-07-19",
+  "mermaid_types": {
+    "mindmap": "Mind map / peta konsep hierarkis (default untuk materi konseptual)",
+    "graph_td": "Graph top-down (prosedur, alur bertahap, langkah)",
+    "graph_lr": "Graph left-right (perbandingan, hubungan timeline)",
+    "flowchart_td": "Flowchart top-down (proses, siklus, alur kerja)",
+    "flowchart_lr": "Flowchart left-right (hubungan sebab-akibat, input-output)",
+    "sequence": "Sequence diagram (interaksi, komunikasi, protokol)",
+    "class": "Class diagram (taksonomi, hierarki, struktur organisasi)",
+    "venn": "Venn/Euler diagram (himpunan, irisan, overlap konsep)",
+    "timeline": "Timeline / Gantt (sejarah, kronologi, jadwal)",
+    "entity": "Entity-relationship / peta konsep terstruktur",
+    "state": "State diagram (siklus hidup, fase, perubahan keadaan)",
+    "piperack": "Pipeline / bagan alir teknik (proses produksi, reaksi)"
+  },
+  "subjects": {
+    "Matematika": {
+      "default_visual": "graph_lr",
+      "description": "Mapel eksak dengan pola hierarki, hubungan, dan langkah penyelesaian.",
+      "topics": {
+        "Himpunan": {
+          "visual_type": "venn",
+          "description": "Gunakan Venn diagram untuk himpunan, irisan, gabungan, komplemen. Notasi { } dijelaskan terpisah via KaTeX.",
+          "example": "```mermaid\nflowchart LR\n    A((A)) --- B((B))\n    A --- C((C))\n    B --- D((D))\n    B --- E((E))\n```"
+        },
+        "Bilangan": {
+          "visual_type": "graph_td",
+          "description": "Gunakan graph TD untuk klasifikasi bilangan (asli, cacah, bulat, rasional, irasional). Spreadsheet untuk pola bilangan.",
+          "example": "```mermaid\ngraph TD\n    Bilangan --> Bil.Bulat\n    Bilangan --> Bil.Pecahan\n    Bil.Bulat --> Positif\n    Bil.Bulat --> Negatif\n```"
+        },
+        "Aljabar": {
+          "visual_type": "flowchart_lr",
+          "description": "Gunakan flowchart LR untuk langkah operasi aljabar. LaTeX untuk variabel dan pangkat.",
+          "example": "```mermaid\nflowchart LR\n    A[Bentuk Aljabar] --> B[Kelompokkan Suku]\n    B --> C[Operasikan Koefisien]\n    C --> D[Sederhanakan]\n```"
+        },
+        "Persamaan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart langkah isolasi variabel (pindah ruas, bagi, sederhanakan).",
+          "example": "```mermaid\nflowchart TD\n    A[Persamaan] --> B[Pindah Ruas]\n    B --> C[Group Variabel]\n    C --> D[Bagi Koefisien]\n    D --> E[Nilai Variabel]\n```"
+        },
+        "Fungsi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk konsep fungsi (domain, kodomain, range). Graph LR untuk pemetaan input-output.",
+          "example": "```mermaid\ngraph LR\n    x(x) --> f[f(x)]\n    f --> y(y)\n    y --> f^{-1}(invers)\n```"
+        },
+        "Geometri": {
+          "visual_type": "graph_td",
+          "description": "Mindmap atau graph TD untuk klasifikasi bangun datar/ruang. LaTeX untuk rumus luas/volume.",
+          "example": "```mermaid\ngraph TD\n    BangunDatar --> Segitiga\n    BangunDatar --> Segiempat\n    BangunDatar --> Lingkaran\n    Segiempat --> Persegi\n    Segiempat --> PersegiPanjang\n```"
+        },
+        "Perbandingan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk perbandingan senilai/berbalik nilai. Spreadsheet untuk rasio tabel.",
+          "example": "```mermaid\nflowchart LR\n    A[Senilai] -->|÷| B[Faktor]\n    B -->|×| C[Hasi]\n    D[Berbalik] -->|×| E[Konstanta]\n    E -->|÷| F[Hasi]\n```"
+        },
+        "Statistika": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi data (tunggal/kelompok, mean/median/modus). Chart untuk visual data.",
+          "example": "```mermaid\ngraph TD\n    Data --> Tunggal\n    Data --> Kelompok\n    Tunggal --> Mean\n    Tunggal --> Median\n    Tunggal --> Modus\n```"
+        },
+        "Peluang": {
+          "visual_type": "graph_td",
+          "description": "Graph TD atau flowchart untuk diagram pohon peluang, ruang sampel, kejadian.",
+          "example": "```mermaid\ngraph TD\n    A[Percobaan] --> B[Kejadian 1]\n    A --> C[Kejadian 2]\n    B --> D[Peluang]\n    C --> D\n```"
+        },
+        "Matriks": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah operasi matriks. Spreadsheet untuk visual matriks baris-kolom.",
+          "example": "```mermaid\nflowchart TD\n    A[Matriks A,B] --> B[Cek Ordo]\n    B -->|Sama| C[Operasikan]\n    B -->|Beda| D[Tidak bisa]\n```"
+        },
+        "Limit": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk konsep limit kiri/kanan. Function chart untuk visual grafik limit.",
+          "example": "```mermaid\ngraph LR\n    x->a --> Limit\n    Limit --> f(x)->L\n    Limit --> f(x)->≠L\n```"
+        },
+        "Turunan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk langkah diferensiasi (aturan rantai, turunan pertama/kedua).",
+          "example": "```mermaid\ngraph LR\n    f(x) --> f'(x)[Turunan]\n    f' --> f''[Turunan Kedua]\n    f' --> NilaiMax\n    f' --> NilaiMin\n```"
+        },
+        "Integral": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah integral tak tentu/tentu, substitusi, parsial.",
+          "example": "```mermaid\ngraph TD\n    Integral --> TakTentu\n    Integral --> Tentu\n    TakTentu --> Substitusi\n    Tentu --> LuasDaerah\n```"
+        },
+        "Trigonometri": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk hubungan sin-cos-tan, kuadran. Function chart untuk grafik trigonometri.",
+          "example": "```mermaid\ngraph TD\n    Trigonometri --> Sin\n    Trigonometri --> Cos\n    Trigonometri --> Tan\n    KuadranI --> Sin+\n    KuadranI --> Cos+\n```"
+        },
+        "Vektor": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk operasi vektor (penjumlahan, dot product, cross product).",
+          "example": "```mermaid\ngraph LR\n    a[Vektor a] -->|+| c[Jumlah]\n    b[Vektor b] -->|+| c\n    a -->|.| d[Dot]\n    b -->|.| d\n```"
+        },
+        "default": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk hubungan rumus/materi. LaTeX untuk notasi matematika. Flowchart untuk langkah penyelesaian soal."
+        }
+      }
+    },
+    "IPA": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel sains dengan proses, siklus, dan klasifikasi.",
+      "topics": {
+        "Metode Ilmiah": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur metode ilmiah dari observasi hingga kesimpulan.",
+          "example": "```mermaid\nflowchart TD\n    A[Observasi] --> B[Pertanyaan]\n    B --> C[Hipotesis]\n    C --> D[Eksperimen]\n    D --> E[Analisis]\n    E --> F[Kesimpulan]\n```"
+        },
+        "Pengukuran": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi besaran pokok/turunan dan satuannya.",
+          "example": "```mermaid\ngraph TD\n    Besaran --> Pokok\n    Besaran --> Turunan\n    Pokok --> Panjang[m]\n    Pokok --> Massa[kg]\n    Pokok --> Waktu[s]\n```"
+        },
+        "Zat": {
+          "visual_type": "graph_td",
+          "description": "Mindmap klasifikasi zat padat-cair-gas. Spreadsheet perbandingan karakteristik partikel.",
+          "example": "```mermaid\ngraph TD\n    Zat --> Padat\n    Zat --> Cair\n    Zat --> Gas\n    Padat --> PartikelRapat\n    Gas --> PartikelRenggang\n```"
+        },
+        "Kalor": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk klasifikasi perpindahan kalor: konduksi, konveksi, radiasi + contoh.",
+          "example": "```mermaid\nmindmap\n  Kalor\n    Konduksi\n      Logam\n      Panas merambat\n    Konveksi\n      Air mendidih\n      Angin\n    Radiasi\n      Matahari\n      Api unggun\n```"
+        },
+        "Taksonomi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD hierarkis untuk klasifikasi makhluk hidup (kingdom, filum, kelas, ordo, famili, genus, spesies).",
+          "example": "```mermaid\ngraph TD\n    Kingdom --> Filum\n    Filum --> Kelas\n    Kelas --> Ordo\n    Ordo --> Famili\n    Famili --> Genus\n    Genus --> Spesies\n```"
+        },
+        "Ekosistem": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR atau flowchart untuk rantai makanan/jaring-jaring makanan dan aliran energi.",
+          "example": "```mermaid\ngraph LR\n    A[Matahari] --> B[Produsen]\n    B --> C[Konsumen I]\n    C --> D[Konsumen II]\n    D --> E[Pengurai]\n    E --> B\n```"
+        },
+        "Sistem Gerak": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk klasifikasi tulang, otot, dan sendi pada sistem gerak manusia.",
+          "example": "```mermaid\nmindmap\n  SistemGerak\n    Tulang\n      Tengkorak\n      Badan\n      Anggota\n    Otot\n      Polos\n      Lurik\n      Jantung\n    Sendi\n      Engsel\n      Putar\n```"
+        },
+        "Sistem Peredaran Darah": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur peredaran darah besar/kecil melalui jantung.",
+          "example": "```mermaid\nflowchart TD\n    A[Serambi Kanan] --> B[Bilik Kanan]\n    B --> C[Paru-paru]\n    C --> D[Serambi Kiri]\n    D --> E[Bilik Kiri]\n    E --> F[Sisa Tubuh]\n    F --> A\n```"
+        },
+        "Sistem Pencernaan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur pencernaan dari mulut hingga anus.",
+          "example": "```mermaid\nflowchart TD\n    A[Mulut] --> B[Kerongkongan]\n    B --> C[Lambung]\n    C --> D[Usus Halus]\n    D --> E[Usus Besar]\n    E --> F[Anus]\n```"
+        },
+        "Fotosintesis": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk reaksi fotosintesis (input-produk).",
+          "example": "```mermaid\nflowchart LR\n    CO2 -->|Fotosintesis| Glukosa\n    H2O -->|Fotosintesis| O2\n    CahayaMatahari -->|Fotosintesis| Energi\n```"
+        },
+        "Gerak dan Gaya": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk hubungan gaya, massa, percepatan (Hukum Newton).",
+          "example": "```mermaid\ngraph LR\n    Gaya -->|F=m×a| Percepatan\n    Massa -->|F=m×a| Percepatan\n    Aksi -->|-| Reaksi\n```"
+        },
+        "Gelombang": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi gelombang (mekanik-elektromagnetik, longitudinal-transversal).",
+          "example": "```mermaid\ngraph TD\n    Gelombang --> Mekanik\n    Gelombang --> Elektromagnetik\n    Mekanik --> Longitudinal\n    Mekanik --> Transversal\n```"
+        },
+        "Tata Surya": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk urutan planet dan benda langit dalam tata surya.",
+          "example": "```mermaid\ngraph LR\n    Matahari --> Merkurius\n    Merkurius --> Venus\n    Venus --> Bumi\n    Bumi --> Mars\n    Mars --> Jupiter\n```"
+        },
+        "Energi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis-jenis energi (kinetik, potensial, kimia, listrik, panas) dan transformasinya.",
+          "example": "```mermaid\nmindmap\n  Energi\n    Kinetik\n    Potensial\n      Gravitasi\n      Elastis\n    Kimia\n    Listrik\n    Panas\n```"
+        },
+        "Organisasi Kehidupan": {
+          "visual_type": "graph_td",
+          "description": "Graph TD hierarkis: sel → jaringan → organ → sistem organ → organisme.",
+          "example": "```mermaid\ngraph TD\n    Sel --> Jaringan\n    Jaringan --> Organ\n    Organ --> SistemOrgan\n    SistemOrgan --> Organisme\n```"
+        },
+        "Genetika": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart untuk persilangan monohibrid/dihibrid (Punnett square dieksekusi sebagai langkah).",
+          "example": "```mermaid\nflowchart TD\n    A[Parental] --> B[Gamet]\n    B --> C[Fertilisasi]\n    C --> D[F1]\n    D --> E[F2]\n    E --> F[Rasio Fenotip]\n```"
+        },
+        "Reaksi Kimia": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk reaktan → reaksi → produk.",
+          "example": "```mermaid\nflowchart LR\n    A[Reaktan 1] -->|Reaksi| C[Produk]\n    B[Reaktan 2] -->|Kondisi| C\n```"
+        },
+        "Listrik": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk hubungan arus, tegangan, hambatan (Hukum Ohm), rangkaian seri-paralel.",
+          "example": "```mermaid\ngraph LR\n    V[Tegangan] -->|V=I×R| I[Arus]\n    I -->|I=V/R| R[Hambatan]\n    R -->|R=V/I| V\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses IPA. Graph TD untuk klasifikasi. LaTeX untuk rumus."
+        }
+      }
+    },
+    "Bahasa Indonesia": {
+      "default_visual": "mindmap",
+      "description": "Mapel bahasa dan sastra, dominan konsep dan struktur teks.",
+      "topics": {
+        "Teks Deskripsi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk kerangka teks deskripsi (identifikasi → klasifikasi → deskripsi bagian).",
+          "example": "```mermaid\nmindmap\n  TeksDeskripsi\n    Identifikasi\n      Nama\n      Lokasi\n    Klasifikasi\n      Jenis\n      Sifat\n    DeskripsiBagian\n      Ciri fisik\n      Fungsi\n```"
+        },
+        "Teks Narasi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur cerita (orientasi, komplikasi, resolusi, koda).",
+          "example": "```mermaid\nflowchart TD\n    A[Orientasi] --> B[Komplikasi]\n    B --> C[Resolusi]\n    C --> D[Koda]\n```"
+        },
+        "Cerita Fantasi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk tahapan alur cerita fantasi dan tokoh.",
+          "example": "```mermaid\nflowchart TD\n    A[Pengenalan] --> B[Konflik]\n    B --> C[Petualangan]\n    C --> D[Klimaks]\n    D --> E[Penyelesaian]\n```"
+        },
+        "Teks Prosedur": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah-langkah dalam teks prosedur kompleks.",
+          "example": "```mermaid\nflowchart TD\n    A[Tujuan] --> B[Tahap 1]\n    B --> C[Tahap 2]\n    C --> D[Tahap 3]\n    D --> E[Hasil]\n```"
+        },
+        "Teks Eksposisi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur teks eksposisi (tesis, argumen, kesimpulan).",
+          "example": "```mermaid\nmindmap\n  Eksposisi\n    Tesis\n      Pernyataan pendapat\n    Argumentasi\n      Alasan 1\n      Alasan 2\n      Data pendukung\n    Penegasan Ulang\n      Kesimpulan\n```"
+        },
+        "Teks Persuasi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk struktur persuasi (ajakan → argumen → bujukan → penutup).",
+          "example": "```mermaid\nflowchart TD\n    A[Pengenalan Isu] --> B[Argumen]\n    B --> C[Fakta pendukung]\n    C --> D[Ajakan]\n    D --> E[Penegasan]\n```"
+        },
+        "Teks Laporan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur teks laporan hasil observasi (definisi umum → deskripsi bagian → kesimpulan).",
+          "example": "```mermaid\nmindmap\n  LaporanObservasi\n    DefinisiUmum\n      Pengertian\n    DeskripsiBagian\n      Ciri\n      Fungsi\n      Jenis\n    Simpulan\n```"
+        },
+        "Berita": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk unsur berita 5W+1H. Spreadsheet untuk perbandingan berita.",
+          "example": "```mermaid\ngraph TD\n    Berita --> What[Apa]\n    Berita --> Who[Siapa]\n    Berita --> When[Kapan]\n    Berita --> Where[Dimana]\n    Berita --> Why[Mengapa]\n    Berita --> How[Bagaimana]\n```"
+        },
+        "Struktur Bahasa": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi frasa, klausa, kalimat tunggal-majemuk.",
+          "example": "```mermaid\ngraph TD\n    Kalimat --> Tunggal\n    Kalimat --> Majemuk\n    Majemuk --> Setara\n    Majemuk --> Bertingkat\n```"
+        },
+        "Sastra": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur intrinsik/ekstrinsik karya sastra (tema, tokoh, alur, latar, amanat).",
+          "example": "```mermaid\nmindmap\n  UnsurSastra\n    Intrinsik\n      Tema\n      Tokoh\n      Alur\n      Latar\n      Amanat\n    Ekstrinsik\n      Latar belakang\n      Nilai sosial\n      Nilai budaya\n```"
+        },
+        "Debat": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk alur debat: mosi → argumen pro → argumen kontra → sanggahan → kesimpulan.",
+          "example": "```mermaid\nflowchart LR\n    A[Mosi] --> B[Tim Pro]\n    A --> C[Tim Kontra]\n    B --> D[Sanggahan]\n    C --> D\n    D --> E[Kesimpulan]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur teks. Flowchart untuk alur/urutan kejadian."
+        }
+      }
+    },
+    "Bahasa Inggris": {
+      "default_visual": "mindmap",
+      "description": "Mapel bahasa asing dengan struktur teks dan tata bahasa.",
+      "topics": {
+        "Tenses": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi tenses (present-past-future, simple-continuous-perfect).",
+          "example": "```mermaid\ngraph TD\n    Tenses --> Present\n    Tenses --> Past\n    Tenses --> Future\n    Present --> Simple\n    Present --> Continuous\n    Past --> Simple\n    Past --> Perfect\n```"
+        },
+        "Text Types": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis teks: narrative, descriptive, recount, procedure, report, explanation, analytical exposition, hortatory exposition.",
+          "example": "```mermaid\nmindmap\n  TextTypes\n    Narrative\n    Descriptive\n    Recount\n    Procedure\n    Report\n    Explanation\n    AnalyticalExposition\n    HortatoryExposition\n```"
+        },
+        "Parts of Speech": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi parts of speech (noun, verb, adjective, adverb, pronoun, preposition, conjunction, interjection).",
+          "example": "```mermaid\ngraph TD\n    PartsOfSpeech --> Noun\n    PartsOfSpeech --> Verb\n    PartsOfSpeech --> Adjective\n    PartsOfSpeech --> Adverb\n    PartsOfSpeech --> Pronoun\n    PartsOfSpeech --> Preposition\n```"
+        },
+        "Procedure Text": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah-langkah dalam procedure text (goal → materials → steps).",
+          "example": "```mermaid\nflowchart TD\n    A[Goal] --> B[Materials]\n    B --> C[Step 1]\n    C --> D[Step 2]\n    D --> E[Result]\n```"
+        },
+        "Narrative Text": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur narrative: orientation → complication → resolution → reorientation.",
+          "example": "```mermaid\nflowchart TD\n    A[Orientation] --> B[Complication]\n    B --> C[Resolution]\n    C --> D[Reorientation]\n```"
+        },
+        "Report Text": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk general classification dan description dalam report text.",
+          "example": "```mermaid\nmindmap\n  Report\n    GeneralClassification\n      Definition\n    Description\n      Parts\n      Functions\n      Behaviors\n```"
+        },
+        "Recount Text": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur recount (orientation → events → reorientation).",
+          "example": "```mermaid\nflowchart TD\n    A[Orientation] --> B[Event 1]\n    B --> C[Event 2]\n    C --> D[Event 3]\n    D --> E[Reorientation]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep bahasa dan teks. Flowchart untuk alur cerita/prosedur."
+        }
+      }
+    },
+    "IPS": {
+      "default_visual": "mindmap",
+      "description": "Mapel sosial dengan konsep, klasifikasi, dan hubungan antarfenomena.",
+      "topics": {
+        "Keluarga": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk silsilah keluarga dan struktur hubungan kekerabatan.",
+          "example": "```mermaid\ngraph TD\n    KakekNenek --> Ayah\n    KakekNenek --> Paman\n    Ayah --> Aku\n    Ayah --> Adik\n    Ibu --> Aku\n    Ibu --> Adik\n```"
+        },
+        "Lingkungan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk komponen lingkungan (biotik-abiotik, interaksi, pencemaran).",
+          "example": "```mermaid\nmindmap\n  Lingkungan\n    Biotik\n      Flora\n      Fauna\n      Manusia\n    Abiotik\n      Tanah\n      Air\n      Udara\n```"
+        },
+        "Interaksi Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk bentuk interaksi sosial (asosiatif-disosiatif, kerja sama, persaingan, konflik).",
+          "example": "```mermaid\nmindmap\n  InteraksiSosial\n    Asosiatif\n      Kerjasama\n      Akomodasi\n      Asimilasi\n    Disosiatif\n      Persaingan\n      Konflik\n      Kontravensi\n```"
+        },
+        "Sumber Daya": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi sumber daya alam (hayati-nonhayati, terbarukan-tidak terbarukan).",
+          "example": "```mermaid\ngraph TD\n    SDA --> Hayati\n    SDA --> NonHayati\n    SDA --> Terbarukan\n    SDA --> TidakTerbarukan\n```"
+        },
+        "Ekonomi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk siklus ekonomi (produksi-distribusi-konsumsi).",
+          "example": "```mermaid\nflowchart LR\n    A[Produksi] --> B[Distribusi]\n    B --> C[Konsumsi]\n    C --> D[Permintaan]\n    D --> E[Produksi]\n```"
+        },
+        "Sejarah": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD atau timeline untuk kronologi peristiwa sejarah secara berurutan.",
+          "example": "```mermaid\nflowchart TD\n    A[Masa Prasejarah] --> B[Hindu-Buddha]\n    B --> C[Islam]\n    C --> D[Kolonial]\n    D --> E[Kemerdekaan]\n    E --> F[Reformasi]\n```"
+        },
+        "Perubahan Sosial": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk faktor penyebab dan dampak perubahan sosial.",
+          "example": "```mermaid\nflowchart LR\n    Teknologi --> PerubahanSosial\n    BudayaAsing --> PerubahanSosial\n    PerubahanSosial --> DampakPositif\n    PerubahanSosial --> DampakNegatif\n```"
+        },
+        "Keberagaman": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk keberagaman budaya, suku, agama, ras, dan golongan.",
+          "example": "```mermaid\nmindmap\n  Keberagaman\n    Suku\n    Agama\n    Ras\n    Golongan\n    Budaya\n```"
+        },
+        "Pasar": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis pasar (konkret-abstrak, tradisional-modern, input-output).",
+          "example": "```mermaid\ngraph TD\n    Pasar --> Konkret\n    Pasar --> Abstrak\n    Konkret --> Tradisional\n    Konkret --> Modern\n```"
+        },
+        "Perdagangan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk rantai distribusi barang (produsen → distributor → konsumen).",
+          "example": "```mermaid\nflowchart LR\n    Produsen --> Distributor\n    Distributor --> Pengecer\n    Pengecer --> Konsumen\n    Eksportir --> LuarNegeri\n```"
+        },
+        "Globalisasi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk dampak globalisasi di berbagai bidang (ekonomi, sosial, budaya, politik).",
+          "example": "```mermaid\nmindmap\n  Globalisasi\n    Ekonomi\n      Perdagangan bebas\n      MEA\n    Sosial\n      Gaya hidup\n    Budaya\n      Westernisasi\n    Politik\n      HAM\n      Demokrasi\n```"
+        },
+        "Organisasi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD hierarkis untuk struktur organisasi (vertikal, horizontal, fungsional).",
+          "example": "```mermaid\ngraph TD\n    Organisasi --> Vertikal\n    Organisasi --> Horizontal\n    Organisasi --> Fungsional\n    Vertikal --> Atasan\n    Vertikal --> Bawahan\n```"
+        },
+        "Lembaga Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis lembaga sosial (keluarga, pendidikan, ekonomi, agama, politik).",
+          "example": "```mermaid\nmindmap\n  LembagaSosial\n    Keluarga\n    Pendidikan\n    Ekonomi\n    Agama\n    Politik\n```"
+        },
+        "Peta": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk komponen peta (judul, skala, legenda, orientasi, inset).",
+          "example": "```mermaid\ngraph LR\n    A[Judul] --> B[Skala]\n    A --> C[Legenda]\n    A --> D[GarisLintang]\n    A --> E[Inset]\n```"
+        },
+        "Anggaran": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk perencanaan keuangan/pendapatan-pengeluaran. Spreadsheet untuk simulasi anggaran.",
+          "example": "```mermaid\ngraph TD\n    Pendapatan --> Gaji\n    Pendapatan --> Usaha\n    Pengeluaran --> Kebutuhan\n    Pengeluaran --> Keinginan\n    Selisih --> Tabungan\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep sosial. Flowchart untuk kronologi dan hubungan sebab-akibat."
+        }
+      }
+    },
+    "Pendidikan Pancasila": {
+      "default_visual": "mindmap",
+      "description": "Mapel kewarganegaraan dengan konsep hierarki nilai dan struktur.",
+      "topics": {
+        "Pancasila": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk 5 sila Pancasila dengan nilai-nilai terkandung di setiap sila.",
+          "example": "```mermaid\nmindmap\n  Pancasila\n    Sila1[Ketuhanan]\n      Beriman\n      Toleransi\n    Sila2[Kemanusiaan]\n      Keadilan\n      HAM\n    Sila3[Persatuan]\n      Nasionalisme\n    Sila4[Kerakyatan]\n      Musyawarah\n    Sila5[KeadilanSosial]\n      Kesejahteraan\n```"
+        },
+        "Norma": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi norma (agama, kesusilaan, kesopanan, hukum) + sanksi.",
+          "example": "```mermaid\ngraph TD\n    Norma --> Agama\n    Norma --> Kesusilaan\n    Norma --> Kesopanan\n    Norma --> Hukum\n```"
+        },
+        "UUD 1945": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk hierarki peraturan perundang-undangan (UUD, UU, PP, Perda).",
+          "example": "```mermaid\ngraph TD\n    UUD1945 --> UU\n    UU --> PP[Peraturan Pemerintah]\n    PP --> Perpres\n    Perpres --> Perda\n```"
+        },
+        "Demokrasi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk prinsip demokrasi dan lembaga negara sesuai UUD 1945.",
+          "example": "```mermaid\nmindmap\n  Demokrasi\n    LembagaNegara\n      Presiden\n      DPR\n      MPR\n      MA\n      MK\n    Prinsip\n      Kebebasan berpendapat\n      Pemilu\n      Musyawarah\n```"
+        },
+        "HAM": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk jenis HAM dan contoh pelanggaran-penegakan.",
+          "example": "```mermaid\nflowchart LR\n    A[HAM] --> B[Hak Pribadi]\n    A --> C[Hak Sosial]\n    A --> D[Hak Politik]\n    Pelanggaran --> Penegakan\n```"
+        },
+        "Hak & Kewajiban": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk hubungan hak-kewajiban sebagai warga negara di berbagai bidang.",
+          "example": "```mermaid\ngraph LR\n    Hak --> Pendidikan\n    Hak --> Kesehatan\n    Kewajiban --> Pajak\n    Kewajiban --> BelaNegara\n```"
+        },
+        "Bela Negara": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk bentuk bela negara (fisik-nonfisik, ancaman militer-nonmiliter).",
+          "example": "```mermaid\nmindmap\n  BelaNegara\n    Fisik\n      TNI\n      Perlawanan bersenjata\n    NonFisik\n      Pendidikan\n      Pengabdian profesi\n      Partisipasi sosial\n```"
+        },
+        "Otonomi Daerah": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk struktur pemerintahan daerah (provinsi, kabupaten/kota, desa).",
+          "example": "```mermaid\ngraph TD\n    PemerintahPusat --> Provinsi\n    Provinsi --> Kabupaten\n    Provinsi --> Kota\n    Kabupaten --> Kecamatan\n    Kecamatan --> Desa\n```"
+        },
+        "NKRI": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk ancaman terhadap NKRI dan upaya pertahanan keamanan.",
+          "example": "```mermaid\nmindmap\n  NKRI\n    Ancaman\n      Militer\n      Nonmiliter\n      Ideologi\n    Upaya\n      Diplomasi\n      Pertahanan\n      Pendidikan\n```"
+        },
+        "Globalisasi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk pengaruh globalisasi terhadap nilai-nilai Pancasila.",
+          "example": "```mermaid\nmindmap\n  Globalisasi&Pancasila\n    DampakPositif\n      Informasi terbuka\n    DampakNegatif\n      Westernisasi\n      Konsumerisme\n    Filter\n      Pancasila\n      Identitas bangsa\n```"
+        },
+        "Pemilu": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk tahapan pemilu (pendaftaran → kampanye → pemungutan → penghitungan → penetapan).",
+          "example": "```mermaid\nflowchart TD\n    A[Pendaftaran] --> B[Kampanye]\n    B --> C[Pemungutan]\n    C --> D[Penghitungan]\n    D --> E[Penetapan]\n```"
+        },
+        "Hukum": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi hukum (publik-privat, pidana-perdata, tertulis-tidak tertulis).",
+          "example": "```mermaid\ngraph TD\n    Hukum --> Publik\n    Hukum --> Privat\n    Publik --> Pidana\n    Publik --> TataNegara\n    Privat --> Perdata\n```"
+        },
+        "Keragaman": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk semboyan Bhinneka Tunggal Ika dan keragaman Indonesia.",
+          "example": "```mermaid\nmindmap\n  BhinnekaTunggalIka\n    SukuBangsa\n      Lebih 300 suku\n    BahasaDaerah\n      Lebih 700 bahasa\n    Agama\n      Islam\n      Kristen\n      Hindu\n      Buddha\n      Konghucu\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep kewarganegaraan. Flowchart untuk tahapan/prosedur."
+        }
+      }
+    },
+    "Sejarah": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel kronologi dan peristiwa masa lalu.",
+      "topics": {
+        "Kronologi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk urutan peristiwa sejarah secara kronologis dari awal hingga akhir.",
+          "example": "```mermaid\nflowchart TD\n    A[Masa Hindu-Buddha] --> B[Masa Islam]\n    B --> C[Kolonial Belanda]\n    C --> D[Kemerdekaan]\n    D --> E[Orde Lama]\n    E --> F[Orde Baru]\n```"
+        },
+        "Kerajaan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk aspek kehidupan kerajaan (politik, ekonomi, sosial, budaya).",
+          "example": "```mermaid\nmindmap\n  KerajaanMajapahit\n    Politik\n      Hayam Wuruk\n      Gajah Mada\n      Sumpah Palapa\n    Ekonomi\n      Perdagangan rempah\n    Sosial\n      Stratifikasi kasta\n    Budaya\n      Wayang\n      Sastra\n```"
+        },
+        "Pergerakan Nasional": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk perkembangan organisasi pergerakan (Budi Utomo → Sumpah Pemuda → Proklamasi).",
+          "example": "```mermaid\nflowchart TD\n    A[1908: Budi Utomo] --> B[1911: Sarekat Islam]\n    B --> C[1926: PNI]\n    C --> D[1928: Sumpah Pemuda]\n    D --> E[1945: Proklamasi]\n```"
+        },
+        "Reformasi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk kronologi reformasi 1998 dan agenda perubahan.",
+          "example": "```mermaid\nflowchart TD\n    A[Krisis 1997] --> B[Demonstrasi]\n    B --> C[Lengser Soeharto]\n    C --> D[Amandemen UUD]\n    D --> E[Desentralisasi]\n```"
+        },
+        "Kolonialisme": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hubungan kolonial dan dampak di berbagai bidang.",
+          "example": "```mermaid\nflowchart LR\n    A[VOC] -->|Monopoli| B[Kekayaan]\n    A -->|Tanam Paksa| C[Penderitaan]\n    A -->|Pendidikan| D[Elite Terdidik]\n    D -->|Kesadaran| E[Nasionalisme]\n```"
+        },
+        "Perang Dunia": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk penyebab, pihak, jalannya perang, dan dampak Perang Dunia.",
+          "example": "```mermaid\nmindmap\n  PerangDuniaII\n    Penyebab\n      Ekspansi Jerman\n      Jepang\n    Pihak\n      Sekutu\n      Poros\n    Akhir\n      Bom Hiroshima\n      Kapitulasi\n    Dampak\n      PBB\n      Perang Dingin\n```"
+        },
+        "Peradaban": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk perkembangan peradaban kuno (Mesir, Mesopotamia, India, Cina).",
+          "example": "```mermaid\nflowchart LR\n    A[Mesir] -->|Firaun| B[Piramida]\n    C[India] -->|Veda| D[Kasta]\n    E[Cina] -->|Filsafat| F[Kekaisaran]\n```"
+        },
+        "Diplomasi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk perjanjian dan hubungan diplomatik antarnegara.",
+          "example": "```mermaid\nflowchart LR\n    A[Proklamasi] --> B[Linggajati]\n    B --> C[Renville]\n    C --> D[RoemRoyen]\n    D --> E[KMB]\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk kronologi. Mindmap untuk aspek kehidupan dan tokoh."
+        }
+      }
+    },
+    "Geografi": {
+      "default_visual": "mindmap",
+      "description": "Mapel keruangan dan lingkungan.",
+      "topics": {
+        "Atmosfer": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk lapisan atmosfer (troposfer, stratosfer, mesosfer, termosfer, eksosfer).",
+          "example": "```mermaid\ngraph TD\n    Atmosfer --> Troposfer\n    Atmosfer --> Stratosfer\n    Atmosfer --> Mesosfer\n    Atmosfer --> Termosfer\n    Atmosfer --> Eksosfer\n```"
+        },
+        "Hidrosfer": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk siklus hidrologi (evaporasi, kondensasi, presipitasi, infiltrasi, run-off).",
+          "example": "```mermaid\nflowchart TD\n    A[Evaporasi] --> B[Kondensasi]\n    B --> C[Presipitasi]\n    C --> D[Infiltrasi]\n    C --> E[Run-Off]\n    D --> A\n    E --> A\n```"
+        },
+        "Litosfer": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk lapisan bumi (kerak, mantel, inti) dan jenis batuan (beku, sedimen, metamorf).",
+          "example": "```mermaid\ngraph TD\n    Bumi --> Kerak\n    Bumi --> Mantel\n    Bumi --> Inti\n    Batuan --> Beku\n    Batuan --> Sedimen\n    Batuan --> Metamorf\n```"
+        },
+        "Peta": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk komponen peta dan jenis peta (umum, tematik, digital).",
+          "example": "```mermaid\ngraph LR\n    Peta --> Umum\n    Peta --> Tematik\n    Peta --> Digital\n    Umum --> Skala\n    Umum --> Legenda\n```"
+        },
+        "Antroposfer": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk aspek kependudukan (jumlah, sebaran, komposisi, pertumbuhan, migrasi).",
+          "example": "```mermaid\nmindmap\n  Kependudukan\n    Jumlah\n    Sebaran\n    Komposisi\n    Pertumbuhan\n    Migrasi\n```"
+        },
+        "Lingkungan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk masalah lingkungan dan konservasi (pencemaran, limbah, reboisasi, energi terbarukan).",
+          "example": "```mermaid\nmindmap\n  LingkunganHidup\n    Masalah\n      Pencemaran\n      Deforestasi\n      Sampah plastik\n    Solusi\n      Reboisasi\n      Energi terbarukan\n      Daur ulang\n```"
+        },
+        "Perairan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis perairan (laut, sungai, danau, rawa) dan karakteristik.",
+          "example": "```mermaid\nmindmap\n  Perairan\n    Laut\n      Luas\n      Arus\n      Pasang surut\n    Darat\n      Sungai\n      Danau\n      Rawa\n```"
+        },
+        "Flora Fauna": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk persebaran flora dan fauna Indonesia (Barat, Tengah, Timur - Garis Wallace, Webber).",
+          "example": "```mermaid\nmindmap\n  FloraFaunaIndonesia\n    Barat[Asiatis]\n      Gajah\n      Harimau\n    Tengah[Peralihan]\n      Komodo\n      Anoa\n    Timur[Australis]\n      Cendrawasih\n      Kanguru pohon\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep geografi. Flowchart untuk siklus dan proses alam."
+        }
+      }
+    },
+    "Ekonomi": {
+      "default_visual": "flowchart_lr",
+      "description": "Mapel keuangan dan analisis ekonomi dengan data dan hubungan.",
+      "topics": {
+        "Permintaan Penawaran": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hukum permintaan dan penawaran. Chart untuk kurva permintaan/penawaran.",
+          "example": "```mermaid\nflowchart LR\n    A[Harga Naik] -->|Permintaan| B[Turun]\n    A[Harga Naik] -->|Penawaran| C[Naik]\n    B -->|Keseimbangan| D[Harga Pasar]\n    C --> D\n```"
+        },
+        "Siklus Ekonomi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk circular flow (RTK, RTP, Pemerintah, Luar Negeri).",
+          "example": "```mermaid\nflowchart TD\n    A[RTK] -->|Faktor produksi| B[RTP]\n    B -->|Imbalan| A\n    B -->|Barang| C[Pemerintah]\n    A -->|Pajak| C\n    D[LN] -->|Ekspor| B\n    B -->|Impor| D\n```"
+        },
+        "Pasar": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur pasar (pasar persaingan sempurna, monopolistik, oligopoli, monopoli).",
+          "example": "```mermaid\nmindmap\n  StrukturPasar\n    Sempurna\n      Banyak penjual\n      Harga ditentukan pasar\n    Monopolistik\n      Diferensiasi produk\n    Oligopoli\n      Sedikit penjual\n    Monopoli\n      Satu penjual\n```"
+        },
+        "Ketenagakerjaan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis tenaga kerja, pengangguran, dan upaya mengatasi pengangguran.",
+          "example": "```mermaid\nmindmap\n  Ketenagakerjaan\n    AngkatanKerja\n      Bekerja\n      Pengangguran\n    BukanAngkatanKerja\n      Sekolah\n      Ibu rumah tangga\n    Pengangguran\n      Friksional\n      Struktural\n      Musiman\n```"
+        },
+        "Pertumbuhan Ekonomi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk faktor pertumbuhan ekonomi (SDM, SDA, modal, teknologi) dan dampaknya.",
+          "example": "```mermaid\nflowchart LR\n    A[SDM] -->|Produktivitas| E[Pertumbuhan]\n    B[SDA] --> E\n    C[Modal] --> E\n    D[Teknologi] --> E\n    E --> F[Kesejahteraan]\n```"
+        },
+        "APBN": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk struktur APBN (pendapatan negara, belanja negara, defisit/surplus).",
+          "example": "```mermaid\ngraph TD\n    APBN --> Pendapatan\n    APBN --> Belanja\n    Pendapatan --> Pajak\n    Pendapatan --> PNBP\n    Belanja --> Pusat\n    Belanja --> Daerah\n```"
+        },
+        "Akuntansi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk siklus akuntansi (transaksi → jurnal → buku besar → neraca saldo → laporan keuangan).",
+          "example": "```mermaid\nflowchart LR\n    A[Transaksi] --> B[Jurnal]\n    B --> C[Buku Besar]\n    C --> D[Neraca Saldo]\n    D --> E[Laporan Keuangan]\n```"
+        },
+        "Perbankan": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis bank dan fungsi lembaga keuangan.",
+          "example": "```mermaid\ngraph TD\n    Bank --> Sentral[BI]\n    Bank --> Umum\n    Bank --> BPR\n    LembagaKeuangan --> Bank\n    LembagaKeuangan --> NonBank[Asuransi, Pasar Modal]\n```"
+        },
+        "Koperasi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk prinsip dan jenis koperasi (simpan pinjam, konsumen, produsen, jasa).",
+          "example": "```mermaid\ngraph TD\n    Koperasi --> SimpanPinjam\n    Koperasi --> Konsumen\n    Koperasi --> Produsen\n    Koperasi --> Jasa\n    Prinsip --> Sukarela\n    Prinsip --> Demokrasi\n```"
+        },
+        "Perdagangan Internasional": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk ekspor-impor, neraca perdagangan, dan kurs valuta asing.",
+          "example": "```mermaid\nflowchart LR\n    A[Ekspor] -->|Devisa| B[Neraca Surplus]\n    C[Impor] -->|Devisa keluar| D[Neraca Defisit]\n    B --> KursMenguat\n    D --> KursMelemah\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk alur ekonomi dan hubungan variabel. Chart untuk data kuantitatif."
+        }
+      }
+    },
+    "Sosiologi": {
+      "default_visual": "mindmap",
+      "description": "Mapel studi masyarakat dan interaksi sosial.",
+      "topics": {
+        "Struktur Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk diferensiasi sosial dan stratifikasi sosial (ras, etnis, kelas, gender).",
+          "example": "```mermaid\nmindmap\n  StrukturSosial\n    Diferensiasi\n      Ras\n      Etnis\n      Agama\n      Gender\n    Stratifikasi\n      Kelas atas\n      Kelas menengah\n      Kelas bawah\n```"
+        },
+        "Interaksi Sosial": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk interaksi asosiatif-disosiatif dengan contoh.",
+          "example": "```mermaid\nflowchart LR\n    A[Kontak] --> B[Komunikasi]\n    B --> C[Asosiatif]\n    B --> D[Disosiatif]\n    C --> Kerjasama\n    C --> Akomodasi\n    D --> Konflik\n    D --> Persaingan\n```"
+        },
+        "Lembaga Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk fungsi dan jenis lembaga sosial dalam masyarakat.",
+          "example": "```mermaid\nmindmap\n  LembagaSosial\n    Keluarga\n      Fungsi biologis\n      Fungsi edukasi\n    Pendidikan\n      Formal\n      Informal\n    Agama\n      Spiritual\n      Moral\n```"
+        },
+        "Perubahan Sosial": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk faktor perubahan dan dampak perubahan sosial.",
+          "example": "```mermaid\nflowchart LR\n    A[Teknologi] -->|Modernisasi| C[Perubahan Sosial]\n    B[Budaya Asing] -->|Akulturasi| C\n    C --> D[Perubahan Nilai]\n    C --> E[Perubahan Norma]\n```"
+        },
+        "Penelitian Sosial": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah penelitian sosial (topik → teori → metode → data → analisis → kesimpulan).",
+          "example": "```mermaid\nflowchart TD\n    A[Topik] --> B[Kajian Teori]\n    B --> C[Metode Penelitian]\n    C --> D[Pengumpulan Data]\n    D --> E[Analisis]\n    E --> F[Kesimpulan]\n```"
+        },
+        "Kelas Sosial": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk piramida stratifikasi kelas sosial beserta karakteristik.",
+          "example": "```mermaid\ngraph TD\n    Stratifikasi --> Atas[Elite]\n    Stratifikasi --> Menengah\n    Stratifikasi --> Bawah[Rakyat biasa]\n```"
+        },
+        "Kelompok Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis kelompok sosial (primer-sekunder, in-group-out-group, formal-informal).",
+          "example": "```mermaid\nmindmap\n  KelompokSosial\n    Primer\n      Keluarga\n      Teman sebaya\n    Sekunder\n      Organisasi\n      Perusahaan\n    Formal\n    Informal\n```"
+        },
+        "Penyimpangan Sosial": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis penyimpangan (primer-sekunder, positif-negatif) dan teori penyimpangan.",
+          "example": "```mermaid\ngraph TD\n    Penyimpangan --> Primer\n    Penyimpangan --> Sekunder\n    Primer --> Ringan\n    Sekunder --> Berat\n    Teori --> Labeling\n    Teori --> DifferentialAssociation\n```"
+        },
+        "Konflik": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk penyebab dan resolusi konflik sosial.",
+          "example": "```mermaid\nflowchart LR\n    A[Perbedaan] -->|Kepentingan| C[Konflik]\n    B[Ketimpangan] --> C\n    C --> D[Mediasi]\n    C --> E[Akomodasi]\n    C --> F[Kekerasan]\n```"
+        },
+        "Globalisasi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk dampak globalisasi di bidang sosial budaya masyarakat.",
+          "example": "```mermaid\nmindmap\n  GlobalisasiSosial\n    Modernisasi\n      Gaya hidup\n      Teknologi\n    Westernisasi\n      Budaya asing\n    Konsumerisme\n      Masyarakat konsumtif\n    Ketimpangan Digital\n      Kesenjangan akses\n```"
+        },
+        "Komunitas": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk tipe komunitas dan kearifan lokal dalam masyarakat.",
+          "example": "```mermaid\nmindmap\n  Komunitas\n    Perdesaan\n      Gotong royong\n      Tradisi\n    Perkotaan\n      Individualis\n      Modern\n    Virtual\n      Media sosial\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep sosiologi. Flowchart untuk proses perubahan dan penelitian."
+        }
+      }
+    },
+    "Biologi": {
+      "default_visual": "mindmap",
+      "description": "Mapel sains kehidupan dengan hierarki dan proses biologis.",
+      "topics": {
+        "Sel": {
+          "visual_type": "mindmap",
+          "description": "Mindmap struktur sel (organel, membran, inti, sitoplasma) dan perbandingan sel hewan-tumbuhan.",
+          "example": "```mermaid\nmindmap\n  Sel\n    Organel\n      Mitokondria\n      Ribosom\n      RE\n      Golgi\n      Lisosom\n    Inti\n      DNA\n      Nukleolus\n    Membran\n      Transport aktif\n      Difusi\n```"
+        },
+        "Jaringan": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi jaringan pada tumbuhan dan hewan.",
+          "example": "```mermaid\ngraph TD\n    Jaringan --> Hewan\n    Jaringan --> Tumbuhan\n    Hewan --> Epitel\n    Hewan --> Otot\n    Hewan --> Saraf\n    Tumbuhan --> Meristem\n    Tumbuhan --> Permanen\n```"
+        },
+        "Evolusi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk mekanisme evolusi (seleksi alam, adaptasi, spesiasi).",
+          "example": "```mermaid\nflowchart TD\n    A[Variasi] --> B[Seleksi Alam]\n    B --> C[Adaptasi]\n    C --> D[Spesiasi]\n    Fosil --> Evolusi\n    DNA --> Evolusi\n```"
+        },
+        "Metabolisme": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk jalur metabolisme (katabolisme-anabolisme, fotosintesis-respirasi).",
+          "example": "```mermaid\nflowchart LR\n    A[Glukosa] -->|Glikolisis| B[ATP]\n    A -->|Fermentasi| C[Etanol]\n    CO2 -->|Fotosintesis| Glukosa\n```"
+        },
+        "Sistem Saraf": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk sistem saraf pusat dan tepi, jalan impuls saraf.",
+          "example": "```mermaid\ngraph TD\n    SistemSaraf --> Pusat[Otak & Sumsum]\n    SistemSaraf --> Tepi[Somatic & Otonom]\n    Otonom --> Simpatik\n    Otonom --> Parasimpatik\n```"
+        },
+        "Klasifikasi Makhluk Hidup": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk kingdom (Animalia, Plantae, Fungi, Protista, Monera).",
+          "example": "```mermaid\ngraph TD\n    Kingdom --> Animalia\n    Kingdom --> Plantae\n    Kingdom --> Fungi\n    Kingdom --> Protista\n    Kingdom --> Monera\n```"
+        },
+        "Genetika": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk hukum Mendel dan persilangan genetik.",
+          "example": "```mermaid\nflowchart TD\n    A[Parental] --> B[Gamet]\n    B --> C[F1]\n    C --> D[F2]\n    D --> E[Rasio Genotip]\n    D --> F[Rasio Fenotip]\n```"
+        },
+        "Ekologi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk aliran energi dan daur biogeokimia.",
+          "example": "```mermaid\nflowchart LR\n    A[Produsen] --> B[Konsumen I]\n    B --> C[Konsumen II]\n    C --> D[Pengurai]\n    D --> A\n```"
+        },
+        "Reproduksi": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk siklus reproduksi (pembelahan sel, fertilisasi, perkembangan embrio).",
+          "example": "```mermaid\nflowchart TD\n    A[Meiosis] --> B[Gamet]\n    B --> C[Fertilisasi]\n    C --> D[Zigot]\n    D --> E[Mitosis]\n    E --> F[Embrio]\n```"
+        },
+        "Virus & Bakteri": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk struktur dan karakteristik virus/bakteri serta perannya.",
+          "example": "```mermaid\ngraph TD\n    Virus --> DNA/RNA\n    Virus --> Kapsid\n    Bakteri --> DindingSel\n    Bakteri --> Sitoplasma\n    Bakteri --> Peran[Merugikan/Menguntungkan]\n```"
+        },
+        "Bioteknologi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk prinsip bioteknologi konvensional-modern dan produknya.",
+          "example": "```mermaid\nflowchart LR\n    A[Mikroorganisme] -->|Fermentasi| B[Tape, Tempe]\n    C[Rekayasa Genetika] --> D[Insulin, Vaksin]\n    E[Kultur Jaringan] --> F[Pertanian]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk klasifikasi biologi. Flowchart untuk proses dan siklus."
+        }
+      }
+    },
+    "Fisika": {
+      "default_visual": "flowchart_lr",
+      "description": "Mapel sains fisika dengan rumus, konsep, dan hubungan variabel.",
+      "topics": {
+        "Mekanika": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hukum Newton dan gaya.",
+          "example": "```mermaid\nflowchart LR\n    A[Gaya] -->|F=m×a| B[Percepatan]\n    C[Massa] -->|m=F/a| A\n    Aksi -->|-Aksi| Reaksi\n```"
+        },
+        "Gerak": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk hubungan besaran gerak (jarak, waktu, kecepatan, percepatan).",
+          "example": "```mermaid\ngraph LR\n    Gerak --> GLB[v=konstan]\n    Gerak --> GLBB[a=konstan]\n    Gerak --> GerakMelingkar\n    GLBB --> s=v0t+½at²\n```"
+        },
+        "Usaha & Energi": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hubungan usaha-energi dan transformasi energi.",
+          "example": "```mermaid\nflowchart LR\n    A[Usaha] -->|W=F×s| B[Energi]\n    Energi --> Kinetik\n    Energi --> Potensial\n    Energi --> Mekanik\n    Kinetik <-->|Konversi| Potensial\n```"
+        },
+        "Gelombang & Bunyi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi gelombang dan sifat bunyi.",
+          "example": "```mermaid\ngraph TD\n    Gelombang --> Mekanik\n    Gelombang --> Elektromagnetik\n    Mekanik --> Longitudinal\n    Mekanik --> Transversal\n    Bunyi --> Frekuensi\n    Bunyi --> Amplitudo\n```"
+        },
+        "Listrik Dinamis": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk rangkaian listrik dan hubungan arus-tegangan-hambatan.",
+          "example": "```mermaid\nflowchart LR\n    Sumber --> Arus\n    Arus --> Rangkaian\n    Rangkaian --> Seri\n    Rangkaian --> Paralel\n    V[V=I×R] --> Hambatan\n```"
+        },
+        "Alat Optik": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk prinsip kerja alat optik (mata, lup, mikroskop, teleskop).",
+          "example": "```mermaid\nflowchart TD\n    A[Lensa] --> B[Pembiasan]\n    B --> C[Bayangan]\n    C --> D[Diperbesar]\n    AlatOptik --> Lup\n    AlatOptik --> Mikroskop\n    AlatOptik --> Teleskop\n```"
+        },
+        "Termodinamika": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk siklus termodinamika dan hukum-hukumnya.",
+          "example": "```mermaid\nflowchart LR\n    A[Hk 0] --> B[Suhu]\n    C[Hk 1] --> D[Energi Dalam]\n    E[Hk 2] --> F[Entropi]\n    G[Hk 3] --> H[Suhu Nol]\n```"
+        },
+        "Listrik Statis": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk listrik statis (muatan, medan, potensial, hukum Coulomb).",
+          "example": "```mermaid\nmindmap\n  ListrikStatis\n    Muatan\n      Positif\n      Negatif\n    MedanListrik\n      Arah\n      Kuat medan\n    PotensialListrik\n      Beda potensial\n    HukumCoulomb\n      F=k×q₁q₂/r²\n```"
+        },
+        "Magnet": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk kemagnetan dan elektromagnetik (GGL induksi, generator, transformator).",
+          "example": "```mermaid\nflowchart LR\n    A[Medan Magnet] --> B[Gaya Lorentz]\n    B --> C[Motor Listrik]\n    D[Fluks] -->|Induksi| E[GGL]\n    E --> F[Transformator]\n```"
+        },
+        "Radioaktivitas": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis radiasi (alfa, beta, gamma) dan penerapan.",
+          "example": "```mermaid\ngraph TD\n    Radioaktivitas --> Alfa\n    Radioaktivitas --> Beta\n    Radioaktivitas --> Gamma\n    Penerapan --> Kedokteran\n    Penerapan --> EnergiNuklir\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hubungan variabel fisika. LaTeX untuk rumus. Graph untuk klasifikasi."
+        }
+      }
+    },
+    "Kimia": {
+      "default_visual": "graph_td",
+      "description": "Mapel sains kimia dengan klasifikasi materi dan reaksi.",
+      "topics": {
+        "Struktur Atom": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk partikel penyusun atom (proton, elektron, neutron) dan konfigurasi elektron.",
+          "example": "```mermaid\nmindmap\n  Atom\n    Inti\n      Proton\n      Neutron\n    KulitElektron\n      K, L, M, N\n      Elektron valensi\n    NomorAtom\n    NomorMassa\n```"
+        },
+        "Ikatan Kimia": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis ikatan (ion, kovalen, logam) dan sifat senyawa.",
+          "example": "```mermaid\ngraph TD\n    Ikatan --> Ion\n    Ikatan --> Kovalen\n    Ikatan --> Logam\n    Ion --> Logam+NonLogam\n    Kovalen --> NonLogam+NonLogam\n    Kovalen --> Polar\n    Kovalen --> NonPolar\n```"
+        },
+        "Hukum Dasar Kimia": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk hubungan hukum Lavoisier, Proust, Dalton, Gay-Lussac, Avogadro.",
+          "example": "```mermaid\nflowchart LR\n    A[Hk Kekekalan] --> B[Massa → massa]\n    C[Hk Perbandingan] --> D[Unsur → rasio tetap]\n    E[Hk Avogadro] --> F[Gas → volume sama]\n```"
+        },
+        "Stoikiometri": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah perhitungan stoikiometri (mol → massa → volume → partikel).",
+          "example": "```mermaid\nflowchart TD\n    A[Mol] --> B[Massa]\n    A --> C[Volume Gas]\n    A --> D[Jumlah Partikel]\n    B --> E[Kadar Zat]\n    A --> F[Pereaksi Pembatas]\n```"
+        },
+        "Larutan": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk jenis larutan (elektrolit-nonelektrolit, asam-basa-garam).",
+          "example": "```mermaid\ngraph TD\n    Larutan --> Elektrolit\n    Larutan --> NonElektrolit\n    Elektrolit --> Kuat\n    Elektrolit --> Lemah\n    Asam --> pH<7\n    Basa --> pH>7\n```"
+        },
+        "Reaksi Redoks": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk reaksi reduksi-oksidasi (elektron, bilangan oksidasi).",
+          "example": "```mermaid\nflowchart LR\n    A[Reduksi] -->|Terima e⁻| B[Biloks turun]\n    C[Oksidasi] -->|Lepas e⁻| D[Biloks naik]\n    Redoks --> Reduksi+Oksidasi\n```"
+        },
+        "Termokimia": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk reaksi endoterm-eksoterm dan perubahan entalpi.",
+          "example": "```mermaid\nflowchart LR\n    A[Eksoterm] -->|ΔH<0| B[Panas keluar]\n    C[Endoterm] -->|ΔH>0| D[Panas masuk]\n    ΔH --> Kalorimetri\n    ΔH --> HkHess\n```"
+        },
+        "Kimia Organik": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi senyawa karbon (alkana, alkena, alkuna, turunan).",
+          "example": "```mermaid\ngraph TD\n    Hidrokarbon --> Alkana[C-C tunggal]\n    Hidrokarbon --> Alkena[C=C rangkap]\n    Hidrokarbon --> Alkuna[C≡C rangkap]\n    Turunan --> Alkohol\n    Turunan --> Aldehid\n    Turunan --> AsamKarboksilat\n```"
+        },
+        "Kesetimbangan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk faktor pergeseran kesetimbangan (suhu, tekanan, konsentrasi).",
+          "example": "```mermaid\nflowchart LR\n    A[Suhu naik] -->|Endoterm| B[Geser kanan]\n    C[Tekanan naik] -->|Jml mol kecil| D[Geser ke mol kecil]\n    E[Konsentrasi] -->|Ditambah| F[Geser berlawanan]\n```"
+        },
+        "Laju Reaksi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk faktor laju reaksi (konsentrasi, luas permukaan, suhu, katalis).",
+          "example": "```mermaid\nmindmap\n  LajuReaksi\n    Faktor\n      Konsentrasi\n      Luas permukaan\n      Suhu\n      Katalis\n    Teori\n      Tumbukan\n      Energi aktivasi\n    Persamaan\n      v=k[A]ˣ[B]ʸ\n```"
+        },
+        "Elektrokimia": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk sel Volta dan sel elektrolisis.",
+          "example": "```mermaid\nflowchart LR\n    A[Sel Volta] -->|Kimia→Listrik| B[Baterai]\n    C[Elektrolisis] -->|Listrik→Kimia| D[Penyepuhan]\n    Potensial --> E°sel\n    E°sel --> ReaksiSpontan\n```"
+        },
+        "default": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi. Flowchart untuk reaksi dan perhitungan. LaTeX untuk rumus kimia."
+        }
+      }
+    },
+    "PJOK": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel olahraga dengan gerakan dan permainan.",
+      "topics": {
+        "Permainan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk sistem pertandingan (gugur, setengah kompetisi, kompetisi penuh).",
+          "example": "```mermaid\nflowchart LR\n    A[Peserta] --> B[Gugur]\n    A --> C[Kompetisi]\n    B -->|kalah| D[Keluar]\n    C -->|poin| E[Klasemen]\n```"
+        },
+        "Gerakan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk tahapan gerakan (sikap awal → pelaksanaan → sikap akhir).",
+          "example": "```mermaid\nflowchart TD\n    A[Sikap Awal] --> B[Gerak Inti]\n    B --> C[Sikap Akhir]\n```"
+        },
+        "Kebugaran": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk komponen kebugaran jasmani (kekuatan, daya tahan, kelenturan, kecepatan, kelincahan).",
+          "example": "```mermaid\ngraph TD\n    Kebugaran --> Kekuatan\n    Kebugaran --> DayaTahan\n    Kebugaran --> Kelenturan\n    Kebugaran --> Kecepatan\n    Kebugaran --> Kelincahan\n```"
+        },
+        "Kesehatan": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk pola hidup sehat (gizi, kebersihan, olahraga, istirahat).",
+          "example": "```mermaid\nmindmap\n  Kesehatan\n    GiziSeimbang\n      4 sehat 5 sempurna\n      Makronutrisi\n      Mikronutrisi\n    Olahraga\n      Teratur\n      Intensitas cukup\n    Istirahat\n      Tidur 7-8 jam\n    Pencegahan\n      Kebersihan\n      Vaksinasi\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk gerakan dan tahapan. Mindmap untuk konsep. Chart untuk data fisik."
+        }
+      }
+    },
+    "Informatika": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel teknologi informasi dengan logika dan komputasi.",
+      "topics": {
+        "Algoritma": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur algoritma (input → proses → output, branching, looping).",
+          "example": "```mermaid\nflowchart TD\n    A[Mulai] --> B[Input]\n    B --> C{Kondisi}\n    C -->|Ya| D[Proses 1]\n    C -->|Tidak| E[Proses 2]\n    D --> F[Output]\n    E --> F\n    F --> G[Selesai]\n```"
+        },
+        "Data": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk tipe data (primitif-komposit) dan struktur data (array, linked list, stack, queue).",
+          "example": "```mermaid\ngraph TD\n    TipeData --> Primitif\n    TipeData --> Komposit\n    Primitif --> Integer\n    Primitif --> Boolean\n    Komposit --> Array\n    Komposit --> Record\n```"
+        },
+        "Jaringan": {
+          "visual_type": "graph_lr",
+          "description": "Graph LR untuk topologi jaringan (star, bus, ring, mesh, tree).",
+          "example": "```mermaid\ngraph LR\n    A[Server] --- B[Client]\n    A --- C[Client]\n    Hub --- B\n    Hub --- C\n```"
+        },
+        "Pemrograman": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk logika pemrograman (sequence, selection, repetition).",
+          "example": "```mermaid\nflowchart TD\n    A[Mulai] --> B[Loop]\n    B --> C{Iterasi}\n    C -->|True| D[Eksekusi]\n    D --> B\n    C -->|False| E[Selesai]\n```"
+        },
+        "Dampak Sosial": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk dampak TIK (positif-negatif, keamanan data, etika digital).",
+          "example": "```mermaid\nmindmap\n  DampakTIK\n    Positif\n      Informasi cepat\n      Efisiensi\n    Negatif\n      Hoaks\n      Cyberbullying\n    Keamanan\n      Password\n      Enkripsi\n    Etika\n      HAKI\n      Privasi\n```"
+        },
+        "Basis Data": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk konsep basis data (tabel, relasi, SQL).",
+          "example": "```mermaid\ngraph TD\n    DB --> Tabel1\n    DB --> Tabel2\n    Tabel1 --> PrimaryKey\n    Tabel2 --> ForeignKey\n    PrimaryKey --> Relasi\n    ForeignKey --> Relasi\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk alur logika. Graph untuk struktur. Mindmap untuk konsep."
+        }
+      }
+    },
+    "Prakarya": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel keterampilan dan kewirausahaan.",
+      "topics": {
+        "Kerajinan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses pembuatan kerajinan (desain → bahan → alat → pembuatan → finishing).",
+          "example": "```mermaid\nflowchart TD\n    A[Desain] --> B[Bahan]\n    B --> C[Alat]\n    C --> D[Pembuatan]\n    D --> E[Finishing]\n    E --> F[Produk Jadi]\n```"
+        },
+        "Rekayasa": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses rekayasa (identifikasi masalah → desain → prototipe → uji coba → produksi).",
+          "example": "```mermaid\nflowchart TD\n    A[Masalah] --> B[Ide]\n    B --> C[Desain]\n    C --> D[Prototipe]\n    D --> E[Uji Coba]\n    E -->|Revisi| C\n    E -->|OK| F[Produksi]\n```"
+        },
+        "Budidaya": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk tahapan budidaya (persiapan lahan → benih → perawatan → panen → pasca panen).",
+          "example": "```mermaid\nflowchart TD\n    A[Persiapan] --> B[Benih]\n    B --> C[Penanaman]\n    C --> D[Perawatan]\n    D --> E[Panen]\n    E --> F[Pasca Panen]\n```"
+        },
+        "Pengolahan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses pengolahan bahan pangan (sortasi → pencucian → pengolahan → pengemasan).",
+          "example": "```mermaid\nflowchart TD\n    A[Bahan Baku] --> B[Sortasi]\n    B --> C[Pencucian]\n    C --> D[Pengolahan]\n    D --> E[Pengemasan]\n    E --> F[Pemasaran]\n```"
+        },
+        "Kewirausahaan": {
+          "visual_type": "flowchart_lr",
+          "description": "Flowchart LR untuk siklus kewirausahaan (ide → perencanaan → produksi → pemasaran → evaluasi).",
+          "example": "```mermaid\nflowchart LR\n    A[Ide] --> B[Business Plan]\n    B --> C[Produksi]\n    C --> D[Pemasaran]\n    D --> E[Evaluasi]\n    E -->|Iterasi| B\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses pembuatan. Mindmap untuk konsep dan ide."
+        }
+      }
+    },
+    "Seni Rupa": {
+      "default_visual": "mindmap",
+      "description": "Mapel seni visual dan desain.",
+      "topics": {
+        "Unsur Seni": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur seni rupa (garis, bidang, bentuk, warna, tekstur, ruang).",
+          "example": "```mermaid\nmindmap\n  UnsurSeniRupa\n    Garis\n    Bidang\n    Bentuk\n    Warna\n      Primer\n      Sekunder\n      Tersier\n    Tekstur\n    Ruang\n```"
+        },
+        "Prinsip Seni": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk prinsip seni (kesatuan, keseimbangan, irama, penekanan, proporsi).",
+          "example": "```mermaid\nmindmap\n  PrinsipDesain\n    Kesatuan\n    Keseimbangan\n      Simetris\n      Asimetris\n    Irama\n    Penekanan\n    Proporsi\n```"
+        },
+        "Teknik": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk langkah teknik menggambar/melukis/membuat patung.",
+          "example": "```mermaid\nflowchart TD\n    A[Sketsa] --> B[Komposisi]\n    B --> C[Blok Warna]\n    C --> D[Detail]\n    D --> E[Finishing]\n```"
+        },
+        "Kriya": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk proses pembuatan karya kriya.",
+          "example": "```mermaid\nflowchart TD\n    A[Desain] --> B[Bahan]\n    B --> C[Alat]\n    C --> D[Proses]\n    D --> E[Finishing]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep dan aliran seni. Flowchart untuk teknik/teknik produksi."
+        }
+      }
+    },
+    "Seni Musik": {
+      "default_visual": "mindmap",
+      "description": "Mapel seni suara dan instrumen.",
+      "topics": {
+        "Notasi": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk notasi musik (balok, angka, nilai not, tanda diam).",
+          "example": "```mermaid\ngraph TD\n    Notasi --> Balok\n    Notasi --> Angka\n    Balok --> Kunci G\n    Balok --> Kunci F\n    NilaiNot --> Penuh[4 ketuk]\n    NilaiNot --> Setengah[2 ketuk]\n    NilaiNot --> Seperempat[1 ketuk]\n```"
+        },
+        "Alat Musik": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi alat musik (tiup, petik, gesek, pukul, tekan).",
+          "example": "```mermaid\ngraph TD\n    AlatMusik --> Tiup\n    AlatMusik --> Petik\n    AlatMusik --> Gesek\n    AlatMusik --> Pukul\n    AlatMusik --> Tekan\n```"
+        },
+        "Ekspresi": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur ekspresi musik (tempo, dinamik, warna bunyi, gaya).",
+          "example": "```mermaid\nmindmap\n  EkspresiMusik\n    Tempo\n      Lambat\n      Sedang\n      Cepat\n    Dinamik\n      Keras\n      Lembut\n    WarnaBunyi\n      Timbre\n      Instrumen\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk teori musik. Flowchart untuk struktur lagu dan komposisi."
+        }
+      }
+    },
+    "Seni Tari": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel seni gerak dan koreografi.",
+      "topics": {
+        "Gerak Dasar": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk ragam gerak (sikap awal → gerak inti → sikap akhir).",
+          "example": "```mermaid\nflowchart TD\n    A[Sikap Awal] --> B[Gerak Inti]\n    B --> C[Variasi]\n    C --> D[Sikap Akhir]\n```"
+        },
+        "Jenis Tari": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi tari (tradisional-kontemporer, tunggal-berpasangan-kelompok).",
+          "example": "```mermaid\ngraph TD\n    Tari --> Tradisional\n    Tari --> Modern\n    Tradisional --> Klasik\n    Tradisional --> Kerakyatan\n    Penyajian --> Tunggal\n    Penyajian --> Berpasangan\n    Penyajian --> Kelompok\n```"
+        },
+        "Unsur Tari": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur tari (wiraga, wirama, wirasa).",
+          "example": "```mermaid\nmindmap\n  UnsurTari\n    Wiraga\n      Gerak\n      Teknik\n    Wirama\n      Irama\n      Ketukan\n    Wirasa\n      Ekspresi\n      Penghayatan\n```"
+        },
+        "default": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk ragam gerak. Mindmap untuk klasifikasi."
+        }
+      }
+    },
+    "Seni Teater": {
+      "default_visual": "flowchart_td",
+      "description": "Mapel seni peran dan drama.",
+      "topics": {
+        "Struktur Drama": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk struktur drama (prolog → konflik → klimaks → resolusi → epilog).",
+          "example": "```mermaid\nflowchart TD\n    A[Prolog] --> B[Konflik]\n    B --> C[Klimaks]\n    C --> D[Resolusi]\n    D --> E[Epilog]\n```"
+        },
+        "Unsur Teater": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur teater (naskah, pemain, sutradara, panggung, tata cahaya, suara).",
+          "example": "```mermaid\nmindmap\n  Teater\n    Naskah\n    Pemain\n      Tokoh\n      Peran\n    Sutradara\n    Panggung\n    TataCahaya\n    TataSuara\n```"
+        },
+        "Latihan": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk tahapan latihan teater (pembacaan → blocking → gladi bersih → pementasan).",
+          "example": "```mermaid\nflowchart TD\n    A[Pembacaan Naskah] --> B[Blocking]\n    B --> C[Latihan Gabungan]\n    C --> D[Gladi Bersih]\n    D --> E[Pementasan]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep teater. Flowchart untuk alur cerita dan proses latihan."
+        }
+      }
+    },
+    "PAI": {
+      "default_visual": "mindmap",
+      "description": "Pendidikan Agama Islam.",
+      "topics": {
+        "Al-Quran": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur Al-Quran (surat, ayat, juz, golongan makkiyah-madaniyah).",
+          "example": "```mermaid\nmindmap\n  AlQuran\n    Surat\n      Makkiyah\n      Madaniyah\n    Ayat\n    Juz\n    Tajwid\n      Idzhar\n      Idgham\n      Iqlab\n      Ikhfa\n```"
+        },
+        "Ibadah": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk rukun ibadah (shalat, puasa, zakat, haji) dan urutan pelaksanaan.",
+          "example": "```mermaid\nflowchart TD\n    A[Niat] --> B[Takbiratul Ihram]\n    B --> C[Baca Fatihah]\n    C --> D[Rukuk]\n    D --> E[I'tidal]\n    E --> F[Sujud]\n    F --> G[Duduk]\n    G --> H[Salam]\n```"
+        },
+        "Akhlak": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk klasifikasi akhlak (mahmudah-mazmumah, kepada Allah, rasul, diri, sesama, lingkungan).",
+          "example": "```mermaid\nmindmap\n  Akhlak\n    Mahmudah\n      Jujur\n      Amanah\n      Sabar\n    Mazmumah\n      Bohong\n      Hasad\n      Takabur\n    KepadaAllah\n      Ibadah\n      Tawakal\n    KepadaSesama\n      Tolong-menolong\n      Silaturahmi\n```"
+        },
+        "Sejarah Islam": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk kronologi sejarah Islam (masa Nabi → Khulafaur Rasyidin → Dinasti → Modern).",
+          "example": "```mermaid\nflowchart TD\n    A[Masa Nabi] --> B[Khulafaur Rasyidin]\n    B --> C[Daulah Umayyah]\n    C --> D[Daulah Abbasiyah]\n    D --> E[Masa Modern]\n```"
+        },
+        "Fikih": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk klasifikasi fikih (ibadah-muamalah, wajib-sunah-mubah-makruh-haram).",
+          "example": "```mermaid\ngraph TD\n    Fikih --> Ibadah\n    Fikih --> Muamalah\n    Hukum --> Wajib\n    Hukum --> Sunah\n    Hukum --> Mubah\n    Hukum --> Makruh\n    Hukum --> Haram\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep dan nilai. Flowchart untuk tata cara ibadah dan kronologi sejarah."
+        }
+      }
+    },
+    "Bahasa Daerah": {
+      "default_visual": "mindmap",
+      "description": "Mapel bahasa dan budaya daerah.",
+      "topics": {
+        "Aksara": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk aksara daerah (hanacaraka, swara, murda, angka, rekan, pasangan).",
+          "example": "```mermaid\ngraph TD\n    Aksara --> Swara[Vokal]\n    Aksara --> Murda[Huruf Kapital]\n    Aksara --> Nglegena[Dasar]\n    Aksara --> Rekan[Serapan]\n    Aksara --> Pasangan\n    Aksara --> Angka\n```"
+        },
+        "Unggah-ungguh": {
+          "visual_type": "graph_td",
+          "description": "Graph TD untuk tingkat tutur (ngoko, madya, krama, krama inggil) dan penggunaannya.",
+          "example": "```mermaid\ngraph TD\n    TingkatTutur --> Ngoko\n    TingkatTutur --> Madya\n    TingkatTutur --> Krama\n    Ngoko --> Akrab\n    Krama --> Sopan\n    KramaInggil --> SangatHormat\n```"
+        },
+        "Sastra Daerah": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk jenis sastra daerah (tembang, geguritan, cerita rakyat, wayang).",
+          "example": "```mermaid\nmindmap\n  SastraDaerah\n    Tembang\n      Macapat\n      Dolanan\n    Geguritan[Puisi]\n    CeritaRakyat\n      Legenda\n      Fabel\n      Mitos\n    Wayang\n      Kulit\n      Wong\n```"
+        },
+        "Budaya": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk unsur budaya daerah (pakaian, makanan, rumah adat, upacara).",
+          "example": "```mermaid\nmindmap\n  BudayaDaerah\n    PakaianAdat\n    MakananTradisional\n    RumahAdat\n    UpacaraAdat\n    Kesenian\n      Tari\n      Musik\n      Teater\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk konsep bahasa. Graph untuk aksara dan hierarki tutur."
+        }
+      }
+    },
+    "Keagamaan Lain": {
+      "default_visual": "mindmap",
+      "description": "Mapel pendidikan agama (Kristen, Katolik, Hindu, Buddha, Khonghucu).",
+      "topics": {
+        "Kitab Suci": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk struktur kitab suci, isi pokok, dan ajaran utama.",
+          "example": "```mermaid\nmindmap\n  KitabSuci\n    PerjanjianLama\n      Taurat\n      Sejarah\n      Puisi\n      Nabi\n    PerjanjianBaru\n      Injil\n      Surat\n      Wahyu\n```"
+        },
+        "Ajaran": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk pokok-pokok ajaran dan nilai moral.",
+          "example": "```mermaid\nmindmap\n  Ajaran\n    Ketuhanan\n    Kemanusiaan\n    Etika\n      Perintah\n      Larangan\n    Ibadah\n      Pribadi\n      Bersama\n```"
+        },
+        "Sejarah Agama": {
+          "visual_type": "flowchart_td",
+          "description": "Flowchart TD untuk kronologi sejarah dan perkembangan agama.",
+          "example": "```mermaid\nflowchart TD\n    A[Awal Mula] --> B[Perkembangan]\n    B --> C[Penyebaran]\n    C --> D[Masa Kini]\n```"
+        },
+        "default": {
+          "visual_type": "mindmap",
+          "description": "Mindmap untuk ajaran dan nilai. Flowchart untuk sejarah dan tata ibadah."
+        }
+      }
+    }
+  }
+}

@@ -2,127 +2,85 @@
 
 namespace App\Services;
 
-use App\Models\Student;
-use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use Minishlink\WebPush\WebPush;
 use Minishlink\WebPush\Subscription;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * Service wrapper around minishlink/web-push.
+ * Requires composer package `minishlink/web-push` and VAPID keys in .env
+ *   VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT
+ */
 class PushNotificationService
 {
+    /** @var WebPush */
+    protected $webPush;
+
+    public function __construct()
+    {
+        $vapid = [
+            'VAPID' => [
+                'subject' => env('VAPID_SUBJECT', 'mailto:admin@smartschool.id'),
+                'publicKey' => env('VAPID_PUBLIC_KEY'),
+                'privateKey' => env('VAPID_PRIVATE_KEY'),
+            ],
+        ];
+        $this->webPush = new WebPush($vapid);
+    }
+
     /**
-     * Send a Web Push notification to the parent/guardian of a student.
+     * Send a notification to a stored subscription JSON.
      *
-     * @param int|Student $student The student object or ID
-     * @param string $title Notification title
-     * @param string $body Notification body
-     * @param string $url URL to open when clicked
-     * @return bool True if successfully queued/sent, false otherwise
+     * @param string $subscriptionJson JSON string stored in users.push_subscription
+     * @param array  $payload          ['title'=>..,'body'=>..,'url'=>..,'icon'=>..]
      */
-    public static function sendToStudentParent($student, string $title, string $body, string $url = '/student/dashboard')
+    public function send(string $subscriptionJson, array $payload): void
     {
         try {
-            if (!$student instanceof Student) {
-                $student = Student::find($student);
+            $subscription = Subscription::create(json_decode($subscriptionJson, true));
+            $this->webPush->sendOneNotification($subscription, json_encode($payload));
+            // Flush queue – ensure delivery (or log failures)
+            foreach ($this->webPush->flush() as $report) {
+                if ($report->isSuccess()) {
+                    Log::info('Push sent to endpoint: ' . $report->getRequest()->getUri()->__toString());
+                } else {
+                    Log::warning('Push failed: ' . $report->getReason());
+                }
             }
-
-            if (!$student || !$student->auth_user_id) {
-                return false; // Student not found or has no linked parent account
-            }
-
-            $user = User::find($student->auth_user_id);
-            if (!$user || empty($user->push_subscription)) {
-                return false; // Parent user not found or hasn't subscribed to PWA Push
-            }
-
-            $subscriptionData = json_decode($user->push_subscription, true);
-            if (!is_array($subscriptionData) || !isset($subscriptionData['endpoint'])) {
-                return false;
-            }
-
-            $auth = [
-                'VAPID' => [
-                    'subject' => env('VAPID_SUBJECT'),
-                    'publicKey' => env('VAPID_PUBLIC_KEY'),
-                    'privateKey' => env('VAPID_PRIVATE_KEY'),
-                ],
-            ];
-
-            $webPush = new WebPush($auth);
-            
-            $subscription = Subscription::create([
-                'endpoint' => $subscriptionData['endpoint'],
-                'publicKey' => $subscriptionData['keys']['p256dh'] ?? null,
-                'authToken' => $subscriptionData['keys']['auth'] ?? null,
-            ]);
-
-            $payload = json_encode([
-                'title' => $title,
-                'body' => $body,
-                'url' => $url,
-            ]);
-
-            $report = $webPush->sendOneNotification($subscription, $payload);
-            
-            return $report->isSuccess();
-        } catch (\Exception $e) {
-            Log::error('Failed to send Push Notification: ' . $e->getMessage());
-            return false;
+        } catch (\Throwable $e) {
+            Log::error('Push notification error: ' . $e->getMessage());
         }
     }
 
     /**
-     * Send a Web Push notification to a specific user (teacher or any user)
-     * Expects the user record to have a `push_subscription` JSON column similar to parents.
+     * Send push notification to a student's auth user account.
      *
-     * @param \App\Models\User|int $user
+     * @param int    $studentId
      * @param string $title
      * @param string $body
      * @param string $url
-     * @return bool
      */
-    public static function sendToUser($user, string $title, string $body, string $url = '/')
+    public static function sendToStudentParent(int $studentId, string $title, string $body, string $url = '/'): void
     {
         try {
-            if (!($user instanceof \App\Models\User)) {
-                $user = \App\Models\User::find($user);
+            $student = \App\Models\Student::with('user')->find($studentId);
+            if (!$student || !$student->user || !$student->user->push_subscription) {
+                return;
             }
 
-            if (!$user || empty($user->push_subscription)) {
-                return false;
-            }
+            $name = $student->name ?? 'Ananda';
+            $fullName = 'Ananda ' . $name;
 
-            $subscriptionData = json_decode($user->push_subscription, true);
-            if (!is_array($subscriptionData) || !isset($subscriptionData['endpoint'])) {
-                return false;
-            }
-
-            $auth = [
-                'VAPID' => [
-                    'subject' => env('VAPID_SUBJECT'),
-                    'publicKey' => env('VAPID_PUBLIC_KEY'),
-                    'privateKey' => env('VAPID_PRIVATE_KEY'),
-                ],
-            ];
-
-            $webPush = new WebPush($auth);
-            $subscription = Subscription::create([
-                'endpoint' => $subscriptionData['endpoint'],
-                'publicKey' => $subscriptionData['keys']['p256dh'] ?? null,
-                'authToken' => $subscriptionData['keys']['auth'] ?? null,
-            ]);
-
-            $payload = json_encode([
+            $service = new self();
+            $service->send($student->user->push_subscription, [
                 'title' => $title,
-                'body' => $body,
-                'url' => $url,
+                'body'  => $fullName . ' — ' . $body,
+                'url'   => $url,
+                'icon'  => '/Logo Smart Teaching Baru_.png',
             ]);
-
-            $report = $webPush->sendOneNotification($subscription, $payload);
-            return $report->isSuccess();
-        } catch (\Exception $e) {
-            Log::error('Failed to send Push Notification to user: ' . $e->getMessage());
-            return false;
+        } catch (\Throwable $e) {
+            Log::error("sendToStudentParent failed for student {$studentId}: {$e->getMessage()}");
         }
     }
 }
+?>

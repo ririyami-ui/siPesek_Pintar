@@ -5,7 +5,7 @@ const PieChart = ({ data }) => {
   const categories = [
     { key: 'Hadir', label: 'Hadir', color: 'bg-green-500', barColor: '#22c55e', icon: <UserCheck size={14} className="text-white" /> },
     { key: 'Sakit', label: 'Sakit', color: 'bg-yellow-500', barColor: '#eab308', icon: <Stethoscope size={14} className="text-white" /> },
-    { key: 'Ijin', label: 'Ijin', color: 'bg-blue-500', barColor: '#3b82f6', icon: <DoorOpen size={14} className="text-white" /> },
+    { key: 'Izin', label: 'Izin', color: 'bg-blue-500', barColor: '#3b82f6', icon: <DoorOpen size={14} className="text-white" /> },
     { key: 'Alpha', label: 'Alpha', color: 'bg-red-500', barColor: '#ef4444', icon: <UserX size={14} className="text-white" /> },
   ];
 

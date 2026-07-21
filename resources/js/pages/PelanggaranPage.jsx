@@ -102,7 +102,7 @@ const PelanggaranPage = () => {
       if (selectedClass) {
         try {
           const res = await api.get('/students', {
-            params: { rombel: selectedClass }
+            params: { class_id: selectedClass }
           });
           const studentData = res.data.data || res.data || [];
           setStudents([...studentData].sort((a, b) => (a.name || '').localeCompare(b.name || '')));

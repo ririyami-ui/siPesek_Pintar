@@ -59,6 +59,23 @@ const exportToDocx = async (htmlContent, fileName, options = {}) => {
     }
 };
 
+// Helper: find teacher name/nip from schedules matching grade & subject
+const getTeacherFromSchedules = (schedules, grade, subject) => {
+    const match = (schedules || []).find(s => {
+        const className = typeof s.class === 'string' ? s.class : s.class?.rombel;
+        if (!className) return false;
+        const gradePattern = new RegExp(`^(?:KELAS\\s+)?(?:${grade})(?![0-9])`, 'i');
+        const isGrade = gradePattern.test(className.trim());
+        const subjectName = typeof s.subject === 'string' ? s.subject : s.subject?.name || '';
+        const subjMatch = subjectName.toLowerCase() === (subject || '').toString().toLowerCase();
+        return isGrade && subjMatch;
+    });
+    if (match && match.teacher) {
+        return { name: match.teacher.name || '', nip: match.teacher.nip || '' };
+    }
+    return { name: '', nip: '' };
+};
+
 const ProgramMengajarPage = () => {
     const { activeSemester, academicYear } = useSettings();
     const [activeTab, setActiveTab] = useState('pekan-efektif');
@@ -169,6 +186,15 @@ const ProgramMengajarPage = () => {
                 // Fetch User Profile for signing location
                 const profileRes = await api.get('/profile');
                 const profile = profileRes.data.profile;
+                // signature_url ada di root response, merge ke profile
+                if (profileRes.data.signature_url) {
+                    profile.signature_url = profileRes.data.signature_url;
+                }
+                // user.name & user.nip ada di root response.user, bukan di profile
+                if (profileRes.data.user) {
+                    profile.name = profileRes.data.user.name || profile.name;
+                    profile.nip = profileRes.data.user.nip || profile.nip;
+                }
                 setUserProfile(profile);
 
                 if (profile?.school_name) {
@@ -465,6 +491,7 @@ const ProgramMengajarPage = () => {
                                     subject={selectedSubject}
                                     semester={activeSemester}
                                     year={academicYear}
+                                    schedules={schedules}
                                     activeTab={activeTab}
                                     userProfile={userProfile}
                                     signingLocation={signingLocation}
@@ -499,7 +526,7 @@ const ProgramMengajarPage = () => {
 
 
 // --- Reusable Signature Section ---
-const SignatureSection = ({ userProfile, signingLocation }) => {
+const SignatureSection = ({ userProfile, signingLocation, teacherName = '', teacherNip = '' }) => {
     return (
         <div className="mt-12 mb-8 grid grid-cols-2 gap-8 text-center text-sm print:text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
             <div className="flex flex-col items-center">
@@ -513,8 +540,8 @@ const SignatureSection = ({ userProfile, signingLocation }) => {
                 <p>{signingLocation || 'Jakarta'}, {moment().format('DD MMMM YYYY')}</p>
                 <p>Guru Mata Pelajaran</p>
                 <div className="h-24"></div>
-                <p className="font-bold underline uppercase">{userProfile?.name || '.....................................'}</p>
-                <p>NIP. {userProfile?.nip || '.....................................'}</p>
+                <p className="font-bold underline uppercase">{teacherName || '.....................................'}</p>
+                <p>NIP. {teacherNip || '.....................................'}</p>
             </div>
         </div>
     );
@@ -1114,6 +1141,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
     };
 
     const handleExportWord = () => {
+        const teacher = getTeacherFromSchedules(schedules, grade, subject);
         const rows = months.map(m => `
             <tr>
                 <td>${m.name}</td>
@@ -1188,15 +1216,15 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                 <tr>
                     <td>
                         Mengetahui,<br>
-                        Kepala Sekolah<br>
+                        Kepala Sekolah<br><br><br>
                         <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
                     <td>
                         ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
-                        Guru Mata Pelajaran<br>
-                        <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.nip || '.....................................'}</div>
+                        Guru Mata Pelajaran<br><br><br>
+                        <div class="signature-name">${teacher.name || '( ..................................... )'}</div>
+                        <div>NIP. ${teacher.nip || '.....................................'}</div>
                     </td>
                 </tr>
             </table>
@@ -1346,7 +1374,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
                 </div>
             </div>
 
-            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} />
+            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} teacherName={getTeacherFromSchedules(schedules, grade, subject).name} teacherNip={getTeacherFromSchedules(schedules, grade, subject).nip} />
 
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center no-print pt-4 border-t dark:border-gray-700 gap-4">
                 <div className="flex flex-wrap gap-2">
@@ -1392,7 +1420,7 @@ const PekanEfektifView = ({ grade, subject, semester, year, schedules, activeTab
     );
 };
 
-const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, signingLocation, sharedEfektifData, subjects }) => {
+const ProtaView = ({ grade, subject, semester, year, schedules, activeTab, userProfile, signingLocation, sharedEfektifData, subjects }) => {
     const [protaData, setProtaData] = useState([]);
     const [targetJP, setTargetJP] = useState(0); // Total effective hours needed
     const [loading, setLoading] = useState(false);
@@ -1545,6 +1573,7 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
     };
 
     const handleExportWord = () => {
+        const teacher = getTeacherFromSchedules(schedules, grade, subject);
         const rows = protaData.map((row, index) => `
             <tr>
                 <td class="text-center">${index + 1}</td>
@@ -1604,17 +1633,17 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
 
             <table class="signature-table">
                 <tr>
-                    <td>
+                    <td align="center" style="border:none; vertical-align: top;">
                         Mengetahui,<br>
-                        Kepala Sekolah<br>
+                        Kepala Sekolah<br><br><br>
                         <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
-                    <td>
+                    <td align="center" style="border:none; vertical-align: top;">
                         ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Jakarta'}, ${moment().format('DD MMMM YYYY')}<br>
-                        Guru Mata Pelajaran<br>
-                        <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.nip || '.....................................'}</div>
+                        Guru Mata Pelajaran<br><br><br>
+                        <div class="signature-name">${teacher.name || '( ..................................... )'}</div>
+                        <div>NIP. ${teacher.nip || '.....................................'}</div>
                     </td>
                 </tr>
             </table>
@@ -1874,7 +1903,7 @@ const ProtaView = ({ grade, subject, semester, year, activeTab, userProfile, sig
                 </table>
             </div>
 
-            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} />
+            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} teacherName={getTeacherFromSchedules(schedules, grade, subject).name} teacherNip={getTeacherFromSchedules(schedules, grade, subject).nip} />
 
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center no-print pt-4 border-t dark:border-gray-700 gap-4">
                 <div className="flex flex-wrap gap-2">
@@ -2146,6 +2175,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
 
 
     const handleExportWord = () => {
+        const teacher = getTeacherFromSchedules(schedules, grade, subject);
         // Build Header for Months
         let monthHeader = '';
         let weekHeader = '';
@@ -2266,15 +2296,15 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 <tr>
                     <td>
                         Mengetahui,<br>
-                        Kepala Sekolah<br>
+                        Kepala Sekolah<br><br><br>
                         <div class="signature-name">${userProfile?.principalName || userProfile?.principal_name || '( ..................................... )'}</div>
                         <div>NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.....................................'}</div>
                     </td>
                     <td>
                         ${signingLocation || userProfile?.school_name?.split(' ')[1] || userProfile?.school?.split(' ')[1] || 'Indonesia'}, ${moment().format('DD MMMM YYYY')}<br>
                         Guru Mata Pelajaran<br>
-                        <div class="signature-name">${userProfile?.name || '( ..................................... )'}</div>
-                        <div>NIP. ${userProfile?.nip || '.....................................'}</div>
+                        <div class="signature-name">${teacher.name || '( ..................................... )'}</div>
+                        <div>NIP. ${teacher.nip || '.....................................'}</div>
                     </td>
                 </tr>
             </table>
@@ -2906,7 +2936,7 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                 </div>
             </div>
 
-            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} />
+            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} teacherName={getTeacherFromSchedules(schedules, grade, subject).name} teacherNip={getTeacherFromSchedules(schedules, grade, subject).nip} />
 
             <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center no-print pt-4 border-t dark:border-gray-700 gap-4">
                 <div className="flex flex-wrap gap-2">
@@ -3209,6 +3239,7 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
 
     // Export Word Logic for ATP
     const handleExportWordATP = async () => {
+        const teacher = getTeacherFromSchedules(schedules, grade, subject);
         const rows = atpItems.map(item => `
             <tr>
                 <td style="text-align:center">${item.no}</td>
@@ -3256,18 +3287,18 @@ const ATPView = ({ grade, subject, semester, year, userProfile, signingLocation,
                         ${rows}
                     </tbody>
                 </table>
-                
+
                 <table border="0" cellpadding="10" cellspacing="0" style="width: 100%; margin-top: 50px;">
                     <tr>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
-                            Mengetahui,<br>Kepala Sekolah<br><br><br><br>
+                            Mengetahui,<br>Kepala Sekolah<br><br><br>
                             <strong>${userProfile?.principalName || userProfile?.principal_name || '................'}</strong><br>
                             NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.......'}
                         </td>
                         <td style="width: 50%; text-align: center; vertical-align: top;">
-                            ${signingLocation}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Guru Mata Pelajaran<br><br><br><br>
-                            <strong>${userProfile?.name || '................'}</strong><br>
-                            NIP. ${userProfile?.nip || '.......'}
+                            ${signingLocation}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Guru Mata Pelajaran<br><br><br>
+                            <strong>${teacher.name || '................'}</strong><br>
+                            NIP. ${teacher.nip || '.......'}
                         </td>
                     </tr>
                 </table>

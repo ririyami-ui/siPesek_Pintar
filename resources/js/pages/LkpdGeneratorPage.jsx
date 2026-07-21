@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import mermaid from 'mermaid';
 import api from '../lib/axios';
 import BSKAP_DATA from '../utils/bskap_2025_intel.json';
 import { toast } from 'react-hot-toast';
@@ -25,6 +26,41 @@ import {
     Clock
 } from 'lucide-react';
 import Modal from '../components/Modal';
+import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
+
+// Initialize Mermaid
+mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'base' });
+
+// Local Mermaid Renderer Component
+const LocalMermaid = ({ content }) => {
+    const [svg, setSvg] = useState('');
+    const [error, setError] = useState(null);
+    const id = useRef(`mermaid-${Math.random().toString(36).substr(2, 9)}`).current;
+
+    useEffect(() => {
+        if (content) {
+            const renderDiagram = async () => {
+                try {
+                    setError(null);
+                    const { svg } = await mermaid.render(id, content);
+                    setSvg(svg);
+                } catch (err) {
+                    console.error('Mermaid error:', err);
+                    setError('Sintaks Mermaid tidak valid.');
+                }
+            };
+            renderDiagram();
+        }
+    }, [content, id]);
+
+    if (error) {
+        return <div className="my-4 p-4 bg-red-50 border border-red-100 rounded-xl text-xs text-red-600 font-mono">⚠️ {error}</div>;
+    }
+
+    return <div className="my-6 flex justify-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm" dangerouslySetInnerHTML={{ __html: svg }} />;
+};
+
+const InlineMermaid = ({ content }) => <LocalMermaid content={content} />;
 
 // Reusing Styled Components for consistency (Keep it simple with Tailwind)
 const StyledSelect = ({ label, value, onChange, children, disabled }) => (
@@ -484,6 +520,28 @@ const LkpdGeneratorPage = () => {
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm, remarkMath]}
                                     rehypePlugins={[rehypeRaw, rehypeKatex]}
+                                    components={{
+                                        code({ node, inline, className, children, ...props }) {
+                                            const match = /language-(\w+)/.exec(className || '');
+                                            if (!inline && match && match[1] === 'visualization') {
+                                                try {
+                                                    const config = JSON.parse(String(children).replace(/\n/g, ' '));
+                                                    return (
+                                                        <div className="my-4 no-print">
+                                                            <VisualizationRenderer visualization={config} />
+                                                        </div>
+                                                    );
+                                                } catch (e) {
+                                                    return <code className={className} {...props}>{children}</code>;
+                                                }
+                                            }
+                                            if (!inline && match && match[1] === 'mermaid') {
+                                                const content = String(children).replace(/\n$/, '');
+                                                return <InlineMermaid content={content} />;
+                                            }
+                                            return <code className={className} {...props}>{children}</code>;
+                                        }
+                                    }}
                                 >
                                     {lkpdContent}
                                 </ReactMarkdown>
