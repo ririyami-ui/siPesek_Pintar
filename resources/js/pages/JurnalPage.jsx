@@ -385,28 +385,27 @@ export default function JurnalPage() {
 
     toast.promise(promise, {
       loading: editingJournalId ? 'Menyimpan perubahan...' : 'Menyimpan jurnal...',
-      success: async () => {
-        setSelectedClass('');
-        setSelectedSubject('');
-        setLearningObjectives('');
-        setLearningActivities('');
-        setReflection('');
-        setStatus('Terlaksana');
-        setFollowUp('');
-        setNotes('');
-        setIsAssignment(false);
-        setEditingJournalId(null);
-        try {
-          await fetchJournalEntries(true);
-        } catch (e) {
-          console.error('Refresh after save failed:', e);
-        }
-        return editingJournalId ? 'Perubahan berhasil disimpan!' : 'Jurnal berhasil disimpan!';
-      },
+      success: editingJournalId ? 'Perubahan berhasil disimpan!' : 'Jurnal berhasil disimpan!',
       error: (err) => {
         const msg = err?.response?.data?.message || 'Gagal menyimpan jurnal.';
         return msg;
       },
+    });
+
+    promise.then(() => {
+      setSelectedClass('');
+      setSelectedSubject('');
+      setLearningObjectives('');
+      setLearningActivities('');
+      setReflection('');
+      setStatus('Terlaksana');
+      setFollowUp('');
+      setNotes('');
+      setIsAssignment(false);
+      setEditingJournalId(null);
+      fetchJournalEntries(true);
+    }).catch((e) => {
+      console.error('Refresh after save failed:', e);
     });
   };
 

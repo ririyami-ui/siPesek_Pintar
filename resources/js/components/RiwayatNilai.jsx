@@ -57,7 +57,7 @@ const RiwayatNilai = ({ classes, subjects }) => {
         }
       });
 
-      const submittedGrades = gradesResponse.data;
+      const submittedGrades = gradesResponse.data.data || [];
 
       const gradesBySession = submittedGrades.reduce((acc, grade) => {
         const key = `${grade.date}-${grade.type}-${grade.topic}`;

@@ -126,6 +126,13 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
+        \Log::info('Journal show check', [
+            'user_id' => auth()->id(),
+            'journal_id' => $journal->id,
+            'journal_user_id' => $journal->user_id,
+            'is_admin' => auth()->user()->isAdmin(),
+        ]);
+
         if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             abort(403);
         }
@@ -138,6 +145,12 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
+        \Log::info('Journal update check', [
+            'user_id' => auth()->id(),
+            'journal_id' => $journal->id,
+            'journal_user_id' => $journal->user_id,
+        ]);
+
         if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             abort(403);
         }
@@ -168,6 +181,12 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
+        \Log::info('Journal destroy check', [
+            'user_id' => auth()->id(),
+            'journal_id' => $journal->id,
+            'journal_user_id' => $journal->user_id,
+        ]);
+
         if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             abort(403);
         }
