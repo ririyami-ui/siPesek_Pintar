@@ -126,18 +126,7 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
-        \Log::info('Journal show check', [
-            'user_id' => auth()->id(),
-            'journal_id' => $journal->id,
-            'journal_user_id' => $journal->user_id,
-            'is_admin' => auth()->user()->isAdmin(),
-        ]);
-
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        return response()->json($journal->load(['class', 'subject', 'schedule']));
+        return response()->json(['debug' => ['user_id' => auth()->id(), 'journal_id' => $journal->id, 'journal_user_id' => $journal->user_id, 'is_admin' => auth()->user()->isAdmin()]]);
     }
 
     /**
@@ -145,35 +134,7 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
-        \Log::info('Journal update check', [
-            'user_id' => auth()->id(),
-            'journal_id' => $journal->id,
-            'journal_user_id' => $journal->user_id,
-        ]);
-
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'date' => 'sometimes|required|date',
-            'topic' => 'sometimes|required|string',
-            'learning_objectives' => 'nullable|string',
-            'learning_activities' => 'nullable|string',
-            'reflection' => 'nullable|string',
-            'status' => 'nullable|string',
-            'follow_up' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'is_assignment' => 'boolean',
-        ]);
-
-        if (isset($validated['date'])) {
-            $validated['date'] = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
-        }
-
-        $journal->update($validated);
-
-        return response()->json($journal->load(['class', 'subject']));
+        return response()->json(['debug' => ['user_id' => auth()->id(), 'journal_id' => $journal->id, 'journal_user_id' => $journal->user_id]]);
     }
 
     /**
@@ -181,18 +142,6 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
-        \Log::info('Journal destroy check', [
-            'user_id' => auth()->id(),
-            'journal_id' => $journal->id,
-            'journal_user_id' => $journal->user_id,
-        ]);
-
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $journal->delete();
-
-        return response()->noContent();
+        return response()->json(['debug' => ['user_id' => auth()->id(), 'journal_id' => $journal->id, 'journal_user_id' => $journal->user_id]]);
     }
 }
