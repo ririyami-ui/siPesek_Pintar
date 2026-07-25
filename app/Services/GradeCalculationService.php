@@ -68,7 +68,7 @@ class GradeCalculationService
         $keaktifanPct = $maxKeaktifanPoints > 0 ? min(100, ($totalKeaktifanPoints / $maxKeaktifanPoints) * 100) : 0;
 
         // 4. Group by subject and calculate scores
-        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws, $keaktifanPct) {
+        $bySubject = $grades->groupBy('subject_id')->map(function ($records, $subjectId) use ($penalty, $wk, $wp, $wa, $ws, $keaktifanPct, $totalKeaktifanPoints, $maxKeaktifanPoints) {
             $subject = $records->first()->subject;
             $avg     = round($records->avg('score'), 2);
 

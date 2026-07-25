@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import api from '../lib/axios';
 import StyledButton from './StyledButton';
 import StyledTable from './StyledTable';
@@ -6,7 +7,7 @@ import { useSettings } from '../utils/SettingsContext';
 import toast from 'react-hot-toast';
 import moment from 'moment';
 
-const GradeDetailsModal = ({ date, assessmentType, material, selectedClass, selectedSubject, onClose, classes, subjects }) => {
+const GradeDetailsModal = ({ date, assessmentType, material, selectedClass, selectedSubject, onClose, onSaved, classes, subjects }) => {
   const [studentGrades, setStudentGrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -32,8 +33,10 @@ const GradeDetailsModal = ({ date, assessmentType, material, selectedClass, sele
           })
         ]);
 
-        const fetchedStudents = studentsRes.data;
-        const fetchedGrades = gradesRes.data;
+        const rawStudents = studentsRes.data;
+        const fetchedStudents = Array.isArray(rawStudents) ? rawStudents : (rawStudents?.data || rawStudents?.students || []);
+        const rawGrades = gradesRes.data;
+        const fetchedGrades = Array.isArray(rawGrades) ? rawGrades : (rawGrades?.data || rawGrades?.grades || []);
 
         const gradesMap = new Map();
         fetchedGrades.forEach(grade => {
@@ -103,6 +106,7 @@ const GradeDetailsModal = ({ date, assessmentType, material, selectedClass, sele
 
       await api.post('/grades/batch', payload);
       toast.success("Perubahan nilai berhasil disimpan!");
+      onSaved?.();
       onClose();
 
     } catch (error) {
@@ -148,7 +152,7 @@ const GradeDetailsModal = ({ date, assessmentType, material, selectedClass, sele
         {/* Status Bar */}
         <div className="px-6 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm flex justify-between items-center border-b border-blue-100 dark:border-blue-900/30">
           <span className="font-medium">Status: {gradeStatus}</span>
-          <span className="text-xs opacity-75">Kelas: {classes.find(c => c.id === selectedClass)?.rombel || selectedClass} • Total: {studentGrades.length} Siswa</span>
+          <span className="text-xs opacity-75">Kelas: {classes.find(c => c.id === Number(selectedClass))?.rombel || selectedClass} • Total: {studentGrades.length} Siswa</span>
         </div>
 
         {/* Content Area */}

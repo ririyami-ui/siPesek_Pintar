@@ -21,7 +21,7 @@ export default function MonitoringLaporanOrtu() {
       setLoading(true);
       const params = {};
       if (filter !== 'all') params.type = filter;
-      const res = await api.get('/parent-reports/admin/all', { params });
+      const res = await api.get('/admin/parent-reports', { params });
       const data = res.data.data || [];
       setReports(data);
       setStats({
@@ -41,15 +41,15 @@ export default function MonitoringLaporanOrtu() {
   const handleRegenerate = async (studentId) => {
     if (!confirm('Regenerasi laporan untuk siswa ini? Proses ini akan memanggil AI kembali.')) return;
     try {
-      await api.post(`/parent-reports/admin/regenerate/${studentId}`);
+      await api.post(`/admin/parent-reports/regenerate/${studentId}`);
       fetchReports();
     } catch (err) {
       console.error('Failed to regenerate:', err);
     }
   };
 
-  const filtered = reports.filter(r => 
-    search === '' || 
+  const filtered = reports.filter(r =>
+    search === '' ||
     (r.student?.name || '').toLowerCase().includes(search.toLowerCase()) ||
     (r.period_label || '').toLowerCase().includes(search.toLowerCase())
   );
@@ -94,9 +94,8 @@ export default function MonitoringLaporanOrtu() {
         <div className="flex gap-2">
           {['all', 'weekly', 'monthly'].map(t => (
             <button key={t} onClick={() => setFilter(t)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                filter === t ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${filter === t ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                }`}
             >{t === 'all' ? 'Semua' : TYPE_LABELS[t]}</button>
           ))}
         </div>
@@ -142,9 +141,8 @@ export default function MonitoringLaporanOrtu() {
                         <p className="text-xs text-slate-400">{r.student?.class?.rombel || '-'}</p>
                       </td>
                       <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                          r.type === 'weekly' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
-                        }`}>{TYPE_LABELS[r.type]}</span>
+                        <span className={`px-2 py-1 rounded-lg text-xs font-medium ${r.type === 'weekly' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
+                          }`}>{TYPE_LABELS[r.type]}</span>
                       </td>
                       <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs">{r.period_label}</td>
                       <td className="px-4 py-3 text-center font-semibold text-slate-700 dark:text-white">

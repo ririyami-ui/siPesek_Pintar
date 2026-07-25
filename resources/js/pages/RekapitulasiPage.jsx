@@ -479,8 +479,12 @@ const RekapitulasiPage = () => {
         challenges: item.notes || '',
         teacherName: item.teacher?.name || '',
         isImplemented: item.status === 'Terlaksana',
+        absentStudents: item.absentStudents || [],
+
+        hadirCount: item.hadirCount || 0,
       })).sort((a, b) => new Date(b.date) - new Date(a.date));
       setJurnalData(fetchedJournals);
+      console.log("DEBUG jurnal fetched:", fetchedJournals.length, "sample:", fetchedJournals[0]);
     } catch (error) {
       console.error("Error fetching journals:", error);
       alert("Gagal mengambil data jurnal.");
@@ -841,6 +845,7 @@ const RekapitulasiPage = () => {
     { header: { label: 'Refleksi' }, accessor: 'reflection' },
     { header: { label: 'Hambatan' }, accessor: 'challenges' },
     { header: { label: 'Tindak Lanjut' }, accessor: 'followUp' },
+    { header: { label: 'Keterlaksanaan' }, accessor: 'isImplemented' },
   ];
 
   const nilaiColumns = [
@@ -1205,11 +1210,51 @@ const RekapitulasiPage = () => {
                             {jurnalColumns.map(col => (
                               <td key={col.accessor} className="px-6 py-4 whitespace-normal text-sm text-gray-600 dark:text-gray-300 border-b border-gray-50 dark:border-gray-800 min-w-[200px]">
                                 {col.accessor === 'date' ? (
-                                  <div className="font-medium whitespace-nowrap">{row[col.accessor]}</div>
+                                  <div className="font-medium whitespace-nowrap">{moment(row.date).format('DD/MM/YYYY')}</div>
+                                ) : col.accessor === 'absentStudents' ? (
+                                  <div className="flex flex-wrap gap-1 min-w-[180px]">
+                                    {row.absentStudents && row.absentStudents.length > 0 ? (
+                                      row.absentStudents.map((s, i) => {
+                                        const colorMap = {
+                                          'Sakit': 'bg-yellow-100 text-yellow-700',
+                                          'Izin': 'bg-blue-100 text-blue-700',
+                                          'Alpa': 'bg-red-100 text-red-700',
+                                        };
+                                        return (
+                                          <span key={i} className={`px-2 py-0.5 rounded-full text-xs font-medium ${colorMap[s.status] || 'bg-gray-100 text-gray-700'}`}>
+                                            {s.name} ({s.status})
+                                          </span>
+                                        );
+                                      })
+                                    ) : (
+                                      <span className="text-xs text-gray-400 italic">Semua hadir</span>
+                                    )}
+                                  </div>
                                 ) : col.accessor === 'isImplemented' ? (
-                                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${row.isImplemented !== false ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                    {row.isImplemented !== false ? 'Terlaksana' : 'Tidak Terlaksana'}
-                                  </span>
+                                  <div className="min-w-[160px]">
+                                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-bold mb-1 ${row.isImplemented !== false ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                      {row.isImplemented !== false ? 'Terlaksana' : 'Tidak Terlaksana'}
+                                    </span>
+                                    {row.absentStudents && (
+                                      <div className="text-xs text-gray-500 space-y-0.5 mt-1">
+                                        <div>Peserta didik hadir: {row.hadirCount}</div>
+                                        {['Sakit', 'Izin', 'Alpa'].map(st => {
+                                          const list = row.absentStudents.filter(s => s.status === st);
+                                          const colorMap = {
+                                            'Sakit': 'text-yellow-600',
+                                            'Izin': 'text-blue-600',
+                                            'Alpa': 'text-red-600',
+                                          };
+                                          return list.length > 0 ? (
+                                            <div key={st}>
+                                              <span className={`font-medium ${colorMap[st]}`}>{st}</span>
+                                              : {list.map(s => s.name).join(', ')}
+                                            </div>
+                                          ) : null;
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
                                 ) : (
                                   row[col.accessor] || '-'
                                 )}

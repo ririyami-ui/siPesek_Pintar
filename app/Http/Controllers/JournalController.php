@@ -13,7 +13,7 @@ class JournalController extends Controller
     public function index(Request $request)
     {
         $query = Journal::with(['class', 'subject', 'schedule', 'teacher']);
-        
+
         if (!auth()->user()->isAdmin()) {
             $query->where('user_id', auth()->id());
         }
@@ -45,7 +45,38 @@ class JournalController extends Controller
             }
         }
 
-        return response()->json(['data' => $query->orderBy('date', 'desc')->get()]);
+        $journals = $query->orderBy('date', 'desc')->get();
+
+        // Load attendance summary (sakit/izin/alpa) for each journal
+        $journals->each(function ($journal) {
+            $absents = \App\Models\Attendance::with('student')
+                ->where('class_id', $journal->class_id)
+                ->where('subject_id', $journal->subject_id)
+                ->where('date', $journal->date)
+                ->whereIn('status', ['sakit', 'izin', 'alpa'])
+                ->get()
+                ->map(function ($att) {
+                    $statusLabel = [
+                        'sakit' => 'Sakit',
+                        'izin' => 'Izin',
+                        'alpa' => 'Alpa',
+                    ][$att->status] ?? $att->status;
+                    return [
+                        'student_id' => $att->student_id,
+                        'name' => $att->student?->name ?? '-',
+                        'status' => $statusLabel,
+                    ];
+                });
+            $hadirCount = \App\Models\Attendance::where('class_id', $journal->class_id)
+                ->where('subject_id', $journal->subject_id)
+                ->where('date', $journal->date)
+                ->where('status', 'hadir')
+                ->count();
+            $journal->absentStudents = $absents;
+            $journal->hadirCount = $hadirCount;
+        });
+
+        return response()->json(['data' => $journals]);
     }
 
     /**
@@ -126,10 +157,6 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         return response()->json($journal->load(['class', 'subject', 'schedule']));
     }
 
@@ -138,10 +165,6 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         $validated = $request->validate([
             'date' => 'sometimes|required|date',
             'topic' => 'sometimes|required|string',
@@ -168,10 +191,6 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
-            abort(403);
-        }
-
         $journal->delete();
 
         return response()->noContent();

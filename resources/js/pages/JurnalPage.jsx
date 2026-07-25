@@ -40,12 +40,11 @@ export default function JurnalPage() {
   const [holidays, setHolidays] = useState([]);
   const [activeHoliday, setActiveHoliday] = useState(null);
   const { activeSemester, academicYear, userProfile } = useSettings();
-  const [showUnfinishedPopup, setShowUnfinishedPopup] = useState(false);
-  const [unfinishedJournals, setUnfinishedJournals] = useState([]);
   const [showMatchPopup, setShowMatchPopup] = useState(false);
   const [matchingJournals, setMatchingJournals] = useState([]);
 
   const [searchParams] = useSearchParams();
+  const [refreshKey, setRefreshKey] = useState(0);
   const classIdFromUrl = searchParams.get('classId');
   const subjectIdFromUrl = searchParams.get('subjectId');
   const dateFromUrl = searchParams.get('date');
@@ -107,7 +106,6 @@ export default function JurnalPage() {
         if (teachersRes) {
           setTeachers(teachersRes.data.data || teachersRes.data || []);
         }
-
         if (classIdFromUrl) {
           const preselectedClass = fetchedClasses.find(cls => cls.rombel === classIdFromUrl || cls.id == classIdFromUrl);
           if (preselectedClass) setSelectedClass(preselectedClass.id);
@@ -184,18 +182,6 @@ export default function JurnalPage() {
     }
   }, [currentDate, holidays]);
 
-  // Detect unfinished journals (status !== Terlaksana)
-  useEffect(() => {
-    if (journals.length > 0 && !showUnfinishedPopup) {
-      const unfinished = journals.filter(j => j.status && j.status !== 'Terlaksana');
-      if (unfinished.length > 0) {
-        setUnfinishedJournals(unfinished);
-        // Only auto-show once per data load (no localStorage to avoid hiding legitimate data)
-        setShowUnfinishedPopup(true);
-      }
-    }
-  }, [journals]);
-
   // Detect matching topic from existing journals (same subject)
   useEffect(() => {
     if (topic && topic.length > 3 && selectedSubject && journals.length > 0) {
@@ -258,21 +244,6 @@ export default function JurnalPage() {
     fetchAttendance();
   }, [fetchAttendance]);
 
-  const copyFromJournal = (journal) => {
-    // Populate fields with data from selected journal
-    setTopic(journal.topic || '');
-    setLearningObjectives(journal.learning_objectives || '');
-    setLearningActivities(journal.learning_activities || '');
-    setReflection(journal.reflection || '');
-    setFollowUp(journal.follow_up || '');
-    // Also set class/subject/date to match selected journal (optional)
-    if (journal.class_id) setSelectedClass(journal.class_id);
-    if (journal.subject_id) setSelectedSubject(journal.subject_id);
-    if (journal.date) setCurrentDate(moment(journal.date).format('YYYY-MM-DD'));
-    // Close popup after copying
-    setShowUnfinishedPopup(false);
-  };
-
   const copyMatchingJournal = (journal) => {
     setLearningObjectives(journal.learning_objectives || '');
     setLearningActivities(journal.learning_activities || '');
@@ -327,11 +298,13 @@ export default function JurnalPage() {
       const res = await api.post('/ai/auto-fill-journal', prompt);
       const result = res.data;
 
-      if (result.topic) setTopic(result.topic);
-      if (result.learningObjectives) setLearningObjectives(result.learningObjectives);
-      if (result.learningActivities) setLearningActivities(result.learningActivities);
-      if (result.reflection) setReflection(result.reflection);
-      if (result.follow_up) setFollowUp(result.follow_up);
+
+      // Only fill empty fields — keep user-entered data (materi from ATP/program)
+      if (!topic && result.topic) setTopic(result.topic);
+      if (!learningObjectives && result.learningObjectives) setLearningObjectives(result.learningObjectives);
+      if (!learningActivities && result.learningActivities) setLearningActivities(result.learningActivities);
+      if (!reflection && result.reflection) setReflection(result.reflection);
+      if (!follow_up && result.follow_up) setFollowUp(result.follow_up);
 
       toast.success('Jurnal berhasil diisi otomatis! Silakan review.');
     } catch (error) {
@@ -404,6 +377,7 @@ export default function JurnalPage() {
       setIsAssignment(false);
       setEditingJournalId(null);
       fetchJournalEntries(true);
+      setRefreshKey(k => k + 1);
     }).catch((e) => {
       console.error('Refresh after save failed:', e);
     });
@@ -476,6 +450,7 @@ export default function JurnalPage() {
       <JournalReminder
         activeSemester={activeSemester}
         academicYear={academicYear}
+        refreshKey={refreshKey}
       />
 
       {activeHoliday && (
@@ -486,54 +461,6 @@ export default function JurnalPage() {
           <div>
             <h3 className="font-bold text-lg">Agenda Sekolah Terdeteksi</h3>
             <p className="text-sm opacity-90">Hari ini adalah <strong>{activeHoliday.name}</strong>. Anda tidak perlu mengisi jurnal mengajar rutin karena jadwal dianggap tidak aktif.</p>
-          </div>
-        </div>
-      )}
-
-      {/* Unfinished Journals Popup */}
-      {showUnfinishedPopup && unfinishedJournals.length > 0 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <AlertCircle size={20} className="text-amber-500" />
-                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Jurnal Tidak Terlaksana</h3>
-              </div>
-              <StyledButton onClick={() => setShowUnfinishedPopup(false)} size="sm" variant="outline">
-                <X size={16} />
-              </StyledButton>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Berikut jurnal dengan status <strong>belum terlaksana</strong>. Segera lengkapi tindak lanjut.
-            </p>
-            <div className="overflow-y-auto space-y-2 flex-1">
-              {unfinishedJournals.map(j => {
-                const cls = classes.find(c => c.id == j.class_id);
-                const sub = subjects.find(s => s.id == j.subject_id);
-                return (
-                  <div key={j.id} className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-700/50">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{cls?.rombel || '-'} — {sub?.name || '-'}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{moment(j.date).format('DD/MM/YYYY')} | <span className="font-medium">{j.topic}</span></p>
-                      <span className={`inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
-                        j.status === 'Tidak Terlaksana' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                      }`}>{j.status}</span>
-                    </div>
-                    <StyledButton size="sm" onClick={() => copyFromJournal(j)}>
-                      Salin
-                    </StyledButton>
-                    <StyledButton size="sm" onClick={() => { handleEditJournal(j); setShowUnfinishedPopup(false); }}>
-                      Edit
-                    </StyledButton>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 text-right">
-              <StyledButton onClick={() => setShowUnfinishedPopup(false)} variant="outline" size="sm">
-                Tutup
-              </StyledButton>
-            </div>
           </div>
         </div>
       )}
@@ -788,6 +715,7 @@ export default function JurnalPage() {
                     .map(journal => {
                     const classInfo = classes.find(c => c.id == journal.class_id);
                     const subjectInfo = subjects.find(s => s.id == journal.subject_id);
+                    const teacherInfo = teachers.find(t => t.auth_user_id == journal.user_id);
 
                     return (
                       <tr key={journal.id}>
@@ -796,7 +724,7 @@ export default function JurnalPage() {
                         </td>
                         {isAdmin && (
                           <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-dark dark:text-text-dark font-medium">
-                            {journal.teacher?.name || '-'}
+                            {teacherInfo?.name || journal.teacher?.name || `User #${journal.user_id}`}
                           </td>
                         )}
                         <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">

@@ -13,7 +13,7 @@ const normalizeHoliday = (h) => {
 
 const simplify = (str) => String(str || '').toLowerCase().replace(/\s+/g, '');
 
-const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount }) => {
+const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount, refreshKey }) => {
     const { userProfile } = useSettings();
     const [missingJournals, setMissingJournals] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -112,8 +112,8 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
                         const originalClassName = sched.class_name || (typeof sched.class === 'object' && sched.class !== null ? sched.class.rombel : sched.class);
                         const originalSubject = sched.subject_name || (typeof sched.subject === 'object' && sched.subject !== null ? sched.subject.name : sched.subject);
 
-                        const normClassName = (originalClassName || '').toString().trim().toLowerCase();
-                        const normSubject = (originalSubject || '').toString().trim().toLowerCase();
+                        const normClassName = simplify(originalClassName);
+                        const normSubject = simplify(originalSubject);
                         const dateStr = checkDate.format('YYYY-MM-DD');
 
                         const journalKey = `${dateStr}_${normClassName}_${normSubject}`;
@@ -174,7 +174,7 @@ const JournalReminder = ({ activeSemester, academicYear, onUpdateMissingCount })
         // Auto-refresh every 5 minutes (300,000ms) without full re-render
         const interval = setInterval(checkMissingJournals, 5 * 60 * 1000);
         return () => clearInterval(interval);
-    }, [activeSemester, academicYear]);
+    }, [activeSemester, academicYear, refreshKey]);
 
     if (isLoading) return null;
     

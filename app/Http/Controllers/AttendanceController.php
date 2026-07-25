@@ -19,25 +19,25 @@ class AttendanceController extends Controller
 
         // Removed user_id restriction to allow global visibility for the same class/subject
 
-        if ($request->has('class_id')) {
+        if ($request->filled('class_id')) {
             $query->where('class_id', $request->class_id);
         }
 
-        if ($request->has('subject_id')) {
+        if ($request->filled('subject_id')) {
             $query->where('subject_id', $request->subject_id);
         }
 
         if ($request->has('date_start') && $request->has('date_end')) {
             $query->whereBetween('date', [$request->date_start, $request->date_end]);
-        } elseif ($request->has('date')) {
+        } elseif ($request->filled('date')) {
             $query->whereDate('date', $request->date);
         }
 
-        if ($request->has('student_id')) {
+        if ($request->filled('student_id')) {
             $query->where('student_id', $request->student_id);
         }
 
-        if ($request->has('user_id')) {
+        if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
 

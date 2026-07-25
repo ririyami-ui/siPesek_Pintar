@@ -266,24 +266,39 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
   doc.text(`Periode tanggal: ${fmtDate(startDate)} sampai tanggal: ${fmtDate(endDate)}`, doc.internal.pageSize.width / 2, 30, { align: "center" });
 
   // Prepare table data
-  const tableColumn = ["Tanggal", "Kelas", "Mapel", "Materi", "Tujuan", "Kegiatan", "Status & Catatan", "Tindak Lanjut"];
+  const tableColumn = ["Tanggal", "Kelas", "Mapel", "Materi", "Tujuan", "Kegiatan", "Keterlaksanaan", "Tindak Lanjut"];
   const tableRows = [];
 
-  jurnalData.forEach(jurnal => {
+  // Sort ascending by date (oldest first)
+  const sortedData = [...jurnalData].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  sortedData.forEach(jurnal => {
     // Format Status String
     let statusString = "Terlaksana";
-    if (jurnal.isImplemented === false) { // Explicit check as undefined might default to true in some legacy data
+    if (jurnal.isImplemented === false) {
       statusString = `Tidak Terlaksana\nKet: ${jurnal.challenges || '-'}`;
     }
 
+    // Attendance breakdown
+    let hadirLine = jurnal.hadirCount != null ? `Peserta hadir: ${jurnal.hadirCount}` : '';
+    if (jurnal.absentStudents && jurnal.absentStudents.length > 0) {
+      const sakitNames = jurnal.absentStudents.filter(s => s.status === 'Sakit').map(s => s.name).join(', ');
+      const izinNames = jurnal.absentStudents.filter(s => s.status === 'Izin').map(s => s.name).join(', ');
+      const alpaNames = jurnal.absentStudents.filter(s => s.status === 'Alpa').map(s => s.name).join(', ');
+      if (sakitNames) statusString += `\nSakit: ${sakitNames}`;
+      if (izinNames) statusString += `\nIzin: ${izinNames}`;
+      if (alpaNames) statusString += `\nAlpa: ${alpaNames}`;
+    }
+    if (hadirLine) statusString = hadirLine + '\n' + statusString;
+
     const rowData = [
-      fmtDate(jurnal.date), // ID Format
+      fmtDate(jurnal.date),
       jurnal.className,
       jurnal.subjectName,
       jurnal.material,
       jurnal.learningObjectives,
       jurnal.learningActivities,
-      statusString, // Combined Status + Challenges
+      statusString,
       jurnal.followUp || '-',
     ];
     tableRows.push(rowData);
@@ -294,30 +309,29 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
     head: [tableColumn],
     body: tableRows,
     startY: 40,
-    theme: 'striped', // Changed to striped for alternate colors
+    theme: 'striped',
     styles: {
-      fontSize: 8, // Smaller font for table content
+      fontSize: 8,
       cellPadding: 2,
     },
     alternateRowStyles: {
-      fillColor: [240, 240, 240], // Light gray for alternate rows
+      fillColor: [240, 240, 240],
     },
     headStyles: {
-      fillColor: [50, 50, 50], // Darker header for better contrast
+      fillColor: [50, 50, 50],
       textColor: [255, 255, 255],
       fontStyle: 'bold',
       lineColor: [50, 50, 50],
     },
     columnStyles: {
-      // Adjusted for A4 Landscape (Total ~277mm width)
-      0: { cellWidth: 25 }, // Tanggal - widen slightly for 'DD MMMM YYYY'
-      1: { cellWidth: 15 }, // Kelas
-      2: { cellWidth: 30 }, // Mata Pelajaran
-      3: { cellWidth: 45 }, // Materi
-      4: { cellWidth: 42 }, // Tujuan Pembelajaran - slight reduce
-      5: { cellWidth: 42 }, // Kegiatan Pembelajaran
-      6: { cellWidth: 40 }, // Status & Catatan
-      7: { cellWidth: 35 }, // Tindak Lanjut
+      0: { cellWidth: 25 },
+      1: { cellWidth: 15 },
+      2: { cellWidth: 30 },
+      3: { cellWidth: 45 },
+      4: { cellWidth: 42 },
+      5: { cellWidth: 42 },
+      6: { cellWidth: 50 },
+      7: { cellWidth: 35 },
     },
   });
 

@@ -45,6 +45,7 @@ export default function NilaiPage() {
   const [editStudents, setEditStudents] = useState([]);
   const [editGrades, setEditGrades] = useState({});
   const [isFetchingEditData, setIsFetchingEditData] = useState(false);
+  const [isSavingGrades, setIsSavingGrades] = useState(false);
 
   const assessmentTypes = ["Harian", "Ulangan", "Tengah Semester", "Akhir Semester", "Praktik", "Sikap"];
 
@@ -208,8 +209,7 @@ export default function NilaiPage() {
         }
       });
 
-      const allGrades = gradesResponse.data;
-      // Filter by material/topic on client side if needed
+      const allGrades = gradesResponse.data.data || gradesResponse.data || [];
       const filteredGrades = allGrades.filter(g => g.topic === editSelectedMaterial);
 
       if (filteredGrades.length === 0) {
@@ -270,6 +270,8 @@ export default function NilaiPage() {
       toast.error('Tidak ada siswa untuk disimpan nilainya.');
       return;
     }
+
+    setIsSavingGrades(true);
     // Auth check handled by backend
 
     const gradesToSave = [];
@@ -312,7 +314,7 @@ export default function NilaiPage() {
         return 'Nilai berhasil disimpan!';
       },
       error: 'Gagal menyimpan nilai. Silakan coba lagi.',
-    });
+    }).finally(() => setIsSavingGrades(false));
   };
 
   const handleSaveEditedGrades = async () => {
@@ -343,6 +345,8 @@ export default function NilaiPage() {
       return;
     }
 
+    setIsSavingGrades(true);
+
     const promise = api.post('/grades/batch', {
       grades: gradesToSave,
       class_id: editSelectedClass,
@@ -368,7 +372,7 @@ export default function NilaiPage() {
         return 'Perubahan nilai berhasil disimpan!';
       },
       error: 'Gagal menyimpan perubahan nilai. Silakan coba lagi.',
-    });
+    }).finally(() => setIsSavingGrades(false));
   };
 
   const handleToggleMode = () => {
@@ -387,6 +391,21 @@ export default function NilaiPage() {
     setMaterialsForEdit([]);
     setEditStudents([]);
     setEditGrades({});
+  };
+
+  const handleNavigateToEdit = (item) => {
+    setActiveTab('input');
+    setShowEditMode(true);
+    // input type="date" requires YYYY-MM-DD format
+    const formattedDate = item.date ? item.date.substring(0, 10) : '';
+    setEditDate(formattedDate);
+    setEditSelectedClass(item.classId);
+    setEditSelectedSubject(item.subjectId);
+    setEditAssessmentType(item.assessmentType);
+    setEditSelectedMaterial(item.material);
+    // Sync input-side so teacher sees context
+    setSelectedClass(item.classId);
+    setSelectedSubject(item.subjectId);
   };
 
   if (isLoading && students.length === 0 && editStudents.length === 0) {
@@ -452,7 +471,7 @@ export default function NilaiPage() {
                         <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm font-medium text-text-light dark:text-text-dark">{index + 1}</td>
                         <td className="px-3 py-4 text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">{student.name}</td>
                         <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
-                          <StyledInput type="number" value={grades[student.id]} onChange={(e) => handleGradeChange(student.id, e.target.value)} className="!px-2.5" containerClassName="w-full" min="0" max="100" />
+                          <StyledInput type="number" value={grades[student.id] ?? ''} onChange={(e) => handleGradeChange(student.id, e.target.value)} className="!px-2.5" containerClassName="w-full" min="0" max="100" />
                         </td>
                       </tr>
                     ))}
@@ -462,7 +481,7 @@ export default function NilaiPage() {
                 <p className="text-text-muted-light dark:text-text-muted-dark">Pilih kelas untuk menampilkan daftar siswa.</p>
               )}
               <div className="mt-6 flex justify-end">
-                <StyledButton onClick={handleSaveGrades}>Simpan Nilai</StyledButton>
+                <StyledButton onClick={handleSaveGrades} loading={isSavingGrades}>Simpan Nilai</StyledButton>
               </div>
             </>
           ) : (
@@ -497,14 +516,14 @@ export default function NilaiPage() {
                           <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm font-medium text-text-light dark:text-text-dark">{index + 1}</td>
                           <td className="px-3 py-4 text-xs sm:px-6 sm:text-sm text-text-muted-light dark:text-text-muted-dark">{student.name}</td>
                           <td className="px-3 py-4 whitespace-nowrap text-xs sm:px-6 sm:text-sm">
-                            <StyledInput type="number" value={editGrades[student.id]} onChange={(e) => setEditGrades(prev => ({ ...prev, [student.id]: e.target.value }))} className="!px-2.5" containerClassName="w-full" min="0" max="100" />
+                            <StyledInput type="number" value={editGrades[student.id] ?? ''} onChange={(e) => setEditGrades(prev => ({ ...prev, [student.id]: e.target.value }))} className="!px-2.5" containerClassName="w-full" min="0" max="100" />
                           </td>
                         </tr>
                       ))}
                     </StyledTable>
                   </div>
                   <div className="mt-6 flex justify-end">
-                    <StyledButton onClick={handleSaveEditedGrades}>Simpan Perubahan</StyledButton>
+                    <StyledButton onClick={handleSaveEditedGrades} loading={isSavingGrades}>Simpan Perubahan</StyledButton>
                   </div>
                 </>
               ) : (
@@ -516,7 +535,7 @@ export default function NilaiPage() {
       )}
 
       {activeTab === 'history' && (
-        <RiwayatNilai classes={classes} subjects={subjects} />
+        <RiwayatNilai classes={classes} subjects={subjects} onNavigateToEdit={handleNavigateToEdit} />
       )}
     </div>
   );

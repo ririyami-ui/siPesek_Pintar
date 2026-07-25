@@ -35,7 +35,9 @@ import {
     ArrowLeft,
     MapPin,
     RefreshCw,
-    Loader2
+    Loader2,
+    Pencil,
+    Trash2
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -88,8 +90,78 @@ const RekapIndividuPage = () => {
     const [flaggedClassFilter, setFlaggedClassFilter] = useState(''); // New state for flagged students filter
     const [classAgreement, setClassAgreement] = useState(null); // New state for dynamic weights
 
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editGrade, setEditGrade] = useState(null);
+    const [editForm, setEditForm] = useState({
+        score: '',
+        topic: '',
+        type: 'formatif',
+        date: ''
+    });
+    const [isSavingGrade, setIsSavingGrade] = useState(false);
+
+    const handleEditClick = (grade) => {
+        setEditGrade(grade);
+        setEditForm({
+            score: grade.score ?? '',
+            topic: grade.topic ?? '',
+            type: grade.assessmentType ?? 'formatif',
+            date: grade.date ? moment(grade.date).format('YYYY-MM-DD') : ''
+        });
+        setShowEditModal(true);
+    };
+
+    const handleDeleteGrade = async (grade) => {
+        if (!confirm(`Hapus nilai "${grade.topic || grade.subjectName}" (${grade.score})?`)) return;
+        try {
+            await api.delete(`/grades/${grade.id}`);
+            toast.success('Nilai berhasil dihapus');
+            // Re-fetch grades for current student
+            const res = await api.get('/grades', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } });
+            const gradeList = res.data.data || res.data || [];
+            setGrades(gradeList.map(g => ({ ...g, studentId: g.student_id, assessmentType: g.type, subjectName: g.subject?.name })).sort((a, b) => new Date(b.date) - new Date(a.date)));
+            const summaryRes = await api.get(`/grades/summary/${selectedStudentId}`, { params: { semester: activeSemester, academic_year: academicYear } });
+            setGradesData(summaryRes.data);
+        } catch (err) {
+            toast.error('Gagal menghapus nilai');
+            console.error(err);
+        }
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editGrade) return;
+        setIsSavingGrade(true);
+        try {
+            await api.put(`/grades/${editGrade.id}`, {
+                score: parseFloat(editForm.score),
+                topic: editForm.topic,
+                type: editForm.type,
+                date: editForm.date,
+                subject_id: editGrade.subject_id || undefined,
+                class_id: editGrade.class_id || undefined,
+                semester: activeSemester,
+                academic_year: academicYear,
+            });
+            toast.success('Nilai berhasil diperbarui');
+            setShowEditModal(false);
+            setEditGrade(null);
+            // Re-fetch grades for current student
+            const res = await api.get('/grades', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } });
+            const gradeList = res.data.data || res.data || [];
+            setGrades(gradeList.map(g => ({ ...g, studentId: g.student_id, assessmentType: g.type, subjectName: g.subject?.name })).sort((a, b) => new Date(b.date) - new Date(a.date)));
+            const summaryRes = await api.get(`/grades/summary/${selectedStudentId}`, { params: { semester: activeSemester, academic_year: academicYear } });
+            setGradesData(summaryRes.data);
+        } catch (err) {
+            toast.error('Gagal menyimpan perubahan');
+            console.error(err);
+        } finally {
+            setIsSavingGrade(false);
+        }
+    };
+
     const [signingLocation, setSigningLocation] = useState('Jakarta');
     const [isDetectingLocation, setIsDetectingLocation] = useState(false);
+    const [allSubjects, setAllSubjects] = useState([]);
 
     const { activeSemester, academicYear, userProfile, geminiModel, academicWeight, attitudeWeight } = useSettings();
 
@@ -194,6 +266,20 @@ const RekapIndividuPage = () => {
         fetchClasses();
     }, []);
 
+    // Fetch all subjects
+    useEffect(() => {
+        const fetchSubjects = async () => {
+            try {
+                const res = await api.get('/subjects');
+                const data = res.data.data || res.data || [];
+                setAllSubjects(data.map(s => s.name).sort());
+            } catch (err) {
+                console.warn('Failed to fetch subjects:', err);
+            }
+        };
+        fetchSubjects();
+    }, []);
+
     // Fetch students when class or auth changes
     useEffect(() => {
         const fetchStudents = async () => {
@@ -252,21 +338,34 @@ const RekapIndividuPage = () => {
 
             setIsLoading(true);
             try {
+                // Keep a local reference for fallback
+                let summaryData = null;
                 // 1. Student Profile
                 const studentDoc = students.find(s => s.id === selectedStudentId);
                 setSelectedStudent(studentDoc);
 
                 // 2. Fetch all academic data in parallel
-                const [gradesRes, gradesSummaryRes, attendanceRes, infractionsRes, notesRes] = await Promise.all([
+                // Wrap summary in try/catch to avoid blocking other data
+                try {
+                    const gradesSummaryRes = await api.get(`/grades/summary/${selectedStudentId}`, {
+                        params: { semester: activeSemester, academic_year: academicYear }
+                    });
+                    summaryData = gradesSummaryRes.data;
+                } catch (summaryErr) {
+                    console.warn('Grades summary failed, fallback to raw data:', summaryErr);
+                    // summaryData stays null, use raw grades for subject list
+                }
+
+                // Store single-source translation
+                setGradesData(summaryData);
+
+                // Fetch remaining data in parallel (grades raw, attendance, infractions, notes)
+                const [gradesRes, attendanceRes, infractionsRes, notesRes] = await Promise.all([
                     api.get('/grades', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } }),
-                    api.get(`/grades/summary/${selectedStudentId}`, { params: { semester: activeSemester, academic_year: academicYear } }),
                     api.get('/attendances', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } }),
                     api.get('/infractions', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } }),
                     api.get('/student-notes', { params: { student_id: selectedStudentId, semester: activeSemester, academic_year: academicYear } })
                 ]);
-
-                // Store single-source translation
-                setGradesData(gradesSummaryRes.data);
 
                 // Map data to match previous expectations if necessary
                 const gradeList = gradesRes.data.data || gradesRes.data || [];
@@ -281,7 +380,7 @@ const RekapIndividuPage = () => {
                 const mappedAttendance = attendanceList.map(a => ({
                     ...a,
                     studentId: a.student_id,
-                    status: (a.status || '').charAt(0).toUpperCase() + (a.status || '').slice(1).replace('zin', 'jin').replace('lpa', 'lpha')
+                    status: (a.status || '').charAt(0).toUpperCase() + (a.status || '').slice(1)
                 })).sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 const infractionList = infractionsRes.data.data || infractionsRes.data || [];
@@ -311,18 +410,44 @@ const RekapIndividuPage = () => {
         fetchAllData();
     }, [selectedStudentId, activeSemester, academicYear, students]);
 
-    // List of unique subjects from grades
+    // List of unique subjects from grades (fallback) + all subjects from API
     const availableSubjects = useMemo(() => {
-        if (!gradesData || !gradesData.by_subject) return [];
-        return gradesData.by_subject.map(g => g.subject_name).sort();
-    }, [gradesData]);
+        // 1. Use all subjects from API if available
+        if (allSubjects.length > 0) return allSubjects;
+        // 2. Fallback: summary data
+        if (gradesData && gradesData.by_subject && gradesData.by_subject.length > 0) {
+            return gradesData.by_subject.map(g => g.subject_name).sort();
+        }
+        // 3. Fallback: derive from raw grades
+        const unique = [...new Set(grades.map(g => g.subjectName))].filter(Boolean);
+        return unique.sort();
+    }, [gradesData, grades, allSubjects]);
 
-    // Filtered data for display
+    // Filtered summary data for display (per-subject aggregate)
     const filteredGrades = useMemo(() => {
         if (!gradesData || !gradesData.by_subject) return [];
         if (!selectedSubject) return gradesData.by_subject;
         return gradesData.by_subject.filter(g => g.subject_name === selectedSubject);
     }, [gradesData, selectedSubject]);
+
+    // Filtered raw individual grade records for detail table
+    const filteredRawGrades = useMemo(() => {
+        if (!selectedSubject) return grades;
+        return grades.filter(g => g.subjectName === selectedSubject);
+    }, [grades, selectedSubject]);
+
+    // Per-subject attendance breakdown
+    const subjectAttendance = useMemo(() => {
+        const map = {};
+        attendance.forEach(a => {
+            const subj = a.subject?.name || 'Tanpa Mapel';
+            if (!map[subj]) map[subj] = { Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0, total: 0 };
+            const status = a.status;
+            if (map[subj][status] !== undefined) map[subj][status]++;
+            map[subj].total++;
+        });
+        return Object.entries(map).sort((a, b) => b[1].total - a[1].total).map(([name, st]) => ({ ...st, subject: name }));
+    }, [attendance]);
 
     // Handle Student Selection via URL/State (Direct link from Early Warning)
 
@@ -360,7 +485,7 @@ const RekapIndividuPage = () => {
             attendance: {
                 Hadir: gradesData.attendance_summary?.hadir || 0,
                 Sakit: gradesData.attendance_summary?.sakit || 0,
-                Ijin: gradesData.attendance_summary?.izin || 0,
+                Izin: gradesData.attendance_summary?.izin || 0,
                 Alpha: gradesData.attendance_summary?.alpa || 0,
                 schoolDays: gradesData.attendance_summary?.school_days || 0,
                 studentCount: 1
@@ -762,7 +887,7 @@ const RekapIndividuPage = () => {
                             value={stats.academicAvg}
                             icon={<GraduationCap className="w-8 h-8 text-blue-500" />}
                             color="blue"
-                            subtitle={`Berdasarkan ${filteredGrades.length} penilaian`}
+                            subtitle={`Berdasarkan ${filteredRawGrades.length} penilaian`}
                         />
                         <SummaryCard
                             title={`Nilai Sikap (${stats.attitudePredicate})`}
@@ -839,33 +964,67 @@ const RekapIndividuPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                                     <div className="w-full">
                                         <PieChart data={stats.attendance} numDays={stats.numDays} />
                                     </div>
-                                    <div className="max-h-[200px] overflow-y-auto custom-scrollbar pr-2">
-                                        <table className="w-full text-left">
-                                            <tbody className="text-xs divide-y dark:divide-gray-700">
-                                                {attendance.length > 0 ? attendance.map((att, i) => (
-                                                    <tr key={i}>
-                                                        <td className="py-2 text-gray-500 text-[10px] font-medium">{moment(att.date).format('DD/MM/YY')}</td>
-                                                        <td className="py-2 font-bold text-gray-800 dark:text-gray-200">
-                                                            {new Intl.DateTimeFormat('id-ID', { weekday: 'long' }).format(new Date(att.date))}
-                                                        </td>
-                                                        <td className="py-2 text-right">
-                                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${att.status === 'Hadir' ? 'bg-green-100 text-green-700 dark:bg-green-900/30' :
-                                                                att.status === 'Alpha' ? 'bg-red-100 text-red-700 dark:bg-red-900/30' :
-                                                                    'bg-amber-100 text-amber-700 dark:bg-amber-900/30'
-                                                                }`}>
-                                                                {att.status.toUpperCase()}
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                )) : (
-                                                    <tr><td colSpan="3" className="py-10 text-center text-gray-400">Belum ada data absensi</td></tr>
-                                                )}
-                                            </tbody>
-                                        </table>
+                                    <div className="space-y-4">
+                                        {/* Per-subject breakdown */}
+                                        {subjectAttendance.length > 0 && (
+                                        <div>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Per Mata Pelajaran</p>
+                                            <div className="max-h-[180px] overflow-y-auto custom-scrollbar pr-1 space-y-1">
+                                                {subjectAttendance.map(sa => (
+                                                    <div key={sa.subject} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900/30 rounded-xl border border-gray-100 dark:border-gray-800">
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-[10px] font-bold text-gray-700 dark:text-gray-300 truncate">{sa.subject}</p>
+                                                            <div className="flex items-center gap-2 mt-0.5">
+                                                                <span className="text-[8px] text-green-600 font-bold">{sa.Hadir}H</span>
+                                                                <span className="text-[8px] text-yellow-600 font-bold">{sa.Sakit}S</span>
+                                                                <span className="text-[8px] text-blue-600 font-bold">{sa.Izin}I</span>
+                                                                <span className="text-[8px] text-red-600 font-bold">{sa.Alpha}A</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <span className="text-xs font-black text-gray-800 dark:text-white">{sa.total}</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        )}
+                                        {/* Daily list */}
+                                        <div>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Riwayat Harian</p>
+                                            <div className="max-h-[150px] overflow-y-auto custom-scrollbar pr-1">
+                                                <table className="w-full text-left">
+                                                    <thead className="text-[8px] font-bold text-gray-400 uppercase tracking-wider">
+                                                        <tr><td colSpan="4" className="pb-1"></td></tr>
+                                                    </thead>
+                                                    <tbody className="text-xs divide-y dark:divide-gray-700">
+                                                        {attendance.length > 0 ? attendance.map((att, i) => (
+                                                            <tr key={i}>
+                                                                <td className="py-1.5 text-gray-500 text-[10px] font-medium whitespace-nowrap">{moment(att.date).format('DD/MM/YY')}</td>
+                                                                <td className="py-1.5 font-bold text-gray-800 dark:text-gray-200 text-[10px]">
+                                                                    {new Intl.DateTimeFormat('id-ID', { weekday: 'long' }).format(new Date(att.date))}
+                                                                </td>
+                                                                <td className="py-1.5 text-[10px] text-gray-500 truncate max-w-[80px]">{att.subject?.name || '-'}</td>
+                                                                <td className="py-1.5 text-right">
+                                                            <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-black ${att.status === 'Hadir' ? 'bg-green-100 text-green-700 dark:bg-green-900/30' :
+                                                                    att.status === 'Alpa' || att.status === 'Alpha' ? 'bg-red-100 text-red-700 dark:bg-red-900/30' :
+                                                                        'bg-amber-100 text-amber-700 dark:bg-amber-900/30'
+                                                                    }`}>
+                                                                    {att.status.toUpperCase()}
+                                                                </span>
+                                                                </td>
+                                                            </tr>
+                                                        )) : (
+                                                            <tr><td colSpan="4" className="py-10 text-center text-gray-400">Belum ada data absensi</td></tr>
+                                                        )}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -922,14 +1081,15 @@ const RekapIndividuPage = () => {
                                             <th className="pb-4">Tanggal</th>
                                             <th className="pb-4">Materi / Subjek</th>
                                             <th className="pb-4 text-right">Nilai</th>
+                                            {userProfile?.role === 'teacher' && <th className="pb-4 text-right w-20">Aksi</th>}
                                         </tr>
                                     </thead>
                                     <tbody className="text-sm divide-y dark:divide-gray-700">
-                                        {filteredGrades.length > 0 ? filteredGrades.map((g, i) => (
-                                            <tr key={i} className="group">
+                                        {filteredRawGrades.length > 0 ? filteredRawGrades.map((g, i) => (
+                                            <tr key={g.id || i} className="group">
                                                 <td className="py-3 text-gray-500">{moment(g.date).format('DD/MM/YYYY')}</td>
                                                 <td className="py-3">
-                                                    <p className="font-bold text-gray-800 dark:text-gray-200">{g.material}</p>
+                                                    <p className="font-bold text-gray-800 dark:text-gray-200">{g.topic || 'Tidak ada keterangan'}</p>
                                                     <p className="text-[10px] text-gray-400 uppercase">{g.subjectName} • {g.assessmentType}</p>
                                                 </td>
                                                 <td className="py-3 text-right">
@@ -937,9 +1097,29 @@ const RekapIndividuPage = () => {
                                                         {g.score}
                                                     </span>
                                                 </td>
+                                                {userProfile?.role === 'teacher' && (
+                                                <td className="py-3 text-right">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            onClick={() => handleEditClick(g)}
+                                                            className="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-600 dark:text-blue-400 transition-all opacity-0 group-hover:opacity-100"
+                                                            title="Edit Nilai"
+                                                        >
+                                                            <Pencil size={14} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteGrade(g)}
+                                                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 transition-all opacity-0 group-hover:opacity-100"
+                                                            title="Hapus Nilai"
+                                                        >
+                                                            <Trash2 size={14} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                )}
                                             </tr>
                                         )) : (
-                                            <tr><td colSpan="3" className="py-10 text-center text-gray-400">Belum ada data nilai</td></tr>
+                                            <tr><td colSpan={userProfile?.role === 'teacher' ? 4 : 3} className="py-10 text-center text-gray-400">Belum ada data nilai</td></tr>
                                         )}
                                     </tbody>
                                 </table>
@@ -1074,6 +1254,86 @@ const RekapIndividuPage = () => {
                                     >
                                         {isCopied ? <Check size={20} /> : <Copy size={20} />}
                                         {isCopied ? 'TERSALIN!' : 'SALIN & KIRIM'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ── Edit Grade Modal ── */}
+                    {showEditModal && editGrade && (
+                        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={() => setShowEditModal(false)}>
+                            <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+                                <div className="p-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white/20 rounded-xl">
+                                            <Pencil size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-black leading-tight">Edit Nilai</h3>
+                                            <p className="text-[10px] opacity-80 font-bold uppercase tracking-wider">{editGrade.subjectName} • {editGrade.assessmentType}</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => setShowEditModal(false)} className="p-2 hover:bg-white/20 rounded-full transition-all">
+                                        <X size={18} />
+                                    </button>
+                                </div>
+                                <div className="p-6 space-y-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Nilai</label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={editForm.score}
+                                            onChange={e => setEditForm(f => ({ ...f, score: e.target.value }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none text-sm font-bold text-gray-800 dark:text-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Materi / Topik</label>
+                                        <input
+                                            type="text"
+                                            value={editForm.topic}
+                                            onChange={e => setEditForm(f => ({ ...f, topic: e.target.value }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-800 dark:text-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Jenis Penilaian</label>
+                                        <select
+                                            value={editForm.type}
+                                            onChange={e => setEditForm(f => ({ ...f, type: e.target.value }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-800 dark:text-white"
+                                        >
+                                            {['formatif', 'sumatif', 'harian', 'uts', 'uas', 'praktik', 'tugas', 'sikap'].map(t => (
+                                                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Tanggal</label>
+                                        <input
+                                            type="date"
+                                            value={editForm.date}
+                                            onChange={e => setEditForm(f => ({ ...f, date: e.target.value }))}
+                                            className="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none text-sm text-gray-800 dark:text-white"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="p-6 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800 flex gap-3">
+                                    <button
+                                        onClick={() => setShowEditModal(false)}
+                                        className="flex-1 py-3 font-bold text-gray-500 hover:text-gray-700 transition-all text-sm rounded-xl"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        onClick={handleSaveEdit}
+                                        disabled={isSavingGrade}
+                                        className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-blue-500/20 disabled:opacity-50 text-sm"
+                                    >
+                                        {isSavingGrade ? 'Menyimpan...' : 'Simpan Perubahan'}
                                     </button>
                                 </div>
                             </div>

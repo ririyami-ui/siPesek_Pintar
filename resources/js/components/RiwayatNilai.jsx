@@ -8,11 +8,10 @@ import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
 import StyledTable from './StyledTable';
-import GradeDetailsModal from './GradeDetailsModal';
 import { useSettings } from '../utils/SettingsContext';
 
-// Komponen baru ini menerima daftar kelas dan mapel sebagai props
-const RiwayatNilai = ({ classes, subjects }) => {
+// Komponen menerima daftar kelas, mapel, dan callback navigasi edit
+const RiwayatNilai = ({ classes, subjects, onNavigateToEdit }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
@@ -20,10 +19,7 @@ const RiwayatNilai = ({ classes, subjects }) => {
   const [riwayatData, setRiwayatData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedAssessmentType, setSelectedAssessmentType] = useState('');
-  const [selectedMaterial, setSelectedMaterial] = useState('');
+  // Detail navigates to Edit tab in parent, no local modal needed
 
   // Delete Modal State
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -77,7 +73,8 @@ const RiwayatNilai = ({ classes, subjects }) => {
         let allGradesSubmitted = true;
         allStudentsInClass.forEach(student => {
           const studentGrade = session.grades.find(grade => grade.student_id === student.id);
-          if (!studentGrade || parseFloat(studentGrade.score) === 0) {
+          console.log("DEBUG status check:", { studentId: student.id, studentName: student.name, grade: studentGrade, score: studentGrade?.score, scoreType: typeof studentGrade?.score });
+          if (!studentGrade || studentGrade.score === null || studentGrade.score === undefined || studentGrade.score === '' || parseFloat(studentGrade.score) === 0) {
             allGradesSubmitted = false;
           }
         });
@@ -103,10 +100,15 @@ const RiwayatNilai = ({ classes, subjects }) => {
   };
 
   const handleShowDetails = (item) => {
-    setSelectedDate(item.date);
-    setSelectedAssessmentType(item.assessmentType);
-    setSelectedMaterial(item.material);
-    setShowDetailsModal(true);
+    if (onNavigateToEdit) {
+      onNavigateToEdit({
+        date: item.date,
+        assessmentType: item.assessmentType,
+        material: item.material,
+        classId: selectedClass,
+        subjectId: selectedSubject,
+      });
+    }
   };
 
   const confirmDelete = async () => {
@@ -127,8 +129,8 @@ const RiwayatNilai = ({ classes, subjects }) => {
       toast.success("Data nilai berhasil dihapus.");
       handleShowHistory(); // Refresh list
     } catch (error) {
-      console.error("Error deleting assessment:", error);
-      toast.error("Gagal menghapus data.");
+      console.error("Error deleting assessment:", error, error.response?.data);
+      toast.error(error.response?.data?.message || "Gagal menghapus data.");
     } finally {
       setIsDeleting(false);
       setShowDeleteModal(false);
@@ -239,18 +241,7 @@ const RiwayatNilai = ({ classes, subjects }) => {
         )}
       </div>
 
-      {showDetailsModal && (
-        <GradeDetailsModal
-          date={selectedDate}
-          assessmentType={selectedAssessmentType}
-          material={selectedMaterial}
-          selectedClass={selectedClass}
-          selectedSubject={selectedSubject}
-          onClose={() => setShowDetailsModal(false)}
-          classes={classes}
-          subjects={subjects}
-        />
-      )}
+      {/* Detail navigates to Edit tab in parent -- no modal here */}
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (

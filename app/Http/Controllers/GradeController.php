@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Services\GradeCalculationService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,14 +19,35 @@ class GradeController extends Controller
         
         $user = Auth::user();
         if (!$user->isAdmin()) {
-            $query->where(function($q) use ($user) {
-                // Own inputted grades
-                $q->where('user_id', $user->id)
-                  // OR grades for students in classes where user is Wali Kelas
-                  ->orWhereHas('schoolClass', function($sq) use ($user) {
-                      $sq->where('user_id', $user->id);
-                  });
-            });
+            if ($request->filled('class_id') && $request->filled('subject_id')) {
+                // Viewing specific session — teacher needs to see ALL grades for that session
+                // Only validate teacher has access to this class/subject
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                $isWaliKelas = \App\Models\SchoolClass::where('id', $request->class_id)->where('user_id', $user->id)->exists();
+                $isAssigned = $teacher && \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                    ->where('class_id', $request->class_id)
+                    ->where('subject_id', $request->subject_id)
+                    ->exists();
+
+                if (!$isWaliKelas && !$isAssigned) {
+                    return response()->json(['message' => 'Unauthorized'], 403);
+                }
+            } else {
+                // General listing — only show own grades + wali kelas
+                $query->where(function($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhereHas('schoolClass', function($sq) use ($user) {
+                          $sq->where('user_id', $user->id);
+                      });
+                });
+            }
+        }
+
+        if ($request->filled('class_id')) {
+            $query->where('class_id', $request->class_id);
+        }
+        if ($request->filled('subject_id')) {
+            $query->where('subject_id', $request->subject_id);
         }
 
         if ($request->has('semester')) {
@@ -34,14 +56,26 @@ class GradeController extends Controller
         if ($request->has('academic_year')) {
             $query->where('academic_year', $request->academic_year);
         }
-        if ($request->has('class_id')) {
+        if ($request->filled('class_id')) {
             $query->where('class_id', $request->class_id);
         }
-        if ($request->has('subject_id')) {
+        if ($request->filled('subject_id')) {
             $query->where('subject_id', $request->subject_id);
+        }
+        if ($request->filled('student_id')) {
+            $query->where('student_id', $request->student_id);
+        }
+        if ($request->filled('date')) {
+            $query->where('date', Carbon::parse($request->date)->format('Y-m-d'));
         }
         if ($request->has('date_start') && $request->has('date_end')) {
             $query->whereBetween('date', [$request->date_start, $request->date_end]);
+        }
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+        if ($request->filled('topic')) {
+            $query->where('topic', $request->topic);
         }
         // Support legacy filtering
         if ($request->has('className')) {
@@ -226,8 +260,8 @@ class GradeController extends Controller
             $query->where('user_id', Auth::id());
         }
         
-        if ($request->has('class_id')) $query->where('class_id', $request->class_id);
-        if ($request->has('subject_id')) $query->where('subject_id', $request->subject_id);
+        if ($request->filled('class_id')) $query->where('class_id', $request->class_id);
+        if ($request->filled('subject_id')) $query->where('subject_id', $request->subject_id);
         if ($request->has('type')) $query->where('type', $request->type);
          if ($request->has('semester')) $query->where('semester', $request->semester);
         
@@ -243,21 +277,51 @@ class GradeController extends Controller
             'subject_id' => 'required',
             'date' => 'required|date',
             'type' => 'required',
-            'topic' => 'required',
+            'topic' => 'nullable',
         ]);
 
         try {
-            $query = Grade::query();
-            if (!Auth::user()->isAdmin()) {
-                $query->where('user_id', Auth::id());
+            $user = Auth::user();
+
+            // Auth check: match same logic as index()
+            if (!$user->isAdmin()) {
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                $isWaliKelas = \App\Models\SchoolClass::where('id', $request->class_id)->where('user_id', $user->id)->exists();
+                $isAssigned = $teacher && \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                    ->where('class_id', $request->class_id)
+                    ->where('subject_id', $request->subject_id)
+                    ->exists();
+
+                if (!$isWaliKelas && !$isAssigned) {
+                    return response()->json(['message' => 'Unauthorized'], 403);
+                }
             }
 
-            $deleted = $query->where('class_id', $request->class_id)
+            $query = Grade::where('class_id', $request->class_id)
                 ->where('subject_id', $request->subject_id)
-                ->where('date', $request->date)
-                ->where('type', $request->type)
-                ->where('topic', $request->topic)
-                ->delete();
+                ->where('date', Carbon::parse($request->date)->format('Y-m-d'))
+                ->where('type', $request->type);
+
+            // Handle topic: null, empty string, or actual value
+            $topic = $request->input('topic');
+            if (is_null($topic) || $topic === '') {
+                $query->where(function($q) {
+                    $q->whereNull('topic')->orWhere('topic', '');
+                });
+            } else {
+                $query->where('topic', $topic);
+            }
+
+            // Debug: log query SQL
+            $sql = $query->toSql();
+            $bindings = $query->getBindings();
+            Log::debug("destroyBatch SQL: $sql", ['bindings' => $bindings, 'request' => $request->all()]);
+
+            $deleted = $query->delete();
+
+            if ($deleted === 0) {
+                return response()->json(['message' => 'Tidak ada data nilai yang cocok untuk dihapus'], 404);
+            }
 
             return response()->json(['message' => "$deleted data nilai berhasil dihapus"]);
         } catch (\Exception $e) {

@@ -48,9 +48,9 @@ class StudentController extends Controller
             $query->where('created_by', $user->id);
         }
 
-        if (request()->has('class_id')) {
+        if (request()->filled('class_id')) {
             $query->where('class_id', request()->class_id);
-        } elseif (request()->has('rombel')) {
+        } elseif (request()->filled('rombel')) {
             $query->whereHas('class', function($q) {
                 $q->where('rombel', request()->rombel);
             });
