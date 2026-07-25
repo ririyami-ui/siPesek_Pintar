@@ -90,11 +90,17 @@ class GradeCalculationService
             $base_attitude = $attitudeScores->count() > 0 ? $attitudeScores->avg('score') : 100;
             $nilai_sikap   = max(0, $base_attitude - $penalty);
 
-            // Integrasi keaktifan: bobot 10% dari nilai akhir
-            $wk_act = 0.10; // 10% — proporsional mengurangi wa & ws
-            $wa_adj = $wa * (1 - $wk_act); // 0.5 * 0.9 = 0.45
-            $ws_adj = $ws * (1 - $wk_act); // 0.5 * 0.9 = 0.45
-            $nilai_akhir   = round(($nilai_akademik * $wa_adj) + ($nilai_sikap * $ws_adj) + ($keaktifanPct * $wk_act), 2);
+            // Integrasi keaktifan: bobot 10% dari nilai akhir, hanya jika ada data keaktifan
+            if ($totalKeaktifanPoints > 0) {
+                $wk_act = 0.10;
+                $wa_adj = $wa * (1 - $wk_act);
+                $ws_adj = $ws * (1 - $wk_act);
+                $nilai_akhir   = round(($nilai_akademik * $wa_adj) + ($nilai_sikap * $ws_adj) + ($keaktifanPct * $wk_act), 2);
+            } else {
+                $wa_adj = $wa;
+                $ws_adj = $ws;
+                $nilai_akhir   = round(($nilai_akademik * $wa_adj) + ($nilai_sikap * $ws_adj), 2);
+            }
 
             $byType = $records->groupBy('type')->map(function ($typeRecords, $type) {
                 return [
@@ -135,7 +141,7 @@ class GradeCalculationService
                     'total_points' => $totalKeaktifanPoints,
                     'max_points'   => $maxKeaktifanPoints,
                     'percentage'   => round($keaktifanPct, 2),
-                    'weight'       => $wk_act * 100,
+                    'weight'       => ($totalKeaktifanPoints > 0 ? $wk_act : 0) * 100,
                 ],
                 'by_type'         => $byType,
             ];

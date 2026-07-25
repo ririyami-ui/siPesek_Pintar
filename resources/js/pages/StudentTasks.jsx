@@ -40,21 +40,19 @@ function TaskCard({ task }) {
           }`}>
             {typeLabel}
           </span>
-          {task.date && (
+          {isGrade && task.date && (
             <span className="text-[10px] text-slate-400 font-bold">
               {new Date(task.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+            </span>
+          )}
+          {!isGrade && task.date && (
+            <span className="text-[11px] text-red-600 dark:text-red-400 font-bold bg-red-50 dark:bg-red-950/30 px-2 py-0.5 rounded-lg border border-red-200 dark:border-red-800/30">
+              Batas pengumpulan: {new Date(task.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
             </span>
           )}
         </div>
 
         <p className="font-bold text-slate-800 dark:text-white text-[11px] leading-snug line-clamp-2 mb-2 min-h-[2.2rem]">{task.topic}</p>
-
-        {task.planned_material && (
-          <div className="bg-white/40 dark:bg-black/20 rounded-xl px-2.5 py-1.5 mb-2 border border-white/50 dark:border-white/5">
-            <p className="text-[8px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-widest mb-0.5">Materi</p>
-            <p className="text-[10px] font-bold text-slate-700 dark:text-slate-200 leading-tight line-clamp-2">{task.planned_material}</p>
-          </div>
-        )}
 
         <div className="flex items-center justify-between gap-2 mt-auto">
           <span className={`text-[9px] font-black uppercase tracking-wider ${isDone ? 'text-emerald-600' : 'text-slate-400'}`}>

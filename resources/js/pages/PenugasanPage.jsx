@@ -77,9 +77,13 @@ export default function PenugasanPage() {
     }
 
     try {
+      const selectedClassObj = classes.find(c => String(c.id) === String(selectedClass));
+      const selectedSubjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
       const taskData = {
         class_id: selectedClass,
+        class_name: selectedClassObj?.rombel || selectedClassObj?.name || '',
         subject_id: selectedSubject,
+        subject_name: selectedSubjectObj?.name || '',
         title: taskTitle,
         description: taskDescription,
         deadline: deadline,
@@ -111,11 +115,11 @@ export default function PenugasanPage() {
   };
 
   const handleEditClick = (task) => {
-    setSelectedClass(task.classId || task.className);
-    setSelectedSubject(task.subjectId || task.subjectName);
+    setSelectedClass(task.class_id || task.class_name);
+    setSelectedSubject(task.subject_id || task.subject_name);
     setTaskTitle(task.title);
     setTaskDescription(task.description || '');
-    setDeadline(task.deadline);
+    setDeadline(task.deadline ? task.deadline.substring(0, 10) : '');
     setIsEditing(true);
     setCurrentTaskId(task.id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -287,8 +291,8 @@ export default function PenugasanPage() {
                     </td>
                     <td className="px-3 py-4">
                       <div className="flex flex-col text-xs">
-                        <span className="font-semibold text-primary">{task.className}</span>
-                        <span className="text-text-muted-light dark:text-text-muted-dark">{task.subjectName}</span>
+                        <span className="font-semibold text-primary">{task.class_name}</span>
+                        <span className="text-text-muted-light dark:text-text-muted-dark">{task.subject_name}</span>
                       </div>
                     </td>
                     <td className="px-3 py-4">

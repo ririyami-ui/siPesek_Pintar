@@ -11,7 +11,7 @@ class StudentTaskController extends Controller
     public function index(Request $request)
     {
         $query = StudentTask::query();
-        if (!Auth::user()->isAdmin()) {
+        if (!Auth::user()->isAdmin() && Auth::user()->role !== 'guru') {
             $query->where('user_id', Auth::id());
         }
 
@@ -53,7 +53,7 @@ class StudentTaskController extends Controller
 
     public function update(Request $request, StudentTask $student_task)
     {
-         if (!Auth::user()->isAdmin() && $student_task->user_id !== Auth::id()) {
+         if (!Auth::user()->isAdmin() && Auth::user()->role !== 'guru' && $student_task->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -75,7 +75,7 @@ class StudentTaskController extends Controller
 
     public function destroy(StudentTask $student_task)
     {
-        if (!Auth::user()->isAdmin() && $student_task->user_id !== Auth::id()) {
+        if (!Auth::user()->isAdmin() && Auth::user()->role !== 'guru' && $student_task->user_id !== Auth::id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

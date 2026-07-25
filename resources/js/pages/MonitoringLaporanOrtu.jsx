@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  FileText, Search, Filter, RefreshCw, CalendarDays,
-  Eye, EyeOff, CheckCircle2, Loader2, School,
-  ChevronDown, ChevronUp, Users, BarChart3, Download
+  FileText, Search, RefreshCw, ChevronDown, ChevronUp,
+  Eye, EyeOff, CheckCircle2, Loader2, Clock, ChevronRight
 } from 'lucide-react';
 import api from '../lib/axios';
 
 const TYPE_LABELS = { weekly: 'Mingguan', monthly: 'Bulanan' };
+const PER_PAGE = 15;
 
 export default function MonitoringLaporanOrtu() {
   const [reports, setReports] = useState([]);
@@ -14,6 +14,7 @@ export default function MonitoringLaporanOrtu() {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [expanded, setExpanded] = useState(null);
+  const [page, setPage] = useState(1);
   const [stats, setStats] = useState({ total: 0, sent: 0, unread: 0 });
 
   const fetchReports = useCallback(async () => {
@@ -29,6 +30,7 @@ export default function MonitoringLaporanOrtu() {
         sent: data.filter(r => r.is_sent).length,
         unread: data.filter(r => !r.read_at).length,
       });
+      setPage(1);
     } catch (err) {
       console.error('Failed to fetch reports:', err);
     } finally {
@@ -54,120 +56,132 @@ export default function MonitoringLaporanOrtu() {
     (r.period_label || '').toLowerCase().includes(search.toLowerCase())
   );
 
+  const displayed = filtered.slice(0, page * PER_PAGE);
+  const hasMore = displayed.length < filtered.length;
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-            <FileText className="text-emerald-600" size={24} />
-            Monitoring Laporan Orang Tua
+          <h1 className="text-lg sm:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+            <FileText className="text-emerald-600 shrink-0" size={22} />
+            Laporan Orang Tua
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Pantau laporan perkembangan periodik yang dikirim ke wali murid
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            Pantau laporan perkembangan yang dikirim ke wali murid
           </p>
         </div>
-        <button onClick={fetchReports} className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors text-sm font-medium">
-          <RefreshCw size={16} /> Refresh
+        <button onClick={fetchReports}
+          className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors text-xs sm:text-sm font-medium">
+          <RefreshCw size={15} /> Refresh
         </button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { label: 'Total Laporan', value: stats.total, color: 'bg-slate-100 dark:bg-slate-700', textColor: 'text-slate-700 dark:text-white', icon: FileText },
           { label: 'Terkirim', value: stats.sent, color: 'bg-emerald-50 dark:bg-emerald-900/30', textColor: 'text-emerald-700', icon: CheckCircle2 },
           { label: 'Belum Dibaca', value: stats.unread, color: 'bg-amber-50 dark:bg-amber-900/30', textColor: 'text-amber-600', icon: EyeOff },
         ].map(s => (
-          <div key={s.label} className={`${s.color} rounded-2xl p-4 flex items-center gap-3`}>
-            <s.icon size={24} className={s.textColor} />
-            <div>
-              <p className={`text-2xl font-bold ${s.textColor}`}>{s.value}</p>
-              <p className="text-xs text-slate-500">{s.label}</p>
+          <div key={s.label} className={`${s.color} rounded-xl sm:rounded-2xl p-3 sm:p-4 flex items-center gap-3`}>
+            <s.icon size={20} className={`${s.textColor} shrink-0`} />
+            <div className="min-w-0">
+              <p className={`text-lg sm:text-2xl font-bold ${s.textColor}`}>{s.value}</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 truncate">{s.label}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap">
-        <div className="flex gap-2">
+      {/* Filter + Search */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="flex gap-1.5">
           {['all', 'weekly', 'monthly'].map(t => (
             <button key={t} onClick={() => setFilter(t)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${filter === t ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex-1 sm:flex-none ${
+                filter === t
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+              }`}
             >{t === 'all' ? 'Semua' : TYPE_LABELS[t]}</button>
           ))}
         </div>
-        <div className="flex-1 max-w-xs">
-          <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="text" placeholder="Cari siswa..." value={search} onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
-          </div>
+        <div className="relative flex-1 max-w-xs w-full sm:w-auto">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input type="text" placeholder="Cari siswa..." value={search} onChange={e => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
         </div>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div className="flex justify-center py-20"><Loader2 size={32} className="animate-spin text-emerald-600" /></div>
+        <div className="flex justify-center py-16"><Loader2 size={28} className="animate-spin text-emerald-600" /></div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 text-slate-400">
-          <FileText size={48} className="mx-auto mb-3 opacity-40" />
-          <p>Tidak ada laporan ditemukan</p>
+        <div className="text-center py-16 text-slate-400">
+          <FileText size={40} className="mx-auto mb-3 opacity-40" />
+          <p className="text-sm">Tidak ada laporan ditemukan</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-300">
                 <tr>
-                  <th className="text-left px-4 py-3 font-medium">Siswa</th>
-                  <th className="text-left px-4 py-3 font-medium">Tipe</th>
-                  <th className="text-left px-4 py-3 font-medium">Periode</th>
-                  <th className="text-center px-4 py-3 font-medium">Nilai Akhir</th>
-                  <th className="text-center px-4 py-3 font-medium">Keaktifan</th>
-                  <th className="text-center px-4 py-3 font-medium">Status</th>
-                  <th className="text-center px-4 py-3 font-medium">Aksi</th>
+                  <th className="text-left px-2 py-2 sm:px-4 sm:py-3 font-medium">Siswa</th>
+                  <th className="text-left px-2 py-2 sm:px-4 sm:py-3 font-medium hidden sm:table-cell">Tipe</th>
+                  <th className="text-left px-2 py-2 sm:px-4 sm:py-3 font-medium">Periode</th>
+                  <th className="text-center px-2 py-2 sm:px-4 sm:py-3 font-medium">Nilai</th>
+                  <th className="text-center px-2 py-2 sm:px-4 sm:py-3 font-medium hidden sm:table-cell">Aktif</th>
+                  <th className="text-center px-2 py-2 sm:px-4 sm:py-3 font-medium hidden sm:table-cell">Status</th>
+                  <th className="text-center px-2 py-2 sm:px-4 sm:py-3 font-medium">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                {filtered.map(r => (
+                {displayed.map(r => (
                   <React.Fragment key={r.id}>
                     <tr className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors cursor-pointer"
                       onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
-                      <td className="px-4 py-3">
-                        <p className="font-medium text-slate-800 dark:text-white">{r.student?.name || '-'}</p>
-                        <p className="text-xs text-slate-400">{r.student?.class?.rombel || '-'}</p>
+                      <td className="px-2 py-2 sm:px-4 sm:py-3">
+                        <p className="font-semibold text-slate-800 dark:text-white text-xs sm:text-sm leading-tight">
+                          {r.student?.name || '-'}
+                        </p>
+                        <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5">{r.student?.class?.rombel || ''}</p>
                       </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-lg text-xs font-medium ${r.type === 'weekly' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
-                          }`}>{TYPE_LABELS[r.type]}</span>
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 hidden sm:table-cell">
+                        <span className={`inline-block px-1.5 py-0.5 rounded-lg text-[10px] font-medium ${
+                          r.type === 'weekly' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'
+                        }`}>{TYPE_LABELS[r.type]}</span>
                       </td>
-                      <td className="px-4 py-3 text-slate-600 dark:text-slate-300 text-xs">{r.period_label}</td>
-                      <td className="px-4 py-3 text-center font-semibold text-slate-700 dark:text-white">
-                        {r.stats?.avg_nilai_akhir !== null ? Math.round(r.stats?.avg_nilai_akhir) : '-'}
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 text-slate-600 dark:text-slate-300 text-[10px] sm:text-xs">
+                        {r.period_label}
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 text-center font-bold text-slate-700 dark:text-white text-xs sm:text-sm">
+                        {r.stats?.avg_nilai_akhir !== null ? Math.round(r.stats.avg_nilai_akhir) : '-'}
+                      </td>
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 text-center hidden sm:table-cell">
                         {r.stats?.total_keaktifan > 0 ? (
-                          <span className="text-blue-600 font-semibold">+{r.stats.total_keaktifan}</span>
+                          <span className="text-blue-600 font-semibold text-xs">+{r.stats.total_keaktifan}</span>
                         ) : <span className="text-slate-300">-</span>}
                       </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex justify-center gap-2">
-                          {r.is_sent ? <CheckCircle2 size={16} className="text-emerald-500" /> : <Clock size={16} className="text-slate-300" />}
-                          {r.read_at ? <Eye size={16} className="text-blue-500" /> : <EyeOff size={16} className="text-amber-400" />}
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 text-center hidden sm:table-cell">
+                        <div className="flex justify-center gap-1.5">
+                          {r.is_sent ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Clock size={14} className="text-slate-300" />}
+                          {r.read_at ? <Eye size={14} className="text-blue-500" /> : <EyeOff size={14} className="text-amber-400" />}
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-center">
+                      <td className="px-2 py-2 sm:px-4 sm:py-3 text-center">
                         <button onClick={e => { e.stopPropagation(); handleRegenerate(r.student_id); }}
-                          className="text-xs text-emerald-600 hover:text-emerald-800 font-medium">Regen</button>
+                          className="text-[10px] sm:text-xs text-emerald-600 hover:text-emerald-800 font-medium whitespace-nowrap">
+                          Regenerate
+                        </button>
                       </td>
                     </tr>
                     {expanded === r.id && (
                       <tr className="bg-slate-50 dark:bg-slate-700/20">
-                        <td colSpan={7} className="px-6 py-4">
-                          <div className="space-y-3 max-h-80 overflow-y-auto">
+                        <td colSpan={7} className="p-2 sm:p-4">
+                          <div className="space-y-2 max-h-80 overflow-y-auto">
                             {r.sections ? (
                               <>
                                 {renderSection('Akademik', r.sections.academic, 'emerald')}
@@ -177,7 +191,9 @@ export default function MonitoringLaporanOrtu() {
                                 {renderSection('Rekomendasi', r.sections.recommendation, 'teal')}
                               </>
                             ) : (
-                              <p className="text-sm text-slate-400">Detail belum tersedia (klik "Regen" untuk generate ulang)</p>
+                              <p className="text-xs sm:text-sm text-slate-400 italic">
+                                Detail belum tersedia (klik "Regenerate" untuk generate ulang)
+                              </p>
                             )}
                           </div>
                         </td>
@@ -188,6 +204,16 @@ export default function MonitoringLaporanOrtu() {
               </tbody>
             </table>
           </div>
+
+          {/* Load More */}
+          {hasMore && (
+            <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-700 text-center">
+              <button onClick={() => setPage(p => p + 1)}
+                className="inline-flex items-center gap-1 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-xs font-medium">
+                Muat lebih banyak <ChevronDown size={14} />
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -204,9 +230,9 @@ function renderSection(title, content, color) {
     teal: 'border-l-teal-400 bg-teal-50/50 dark:bg-teal-900/10',
   };
   return (
-    <div className={`border-l-4 rounded-r-xl p-3 ${colorMap[color] || colorMap.emerald}`}>
-      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">{title}</p>
-      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{content}</p>
+    <div className={`border-l-4 rounded-r-xl p-2 sm:p-3 ${colorMap[color] || colorMap.emerald}`}>
+      <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider mb-0.5">{title}</p>
+      <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{content}</p>
     </div>
   );
 }
