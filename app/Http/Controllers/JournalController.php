@@ -47,34 +47,47 @@ class JournalController extends Controller
 
         $journals = $query->orderBy('date', 'desc')->get();
 
-        // Load attendance summary (sakit/izin/alpa) for each journal
-        $journals->each(function ($journal) {
-            $absents = \App\Models\Attendance::with('student')
-                ->where('class_id', $journal->class_id)
-                ->where('subject_id', $journal->subject_id)
-                ->where('date', $journal->date)
-                ->whereIn('status', ['sakit', 'izin', 'alpa'])
+        // Batch load attendance summary (sakit/izin/alpa) — replaces N+1 loop
+        if ($journals->isNotEmpty()) {
+            $keys = $journals->map(fn($j) => "{$j->class_id}-{$j->subject_id}-{$j->date}")->unique()->values();
+
+            $attendanceRecords = \App\Models\Attendance::with('student')
+                ->whereIn('status', ['sakit', 'izin', 'alpa', 'hadir'])
+                ->where(function ($q) use ($keys) {
+                    foreach ($keys as $key) {
+                        [$cid, $sid, $d] = explode('-', $key, 3);
+                        $q->orWhere(function ($sub) use ($cid, $sid, $d) {
+                            $sub->where('class_id', $cid)
+                                 ->where('subject_id', $sid)
+                                 ->where('date', $d);
+                        });
+                    }
+                })
                 ->get()
-                ->map(function ($att) {
-                    $statusLabel = [
-                        'sakit' => 'Sakit',
-                        'izin' => 'Izin',
-                        'alpa' => 'Alpa',
-                    ][$att->status] ?? $att->status;
-                    return [
-                        'student_id' => $att->student_id,
-                        'name' => $att->student?->name ?? '-',
-                        'status' => $statusLabel,
-                    ];
-                });
-            $hadirCount = \App\Models\Attendance::where('class_id', $journal->class_id)
-                ->where('subject_id', $journal->subject_id)
-                ->where('date', $journal->date)
-                ->where('status', 'hadir')
-                ->count();
-            $journal->absentStudents = $absents;
-            $journal->hadirCount = $hadirCount;
-        });
+                ->groupBy(fn($att) => "{$att->class_id}-{$att->subject_id}-{$att->date}");
+
+            $journals->each(function ($journal) use ($attendanceRecords) {
+                $key = "{$journal->class_id}-{$journal->subject_id}-{$journal->date}";
+                $records = $attendanceRecords->get($key, collect());
+
+                $journal->hadirCount = $records->where('status', 'hadir')->count();
+
+                $journal->absentStudents = $records
+                    ->whereIn('status', ['sakit', 'izin', 'alpa'])
+                    ->map(function ($att) {
+                        $statusLabel = [
+                            'sakit' => 'Sakit',
+                            'izin' => 'Izin',
+                            'alpa' => 'Alpa',
+                        ][$att->status] ?? $att->status;
+                        return [
+                            'student_id' => $att->student_id,
+                            'name' => $att->student?->name ?? '-',
+                            'status' => $statusLabel,
+                        ];
+                    })->values();
+            });
+        }
 
         return response()->json(['data' => $journals]);
     }
@@ -93,7 +106,7 @@ class JournalController extends Controller
             'learning_objectives' => 'nullable|string',
             'learning_activities' => 'nullable|string',
             'reflection' => 'nullable|string',
-            'status' => 'nullable|string',
+            'status' => 'nullable|string|in:Terlaksana,Tidak Terlaksana',
             'follow_up' => 'nullable|string',
             'notes' => 'nullable|string',
             'is_assignment' => 'boolean',
@@ -171,7 +184,7 @@ class JournalController extends Controller
             'learning_objectives' => 'nullable|string',
             'learning_activities' => 'nullable|string',
             'reflection' => 'nullable|string',
-            'status' => 'nullable|string',
+            'status' => 'nullable|string|in:Terlaksana,Tidak Terlaksana',
             'follow_up' => 'nullable|string',
             'notes' => 'nullable|string',
             'is_assignment' => 'boolean',

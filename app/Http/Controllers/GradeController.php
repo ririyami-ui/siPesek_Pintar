@@ -66,7 +66,7 @@ class GradeController extends Controller
             $query->where('student_id', $request->student_id);
         }
         if ($request->filled('date')) {
-            $query->where('date', Carbon::parse($request->date)->format('Y-m-d'));
+            $query->where('date', $request->date);
         }
         if ($request->has('date_start') && $request->has('date_end')) {
             $query->whereBetween('date', [$request->date_start, $request->date_end]);

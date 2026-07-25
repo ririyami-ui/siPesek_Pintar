@@ -73,7 +73,6 @@ const RiwayatNilai = ({ classes, subjects, onNavigateToEdit }) => {
         let allGradesSubmitted = true;
         allStudentsInClass.forEach(student => {
           const studentGrade = session.grades.find(grade => grade.student_id === student.id);
-          console.log("DEBUG status check:", { studentId: student.id, studentName: student.name, grade: studentGrade, score: studentGrade?.score, scoreType: typeof studentGrade?.score });
           if (!studentGrade || studentGrade.score === null || studentGrade.score === undefined || studentGrade.score === '' || parseFloat(studentGrade.score) === 0) {
             allGradesSubmitted = false;
           }

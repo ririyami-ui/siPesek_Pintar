@@ -26,7 +26,6 @@ class Grade extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
         'score' => 'decimal:2',
     ];
 

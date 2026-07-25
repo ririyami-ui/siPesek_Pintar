@@ -105,7 +105,7 @@ class GradeCalculationService
                         'id'    => $g->id,
                         'topic' => $g->topic,
                         'score' => (float)$g->score,
-                        'date'  => $g->date?->toDateString(),
+                        'date'  => $g->date ? \Carbon\Carbon::parse($g->date)->toDateString() : null,
                         'notes' => $g->notes,
                     ])->values(),
                 ];

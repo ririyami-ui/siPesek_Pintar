@@ -330,8 +330,16 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
       3: { cellWidth: 45 },
       4: { cellWidth: 42 },
       5: { cellWidth: 42 },
-      6: { cellWidth: 50 },
+      6: { cellWidth: 50, cellHeight: 'auto' },
       7: { cellWidth: 35 },
+    },
+    didParseCell: function(data) {
+      if (data.column.index === 6 && data.section === 'body') {
+        var lines = data.cell.text.split('\n');
+        if (lines.length > 1) {
+          data.row.height = Math.max(data.row.height, lines.length * 6);
+        }
+      }
     },
   });
 

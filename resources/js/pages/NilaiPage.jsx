@@ -396,7 +396,7 @@ export default function NilaiPage() {
   const handleNavigateToEdit = (item) => {
     setActiveTab('input');
     setShowEditMode(true);
-    // input type="date" requires YYYY-MM-DD format
+    console.log("DEBUG date from item:", item.date, "formatted:", item.date ? item.date.substring(0, 10) : 'empty');
     const formattedDate = item.date ? item.date.substring(0, 10) : '';
     setEditDate(formattedDate);
     setEditSelectedClass(item.classId);

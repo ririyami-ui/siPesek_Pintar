@@ -16,6 +16,12 @@ class InstallController extends Controller
 {
     public function index()
     {
+        // If lock exists but no admin user found, unlock so install can proceed
+        if (File::exists(storage_path('installed.lock'))) {
+            if (!\App\Models\User::where('role', 'admin')->exists()) {
+                File::delete(storage_path('installed.lock'));
+            }
+        }
         if (File::exists(storage_path('installed.lock'))) {
             return redirect('/');
         }
