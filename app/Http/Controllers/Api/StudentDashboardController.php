@@ -498,12 +498,12 @@ class StudentDashboardController extends Controller
 
         // Daily detail (last 30 days by default)
         $daily = $attendances->map(fn($a) => [
-            'date'           => $a->date->toDateString(),
+            'date'           => $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : null,
             'subject_id'     => $a->subject_id,
             'subject_name'   => $a->subject?->name ?? '-',
             'status'         => $a->status,
             'note'           => $a->note,
-            'planned_material' => $this->getPlannedMaterial($student, $a->subject_id, $a->date->toDateString()),
+            'planned_material' => $this->getPlannedMaterial($student, $a->subject_id, $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : null),
         ])->values();
 
         return response()->json([
@@ -589,13 +589,13 @@ class StudentDashboardController extends Controller
                 'category'     => $cat,
                 'count'        => $records->count(),
                 'total_points' => $records->sum('points'),
-                'latest_date'  => $records->max('date')?->toDateString(),
+                'latest_date'  => $records->max('date') ? \Carbon\Carbon::parse($records->max('date'))->toDateString() : null,
             ];
         })->sortByDesc('latest_date')->values();
 
         $records = $infractions->map(fn($inf) => [
             'id'           => $inf->id,
-            'date'         => $inf->date?->toDateString(),
+            'date'         => $inf->date ? \Carbon\Carbon::parse($inf->date)->toDateString() : null,
             'category'     => $inf->category ?? 'Umum',
             'description'  => $inf->description,
             'points'       => $inf->points,
@@ -638,11 +638,11 @@ class StudentDashboardController extends Controller
                     'subject_name'    => $g->subject?->name ?? '-',
                     'topic'           => $g->topic ?? 'Tidak ada keterangan',
                     'assessment_type' => $g->type ?? '-',
-                    'date'            => $g->date?->toDateString(),
+                    'date'            => $g->date ? \Carbon\Carbon::parse($g->date)->toDateString() : null,
                     'score'           => (float)$g->score,
                     'notes'           => $g->notes,
                     'status'          => $hasScore ? 'Selesai' : 'Belum Dinilai',
-                    'planned_material' => $this->getPlannedMaterial($student, $g->subject_id, $g->date?->toDateString()),
+                    'planned_material' => $this->getPlannedMaterial($student, $g->subject_id, $g->date ? \Carbon\Carbon::parse($g->date)->toDateString() : null),
                 ];
             });
 
@@ -650,12 +650,15 @@ class StudentDashboardController extends Controller
         $subjects = Subject::pluck('id', 'name');
 
         // StudentTask: class-level tasks
-        $studentTasks = StudentTask::where('class_id', $student->class_id)
+        $studentTasks = StudentTask::where(function($q) use ($student) {
+                $q->where('class_id', $student->class_id)
+                  ->orWhereNull('class_id');
+            })
             ->orderBy('deadline', 'asc')
             ->get()
             ->map(function($t) use ($student, $subjects) {
                 $subjectId = isset($t->subject_name) ? ($subjects[$t->subject_name] ?? null) : null;
-                $dateStr = $t->deadline?->toDateString();
+                $dateStr = $t->deadline instanceof \Illuminate\Support\Carbon ? $t->deadline->toDateString() : \Carbon\Carbon::parse($t->deadline)->toDateString();
                 $isDone = strtolower($t->status) === 'selesai' || strtolower($t->status) === 'complete';
                 return [
                     'id'              => $t->id,
