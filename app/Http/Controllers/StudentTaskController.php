@@ -11,7 +11,7 @@ class StudentTaskController extends Controller
     public function index(Request $request)
     {
         $query = StudentTask::query();
-        if (!Auth::user()->isAdmin() && Auth::user()->role !== 'guru') {
+        if (!Auth::user()->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
 
