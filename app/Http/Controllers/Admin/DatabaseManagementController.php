@@ -77,7 +77,8 @@ class DatabaseManagementController extends Controller
     {
         $request->validate([
             'table' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'confirmation' => 'required|string|in:KOSONGKAN'
         ]);
 
         if (!$this->verifyPassword($request->password)) {
@@ -173,7 +174,11 @@ class DatabaseManagementController extends Controller
 
             // Generate a secure one-time ticket for the download
             $ticket = Str::random(64);
-            Cache::put('backup_ticket_' . $ticket, $path, now()->addMinutes(5));
+            Cache::put('backup_ticket_' . $ticket, [
+                'path' => $path,
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ], now()->addMinutes(5));
 
             return response()->json([
                 'ticket' => $ticket,
@@ -199,11 +204,18 @@ class DatabaseManagementController extends Controller
         }
 
         $cacheKey = 'backup_ticket_' . $ticket;
-        $path = Cache::get($cacheKey);
+        $ticketData = Cache::get($cacheKey);
 
-        if (!$path || !file_exists($path)) {
+        if (!$ticketData || empty($ticketData['path']) || !file_exists($ticketData['path'])) {
             abort(404, 'File backup sudah kedaluwarsa atau tidak ditemukan.');
         }
+
+        if (($ticketData['ip'] ?? null) !== $request->ip() || ($ticketData['user_agent'] ?? null) !== $request->userAgent()) {
+            Cache::forget($cacheKey);
+            abort(403, 'Ticket backup tidak valid untuk perangkat ini.');
+        }
+
+        $path = $ticketData['path'];
 
         // Remove ticket after use (one-time use)
         Cache::forget($cacheKey);
@@ -219,7 +231,8 @@ class DatabaseManagementController extends Controller
     {
         $request->validate([
             'backup_file' => 'required|file',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'confirmation' => 'required|string|in:PULIHKAN'
         ]);
 
         if (!$this->verifyPassword($request->password)) {
@@ -249,8 +262,37 @@ class DatabaseManagementController extends Controller
                 throw new \Exception("File backup kosong atau tidak dapat dibaca.");
             }
 
+            $allowedStatements = [
+                '/^\s*CREATE\s+TABLE\b/i',
+                '/^\s*INSERT\s+INTO\b/i',
+                '/^\s*TRUNCATE\s+TABLE\b/i',
+                '/^\s*DROP\s+TABLE\b/i',
+                '/^\s*SET\s+FOREIGN_KEY_CHECKS\s*=\s*[01]\s*;?\s*$/i',
+                '/^\s*\/\*/',
+                '/^\s*--/',
+                '/^\s*$/',
+            ];
+
+            foreach (preg_split('/;\s*(?=\n|$)/', $sql) as $statement) {
+                $trimmed = trim($statement);
+                if ($trimmed === '') {
+                    continue;
+                }
+
+                $isAllowed = false;
+                foreach ($allowedStatements as $pattern) {
+                    if (preg_match($pattern, $trimmed)) {
+                        $isAllowed = true;
+                        break;
+                    }
+                }
+
+                if (!$isAllowed) {
+                    throw new \Exception('Isi backup tidak valid.');
+                }
+            }
+
             // Remove any DEFINER statements that often cause issues on shared hosting
-            // This replaces DEFINER=`anything`@`anything` with empty string
             $sql = preg_replace('/DEFINER\s*=\s*`[^`]+`@`[^`]+`/', '', $sql);
             $sql = preg_replace('/DEFINER\s*=\s*[^\s@]+@[^\s@]+/', '', $sql);
 
@@ -279,7 +321,8 @@ class DatabaseManagementController extends Controller
     public function wipeDatabase(Request $request)
     {
         $request->validate([
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'confirmation' => 'required|string|in:RESET TOTAL'
         ]);
 
         if (!$this->verifyPassword($request->password)) {

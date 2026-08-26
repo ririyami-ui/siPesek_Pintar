@@ -113,6 +113,10 @@ class AuthController extends Controller
         ]);
 
         $user = auth()->user();
+        if (!in_array($user->role, ['student', 'parent'])) {
+            return response()->json(['message' => 'Aksi tidak diizinkan untuk role ini.'], 403);
+        }
+
         $user->push_subscription = json_encode($request->input('subscription'));
         $user->save();
 

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\InstallController;
 
@@ -20,7 +22,15 @@ Route::post('/install', [InstallController::class, 'postInstall'])->name('instal
 // Management Routes (Admin Only)
 Route::middleware(['auth', 'admin'])->group(function () {
     // Emergency migration route for production (No SSH)
-    Route::post('/run-migrations', function() {
+    Route::post('/run-migrations', function(Request $request) {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        if (!Hash::check($request->password, $request->user()->password)) {
+            return response("Password salah. Akses ditolak.", 403);
+        }
+
         try {
             Artisan::call('migrate', ['--force' => true]);
             return "Database berhasil diupdate ke versi terbaru!";
@@ -30,7 +40,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 
     // Emergency cache clear for production
-    Route::post('/clear-cache', function() {
+    Route::post('/clear-cache', function(Request $request) {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        if (!Hash::check($request->password, $request->user()->password)) {
+            return response("Password salah. Akses ditolak.", 403);
+        }
+
         try {
             Artisan::call('config:clear');
             Artisan::call('cache:clear');
@@ -43,7 +61,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 
     // Emergency storage link route
-    Route::post('/storage-link', function() {
+    Route::post('/storage-link', function(Request $request) {
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        if (!Hash::check($request->password, $request->user()->password)) {
+            return response("Password salah. Akses ditolak.", 403);
+        }
+
         try {
             $link = public_path('storage');
             $target = storage_path('app/public');
@@ -116,4 +142,4 @@ Route::get('/login', function () {
 
 Route::get('/{any?}', function () {
     return view('index');
-})->where('any', '^(?!install|login|storage-link|clear-cache|run-migrations).*$');
+})->where('any', '^(?!api|install|login|storage-link|clear-cache|run-migrations).*$');
