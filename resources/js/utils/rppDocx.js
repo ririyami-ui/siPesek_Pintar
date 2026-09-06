@@ -1,0 +1,455 @@
+import {
+    Document, Packer, Paragraph, TextRun, HeadingLevel,
+    Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType,
+    VerticalAlign, convertInchesToTwip, LineRuleType,
+    Math, MathRun, MathFraction, MathSubScript, MathSuperScript,
+    MathSubSuperScript, MathRadical, MathLimitUpper, MathLimitLower,
+    MathSum, MathIntegral,
+} from 'docx';
+import { mml2omml } from 'mathml2omml';
+
+const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
+const DEFAULT_FONT = 'Arial';
+const LINE = { line: 360, lineRule: LineRuleType.AUTO };
+
+function mathChildren(container) {
+    const children = [];
+    for (const child of container.children) {
+        const item = toMathNode(child);
+        if (item) children.push(item);
+    }
+    return children;
+}
+
+function toMathNode(item) {
+    const local = item.localName;
+    const firstMath = (name) => {
+        const els = item.getElementsByTagNameNS(MATH_NS, name);
+        return els.length ? els[0] : null;
+    };
+
+    switch (local) {
+        case 'r': {
+            const t = item.getElementsByTagNameNS(MATH_NS, 't')[0];
+            return new MathRun(t ? t.textContent : '');
+        }
+        case 'f': {
+            const num = firstMath('num');
+            const den = firstMath('den');
+            return new MathFraction({
+                numerator: num ? mathChildren(num) : [new MathRun('')],
+                denominator: den ? mathChildren(den) : [new MathRun('')],
+            });
+        }
+        case 'sSup': {
+            const e = firstMath('e');
+            const sup = firstMath('sup');
+            return new MathSuperScript({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                superScript: sup ? mathChildren(sup) : [new MathRun('')],
+            });
+        }
+        case 'sSub': {
+            const e = firstMath('e');
+            const sub = firstMath('sub');
+            return new MathSubScript({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                subScript: sub ? mathChildren(sub) : [new MathRun('')],
+            });
+        }
+        case 'sSubSup': {
+            const e = firstMath('e');
+            const sub = firstMath('sub');
+            const sup = firstMath('sup');
+            return new MathSubSuperScript({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                subScript: sub ? mathChildren(sub) : [new MathRun('')],
+                superScript: sup ? mathChildren(sup) : [new MathRun('')],
+            });
+        }
+        case 'rad': {
+            const e = firstMath('e');
+            const degEls = item.getElementsByTagNameNS(MATH_NS, 'deg');
+            const deg = degEls.length ? mathChildren(degEls[0]) : [];
+            return new MathRadical({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                degree: deg.length ? deg : undefined,
+            });
+        }
+        case 'limLow': {
+            const e = firstMath('e');
+            const lim = firstMath('lim');
+            return new MathLimitLower({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                limit: lim ? mathChildren(lim) : [new MathRun('')],
+            });
+        }
+        case 'limUpp': {
+            const e = firstMath('e');
+            const lim = firstMath('lim');
+            return new MathLimitUpper({
+                children: e ? mathChildren(e) : [new MathRun('')],
+                limit: lim ? mathChildren(lim) : [new MathRun('')],
+            });
+        }
+        case 'nary': {
+            const chr = item.getElementsByTagNameNS(MATH_NS, 'chr')[0];
+            const chrVal = chr ? chr.getAttributeNS(MATH_NS, 'val') : '';
+            const e = firstMath('e');
+            const sub = firstMath('sub');
+            const sup = firstMath('sup');
+            const children = e ? mathChildren(e) : [new MathRun('')];
+            const subChildren = sub ? mathChildren(sub) : [new MathRun('')];
+            const supChildren = sup ? mathChildren(sup) : [new MathRun('')];
+            if (chrVal === '\u222B') {
+                return new MathIntegral({ children, subScript: subChildren, superScript: supChildren });
+            }
+            return new MathSum({ children, subScript: subChildren, superScript: supChildren });
+        }
+        default: {
+            const sub = mathChildren(item);
+            return sub.length === 1 ? sub[0] : (sub.length ? sub : null);
+        }
+    }
+}
+
+function convertOmmlToMath(ommlString) {
+    const dom = new DOMParser().parseFromString(ommlString, 'text/xml');
+    let oMath = dom.getElementsByTagNameNS(MATH_NS, 'oMath')[0];
+    if (!oMath) {
+        oMath = dom.querySelector('m\\:oMath, math');
+    }
+    if (!oMath) return null;
+    return new Math({ children: mathChildren(oMath) });
+}
+
+function katexSpanToMath(el) {
+    let mathElement = el.querySelector('.katex-mathml math');
+    if (!mathElement) {
+        mathElement = el.querySelector('math');
+    }
+    if (!mathElement) return null;
+    const omml = mml2omml(mathElement.outerHTML, { disableDecode: true });
+    if (!omml || !omml.includes('oMath')) return null;
+    return convertOmmlToMath(omml);
+}
+
+function parseInline(element) {
+    const children = [];
+    for (const node of element.childNodes) {
+        if (node.nodeType === 3) {
+            if (node.textContent) {
+                children.push(new TextRun(node.textContent));
+            }
+            continue;
+        }
+        if (node.nodeType !== 1) continue;
+
+        const tag = node.tagName.toLowerCase();
+        switch (tag) {
+            case 'strong':
+            case 'b':
+                children.push(new TextRun({ text: node.textContent, bold: true }));
+                break;
+            case 'em':
+            case 'i':
+                children.push(new TextRun({ text: node.textContent, italics: true }));
+                break;
+            case 'u':
+                children.push(new TextRun({ text: node.textContent, underline: {} }));
+                break;
+            case 'code':
+                children.push(new TextRun({ text: node.textContent, font: 'Courier New', size: 20 }));
+                break;
+            case 'span':
+                if (node.classList && node.classList.contains('katex')) {
+                    const math = katexSpanToMath(node);
+                    if (math) {
+                        children.push(math);
+                    } else {
+                        children.push(new TextRun({ text: node.textContent }));
+                    }
+                } else {
+                    children.push(...parseInline(node));
+                }
+                break;
+            case 'br':
+                children.push(new TextRun(' '));
+                break;
+            default:
+                children.push(...parseInline(node));
+                break;
+        }
+    }
+    return children.length > 0 ? children : [new TextRun(element.textContent)];
+}
+
+const headingParagraph = (level, text) => {
+    switch (level) {
+        case 1:
+            return new Paragraph({
+                alignment: AlignmentType.CENTER,
+                spacing: { before: 0, after: 480, ...LINE },
+                border: { bottom: { style: BorderStyle.DOUBLE, size: 6, color: '000000' } },
+                children: [new TextRun({ text: text.toUpperCase(), bold: true, size: 28 })],
+            });
+        case 2:
+            return new Paragraph({
+                spacing: { before: 480, after: 200, ...LINE },
+                border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: '000000' } },
+                children: [new TextRun({ text: text.toUpperCase(), bold: true, size: 22 })],
+            });
+        default:
+            return new Paragraph({
+                spacing: { before: 400, after: 200, ...LINE },
+                border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'eeeeee' } },
+                children: [new TextRun({ text: text, bold: true, size: 22 })],
+            });
+    }
+};
+
+const romanNumeral = (n) => {
+    const map = { 10: 'x', 9: 'ix', 5: 'v', 4: 'iv', 1: 'i' };
+    let out = '';
+    for (const [k, v] of Object.entries(map)) {
+        const count = Number.parseInt(n / Number(k), 10);
+        out += v.repeat(count);
+        n -= count * Number(k);
+    }
+    return out;
+};
+
+function parseList(listEl, depth = 0) {
+    const container = [];
+    const isOrdered = listEl.tagName.toLowerCase() === 'ol';
+    const indent = { left: convertInchesToTwip(0.5 + depth * 0.5) };
+    let counter = 1;
+
+    for (const node of listEl.childNodes) {
+        if (node.nodeType !== 1 || node.tagName !== 'LI') continue;
+
+        const lead = [];
+        const nested = [];
+        for (const n of node.childNodes) {
+            if (n.nodeType === 3) {
+                if (n.textContent) lead.push(new TextRun(n.textContent));
+            } else if (n.nodeType === 1) {
+                if (n.tagName === 'OL' || n.tagName === 'UL') {
+                    nested.push(n);
+                } else {
+                    lead.push(...parseInline(n));
+                }
+            }
+        }
+
+        let marker;
+        if (!isOrdered) {
+            marker = '\u2022';
+        } else if (depth === 0) {
+            marker = `${counter}.`;
+        } else if (depth === 1) {
+            marker = `${String.fromCharCode(96 + counter)})`;
+        } else {
+            marker = `${romanNumeral(counter)}.`;
+        }
+
+        container.push(new Paragraph({
+            children: [new TextRun({ text: `${marker} `, bold: true }), ...lead],
+            indent,
+            spacing: { after: 80, ...LINE },
+        }));
+
+        nested.forEach(nl => container.push(...parseList(nl, depth + 1)));
+        counter++;
+    }
+    return container;
+}
+
+const tableCellBorders = {
+    top: { style: BorderStyle.SINGLE, size: 6, color: '000000' },
+    bottom: { style: BorderStyle.SINGLE, size: 6, color: '000000' },
+    left: { style: BorderStyle.SINGLE, size: 6, color: '000000' },
+    right: { style: BorderStyle.SINGLE, size: 6, color: '000000' }
+};
+
+function parseTable(tableEl) {
+    const rows = tableEl.querySelectorAll('tr');
+    const tableRows = [];
+
+    for (const row of rows) {
+        const cells = row.querySelectorAll('th, td');
+        const tableCells = Array.from(cells).map(cell => {
+            const runs = parseInline(cell);
+            return new TableCell({
+                children: [new Paragraph({
+                    children: runs.length ? runs : [new TextRun('')],
+                    alignment: cell.tagName === 'TH' ? AlignmentType.CENTER : AlignmentType.LEFT,
+                    spacing: { after: 0, ...LINE }
+                })],
+                shading: cell.tagName === 'TH' ? { fill: 'f0f0f0' } : undefined,
+                margins: { top: 120, bottom: 120, left: 180, right: 180 },
+                verticalAlign: VerticalAlign.CENTER,
+                borders: tableCellBorders
+            });
+        });
+
+        tableRows.push(new TableRow({
+            children: tableCells
+        }));
+    }
+
+    return new Table({
+        width: { size: 100, type: WidthType.PERCENTAGE },
+        rows: tableRows
+    });
+}
+
+const signatureCellParagraphs = (cellDiv) => {
+    const ps = cellDiv.querySelectorAll('p');
+    return Array.from(ps).map(p => {
+        const bold = p.classList.contains('font-bold');
+        const underline = p.classList.contains('underline');
+        const keepSpace = p.classList.contains('mb-16');
+        return new Paragraph({
+            children: [new TextRun({
+                text: p.textContent,
+                bold,
+                underline: underline ? {} : undefined
+            })],
+            alignment: AlignmentType.CENTER,
+            spacing: { after: keepSpace ? 960 : 60, ...LINE }
+        });
+    });
+};
+
+const noBorders = {
+    top: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+    bottom: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+    left: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' },
+    right: { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' }
+};
+
+function parseSignature(section) {
+    const gridEl = section.children.length ? section.children[0] : null;
+    const cells = gridEl ? Array.from(gridEl.children) : [];
+
+    const row = new TableRow({
+        cantSplit: true,
+        children: cells.map(cell => new TableCell({
+            children: cell.children.length
+                ? signatureCellParagraphs(cell)
+                : [new Paragraph({ children: [new TextRun('')] })],
+            verticalAlign: VerticalAlign.TOP,
+            margins: { top: 40, bottom: 40, left: 80, right: 80 },
+            borders: noBorders
+        }))
+    });
+
+    return [
+        new Paragraph({ children: [], spacing: { before: 480 } }),
+        new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            borders: noBorders,
+            rows: [row]
+        })
+    ];
+}
+
+function parseBlock(element) {
+    const children = [];
+
+    for (const node of element.childNodes) {
+        if (node.nodeType === 3) {
+            const text = node.textContent.trim();
+            if (text) {
+                children.push(new Paragraph({
+                    children: [new TextRun(text)],
+                    spacing: { after: 240, ...LINE },
+                    alignment: AlignmentType.JUSTIFIED
+                }));
+            }
+            continue;
+        }
+        if (node.nodeType !== 1) continue;
+
+        if (node.id === 'signature-section') {
+            children.push(...parseSignature(node));
+            continue;
+        }
+
+        const tag = node.tagName.toLowerCase();
+        switch (tag) {
+            case 'h1':
+                children.push(headingParagraph(1, node.textContent));
+                break;
+            case 'h2':
+                children.push(headingParagraph(2, node.textContent));
+                break;
+            case 'h3':
+                children.push(headingParagraph(3, node.textContent));
+                break;
+            case 'p':
+                children.push(new Paragraph({
+                    children: parseInline(node),
+                    spacing: { after: 240, ...LINE },
+                    alignment: AlignmentType.JUSTIFIED
+                }));
+                break;
+            case 'ul':
+            case 'ol':
+                children.push(...parseList(node));
+                break;
+            case 'pre':
+                children.push(new Paragraph({
+                    children: [new TextRun({ text: node.textContent, font: 'Courier New', size: 20 })],
+                    spacing: { after: 160, ...LINE }
+                }));
+                break;
+            case 'table':
+                children.push(parseTable(node));
+                break;
+            case 'div':
+            case 'section':
+                children.push(...parseBlock(node));
+                break;
+            case 'br':
+                children.push(new Paragraph({ children: [] }));
+                break;
+            default:
+                children.push(...parseBlock(node));
+                break;
+        }
+    }
+
+    return children.length > 0 ? children : [new Paragraph({ children: [] })];
+}
+
+async function generateRppDoc(element) {
+    const children = parseBlock(element);
+    const doc = new Document({
+        styles: {
+            default: {
+                document: {
+                    run: { font: DEFAULT_FONT, size: 22 },
+                    paragraph: { spacing: { after: 120, line: 360, lineRule: LineRuleType.AUTO } }
+                }
+            }
+        },
+        sections: [{
+            properties: {
+                page: {
+                    margin: {
+                        top: convertInchesToTwip(1),
+                        bottom: convertInchesToTwip(1),
+                        left: convertInchesToTwip(1),
+                        right: convertInchesToTwip(1)
+                    }
+                }
+            },
+            children: children
+        }]
+    });
+    return Packer.toBlob(doc);
+}
+
+export { generateRppDoc };

@@ -4,6 +4,20 @@ import BSKAP_DATA from './bskap_2025_intel.json';
 // --- Analysis Configuration (Sourced from BSKAP_DATA) ---
 const { low_grade_threshold: LOW_GRADE_THRESHOLD, high_absence_threshold: HIGH_ABSENCE_THRESHOLD, infraction_score_threshold: INFRACTION_SCORE_THRESHOLD } = BSKAP_DATA.standards.early_warning_standards;
 
+// Convert semester + academic year (e.g. '2025/2026') to a date range.
+// Same convention used by the backend (Ganjil: Jul 1 - Dec 31, Genap: Jan 1 - Jun 30).
+export const getSemesterRange = (semester, academicYear) => {
+  if (!semester) return null;
+  const years = String(academicYear || '').split('/');
+  const yearStart = parseInt(years[0], 10) || new Date().getFullYear();
+  const yearEnd = years.length > 1 ? parseInt(years[1], 10) : yearStart + 1;
+  const isGanjil = semester === 'Ganjil';
+  return {
+    date_start: isGanjil ? `${yearStart}-07-01` : `${yearEnd}-01-01`,
+    date_end: isGanjil ? `${yearStart}-12-31` : `${yearEnd}-06-30`,
+  };
+};
+
 /**
  * Fetches all students for a given user.
  * @param {string} userId - Not used in Laravel API as it's handled by auth middleware
@@ -15,7 +29,12 @@ export const getAllStudents = async (userId = null, rombel = null) => {
     const res = await api.get('/students', {
       params: { all: true, rombel: rombel }
     });
-    return res.data.data || res.data || [];
+    const list = res.data.data || res.data || [];
+    return (Array.isArray(list) ? list : []).map(s => ({
+      ...s,
+      rombel: s.class?.rombel ?? s.rombel ?? null,
+      classId: s.class_id ?? s.class?.id ?? null,
+    }));
   } catch (error) {
     console.error("Error fetching students:", error);
     return [];
@@ -32,7 +51,7 @@ export const getAllGrades = async (userId = null, studentId = null, semester, ac
         student_id: studentId,
         class_id: classId,
         semester,
-        academic_year: academicYear
+        ...(academicYear ? { academic_year: academicYear } : {}),
       }
     });
 
@@ -42,6 +61,7 @@ export const getAllGrades = async (userId = null, studentId = null, semester, ac
     return gradeList.map(g => ({
       ...g,
       studentId: g.student_id,
+      subjectId: g.subject_id,
       assessmentType: g.type,
       subjectName: g.subject?.name
     }));
@@ -56,14 +76,21 @@ export const getAllGrades = async (userId = null, studentId = null, semester, ac
  */
 export const getAllAttendance = async (userId = null, studentId = null, semester, academicYear, classId = null) => {
   try {
-    const res = await api.get('/attendances', {
-      params: {
-        student_id: studentId,
-        class_id: classId,
-        semester,
-        academic_year: academicYear
-      }
-    });
+    const params = {};
+    if (studentId) params.student_id = studentId;
+    if (classId) params.class_id = classId;
+    if (semester) params.semester = semester;
+    if (academicYear) params.academic_year = academicYear;
+
+    // Backend filters attendance by date range, not by semester column.
+    // Convert semester + year to a date range so warnings only count the active period.
+    const range = getSemesterRange(semester, academicYear);
+    if (range) {
+      params.date_start = range.date_start;
+      params.date_end = range.date_end;
+    }
+
+    const res = await api.get('/attendances', { params });
 
     const attendanceList = res.data.data || res.data || [];
     if (!Array.isArray(attendanceList)) return [];
@@ -111,14 +138,13 @@ export const getAllJournals = async (userId = null, semester, academicYear, clas
  */
 export const getAllInfractions = async (userId = null, studentId = null, semester, academicYear, classId = null) => {
   try {
-    const res = await api.get('/infractions', {
-      params: {
-        student_id: studentId,
-        class_id: classId,
-        semester,
-        academic_year: academicYear
-      }
-    });
+    const params = {};
+    if (studentId) params.student_id = studentId;
+    if (classId) params.class_id = classId;
+    if (semester) params.semester = semester;
+    if (academicYear) params.academic_year = academicYear;
+
+    const res = await api.get('/infractions', { params });
 
     const infractionList = res.data.data || res.data || [];
     if (!Array.isArray(infractionList)) return [];
@@ -138,15 +164,15 @@ export const getAllInfractions = async (userId = null, studentId = null, semeste
  * Runs the early warning system analysis.
  * This is the main function that will orchestrate the data fetching and analysis.
  */
-export const runEarlyWarningAnalysis = async (userId = null, activeSemester, academicYear, modelName) => {
+export const runEarlyWarningAnalysis = async (userId = null, activeSemester, academicYear, modelName, classId = null) => {
   try {
     // 1. Fetch all necessary data in parallel
     const [students, grades, attendance, journals, infractions] = await Promise.all([
       getAllStudents(userId),
-      getAllGrades(userId, null, activeSemester, academicYear),
-      getAllAttendance(userId, null, activeSemester, academicYear),
-      getAllJournals(userId, activeSemester, academicYear),
-      getAllInfractions(userId, null, activeSemester, academicYear),
+      getAllGrades(userId, null, activeSemester, academicYear, classId),
+      getAllAttendance(userId, null, activeSemester, academicYear, classId),
+      getAllJournals(userId, activeSemester, academicYear, classId),
+      getAllInfractions(userId, null, activeSemester, academicYear, classId),
     ]);
 
     const flaggedStudents = {};
@@ -164,10 +190,13 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       studentInfractions[infraction.studentId].records.push(infraction);
     });
 
+    // Helper to normalize id across sources (localhost serializes int, cPanel may string)
+    const normId = (id) => Number(id);
+
     // Helper to add a warning and associate data with a student
     const addWarning = (studentId, reason, subject = null) => {
       if (!flaggedStudents[studentId]) {
-        const studentInfo = students.find(s => s.id === studentId);
+        const studentInfo = students.find(s => normId(s.id) === normId(studentId));
         if (studentInfo) {
           flaggedStudents[studentId] = {
             ...studentInfo,
@@ -182,7 +211,7 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
         if (!flaggedStudents[studentId].warnings.includes(reason)) {
           flaggedStudents[studentId].warnings.push(reason);
         }
-        if (subject && !flaggedStudents[studentId].subjectsWithWarnings.some(s => s.id === subject.id || s.name === subject.name)) {
+        if (subject && !flaggedStudents[studentId].subjectsWithWarnings.some(s => normId(s.id) === normId(subject.id) || s.name === subject.name)) {
           // Store both id and name for better filtering
           flaggedStudents[studentId].subjectsWithWarnings.push(subject);
         }
@@ -227,7 +256,7 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       const subjectName = item.subjectName;
 
       // Find student's class
-      const studentInfo = students.find(s => s.id === studentId);
+      const studentInfo = students.find(s => normId(s.id) === normId(studentId));
       const classId = studentInfo?.class_id;
       const agreement = classAgreements[classId] || {};
       const wa = (agreement.academic_weight ?? 50) / 100;
@@ -236,7 +265,7 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       const wp = (agreement.practice_weight ?? 60) / 100;
 
       // Separate knowledge, practice, and attitude scores
-      const subjectGrades = grades.filter(g => g.studentId === studentId && g.subjectName === subjectName);
+      const subjectGrades = grades.filter(g => normId(g.studentId) === normId(studentId) && g.subjectName === subjectName);
       const knowledgeTypes = ['Harian', 'Formatif', 'Sumatif', 'Ulangan', 'Tengah Semester', 'PTS', 'Akhir Semester', 'PAS'];
 
       const knowledgeScores = subjectGrades.filter(g => knowledgeTypes.includes(g.assessmentType)).map(g => parseFloat(g.score) || 0);
@@ -269,25 +298,29 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
 
       if (average < LOW_GRADE_THRESHOLD && average > 0) {
         const gradeSample = subjectGrades[0];
-        addWarning(studentId, `Rata-rata nilai rendah di mapel ${subjectName} (${average.toFixed(1)})`, { id: gradeSample?.subjectId || '', name: subjectName });
+        addWarning(studentId, `Rata-rata nilai rendah di mapel ${subjectName} (${average.toFixed(1)})`, { id: gradeSample?.subjectId ?? gradeSample?.subject_id ?? '', name: subjectName });
       }
     }
 
-    // 3. Analyze Attendance
+    // 3. Analyze Attendance — includes Alpha, Sakit, Izin
     const studentAbsences = {};
     attendance.forEach(att => {
-      if (att.status === 'Alpha') {
-        if (!studentAbsences[att.studentId]) {
-          studentAbsences[att.studentId] = 0;
-        }
-        studentAbsences[att.studentId]++;
+      if (!studentAbsences[att.studentId]) {
+        studentAbsences[att.studentId] = { alpha: 0, sakit: 0, izin: 0 };
       }
+      if (att.status === 'Alpha') studentAbsences[att.studentId].alpha++;
+      if (att.status === 'Sakit') studentAbsences[att.studentId].sakit++;
+      if (att.status === 'Ijin') studentAbsences[att.studentId].izin++;
     });
 
     for (const studentId in studentAbsences) {
-      const alphaCount = studentAbsences[studentId];
-      if (alphaCount >= HIGH_ABSENCE_THRESHOLD) {
-        addWarning(studentId, `${alphaCount} kali absen tanpa keterangan (Alpha)`);
+      const a = studentAbsences[studentId];
+      const warnings = [];
+      if (a.alpha >= HIGH_ABSENCE_THRESHOLD) warnings.push(`${a.alpha}x Alpha`);
+      if (a.sakit >= HIGH_ABSENCE_THRESHOLD) warnings.push(`${a.sakit}x Sakit`);
+      if (a.izin >= HIGH_ABSENCE_THRESHOLD) warnings.push(`${a.izin}x Izin`);
+      if (warnings.length > 0) {
+        addWarning(studentId, warnings.join(', '));
       }
     }
 
@@ -309,7 +342,11 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
     //   ...
     // }
 
-    return Object.values(flaggedStudents);
+    // Sort by severity: more warnings first, then infraction score
+    return Object.values(flaggedStudents).sort((a, b) => {
+      if (b.warnings.length !== a.warnings.length) return b.warnings.length - a.warnings.length;
+      return (b.totalPointsDeducted || 0) - (a.totalPointsDeducted || 0);
+    });
 
   } catch (error) {
     console.error("Error during early warning analysis:", error);

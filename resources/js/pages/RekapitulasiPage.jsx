@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../lib/axios';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { asBlob } from 'html-docx-js-typescript';
 import { Calendar, BookOpen, Award, AlertTriangle, Users, TrendingUp, FileDown, CheckCircle, XCircle, MapPin, RefreshCw, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import moment from 'moment';
@@ -502,27 +503,67 @@ const RekapitulasiPage = () => {
     generateJurnalRecapPDF(jurnalData, jurnalStartDate, jurnalEndDate, teacherName, { ...userProfile, academicYear, activeSemester });
   };
 
-  const handleJurnalExcelExport = () => {
+  const handleJurnalWordExport = async () => {
     if (jurnalData.length === 0) {
-      alert('Tidak ada data jurnal untuk diekspor ke Excel.');
+      alert('Tidak ada data jurnal untuk diekspor ke Word.');
       return;
     }
-    const worksheet = XLSX.utils.json_to_sheet(jurnalData.map(item => ({
-      'Tanggal': item.date || '',
-      'Kelas': item.className || '',
-      'Mata Pelajaran': item.subjectName || '',
-      'Materi': item.material || '',
-      'Tujuan Pembelajaran': item.learningObjectives || '',
-      'Kegiatan Pembelajaran': item.learningActivities || '',
-      'Refleksi': item.reflection || '',
-      'Keterlaksanaan': item.status || 'Terlaksana',
-      'Tindak Lanjut': item.followUp || '',
-    })));
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Jurnal');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(data, `Rekapitulasi_Jurnal_${jurnalStartDate}_${jurnalEndDate}.xlsx`);
+
+    const fmtDateWord = (date) => {
+      if (!date) return '-';
+      return moment(date).locale('id').format('DD MMMM YYYY');
+    };
+
+    // Bangun HTML: kop + tabel (sama seperti export PDF), halaman A4 landscape
+    let html = `<style>@page {size: A4 landscape; margin: 1cm; mso-page-orientation: landscape;}</style>
+      <h2 style="text-align:center;margin-bottom:4px">JURNAL MENGAJAR</h2>
+      <p style="text-align:center;margin-top:0">Periode tanggal: ${fmtDateWord(jurnalStartDate)} sampai tanggal: ${fmtDateWord(jurnalEndDate)}</p>
+      <table border="1" cellpadding="4" cellspacing="0" style="border-collapse:collapse;width:100%">
+      <thead><tr style="background:#f0f0f0">
+        <th>Tanggal</th><th>Kelas</th><th>Mata Pelajaran</th><th>Materi</th>
+        <th>Tujuan Pembelajaran</th><th>Kegiatan Pembelajaran</th><th>Refleksi</th>
+        <th>Keterlaksanaan</th><th>Tindak Lanjut</th>
+      </tr></thead><tbody>`;
+
+    jurnalData.forEach(item => {
+      // Format keterlaksanaan sama seperti export PDF
+      let statusString = "Terlaksana";
+      if (item.isImplemented === false) {
+        statusString = `Tidak Terlaksana\nKet: ${item.challenges || '-'}`;
+      }
+      if (item.absentStudents && item.absentStudents.length > 0) {
+        const sakitNames = item.absentStudents.filter(s => s.status === 'Sakit').map(s => s.name).join(', ');
+        const izinNames = item.absentStudents.filter(s => s.status === 'Izin').map(s => s.name).join(', ');
+        const alpaNames = item.absentStudents.filter(s => s.status === 'Alpa').map(s => s.name).join(', ');
+        if (sakitNames) statusString += `\nSakit: ${sakitNames}`;
+        if (izinNames) statusString += `\nIzin: ${izinNames}`;
+        if (alpaNames) statusString += `\nAlpa: ${alpaNames}`;
+      }
+      const hadirLine = item.hadirCount != null ? `Peserta hadir: ${item.hadirCount}` : '';
+      if (hadirLine) statusString += '\n' + hadirLine;
+      const statusHtml = statusString.replace(/\n/g, '<br/>');
+
+      html += `<tr>
+        <td>${item.date || ''}</td>
+        <td>${item.className || ''}</td>
+        <td>${item.subjectName || ''}</td>
+        <td>${item.material || ''}</td>
+        <td>${item.learningObjectives || ''}</td>
+        <td>${item.learningActivities || ''}</td>
+        <td>${item.reflection || ''}</td>
+        <td>${statusHtml}</td>
+        <td>${item.followUp || ''}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+
+    try {
+      const converted = await asBlob(html);
+      saveAs(converted, `Rekapitulasi_Jurnal_${jurnalStartDate}_${jurnalEndDate}.docx`);
+    } catch (error) {
+      console.error("Download Word error:", error);
+      alert("Gagal membuat file Word.");
+    }
   };
 
   const handleApplyNilaiFilter = async () => {
@@ -532,123 +573,48 @@ const RekapitulasiPage = () => {
     }
     setIsLoadingNilai(true);
     try {
-      const [studentsRes, gradesRes, agreementRes] = await Promise.all([
+      const [studentsRes, agreementRes] = await Promise.all([
         api.get('/students', { params: { class_id: selectedNilaiClass } }),
-        api.get('/grades', {
-          params: {
-            class_id: selectedNilaiClass,
-            subject_id: selectedNilaiSubject,
-            date_start: nilaiStartDate,
-            date_end: nilaiEndDate
-          }
-        }),
-        api.get(`/class-agreements/${selectedNilaiClass}`).catch(() => ({ data: { knowledge_weight: 40, practice_weight: 60 } }))
+        api.get(`/class-agreements/${selectedNilaiClass}`).catch(() => ({ data: { knowledge_weight: 40, practice_weight: 60, academic_weight: 50, attitude_weight: 50 } }))
       ]);
 
       const fetchedStudents = studentsRes.data.data || studentsRes.data || [];
-      let gradeList = gradesRes.data.data || gradesRes.data || [];
-      if (!Array.isArray(gradeList)) gradeList = [];
-      const rawGrades = gradeList.map(g => ({
-        ...g,
-        studentId: g.student_id,
-        assessmentType: g.type
-      }));
 
-      const recapitulation = {};
-      fetchedStudents.forEach(student => {
-        recapitulation[student.id] = {
+      const summaryPromises = fetchedStudents.map(st =>
+        api.get(`/grades/summary/${st.id}`, {
+          params: { semester: activeSemester, academic_year: academicYear }
+        })
+          .then(res => ({ student: st, summary: res.data }))
+          .catch(() => null)
+      );
+      const summaries = (await Promise.all(summaryPromises)).filter(Boolean);
+
+      const finalNilaiData = summaries.map(({ student, summary }) => {
+        const subjectEntry = summary.by_subject?.find(s => String(s.subject_id) === String(selectedNilaiSubject));
+        const nilaiAkademik = subjectEntry?.nilai_akademik ?? 0;
+        const nilaiAkhir = subjectEntry?.nilai_akhir ?? 0;
+        const nilaiSikap = subjectEntry?.nilai_sikap ?? (100 - (summary.infraction_summary?.total_points || 0));
+        const praktikAvg = subjectEntry?.avg_practice ?? 0;
+        const knowledgeAvg = subjectEntry?.avg_knowledge ?? 0;
+
+        return {
           absen: student.absen,
           nis: student.nisn || student.nis,
           name: student.name,
-          NH: [],
-          Formatif: [],
-          Sumatif: [],
-          Ulangan: [],
-          PTS: [],
-          PAS: [],
-          Praktik: [],
-          Sikap: [],
-        };
-      });
-
-      rawGrades.forEach(grade => {
-        if (recapitulation[grade.studentId]) {
-          const score = parseFloat(grade.score);
-          if (!isNaN(score)) {
-            const type = grade.assessmentType;
-            if (['Harian', 'Tugas', 'Kuis', 'Pengetahuan', 'Homework'].includes(type)) recapitulation[grade.studentId].NH.push(score);
-            else if (type === 'Formatif') recapitulation[grade.studentId].Formatif.push(score);
-            else if (type === 'Sumatif') recapitulation[grade.studentId].Sumatif.push(score);
-            else if (type === 'Ulangan') recapitulation[grade.studentId].Ulangan.push(score);
-            else if (type === 'Tengah Semester' || type === 'PTS') recapitulation[grade.studentId].PTS.push(score);
-            else if (type === 'Akhir Semester' || type === 'PAS') recapitulation[grade.studentId].PAS.push(score);
-            else if (['Praktik', 'Proyek', 'Produk', 'Portofolio', 'Keterampilan', 'Unjuk Kerja', 'Praktikum', 'Project', 'Skill'].includes(type)) recapitulation[grade.studentId].Praktik.push(score);
-            else if (['Sikap', 'Afektif', 'Attitude', 'Observasi'].includes(type)) recapitulation[grade.studentId].Sikap.push(score);
-          }
-        }
-      });
-
-      const knowledgeW = (agreementRes.data.knowledge_weight ?? 40) / 100;
-      const practiceW = (agreementRes.data.practice_weight ?? 60) / 100;
-
-      const finalNilaiData = Object.values(recapitulation).map(studentData => {
-        const pengetahuanScores = [
-          ...studentData.NH,
-          ...studentData.Formatif,
-          ...studentData.Sumatif,
-          ...studentData.Ulangan,
-          ...studentData.PTS,
-          ...studentData.PAS
-        ];
-
-        const sikapScores = [...(studentData.Sikap || [])];
-
-        const NH_avg = studentData.NH.length > 0 ? studentData.NH.reduce((a, b) => a + b, 0) / studentData.NH.length : 0;
-        const Formatif_avg = studentData.Formatif.length > 0 ? studentData.Formatif.reduce((a, b) => a + b, 0) / studentData.Formatif.length : 0;
-        const Sumatif_avg = studentData.Sumatif.length > 0 ? studentData.Sumatif.reduce((a, b) => a + b, 0) / studentData.Sumatif.length : 0;
-        const Praktik_avg = studentData.Praktik.length > 0 ? studentData.Praktik.reduce((a, b) => a + b, 0) / studentData.Praktik.length : 0;
-
-        const Pengetahuan_avg = pengetahuanScores.length > 0 ? pengetahuanScores.reduce((a, b) => a + b, 0) / pengetahuanScores.length : 0;
-        const Sikap_avg = sikapScores.length > 0 ? sikapScores.reduce((a, b) => a + b, 0) / sikapScores.length : 0;
-
-        // Weighted: Knowledge+Practice (academic) vs Attitude (afektif)
-        const akademikWeight = (agreementRes.data.academic_weight ?? 50) / 100;
-        const sikapWeight = (agreementRes.data.attitude_weight ?? 50) / 100;
-
-        let NA = 0;
-        let nilai_akademik = 0;
-        if (Pengetahuan_avg > 0 && Praktik_avg > 0) {
-          nilai_akademik = (Pengetahuan_avg * knowledgeW) + (Praktik_avg * practiceW);
-        } else if (Pengetahuan_avg > 0) {
-          nilai_akademik = Pengetahuan_avg;
-        } else if (Praktik_avg > 0) {
-          nilai_akademik = Praktik_avg;
-        }
-
-        if (nilai_akademik > 0 && Sikap_avg > 0) {
-          NA = (nilai_akademik * akademikWeight) + (Sikap_avg * sikapWeight);
-        } else if (Sikap_avg > 0) {
-          NA = Sikap_avg;
-        } else {
-          NA = nilai_akademik;
-        }
-
-        return {
-          absen: studentData.absen,
-          nis: studentData.nis,
-          name: studentData.name,
-          NH_avg: NH_avg.toFixed(2),
-          Formatif_avg: Formatif_avg.toFixed(2),
-          Sumatif_avg: Sumatif_avg.toFixed(2),
-          Praktik_avg: Praktik_avg.toFixed(2),
-          Sikap_avg: Sikap_avg.toFixed(2),
-          NA: NA.toFixed(2),
-          knowledgeW: (knowledgeW * 100).toFixed(0),
-          practiceW: (practiceW * 100).toFixed(0),
-          akademikWeight: (akademikWeight * 100).toFixed(0),
-          sikapWeight: (sikapWeight * 100).toFixed(0)
+          NH_avg: knowledgeAvg.toFixed(2),
+          Formatif_avg: '-',
+          Sumatif_avg: '-',
+          Praktik_avg: praktikAvg.toFixed(2),
+          Sikap_avg: nilaiSikap.toFixed(2),
+          Sikap_predikat: getAttitudePredicate(Math.round(nilaiSikap)),
+          NA: nilaiAkhir.toFixed(2),
+          knowledgeW: (agreementRes.data.knowledge_weight ?? 40).toString(),
+          practiceW: (agreementRes.data.practice_weight ?? 60).toString(),
+          akademikWeight: (agreementRes.data.academic_weight ?? 50).toString(),
+          sikapWeight: (agreementRes.data.attitude_weight ?? 50).toString()
         };
       }).sort((a, b) => a.absen - b.absen);
+
       setNilaiData(finalNilaiData);
     } catch (error) {
       console.error("Error fetching grades:", error);
@@ -681,6 +647,13 @@ const RekapitulasiPage = () => {
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(data, `Rekapitulasi_Nilai_${classObj?.rombel || selectedNilaiClass}_${subjectObj?.name || selectedNilaiSubject}_${nilaiStartDate}_${nilaiEndDate}.xlsx`);
+  };
+
+  const getAttitudePredicate = (score) => {
+    if (score >= 91) return 'Sangat Baik';
+    if (score >= 81) return 'Baik';
+    if (score >= 71) return 'Cukup';
+    return 'Kurang';
   };
 
   const calculateNilaiSikap = (currentScore) => {
@@ -870,7 +843,7 @@ const RekapitulasiPage = () => {
           ? `Sikap (${nilaiData[0].sikapWeight}%)`
           : 'Sikap'
       },
-      accessor: 'Sikap_avg'
+      accessor: 'Sikap_predikat'
     },
   ];
 
@@ -964,7 +937,7 @@ const RekapitulasiPage = () => {
                         <StyledButton onClick={handleKehadiranPDFExport} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 border-red-100 dark:border-red-900/30">
                           <FileDown className="w-5 h-5" />
                         </StyledButton>
-                        <StyledButton onClick={handleKehadiranExcelExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-100 dark:border-green-900/30" title="Unduh Rangkuman Excel">
+                        <StyledButton onClick={handleKehadiranExcelExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 border-green-100 dark:border-green-900/30" title="Unduh Excel (Rangkuman)">
                           <FileDown className="w-5 h-5" />
                         </StyledButton>
                         <StyledButton onClick={handleKehadiranSesiExcelExport} className="bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 border-blue-100 dark:border-blue-900/30" title="Unduh Log Sesi Excel (Detail)">
@@ -1177,8 +1150,8 @@ const RekapitulasiPage = () => {
                         <StyledButton onClick={handleJurnalExport} className="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 border-red-100 dark:border-red-900/30 gap-2 px-3">
                           <FileDown className="w-4 h-4" /> PDF
                         </StyledButton>
-                        <StyledButton onClick={handleJurnalExcelExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 border-green-100 dark:border-green-900/30 gap-2 px-3">
-                          <FileDown className="w-4 h-4" /> Excel
+                        <StyledButton onClick={handleJurnalWordExport} className="bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/20 border-green-100 dark:border-green-900/30 gap-2 px-3">
+                          <FileDown className="w-4 h-4" /> Word
                         </StyledButton>
                       </>
                     )}

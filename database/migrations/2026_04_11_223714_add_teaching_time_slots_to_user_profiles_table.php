@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $row) {
-            $row->json('teaching_time_slots')->nullable()->after('school_days');
+            if (!Schema::hasColumn('user_profiles', 'teaching_time_slots')) {
+                $row->json('teaching_time_slots')->nullable()->after('school_days');
+            }
         });
     }
 

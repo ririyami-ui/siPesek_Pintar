@@ -53,6 +53,33 @@ class PushNotificationService
     }
 
     /**
+     * Send push notification to a specific user account (e.g. guru).
+     *
+     * @param \App\Models\User $user
+     * @param string $title
+     * @param string $body
+     * @param string $url
+     */
+    public static function sendToUser(\App\Models\User $user, string $title, string $body, string $url = '/'): void
+    {
+        try {
+            if (!$user || !$user->push_subscription) {
+                return;
+            }
+
+            $service = new self();
+            $service->send($user->push_subscription, [
+                'title' => $title,
+                'body'  => $body,
+                'url'   => $url,
+                'icon'  => '/Logo Smart Teaching Baru_.png',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("sendToUser failed for user {$user->id}: {$e->getMessage()}");
+        }
+    }
+
+    /**
      * Send push notification to a student's auth user account.
      *
      * @param int    $studentId
@@ -63,8 +90,8 @@ class PushNotificationService
     public static function sendToStudentParent(int $studentId, string $title, string $body, string $url = '/'): void
     {
         try {
-            $student = \App\Models\Student::with('user')->find($studentId);
-            if (!$student || !$student->user || !$student->user->push_subscription) {
+            $student = \App\Models\Student::with('authUser')->find($studentId);
+            if (!$student || !$student->authUser || !$student->authUser->push_subscription) {
                 return;
             }
 
@@ -72,7 +99,7 @@ class PushNotificationService
             $fullName = 'Ananda ' . $name;
 
             $service = new self();
-            $service->send($student->user->push_subscription, [
+            $service->send($student->authUser->push_subscription, [
                 'title' => $title,
                 'body'  => $fullName . ' — ' . $body,
                 'url'   => $url,

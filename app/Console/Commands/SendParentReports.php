@@ -35,7 +35,8 @@ class SendParentReports extends Command
         {--type=weekly : Report type: weekly or monthly}
         {--student-id= : Optional: generate for specific student only}
         {--dry-run : Preview report without saving or sending}
-        {--force : Re-generate even if already sent}';
+        {--force : Re-generate even if already sent}
+        {--no-ai : Pakai template saja, tanpa panggilan Gemini}';
 
     protected $description = 'Generate AI-powered weekly/monthly parent reports and send push notifications';
 
@@ -59,12 +60,15 @@ class SendParentReports extends Command
         $this->info("Period: {$periodLabel} ({$periodStart} s/d {$periodEnd})");
 
         // Build student query
-        $query = Student::whereNotNull('auth_user_id')
-            ->whereHas('authUser', fn($q) => $q->whereNotNull('push_subscription'));
+        // Note: filter push_subscription hanya untuk jalur massal (cron).
+        // Saat --student-id (regenerate admin), tetap proses walau tanpa subscription.
+        $query = Student::whereNotNull('auth_user_id');
 
         if ($studentId) {
             $query->where('id', $studentId);
         } else {
+            $query->whereHas('authUser', fn($q) => $q->whereNotNull('push_subscription'));
+
             // Skip if already sent (unless --force)
             if (!$this->option('force')) {
                 $query->whereDoesntHave('parentReports', function($q) use ($type, $periodStart) {
@@ -121,10 +125,12 @@ class SendParentReports extends Command
             $weekNum = $now->weekOfMonth;
             $periodLabel = "Minggu ke-{$weekNum} ({$periodStart} s/d {$periodEnd})";
         } else {
-            // Current month
-            $periodStart = $now->copy()->startOfMonth()->toDateString();
-            $periodEnd   = $now->copy()->endOfMonth()->toDateString();
-            $periodLabel = $now->copy()->translatedFormat('F Y'); // e.g. "Juli 2026"
+            // Current month: jalur bulanan berjalan tgl 1, sehingga period
+            // yang dilaporkan adalah bulan sebelumnya (bulan yang baru selesai).
+            $prevMonth = $now->copy()->subMonth();
+            $periodStart = $prevMonth->copy()->startOfMonth()->toDateString();
+            $periodEnd   = $prevMonth->copy()->endOfMonth()->toDateString();
+            $periodLabel = $prevMonth->translatedFormat('F Y'); // e.g. "Juni 2026"
         }
 
         return [$periodStart, $periodEnd, $periodLabel];
@@ -153,15 +159,14 @@ class SendParentReports extends Command
                 ? $gradeService->calculateStudentGrades($student, $grades)
                 : null;
 
-            // Build stats snapshot
+
             $statsSnapshot = [
-                'avg_nilai_akhir'  => $calculated['overall_nilai_akhir'] ?? null,
+                'avg_nilai_akhir'   => $calculated['overall_nilai_akhir'] ?? null,
                 'by_subject_count' => $grades->count(),
                 'attendance'       => $data['attendance'],
                 'infraction_points'=> $data['totalInfractionPoints'],
                 'total_keaktifan'  => $data['totalKeaktifan'],
             ];
-
             // Save
             $report = ParentReport::updateOrCreate(
                 [
@@ -173,12 +178,12 @@ class SendParentReports extends Command
                     'class_id'              => $student->class_id,
                     'period_label'          => $periodLabel,
                     'period_end'            => $periodEnd,
-                    'summary_academic'      => $summary['academic'] ?? null,
-                    'summary_attendance'    => $summary['attendance'] ?? null,
-                    'summary_behavior'      => $summary['behavior'] ?? null,
-                    'summary_activity'      => $summary['activity'] ?? null,
-                    'summary_recommendation'=> $summary['recommendation'] ?? null,
-                    'full_report'           => $summary['full'] ?? null,
+                    'summary_academic'      => $summary['academic'] ?? '',
+                    'summary_attendance'    => $summary['attendance'] ?? '',
+                    'summary_behavior'      => $summary['behavior'] ?? '',
+                    'summary_activity'      => $summary['activity'] ?? '',
+                    'summary_recommendation'=> $summary['recommendation'] ?? '',
+                    'full_report'           => $summary['full'] ?? '',
                     'stats_snapshot'        => $statsSnapshot,
                     'radar_snapshot'        => $calculated['radar_data'] ?? null,
                 ]
@@ -246,7 +251,7 @@ class SendParentReports extends Command
             'totalKeaktifan'        => $totalKeaktifan,
             'infractions'           => $infractions->map(fn($i) => [
                 'date' => $i->date?->toDateString(),
-                'type' => $i->infractionType?->name,
+                'type' => $i->category ?: 'Pelanggaran',
                 'points' => $i->points,
             ])->toArray(),
             'keaktifanDetails' => StudentActivityPoint::where('student_id', $student->id)
@@ -263,22 +268,68 @@ class SendParentReports extends Command
 
     private function generateSummaries(Student $student, array $data, string $type, string $periodLabel): array
     {
+        // Template dasar (0 token) — selalu tersedia
+        $fallback = $this->generateFallbackSummaries($data, $type, $periodLabel);
+
+        // AI hanya bila: tidak di-disable, key terkonfigurasi, dan ada materi narasi
+        $useAi = !$this->option('no-ai')
+            && $this->gemini->isConfigured()
+            && $this->hasPeriodData($data);
+
+        if (!$useAi) {
+            return $fallback;
+        }
+
+        // 1 panggilan gabungan → parse JSON → merge (AI menang bila non-empty)
+        $ai = $this->generateCombinedSummary($student, $data, $type, $periodLabel);
+        if (!$ai) {
+            return $fallback;
+        }
+
+        return [
+            'academic'       => $ai['academic']       ?: $fallback['academic'],
+            'attendance'     => $ai['attendance']     ?: $fallback['attendance'],
+            'behavior'       => $ai['behavior']       ?: $fallback['behavior'],
+            'activity'       => $ai['activity']       ?: $fallback['activity'],
+            'recommendation' => $ai['recommendation'] ?: $fallback['recommendation'],
+            'full'           => $ai['full']           ?: $fallback['full'],
+        ];
+    }
+
+    /**
+     * Apakah periode ini punya materi narasi yang layak untuk AI?
+     * Absensi saja tidak cukup (cukup template).
+     */
+    private function hasPeriodData(array $data): bool
+    {
+        return !empty($data['grades'])
+            || (int) ($data['totalInfractions'] ?? 0) > 0
+            || (int) ($data['totalKeaktifan'] ?? 0) > 0;
+    }
+
+    /**
+     * Satu panggilan Gemini untuk seluruh bagian laporan (hemat token).
+     * Kembalikan array section atau null bila gagal.
+     */
+    private function generateCombinedSummary(Student $student, array $data, string $type, string $periodLabel): ?array
+    {
         $studentName = $student->name;
         $className   = $data['class_name'];
         $gradesJson  = json_encode($data['grades'], JSON_UNESCAPED_UNICODE);
         $attJson     = json_encode($data['attendance'], JSON_UNESCAPED_UNICODE);
         $keaktifanJson = json_encode($data['keaktifanDetails'], JSON_UNESCAPED_UNICODE);
 
-        // Build AI prompt
         $systemInstruction = <<<TXT
 Anda adalah asisten AI yang membantu guru membuat laporan perkembangan siswa untuk orang tua/wali murid.
-Gaya bahasa: ramah, informatif, menyemangati. 
-Format jawaban: paragraph teks yang mudah dibaca orang tua (bukan JSON atau kode).
+Gaya bahasa: ramah, informatif, menyemangati.
 Jangan gunakan emoji berlebihan. Gunakan bahasa Indonesia yang sopan dan komunikatif.
+BALAS HANYA SATU OBJEK JSON (tanpa teks lain, tanpa markdown):
+{"academic":"...","attendance":"...","behavior":"...","activity":"...","recommendation":"...","full":"..."}
+Setiap nilai adalah 1-2 paragraf teks siap baca orang tua.
 TXT;
 
         $prompt = <<<TXT
-Buatkan laporan perkembangan siswa untuk orang tua/wali murid dengan detail berikut:
+Buatkan laporan perkembangan siswa untuk orang tua/wali murid.
 
 IDENTITAS:
 - Nama Siswa: {$studentName}
@@ -295,46 +346,134 @@ DATA KEAKTIFAN (point per kategori):
 {$keaktifanJson}
 
 POIN PELANGGARAN PERIODE INI: {$data['totalInfractionPoints']} poin ({$data['totalInfractions']} kali)
+
+Isi setiap bagian:
+- academic: ringkasan akademik, fokus mapel baik & perlu peningkatan.
+- attendance: ringkasan kehadiran, mendorong perbaikan tanpa menghakimi.
+- behavior: ringkasan perilaku/disiplin; jika 0 beri apresiasi, jika ada sampaikan konstruktif.
+- activity: ringkasan keaktifan; hargai partisipasi, dorong lebih aktif.
+- recommendation: saran konkret untuk orang tua di rumah.
+- full: gabungan narasi lengkap.
+
+HANYA JSON, tanpa teks lain.
 TXT;
 
-        // Different sub-prompts for structured output
-        $academic = $this->safeCallGemini(
-            "Berdasarkan data berikut, tulis 1-2 paragraf ringkasan akademik untuk orang tua:\n\n" .
-            "Nama: {$studentName}, Kelas: {$className}\nNilai: {$gradesJson}\n" .
-            "Fokus pada mapel yang baik dan yang perlu peningkatan. Gunakan bahasa menyemangati.",
-            $systemInstruction
-        );
+        $raw = $this->safeCallGemini($prompt, $systemInstruction);
+        if (!$raw) {
+            return null;
+        }
 
-        $attendance = $this->safeCallGemini(
-            "Tulis 1 paragraf ringkasan kehadiran untuk orang tua:\n\n" .
-            "Nama: {$studentName}\nKehadiran: {$attJson}\n" .
-            "Jangan menghakimi, tapi mendorong perbaikan.",
-            $systemInstruction
-        );
+        return $this->parseCombinedJson($raw);
+    }
 
-        $behavior = $this->safeCallGemini(
-            "Tulis 1 paragraf ringkasan perilaku/disiplin untuk orang tua:\n\n" .
-            "Nama: {$studentName}\nPelanggaran periode ini: {$data['totalInfractionPoints']} poin.\n" .
-            "Jika 0, berikan apresiasi. Jika ada, sampaikan secara konstruktif.",
-            $systemInstruction
-        );
+    /**
+     * Parse JSON dari respons Gemini; strip markdown fence bila perlu.
+     */
+    private function parseCombinedJson(string $raw): ?array
+    {
+        $json = trim($raw);
 
-        $activity = $this->safeCallGemini(
-            "Tulis 1 paragraf tentang keaktifan siswa di kelas:\n\n" .
-            "Nama: {$studentName}\nKeaktifan: {$keaktifanJson}\n" .
-            "Hargai setiap bentuk partisipasi. Dorong untuk lebih aktif.",
-            $systemInstruction
-        );
+        // Lepas fence ```json ... ```
+        if (preg_match('/```(?:json)?\s*(.+?)\s*```/s', $json, $m)) {
+            $json = trim($m[1]);
+        }
 
-        $recommendation = $this->safeCallGemini(
-            "Berdasarkan data berikut, tulis 1 paragraf saran/rekomendasi untuk orang tua:\n\n" .
-            "Nama: {$studentName}\nNilai: {$gradesJson}\nKehadiran: {$attJson}\n" .
-            "Pelanggaran: {$data['totalInfractionPoints']} poin\nKeaktifan: {$keaktifanJson}\n" .
-            "Saran konkret yang bisa dilakukan orang tua di rumah.",
-            $systemInstruction
-        );
+        // Potong teks di luar objek JSON
+        $start = strpos($json, '{');
+        $end = strrpos($json, '}');
+        if ($start === false || $end === false || $end < $start) {
+            return null;
+        }
+        $json = substr($json, $start, $end - $start + 1);
 
-        $full = $this->safeCallGemini($prompt, $systemInstruction);
+        $decoded = json_decode($json, true);
+        if (!is_array($decoded)) {
+            return null;
+        }
+
+        $sections = ['academic', 'attendance', 'behavior', 'activity', 'recommendation', 'full'];
+        $out = [];
+        foreach ($sections as $s) {
+            $val = $decoded[$s] ?? null;
+            $out[$s] = is_string($val) && trim($val) !== '' ? trim($val) : null;
+        }
+        return $out;
+    }
+
+    /**
+     * Deskripsi singkat perkembangan anak dari data nyata (tanpa AI),
+     * dipakai bila Gemini gagal atau API key belum diisi.
+     */
+    private function generateFallbackSummaries(array $data, string $type, string $periodLabel): array
+    {
+        $name = $data['student_name'] ?? 'Ananda';
+        $grades = $data['grades'] ?? [];
+        $att = $data['attendance'] ?? [];
+        $attPct = $att['percentage'] ?? 0;
+        $hadir = $att['hadir'] ?? 0;
+        $sakit = $att['sakit'] ?? 0;
+        $izin = $att['izin'] ?? 0;
+        $alpa = $att['alpa'] ?? 0;
+        $totalAtt = $att['total'] ?? 0;
+        $infPts = $data['totalInfractionPoints'] ?? 0;
+        $infCount = $data['totalInfractions'] ?? 0;
+        $keaktifan = $data['totalKeaktifan'] ?? 0;
+
+        // Akademik
+        if (count($grades) === 0) {
+            $academic = "Pada periode ini belum tercatat nilai untuk {$name}. " .
+                "Guru masih dalam proses penilaian. Bunda/Ayah tetap dapat memantau perkembangan ananda melalui kehadiran dan keaktifan di sekolah.";
+        } else {
+            $parts = [];
+            foreach ($grades as $g) {
+                $parts[] = "{$g['subject']}: " . number_format((float) ($g['avg'] ?? 0), 1) . " ({$g['count']} data)";
+            }
+            $academic = "Selama periode ini, rata-rata nilai ananda adalah: " . implode('; ', $parts) . ". " .
+                "Terus dampingi ananda mengulang materi di rumah agar hasil belajar semakin meningkat.";
+        }
+
+        // Kehadiran
+        if ($totalAtt > 0) {
+            $attendance = "Kehadiran {$name} pada periode ini mencapai {$attPct}% ({$hadir} hadir, {$sakit} sakit, {$izin} izin, {$alpa} alpa). " .
+                ($alpa > 0
+                    ? "Ada catatan alpa, mohon perhatikan keterangan ananda saat tidak hadir."
+                    : "Disiplin kehadiran ananda terjaga baik, pertahankan.");
+        } else {
+            $attendance = "Belum ada catatan kehadiran untuk {$name} pada periode ini.";
+        }
+
+        // Perilaku
+        if ($infPts > 0) {
+            $behavior = "Pada periode ini ananda tercatat {$infCount} catatan pelanggaran dengan total {$infPts} poin. " .
+                "Kami mohon kerja sama Bunda/Ayah untuk membimbing ananda agar dapat memperbaiki sikap dan disiplin.";
+        } else {
+            $behavior = "Tidak ada catatan pelanggaran untuk {$name} pada periode ini. " .
+                "Sikap dan kedisiplinan ananda terjaga baik, apresiasi untuk ananda.";
+        }
+
+        // Keaktifan
+        if ($keaktifan > 0) {
+            $activity = "Ananda mengumpulkan {$keaktifan} poin keaktifan pada periode ini. " .
+                "Partisipasi aktif seperti ini sangat baik untuk perkembangan belajar, terus pertahankan.";
+        } else {
+            $activity = "Belum ada poin keaktifan tercatat untuk {$name} pada periode ini. " .
+                "Bunda/Ayah dapat mendorong ananda untuk lebih aktif bertanya dan berpartisipasi di kelas.";
+        }
+
+        // Rekomendasi
+        $recommendation = "Untuk {$periodLabel}, kami sarankan Bunda/Ayah membiasakan diskusi singkat setiap hari tentang kegiatan belajar ananda, " .
+            "menemani mengerjakan tugas, dan memberikan apresiasi atas usaha ananda. " .
+            "Jika ada kendala, jangan ragu menghubungi wali kelas melalui aplikasi.";
+
+        $className = $data['class_name'] ?? '-';
+        // Full
+        $full = "Laporan perkembangan {$name} ({$className}) untuk {$periodLabel}.\n\n" .
+            "Akademik: {$academic}\n\n" .
+            "Kehadiran: {$attendance}\n\n" .
+            "Perilaku: {$behavior}\n\n" .
+            "Keaktifan: {$activity}\n\n" .
+            "Rekomendasi: {$recommendation}";
+
 
         return [
             'academic'      => $academic,
@@ -346,7 +485,19 @@ TXT;
         ];
     }
 
-    
+    /**
+     * Panggil Gemini dengan sistem instruksi; kembalikan null bila gagal
+     * agar laporan tetap tersimpan walau AI error.
+     */
+    private function safeCallGemini(string $prompt, string $systemInstruction = ''): ?string
+    {
+        try {
+            return $this->gemini->callGeminiApi($prompt, null, 2048, 0.7, $systemInstruction);
+        } catch (\Throwable $e) {
+            Log::warning("Gemini summary failed for parent report: {$e->getMessage()}");
+            return null;
+        }
+    }
 
     private function sendPushNotification(Student $student, ParentReport $report, string $type, string $periodLabel): void
     {

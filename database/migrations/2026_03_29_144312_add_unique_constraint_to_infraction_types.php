@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('infraction_types', function (Blueprint $table) {
+        if (!Schema::hasIndex('infraction_types', 'infraction_types_user_id_name_unique')) {
             $table->unique(['user_id', 'name']);
+        }
         });
     }
 

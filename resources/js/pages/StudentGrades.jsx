@@ -145,36 +145,35 @@ export default function StudentGrades() {
       </div>
 
       {/* Overall banner */}
-      <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-3xl p-5 text-white flex items-center gap-5">
-        <RadialProgress percent={overallAvg} size={88} stroke={8} />
+      <div className="bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl p-3 text-white flex items-center gap-3">
+        <RadialProgress percent={overallAvg} size={56} stroke={6} />
         <div className="flex-1">
-          <p className="text-white/70 text-sm">Rata-rata Nilai Akhir Keseluruhan</p>
-          <div className="flex items-baseline gap-3 mt-1">
-            <p className="text-4xl font-bold">{overallAvg}</p>
-            <span className="text-xl font-bold text-white/70">/ 100</span>
+          <p className="text-white/70 text-xs">Rata-rata Nilai Akhir</p>
+          <div className="flex items-baseline gap-2 mt-0.5">
+            <p className="text-2xl font-bold">{overallAvg}</p>
+            <span className="text-sm font-bold text-white/70">/ 100</span>
           </div>
-          <p className="text-white/60 text-xs mt-1">
-            {bySubject.length} mapel · {data?.total_grades ?? 0} total penilaian
+          <p className="text-white/60 text-[10px] mt-0.5">
+            {bySubject.length} mapel · {data?.total_grades ?? 0} penilaian
           </p>
         </div>
-        <div className="shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black bg-white/20">
+        <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-lg font-black bg-white/20">
           {overallPred.label}
         </div>
       </div>
 
       {/* Weights Settings Information */}
       {weights && (
-        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex flex-shrink-0 items-center justify-center">
-            <Scale size={18} className="text-blue-600 dark:text-blue-400" />
+        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl px-3 py-2 flex items-start gap-2">
+          <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/50 flex flex-shrink-0 items-center justify-center">
+            <Scale size={13} className="text-blue-600 dark:text-blue-400" />
           </div>
-          <div className="flex-1">
-            <p className="font-semibold text-blue-700 dark:text-blue-400 text-sm">
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-blue-700 dark:text-blue-400 text-[11px]">
               Sistem Penilaian {weights.is_custom ? '(Kesepakatan Kelas)' : '(Standar)'}
             </p>
-            <p className="text-blue-600 dark:text-blue-300 text-xs mt-0.5">
-              Nilai Akhir: <b>{weights.academic}% Akademik</b> + <b>{weights.attitude}% Sikap</b>{' '}
-              + <b>10% Keaktifan</b>.<br/>
+            <p className="text-blue-600 dark:text-blue-300 text-[10px] mt-0.5 leading-relaxed">
+              Nilai Akhir: <b>{weights.academic}% Akademik</b> + <b>{weights.attitude}% Sikap</b> + <b>10% Keaktifan</b>.
               Khusus Akademik: <b>{weights.knowledge}% Pengetahuan</b> + <b>{weights.practice}% Praktik.</b>
             </p>
           </div>
@@ -182,70 +181,70 @@ export default function StudentGrades() {
       )}
 
       {/* Behavior / Penalty Banner */}
-      <div className={`border rounded-2xl p-4 flex items-start sm:items-center gap-3 ${
+      <div className={`border rounded-xl p-2 flex items-start gap-2 ${
         penalty > 0 
           ? 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800'
           : 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
       }`}>
-        <div className={`w-10 h-10 rounded-full flex flex-shrink-0 items-center justify-center ${
+        <div className={`w-7 h-7 rounded-full flex flex-shrink-0 items-center justify-center ${
           penalty > 0 ? 'bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400'
         }`}>
-          {penalty > 0 ? <Hand size={18} /> : <Award size={18} />}
+          {penalty > 0 ? <Hand size={13} /> : <Award size={13} />}
         </div>
-        <div className="flex-1">
-          <p className={`font-semibold text-sm ${penalty > 0 ? 'text-red-700 dark:text-red-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
+        <div className="flex-1 min-w-0">
+          <p className={`font-semibold text-[11px] ${penalty > 0 ? 'text-red-700 dark:text-red-400' : 'text-emerald-700 dark:text-emerald-400'}`}>
             {penalty > 0 ? 'Pengurangan Poin Tata Tertib' : 'Nilai Sikap Sempurna (100)'}
           </p>
-          <p className={`text-xs mt-0.5 ${penalty > 0 ? 'text-red-600 dark:text-red-300' : 'text-emerald-600 dark:text-emerald-300'}`}>
+          <p className={`text-[10px] mt-0.5 ${penalty > 0 ? 'text-red-600 dark:text-red-300' : 'text-emerald-600 dark:text-emerald-300'}`}>
             {penalty > 0 
-              ? <>Tercatat <b>{infractionSummary?.total_points}</b> poin pelanggaran. <b>Nilai Sikap ({weights?.attitude}%)</b> otomatis <b>dikurangi {penalty} angka</b> menurut kesepakatan.</>
-              : <>Luar biasa! Tidak ada pelanggaran yang tercatat. Anda otomatis mendapatkan <b>Nilai Sikap 100</b> di semua mata pelajaran sesuai kesepakatan.</>
+              ? <>Tercatat <b>{infractionSummary?.total_points}</b> poin pelanggaran. <b>Nilai Sikap ({weights?.attitude}%)</b> otomatis <b>dikurangi {penalty} angka</b>.</>
+              : <>Luar biasa! Tidak ada pelanggaran. Nilai Sikap otomatis <b>100</b>.</>
             }
           </p>
         </div>
       </div>
 
       {/* View toggle */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         <button
           onClick={() => setView('summary')}
-          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${view === 'summary' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+          className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${view === 'summary' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
-          <FileText size={14} />
-          Rekap Nilai
+          <FileText size={12} />
+          Rekap
         </button>
         <button
           onClick={() => setView('detail')}
-          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${view === 'detail' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+          className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${view === 'detail' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
-          <BookOpen size={14} />
-          Detail Per Mapel
+          <BookOpen size={12} />
+          Detail
         </button>
         <button
           onClick={() => setView('analysis')}
-          className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${view === 'analysis' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+          className={`flex items-center gap-1 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${view === 'analysis' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
-          <Brain size={14} />
-          Analisis Karakter
+          <Brain size={12} />
+          Analisis
         </button>
       </div>
 
       {/* ── ANALYSIS / RADAR CHART ── */}
       {view === 'analysis' && (
-        <div className="space-y-5 animate-fade-in-up">
+        <div className="space-y-3 animate-fade-in-up">
           {/* Early Warning / Notifikasi Wali Murid */}
           {(data?.warnings?.length > 0) && (
-            <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800 rounded-3xl p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-rose-100 dark:bg-rose-900/50 rounded-xl">
-                  <AlertTriangle size={20} className="text-rose-600 dark:text-rose-400" />
+            <div className="bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800 rounded-xl p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="p-1 bg-rose-100 dark:bg-rose-900/50 rounded-lg">
+                  <AlertTriangle size={14} className="text-rose-600 dark:text-rose-400" />
                 </div>
-                <h3 className="font-black text-rose-900 dark:text-rose-100 uppercase tracking-widest text-xs">Catatan Penting Wali Murid</h3>
+                <h3 className="font-black text-rose-900 dark:text-rose-100 uppercase tracking-widest text-[10px]">Catatan Penting Wali Murid</h3>
               </div>
-              <ul className="space-y-3">
+              <ul className="space-y-2">
                 {data.warnings.map((w, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm font-bold text-rose-700 dark:text-rose-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-[11px] font-bold text-rose-700 dark:text-rose-300">
+                    <span className="w-1 h-1 rounded-full bg-rose-400 mt-1 shrink-0" />
                     {w}
                   </li>
                 ))}
@@ -253,28 +252,28 @@ export default function StudentGrades() {
             </div>
           )}
 
-          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden p-6">
-            <div className="flex flex-col md:flex-row gap-8 items-center">
-              <div className="flex-1">
-                <h3 className="text-xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">Dimensi Profil Lulusan</h3>
-                <p className="text-sm text-slate-500 leading-relaxed mb-6">
-                  Analisis ini mencakup 8 dimensi profil lulusan berdasarkan integrasi data akademik, kedisiplinan, dan presensi di sekolah.
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+            <div className="flex flex-col md:flex-row gap-4 items-start">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-black text-slate-800 dark:text-white mb-2 tracking-tight">Dimensi Profil Lulusan</h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-3">
+                  8 dimensi berdasarkan akademik, kedisiplinan, dan presensi.
                 </p>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                   {Object.entries(data?.radar_data || {}).map(([key, val]) => (
-                    <div key={key} className="p-3 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-100 dark:border-white/5">
+                    <div key={key} className="p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-white/5">
                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{key}</p>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex-1 h-1 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${val}%` }} />
                         </div>
-                        <span className="text-xs font-black text-slate-700 dark:text-slate-200">{val}</span>
+                        <span className="text-[10px] font-black text-slate-700 dark:text-slate-200">{val}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="w-full md:w-[350px] aspect-square flex items-center justify-center bg-slate-50 dark:bg-slate-900/30 rounded-[2rem] p-4">
+              <div className="w-full md:w-[200px] aspect-square flex items-center justify-center bg-slate-50 dark:bg-slate-900/30 rounded-lg p-2">
                 {data?.radar_data && <RadarChart data={data.radar_data} />}
               </div>
             </div>
@@ -284,30 +283,30 @@ export default function StudentGrades() {
 
       {/* ── SUMMARY / RAPOR TABLE ── */}
       {view === 'summary' && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-          <div className="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
-            <Award size={16} className="text-emerald-600" />
-            <h2 className="font-semibold text-slate-700 dark:text-white text-sm">Nilai Per Mata Pelajaran</h2>
-            <span className="ml-auto text-xs text-slate-400">{bySubject.length} mata pelajaran</span>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+          <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
+            <Award size={14} className="text-emerald-600" />
+            <h2 className="font-semibold text-slate-700 dark:text-white text-xs">Nilai Per Mata Pelajaran</h2>
+            <span className="ml-auto text-[10px] text-slate-400">{bySubject.length} mapel</span>
           </div>
 
           {bySubject.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 text-sm">
-              <BarChart2 size={36} className="mx-auto mb-2 opacity-30" />
+            <div className="py-8 text-center text-slate-400 text-xs">
+              <BarChart2 size={24} className="mx-auto mb-1 opacity-30" />
               Belum ada data nilai.
             </div>
           ) : (
             <>
               {/* Desktop table */}
               <div className="hidden md:block overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-xs">
                   <thead>
-                    <tr className="text-xs text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
-                      <th className="px-5 py-3 text-left font-semibold">No</th>
-                      <th className="px-5 py-3 text-left font-semibold">Mata Pelajaran</th>
-                      <th className="px-5 py-3 text-center font-semibold">Jml Penilaian</th>
-                      <th className="px-5 py-3 text-left font-semibold w-52">Nilai Akhir (Terbobot)</th>
-                      <th className="px-5 py-3 text-center font-semibold">Predikat</th>
+                    <tr className="text-[10px] text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/50">
+                      <th className="px-3 py-2 text-left font-semibold">No</th>
+                      <th className="px-3 py-2 text-left font-semibold">Mapel</th>
+                      <th className="px-3 py-2 text-center font-semibold">Penilai</th>
+                      <th className="px-3 py-2 text-left font-semibold">Nilai</th>
+                      <th className="px-3 py-2 text-center font-semibold">Predikat</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
@@ -315,21 +314,21 @@ export default function StudentGrades() {
                       const pred = getPredikat(subj.nilai_akhir);
                       return (
                         <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
-                          <td className="px-5 py-3.5 text-slate-400 text-xs">{i + 1}</td>
-                          <td className="px-5 py-3.5 font-medium text-slate-800 dark:text-white">{subj.subject_name}</td>
-                          <td className="px-5 py-3.5 text-center text-slate-500 text-xs">{subj.total_input}</td>
-                          <td className="px-5 py-3.5 min-w-[200px]">
-                            <div className="flex items-center gap-3">
+                          <td className="px-3 py-2.5 text-slate-400 text-[10px]">{i + 1}</td>
+                          <td className="px-3 py-2.5 font-medium text-slate-800 dark:text-white truncate">{subj.subject_name}</td>
+                          <td className="px-3 py-2.5 text-center text-slate-500 text-[10px]">{subj.total_input}</td>
+                          <td className="px-3 py-2.5 min-w-[120px]">
+                            <div className="flex items-center gap-2">
                               <div className="flex-1">
                                 <ScoreBar score={subj.nilai_akhir} />
                               </div>
-                              {subj.trend === 'up' && <TrendingUp size={16} className="text-emerald-500 shrink-0 animate-bounce" title="Meningkat" />}
-                              {subj.trend === 'down' && <TrendingDown size={16} className="text-red-500 shrink-0 animate-pulse" title="Menurun" />}
-                              {subj.trend === 'stable' && <Minus size={14} className="text-slate-300 shrink-0" title="Stabil" />}
+                              {subj.trend === 'up' && <TrendingUp size={12} className="text-emerald-500 shrink-0" title="Meningkat" />}
+                              {subj.trend === 'down' && <TrendingDown size={12} className="text-red-500 shrink-0" title="Menurun" />}
+                              {subj.trend === 'stable' && <Minus size={10} className="text-slate-300 shrink-0" title="Stabil" />}
                             </div>
                           </td>
-                          <td className="px-5 py-3.5 text-center">
-                            <span className={`inline-flex w-8 h-8 rounded-lg text-sm font-black border items-center justify-center ${pred.color}`}>
+                          <td className="px-3 py-2.5 text-center">
+                            <span className={`inline-flex w-7 h-7 rounded-lg text-xs font-black border items-center justify-center ${pred.color}`}>
                               {pred.label}
                             </span>
                           </td>
@@ -339,15 +338,15 @@ export default function StudentGrades() {
                   </tbody>
                   <tfoot>
                     <tr className="bg-emerald-50 dark:bg-emerald-950/20 border-t-2 border-emerald-200 dark:border-emerald-800">
-                      <td colSpan={2} className="px-5 py-3 font-bold text-slate-700 dark:text-white text-sm">
+                      <td colSpan={2} className="px-3 py-2 font-bold text-slate-700 dark:text-white text-xs">
                         Rata-rata Keseluruhan
                       </td>
-                      <td className="px-5 py-3 text-center text-slate-500 text-xs">{data?.total_grades ?? 0}</td>
-                      <td className="px-5 py-3 min-w-[180px]">
+                      <td className="px-3 py-2 text-center text-slate-500 text-[10px]">{data?.total_grades ?? 0}</td>
+                      <td className="px-3 py-2 min-w-[100px]">
                         <ScoreBar score={overallAvg} />
                       </td>
-                      <td className="px-5 py-3 text-center">
-                        <span className={`inline-flex w-8 h-8 rounded-lg text-sm font-black border items-center justify-center ${overallPred.color}`}>
+                      <td className="px-3 py-2 text-center">
+                        <span className={`inline-flex w-7 h-7 rounded-lg text-xs font-black border items-center justify-center ${overallPred.color}`}>
                           {overallPred.label}
                         </span>
                       </td>
@@ -361,35 +360,34 @@ export default function StudentGrades() {
                 {sorted.map((subj, i) => {
                   const pred = getPredikat(subj.nilai_akhir);
                   return (
-                    <div key={i} className="px-4 py-3.5 flex items-center gap-3">
-                      <div className="w-6 text-xs text-slate-400 shrink-0">{i + 1}</div>
+                    <div key={i} className="px-3 py-2.5 flex items-center gap-2">
+                      <div className="w-5 text-[10px] text-slate-400 shrink-0">{i + 1}</div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-slate-800 dark:text-white text-sm truncate">{subj.subject_name}</p>
-                        <div className="mt-1.5 flex items-center gap-3">
+                        <p className="font-medium text-slate-800 dark:text-white text-xs truncate">{subj.subject_name}</p>
+                        <div className="mt-1 flex items-center gap-2">
                           <div className="flex-1">
                             <ScoreBar score={subj.nilai_akhir} />
                           </div>
-                          {subj.trend === 'up' && <TrendingUp size={14} className="text-emerald-500 shrink-0" />}
-                          {subj.trend === 'down' && <TrendingDown size={14} className="text-red-500 shrink-0" />}
+                          {subj.trend === 'up' && <TrendingUp size={10} className="text-emerald-500 shrink-0" />}
+                          {subj.trend === 'down' && <TrendingDown size={10} className="text-red-500 shrink-0" />}
                         </div>
-                        <p className="text-xs text-slate-400 mt-0.5">{subj.total_input} penilaian</p>
+                        <p className="text-[10px] text-slate-400 mt-0.5">{subj.total_input} penilai</p>
                       </div>
-                      <span className={`inline-flex w-9 h-9 rounded-xl text-base font-black border items-center justify-center shrink-0 ${pred.color}`}>
+                      <span className={`inline-flex w-8 h-8 rounded-lg text-xs font-black border items-center justify-center shrink-0 ${pred.color}`}>
                         {pred.label}
                       </span>
                     </div>
                   );
                 })}
-                {/* Mobile footer */}
-                <div className="px-4 py-3.5 flex items-center gap-3 bg-emerald-50 dark:bg-emerald-950/20">
-                  <div className="w-6 shrink-0" />
+                <div className="px-3 py-2.5 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-950/20">
+                  <div className="w-5 shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-slate-800 dark:text-white text-sm">Rata-rata Keseluruhan</p>
-                    <div className="mt-1.5">
+                    <p className="font-bold text-slate-800 dark:text-white text-xs">Rata-rata Keseluruhan</p>
+                    <div className="mt-1">
                       <ScoreBar score={overallAvg} />
                     </div>
                   </div>
-                  <span className={`inline-flex w-9 h-9 rounded-xl text-base font-black border items-center justify-center shrink-0 ${overallPred.color}`}>
+                  <span className={`inline-flex w-8 h-8 rounded-lg text-xs font-black border items-center justify-center shrink-0 ${overallPred.color}`}>
                     {overallPred.label}
                   </span>
                 </div>

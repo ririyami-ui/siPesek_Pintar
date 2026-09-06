@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ClipboardCheck, Users, CheckCircle2, XCircle, Printer, Loader, FileText, Search, BarChart3, RefreshCw } from 'lucide-react';
 import api from '../lib/axios';
 import { useSettings } from '../utils/SettingsContext';
@@ -18,6 +19,8 @@ const KartuKendaliPage = () => {
   const [loadingData, setLoadingData] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('matrix');
+  const [activeStudent, setActiveStudent] = useState(null);
+  const [savingTask, setSavingTask] = useState({});
 
   useEffect(() => {
     const fetchMeta = async () => {
@@ -60,17 +63,19 @@ const KartuKendaliPage = () => {
       const allGrades = gradesRes.data.data || [];
 
       // Derive tasks from unique topics
-      const uniqueMaterials = [...new Set(allGrades.map(g => g.topic))].filter(Boolean);
+      const uniqueMaterials = [...new Set(allGrades.map(g => String(g.topic || '').trim()))].filter(Boolean);
       
       const finalTaskList = uniqueMaterials.map(mat => {
-        const materialGrades = allGrades.filter(g => g.topic === mat);
+        const materialGrades = allGrades.filter(g => String(g.topic || '').trim() === mat);
         const refDate = materialGrades[0]?.date || '';
         const sub = subjects.find(s => s.id === materialGrades[0]?.subject_id);
         return {
           id: mat,
           title: mat,
           deadline: refDate,
-          subjectName: sub?.name || 'Mata Pelajaran'
+          subjectName: sub?.name || 'Mata Pelajaran',
+          subjectId: sub?.id,
+          type: materialGrades[0]?.type || 'Tugas'
         };
       });
       setTasks(finalTaskList);
@@ -78,8 +83,8 @@ const KartuKendaliPage = () => {
       const subMap = {};
       finalTaskList.forEach(task => {
         subMap[task.id] = allGrades
-          .filter(g => g.topic === task.id && (parseFloat(g.score) || 0) > 0)
-          .map(g => g.student_id);
+          .filter(g => String(g.topic || '').trim() === task.id && (parseFloat(g.score) || 0) > 0)
+          .map(g => String(g.student_id));
       });
       setSubmissions(subMap);
     } catch (e) {
@@ -96,7 +101,7 @@ const KartuKendaliPage = () => {
 
   const studentStats = useMemo(() => {
     return students.map(s => {
-      const submittedCount = tasks.filter(t => submissions[t.id]?.includes(s.id)).length;
+      const submittedCount = tasks.filter(t => submissions[t.id]?.includes(String(s.id))).length;
       return { ...s, submitted: submittedCount, pending: Math.max(0, tasks.length - submittedCount) };
     });
   }, [students, tasks, submissions]);
@@ -231,7 +236,7 @@ const KartuKendaliPage = () => {
                       <tr key={student.id} className="border-t border-gray-50 dark:border-gray-800 hover:bg-indigo-50/30 transition-colors">
                         <td className="p-3 sticky left-0 z-10 bg-white dark:bg-gray-900 border-r text-sm font-bold">{student.name}</td>
                         {tasks.map(task => {
-                          const isSubmitted = submissions[task.id]?.includes(student.id);
+                          const isSubmitted = submissions[task.id]?.includes(String(student.id));
                           return (
                             <td key={task.id} className="p-2 text-center">
                               {isSubmitted ? (
@@ -253,18 +258,22 @@ const KartuKendaliPage = () => {
           {viewMode === 'perStudent' && (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 print:hidden">
               {filteredStudents.map(student => {
-                const pendingCount = tasks.filter(t => !submissions[t.id]?.includes(student.id)).length;
+                const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(String(student.id)));
+                const pendingCount = pendingTasks.length;
                 return (
-                  <div key={student.id} className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                  <div key={student.id} 
+                    className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm cursor-pointer hover:border-indigo-300 transition-colors"
+                    onClick={() => pendingCount > 0 && setActiveStudent({...student, pendingTasks})}
+                  >
                     <div className="flex justify-between items-start mb-3">
-                      <h4 className="font-bold text-sm text-gray-800 dark:text-white truncate pr-2">{student.name}</h4>
+                      <h4 className="font-bold text-sm text-gray-800 dark:text-white truncate pr-2">{student.absen}. {student.name}</h4>
                       <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${pendingCount === 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'}`}>
                         {pendingCount === 0 ? 'LUNAS' : `${pendingCount} TERTUNDA`}
                       </span>
                     </div>
                     <div className="space-y-1.5 max-h-[200px] overflow-y-auto pr-1">
                       {tasks.map(task => {
-                        const submitted = submissions[task.id]?.includes(student.id);
+                        const submitted = submissions[task.id]?.includes(String(student.id));
                         return (
                           <div key={task.id} className="flex items-center gap-2 text-[11px]">
                             {submitted ? <CheckCircle2 size={12} className="text-emerald-500" /> : <XCircle size={12} className="text-gray-300" />}
@@ -317,7 +326,7 @@ const KartuKendaliPage = () => {
         `}} />
         <div className="print-area">
           {(() => {
-            const debtorStudents = filteredStudents.filter(s => tasks.filter(t => !submissions[t.id]?.includes(s.id)).length > 0);
+            const debtorStudents = filteredStudents.filter(s => tasks.filter(t => !submissions[t.id]?.includes(String(s.id))).length > 0);
             const chunks = [];
             for (let i = 0; i < debtorStudents.length; i += 6) {
               chunks.push(debtorStudents.slice(i, i + 6));
@@ -327,7 +336,7 @@ const KartuKendaliPage = () => {
               <div key={pageIndex} className="print-page">
                 <div className="print-grid">
                   {chunk.map((student) => {
-                    const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(student.id));
+                    const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(String(student.id)));
                     return (
                       <div key={student.id} className="print-card">
                         <div className="watermark">SI PESEK PINTAR</div>
@@ -379,6 +388,94 @@ const KartuKendaliPage = () => {
               </div>
             ));
           })()}
+        </div>
+      </div>
+      {/* Modal Input Nilai */}
+      {activeStudent && createPortal(
+        <TaskInputModal
+          student={activeStudent}
+          selectedClass={selectedClass}
+          activeSemester={activeSemester}
+          academicYear={academicYear}
+          onClose={() => setActiveStudent(null)}
+          onSave={fetchAllData}
+        />,
+        document.body
+      )}
+    </div>
+  );
+};
+
+// New Modal Component
+const TaskInputModal = ({ student, selectedClass, activeSemester, academicYear, onClose, onSave }) => {
+  const [savingTask, setSavingTask] = useState({});
+
+  const handleSaveScore = async (task) => {
+    const score = savingTask[task.id];
+    if (!score) return toast.error('Masukkan nilai!');
+    
+    try {
+      await api.post('/grades', {
+        student_id: student.id,
+        subject_id: task.subjectId,
+        class_id: selectedClass,
+        score: score,
+        type: task.type,
+        date: task.deadline,
+        semester: activeSemester,
+        academic_year: academicYear,
+        topic: task.title
+      });
+      toast.success('Nilai tersimpan!');
+      onSave(); // Refresh parent data
+      onClose(); // Close modal after saving
+    } catch (err) {
+      toast.error('Gagal menyimpan nilai');
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 min-h-screen">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="bg-white dark:bg-gray-900 rounded-3xl w-full max-w-lg p-6 relative z-10 shadow-2xl border border-gray-200 dark:border-gray-700 max-h-[85dvh] flex flex-col">
+        <button 
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          onClick={onClose}
+        >
+          <XCircle size={20} />
+        </button>
+        <h3 className="text-lg font-black text-gray-800 dark:text-white mb-1">Input Nilai</h3>
+        <p className="text-xs text-gray-500 mb-4">{student.name} - Absen {student.absen}</p>
+        
+        <div className="space-y-3 overflow-y-auto pr-2 flex-1 scrollbar-thin">
+          {student.pendingTasks.map((task) => (
+            <div key={task.id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800">
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-xs truncate text-gray-800 dark:text-gray-200">{task.title}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[10px] text-gray-400 dark:text-gray-500">{task.subjectName}</p>
+                  <span className="text-[9px] text-gray-400 font-medium bg-gray-200 dark:bg-gray-800 px-1 rounded-sm">{task.deadline}</span>
+                </div>
+              </div>
+              <input 
+                type="number"
+                min="0"
+                max="100"
+                className="w-16 p-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-center text-xs font-bold focus:ring-2 focus:ring-indigo-500 outline-none"
+                placeholder="0"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSavingTask(prev => ({ ...prev, [task.id]: val }));
+                }}
+              />
+              <button 
+                className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shrink-0"
+                onClick={() => handleSaveScore(task)}
+              >
+                <CheckCircle2 size={14} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

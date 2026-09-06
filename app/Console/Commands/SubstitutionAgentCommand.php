@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Attendance;
+use App\Models\Holiday;
 use App\Models\Journal;
 use App\Models\Schedule;
 use App\Models\SubstitutionRecommendation;
@@ -32,6 +33,21 @@ class SubstitutionAgentCommand extends Command
 
         if ($schedules->isEmpty()) {
             $this->info('Tidak ada jadwal yang perlu dicek.');
+            return Command::SUCCESS;
+        }
+
+        // [AGENDA] Lewati jika hari ini libur atau agenda kegiatan (mis. P5) —
+        // saat itu sesi mapel tidak berjalan, bukan berarti guru tidak hadir.
+        $todayHoliday = Holiday::where(function ($q) use ($today) {
+            $q->where('date', $today)
+              ->orWhere(function ($sub) use ($today) {
+                  $sub->where('start_date', '<=', $today)
+                      ->where('end_date', '>=', $today);
+              });
+        })->first();
+
+        if ($todayHoliday) {
+            $this->info("Hari ini agenda/libur: {$todayHoliday->name}. Deteksi pengganti dilewati.");
             return Command::SUCCESS;
         }
 

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,8 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->string('principalName')->nullable()->after('logo_path');
-            $table->string('principalNip')->nullable()->after('principalName');
+            $columns = collect(DB::select("SHOW COLUMNS FROM user_profiles"))
+                ->pluck('Field')
+                ->toArray();
+
+            if (!in_array('principalName', $columns)) {
+                $table->string('principalName')->nullable()->after('logo_path');
+            }
+            if (!in_array('principalNip', $columns)) {
+                $table->string('principalNip')->nullable()->after('principalName');
+            }
         });
     }
 

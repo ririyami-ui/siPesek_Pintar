@@ -45,6 +45,7 @@ import StudentLibraryPage from './pages/StudentLibraryPage.jsx';
 import StudentSchedule from './pages/StudentSchedule.jsx';
 import StudentParentReports from './pages/StudentParentReports.jsx';
 import MonitoringLaporanOrtu from './pages/MonitoringLaporanOrtu.jsx';
+import AppInstallationsPage from './pages/AppInstallationsPage.jsx';
 import { ChatProvider } from './utils/ChatContext.jsx';
 import { SettingsProvider } from './utils/SettingsContext.jsx';
 import InstallPwaCard from './components/InstallPwaCard.jsx';
@@ -153,7 +154,7 @@ function App() {
       }
     };
 
-    if (user && !['admin', 'adminer', 'librarian'].includes(user.role) && window.isSecureContext) {
+    if (user && ['student', 'parent'].includes(user.role) && window.isSecureContext) {
       subscribeToPush();
     }
   }, [user]);
@@ -311,6 +312,7 @@ function App() {
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/kartu-kendali" element={<KartuKendaliPage />} />
           <Route path="/monitoring-laporan-ortu" element={<MonitoringLaporanOrtu />} />
+          <Route path="/instalasi-aplikasi" element={<AppInstallationsPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>

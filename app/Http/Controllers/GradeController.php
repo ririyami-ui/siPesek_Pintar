@@ -15,13 +15,11 @@ class GradeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Grade::query()->with(['student', 'subject', 'schoolClass']);
+        $query = Grade::query()->with(['student', 'subject', 'schoolClass', 'user']);
         
         $user = Auth::user();
         if (!$user->isAdmin()) {
             if ($request->filled('class_id') && $request->filled('subject_id')) {
-                // Viewing specific session — teacher needs to see ALL grades for that session
-                // Only validate teacher has access to this class/subject
                 $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
                 $isWaliKelas = \App\Models\SchoolClass::where('id', $request->class_id)->where('user_id', $user->id)->exists();
                 $isAssigned = $teacher && \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
@@ -33,7 +31,6 @@ class GradeController extends Controller
                     return response()->json(['message' => 'Unauthorized'], 403);
                 }
             } else {
-                // General listing — only show own grades + wali kelas
                 $query->where(function($q) use ($user) {
                     $q->where('user_id', $user->id)
                       ->orWhereHas('schoolClass', function($sq) use ($user) {
@@ -102,6 +99,29 @@ class GradeController extends Controller
             'topic' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
+
+        // [SECURITY] Ensure non-admin teachers can only input grades for classes they teach
+        $user = Auth::user();
+        if (!$user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (!$teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'
+                ], 403);
+            }
+
+            // Check if teacher is assigned to this class and subject
+            $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                ->where('class_id', $request->class_id)
+                ->where('subject_id', $request->subject_id)
+                ->exists();
+
+            if (!$isAssigned) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses untuk memasukkan nilai di kelas/mata pelajaran ini.'
+                ], 403);
+            }
+        }
 
         $grade = Grade::updateOrCreate(
             [
@@ -389,7 +409,7 @@ class GradeController extends Controller
             ->where('student_id', $student_id);
         
         if (!Auth::user()->isAdmin()) {
-            $isWali = $student->schoolClass && $student->schoolClass->user_id === Auth::id();
+            $isWali = $student->class && $student->class->user_id === Auth::id();
             if (!$isWali) {
                 $query->where('user_id', Auth::id());
             }
@@ -404,16 +424,32 @@ class GradeController extends Controller
 
         $grades = $query->orderBy('date', 'desc')->get();
 
+        // [SECURITY] Guru non-wali: batasi ringkasan kehadiran hanya pada mapel yang diampu
+        $subjectIds = null;
+        if (!Auth::user()->isAdmin()) {
+            $isWali = $student->class && $student->class->user_id === Auth::id();
+            if (!$isWali) {
+                $teacher = \App\Models\Teacher::where('auth_user_id', Auth::id())->first();
+                $subjectIds = $teacher
+                    ? \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                        ->pluck('subject_id')
+                        ->unique()
+                        ->toArray()
+                    : [];
+            }
+        }
+
         $gradeService = new GradeCalculationService();
         $calculatedData = $gradeService->calculateStudentGrades(
             $student, 
             $grades, 
             $request->semester, 
-            $request->academic_year
+            $request->academic_year,
+            $subjectIds
         );
 
         return response()->json([
-            'student'            => ['name' => $student->name, 'class' => $student->schoolClass->rombel ?? ''],
+            'student'            => ['name' => $student->name, 'class' => $student->class->rombel ?? ''],
             'by_subject'         => $calculatedData['by_subject'],
             'total_grades'       => $grades->count(),
             'weights'            => $calculatedData['weights'],

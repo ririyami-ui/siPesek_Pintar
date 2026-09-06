@@ -32,12 +32,14 @@ const EarlyWarningPage = () => {
     const performAnalysis = async () => {
       setIsLoading(true);
       try {
+        let currentClassId = null;
         let currentRombel = '';
         if (isRadarMode) {
           try {
             const classRes = await api.get('/wali/my-class');
-            if (classRes.data?.data?.rombel) {
-              currentRombel = classRes.data.data.rombel;
+            if (classRes.data?.data?.id) {
+              currentClassId = classRes.data.data.id;
+              currentRombel = classRes.data.data.rombel || '';
               setSelectedClass(currentRombel);
             }
           } catch (err) {
@@ -48,7 +50,7 @@ const EarlyWarningPage = () => {
         const analysisScope = isRadarMode ? currentRombel : 'me';
         
         const [flaggedResults, allStudentsData, classesRes, subjectsRes] = await Promise.all([
-          runEarlyWarningAnalysis(analysisScope, activeSemester, academicYear, geminiModel),
+          runEarlyWarningAnalysis(analysisScope, activeSemester, academicYear, geminiModel, currentClassId),
           getAllStudents(null, isRadarMode ? currentRombel : null),
           api.get('/classes?all=true'),
           api.get('/subjects')
@@ -77,7 +79,7 @@ const EarlyWarningPage = () => {
     return flaggedStudents.filter(student => {
       const classMatch = selectedClass === '' || student.rombel === selectedClass;
       const subjectMatch = selectedSubject === '' ||
-        (student.subjectsWithWarnings && student.subjectsWithWarnings.some(s => s.id === selectedSubject || s.name === selectedSubject));
+        (student.subjectsWithWarnings && student.subjectsWithWarnings.some(s => String(s.id) === String(selectedSubject) || s.name === selectedSubject));
       return classMatch && subjectMatch;
     });
   }, [flaggedStudents, selectedClass, selectedSubject]);

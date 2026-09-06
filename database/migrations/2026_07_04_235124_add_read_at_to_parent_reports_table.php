@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('parent_reports', function (Blueprint $table) {
-            $table->timestamp('read_at')->nullable();
+            if (!Schema::hasColumn('parent_reports', 'read_at')) {
+                $table->timestamp('read_at')->nullable();
+            }
         });
     }
 

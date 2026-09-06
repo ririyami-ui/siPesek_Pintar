@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Services\AiGeneratorService;
+use App\Services\RppDocxService;
 use App\Models\LessonPlan;
 use App\Models\Quiz;
 use App\Models\Handout;
 use App\Models\Worksheet;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -108,7 +110,7 @@ class AiFeaturesController extends Controller
     public function getRppHistory(Request $request)
     {
         try {
-            $limit = (int) $request->input('limit', 50);
+            $limit = (int) $request->input('limit', 1000);
             $gradeLevel = $request->input('grade_level') ?? $request->input('gradeLevel');
             $subjectId = $request->input('subject_id') ?? $request->input('subjectId');
             
@@ -461,6 +463,55 @@ class AiFeaturesController extends Controller
             return response()->json(['message' => 'LKPD dihapus']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Gagal menghapus LKPD'], 500);
+        }
+    }
+
+    /**
+     * Export RPP as DOCX with native Word equations (OMML).
+     * 
+     * Accepts:
+     *   - rppId: id of saved LessonPlan
+     *   - content: markdown/HTML content (for unsaved generated RPP)
+     * 
+     * Returns: binary DOCX file as download
+     */
+    public function exportRppDocx(Request $request, RppDocxService $docxService)
+    {
+        return response()->json(['error' => 'Fitur export DOCX sedang dalam perbaikan, silakan coba lagi nanti.'], 503);
+
+        try {
+            $rppId = $request->input('rppId');
+            $content = $request->input('content');
+            
+            if (!$rppId && !$content) {
+                return response()->json(['error' => 'rppId atau content harus diisi'], 400);
+            }
+            
+            // Get user profile for signature
+            $profile = UserProfile::where('user_id', Auth::id())->first();
+            $metadata = [
+                'subject' => $request->input('subject', 'Mata Pelajaran'),
+                'gradeLevel' => $request->input('gradeLevel', 'X'),
+                'topic' => $request->input('topic', 'Materi'),
+                'userName' => $profile->name ?? Auth::user()->name ?? '',
+                'userNip' => $profile->nip ?? '',
+                'principalName' => $profile->principal_name ?? '',
+                'principalNip' => $profile->principal_nip ?? '',
+                'signingLocation' => $profile->signing_location ?? 'Jakarta',
+            ];
+            
+            if ($rppId) {
+                $lessonPlan = LessonPlan::find($rppId);
+                if (!$lessonPlan) {
+                    return response()->json(['error' => 'RPP tidak ditemukan'], 404);
+                }
+                return $docxService->generateFromModel($lessonPlan);
+            } else {
+                return $docxService->generateDocx($content, $metadata);
+            }
+        } catch (\Exception $e) {
+            Log::error("Error exporting RPP DOCX: " . $e->getMessage());
+            return response()->json(['error' => 'Gagal membuat file DOCX: ' . $e->getMessage()], 500);
         }
     }
 }

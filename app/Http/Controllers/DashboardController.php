@@ -72,34 +72,18 @@ class DashboardController extends Controller
         })->first();
 
         // [HOTFIX] If today is a holiday, return empty monitoring data — no schedule cards should appear
-        if ($agenda && $agenda->is_holiday) {
-            return response()->json([
-                'date' => $todayDate,
-                'day' => $todayDay,
-                'current_time' => $currentTime,
-                'min_start_time' => null,
-                'max_end_time' => null,
-                'active_non_teaching' => null,
-                'non_teaching_schedules' => [],
-                'is_weekend' => false,
-                'school_agenda' => [
-                    'title' => $agenda->title,
-                    'is_holiday' => true,
-                    'description' => $agenda->description,
-                ],
-                'stats' => [
-                    'total_cards' => 0,
-                    'berlangsung' => 0,
-                    'selesai' => 0,
-                    'alfa' => 0,
-                    'belum_mulai' => 0,
-                    'needs_attention' => 0,
-                    'student_stats' => ['total' => 0, 'male' => 0, 'female' => 0],
-                    'attendance_summary' => ['hadir' => 0, 'sakit' => 0, 'izin' => 0, 'alpa' => 0],
-                ],
-                'data' => [],
-                'full_data' => [],
-            ]);
+        if ($agenda) {
+            $isBlocking = true;
+            $name = strtolower($agenda->name ?? $agenda->title ?? '');
+            if (str_contains($name, 'upacara') || str_contains($name, 'senam') || str_contains($name, 'kokurikuler')) {
+                $isBlocking = false;
+            }
+
+            if ($isBlocking) {
+                // Return empty data for schedules but keep stats
+                $monitoringData = collect(); 
+                $groupedMonitoringData = collect();
+            }
         }
 
         // [FIX] Pre-fetch teacher names based on auth_user_id to ensure consistency with Schedule table
@@ -578,55 +562,6 @@ class DashboardController extends Controller
                             $realization += ($journal->schedule->end_period - $journal->schedule->start_period + 1);
                         } else {
                             // If manually entered journal without schedule, we assume 2 JP or a default
-                            $realization += 2; 
-                        }
-                    }
-                }
-
-                $diff = $realization - $target;
-                $status = 'exact';
-                if ($realization === 0) $status = 'not_started';
-                elseif ($realization < $target) $status = 'under_target';
-                elseif ($realization > $target) $status = 'over_target';
-
-                return [
-                    'subject_name' => $as->subject->name ?? '?',
-                    'teacher_name' => $as->teacher->name ?? '?',
-                    'target' => (int)$target,
-                    'realization' => (int)$realization,
-                    'diff' => $diff,
-                    'status' => $status,
-                ];
-            })->values();
-
-            $totalTarget = $subjects->sum('target');
-            $totalRealization = $subjects->sum('realization');
-
-            return [
-                'class_id' => $class->id,
-                'rombel' => $class->rombel,
-                'total_target' => $totalTarget,
-                'total_realization' => $totalRealization,
-                'compliance_rate' => $totalTarget > 0 ? round(($totalRealization / $totalTarget) * 100, 1) : 0,
-                'subjects' => $subjects
-            ];
-        });
-
-
-
-        // Compute compliance data per class
-        $complianceData = $classes->map(function ($class) use ($allAssignments, $journalsThisWeek) {
-            $assignments = $allAssignments->get($class->id, collect());
-            $subjects = $assignments->map(function ($as) use ($class, $journalsThisWeek) {
-                $target = $as->subject->weekly_hours ?? 0;
-                $key = $class->id . '-' . $as->subject_id;
-                
-                $realization = 0;
-                if ($journalsThisWeek->has($key)) {
-                    foreach ($journalsThisWeek->get($key) as $journal) {
-                        if ($journal->schedule) {
-                            $realization += ($journal->schedule->end_period - $journal->schedule->start_period + 1);
-                        } else {
                             $realization += 2; 
                         }
                     }

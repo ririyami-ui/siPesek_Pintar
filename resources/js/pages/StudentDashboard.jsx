@@ -2,15 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import {
   MonitorPlay, Clock, CheckCircle2, XCircle, AlertCircle,
   BookOpen, User, RefreshCw, Wifi, WifiOff,
-  CalendarDays, School, Award, BarChart3, ShieldAlert, Bot, Ban
+  CalendarDays, School, Award, BarChart3, ShieldAlert, Bot, Ban, ClipboardList, TrendingUp
 } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
+import moment from 'moment';
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js';
+import { Doughnut, Line } from 'react-chartjs-2';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Filler);
 
 const STATUS_MAP = {
   hadir: { label: 'Hadir',   color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
@@ -36,15 +37,19 @@ export default function StudentDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState(null);
+  const [nearDeadlineTasks, setNearDeadlineTasks] = useState([]);
+  const [trend, setTrend] = useState(null);
 
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     try {
-      const [realtimeRes, attendanceRes, gradesRes, infractionsRes] = await Promise.all([
+      const [realtimeRes, attendanceRes, gradesRes, infractionsRes, tasksRes, trendRes] = await Promise.all([
         api.get('/student/realtime'),
         api.get('/student/attendance'),
         api.get('/student/grades'),
         api.get('/student/infractions'),
+        api.get('/student/tasks'),
+        api.get('/student/trend'),
       ]);
 
       setData(realtimeRes.data);
@@ -67,6 +72,19 @@ export default function StudentDashboard() {
         total_pelanggaran: infractionsRes.data?.total_points ?? 0,
         total_kejadian: infractionsRes.data?.total_count ?? 0,
       });
+      setTrend(trendRes.data);
+
+      const allTasks = tasksRes.data?.missing_tasks ?? [];
+      const today = moment().startOf('day');
+      const nearDeadline = allTasks.filter(t => {
+        if (t.type !== 'task') return false;
+        const s = (t.status || '').toString().trim().toLowerCase();
+        if (s === 'selesai' || s === 'completed' || s === 'complete') return false;
+        if (!t.date) return false;
+        const deadline = moment(t.date).startOf('day');
+        return deadline.diff(today, 'days') <= 2;
+      });
+      setNearDeadlineTasks(nearDeadline);
     } catch (err) {
       if (!silent) toast.error('Gagal memuat data terbaru.');
     } finally {
@@ -170,6 +188,25 @@ export default function StudentDashboard() {
         </div>
       )}
 
+      {/* Kegiatan Banner (agenda kegiatan is_holiday=false) */}
+      {data?.kegiatan && (
+        <div className="bg-blue-50/80 dark:bg-blue-950/40 backdrop-blur-md rounded-2xl p-4 border border-blue-200 dark:border-blue-900/30 flex items-center gap-3">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-xl shrink-0">
+            <CalendarDays size={16} className="text-blue-600 dark:text-blue-400" />
+          </div>
+          <div className="flex-1">
+            <p className="text-xs font-bold text-blue-700 dark:text-blue-300">Kegiatan Hari Ini: {data.kegiatan.title}</p>
+            {data.kegiatan.start_time && data.kegiatan.end_time && (
+              <p className="text-[10px] font-medium text-blue-600/80 dark:text-blue-400/70">Jam {data.kegiatan.start_time} - {data.kegiatan.end_time}</p>
+            )}
+            {data.kegiatan.description && (
+              <p className="text-[10px] font-medium text-blue-600/80 dark:text-blue-400/70">{data.kegiatan.description}</p>
+            )}
+          </div>
+          <StatusBadge status={data.kegiatan.attendance_status} />
+        </div>
+      )}
+
       {/* Emergency Banner */}
       {data?.emergency_holiday && (
         <div className="bg-red-50/80 dark:bg-red-950/40 backdrop-blur-md rounded-2xl p-4 border border-red-200 dark:border-red-900/30 flex items-center gap-3">
@@ -266,6 +303,34 @@ export default function StudentDashboard() {
       </div>
       )}
 
+      {/* Task Deadline Reminder Banner */}
+      {nearDeadlineTasks.length > 0 && (
+        <div className="bg-amber-50/90 dark:bg-amber-950/40 backdrop-blur-md rounded-2xl p-4 border border-amber-200 dark:border-amber-800/40 flex items-start gap-3">
+          <div className="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-xl shrink-0">
+            <ClipboardList size={18} className="text-amber-600 dark:text-amber-400" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <h5 className="text-[10px] font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400 mb-1">
+              {nearDeadlineTasks.length} Tugas Mendekati Batas Waktu
+            </h5>
+            <div className="space-y-1.5">
+              {nearDeadlineTasks.slice(0, 3).map(task => (
+                <div key={task.id} className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                  <Clock size={12} className="text-amber-500 shrink-0" />
+                  <span className="font-bold text-amber-700 dark:text-amber-300 shrink-0">
+                    {moment(task.date).format('DD MMM')}
+                  </span>
+                  <span className="truncate">{task.topic}</span>
+                  {moment(task.date).startOf('day').isBefore(moment().startOf('day')) && (
+                    <span className="ml-auto shrink-0 text-[9px] font-black uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 px-1.5 py-0.5 rounded">Terlewat</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Daily Narrative */}
       {data?.daily_narrative && (
         <div className="bg-indigo-50/80 dark:bg-indigo-950/40 backdrop-blur-md rounded-2xl p-5 border border-indigo-100 dark:border-indigo-900/30 flex gap-4 items-start">
@@ -281,152 +346,223 @@ export default function StudentDashboard() {
         </div>
       )}
 
-      {/* Overall Summary Cards */}
-      {summary && (
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
-            <BarChart3 size={14} /> Ringkasan Belajar
-          </h3>
+       {/* Overall Summary Cards */}
+       {summary && (
+         <div className="space-y-2">
+           <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 px-1">
+             <BarChart3 size={12} /> Ringkasan Belajar
+           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {/* Kehadiran - Doughnut */}
-            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="p-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
-                  <BookOpen size={14} className="text-emerald-600 dark:text-emerald-400" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Kehadiran</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 shrink-0">
-                  {summary.total_sesi > 0 ? (
-                    <Doughnut
-                      data={{
-                        labels: ['Hadir', 'Sakit', 'Izin', 'Alpa'],
-                        datasets: [{
-                          data: [
-                            Math.round((summary.hadir / summary.total_sesi) * 100),
-                            Math.round((summary.sakit / summary.total_sesi) * 100),
-                            Math.round((summary.izin / summary.total_sesi) * 100),
-                            Math.round((summary.alpa / summary.total_sesi) * 100),
-                          ],
-                          backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
-                          borderWidth: 0,
-                        }]
-                      }}
-                      options={chartOptions}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
-                      <BookOpen size={24} />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-2xl font-black text-slate-800 dark:text-white">
-                    {summary.kehadiran_pct !== null ? `${summary.kehadiran_pct}%` : 'N/A'}
-                  </p>
-                  <div className="mt-1.5 space-y-0.5">
-                    <div className="flex items-center gap-1.5 text-[9px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      <span className="text-slate-500 dark:text-slate-400">{summary.hadir} Hadir</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[9px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                      <span className="text-slate-500 dark:text-slate-400">{summary.sakit} Sakit</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[9px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                      <span className="text-slate-500 dark:text-slate-400">{summary.izin} Izin</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[9px]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
-                      <span className="text-slate-500 dark:text-slate-400">{summary.alpa} Alpa</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+           {/* Tren Perkembangan Nilai */}
+           <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-xl p-3 border border-slate-100 dark:border-white/5 shadow-sm">
+             <div className="flex items-center justify-between mb-2 px-1">
+               <div className="flex items-center gap-1.5">
+                 <div className="p-1 rounded-lg bg-violet-100 dark:bg-violet-900/40">
+                   <TrendingUp size={12} className="text-violet-600 dark:text-violet-400" />
+                 </div>
+                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Tren Perkembangan Nilai</span>
+               </div>
+               {trend?.days?.length > 0 && (
+                 <span className="text-[8px] font-bold text-slate-400">
+                   {trend.days.length} hari terakhir
+                 </span>
+               )}
+             </div>
+             <div className="h-48">
+               {trend?.days?.length > 0 && (trend.overall?.some(v => v !== null) || trend.series?.some(s => s.scores?.some(v => v !== null))) ? (
+                 <Line
+                   data={{
+                     labels: trend.days.map(d => moment(d, 'YYYY-MM-DD').format('DD MMM')),
+                     datasets: [
+                       {
+                         label: 'Rata-rata',
+                         data: trend.overall,
+                         borderColor: '#8b5cf6',
+                         backgroundColor: 'rgba(139, 92, 246, 0.08)',
+                         fill: true,
+                         tension: 0.35,
+                         pointRadius: 3,
+                         borderWidth: 2.5,
+                       },
+                       ...(trend.series || []).slice(0, 5).map((s, i) => ({
+                         label: s.subject_name,
+                         data: s.scores,
+                         borderColor: ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#14b8a6'][i % 5],
+                         backgroundColor: 'transparent',
+                         tension: 0.35,
+                         pointRadius: 2,
+                         borderWidth: 1.5,
+                         borderDash: [4, 3],
+                       })),
+                     ],
+                   }}
+                   options={{
+                     responsive: true,
+                     maintainAspectRatio: false,
+                     plugins: {
+                       legend: {
+                         display: true,
+                         position: 'bottom',
+                         labels: { boxWidth: 8, boxHeight: 8, font: { size: 8, weight: 'bold' }, color: '#94a3b8' },
+                       },
+                       tooltip: { enabled: true },
+                     },
+                     scales: {
+                       y: { beginAtZero: true, max: 100, ticks: { font: { size: 8 }, color: '#94a3b8' }, grid: { color: 'rgba(0,0,0,0.04)' } },
+                       x: { ticks: { font: { size: 8 }, color: '#94a3b8' }, grid: { display: false } },
+                     },
+                   }}
+                 />
+               ) : (
+                 <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                   <div className="text-center">
+                     <TrendingUp size={20} className="mx-auto mb-1 opacity-50" />
+                     <p className="text-[9px] font-medium text-slate-400">Belum ada data nilai</p>
+                   </div>
+                 </div>
+               )}
+             </div>
+           </div>
 
-            {/* Nilai - Per Subject */}
-            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm sm:col-span-2">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/40">
-                  <Award size={14} className="text-blue-600 dark:text-blue-400" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rata Nilai Per Mapel</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-24 h-24 shrink-0">
-                  {summary.by_subject?.length > 0 ? (
-                    <Doughnut
-                      data={{
-                        labels: summary.by_subject.map(s => s.subject_name),
-                        datasets: [{
-                          data: summary.by_subject.map(s => s.nilai_akhir),
-                          backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
-                          borderWidth: 0,
-                        }]
-                      }}
-                      options={{
-                        cutout: '72%',
-                        plugins: { tooltip: { enabled: true }, legend: { display: false } },
-                        maintainAspectRatio: false,
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
-                      <Award size={24} />
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0 grid grid-cols-2 gap-x-3 gap-y-1">
-                  {summary.by_subject?.map((s, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-[10px]">
-                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i % 8] }} />
-                      <span className="text-slate-500 dark:text-slate-400 truncate">{s.subject_name}</span>
-                      <span className="font-bold text-slate-700 dark:text-slate-200 ml-auto">{s.nilai_akhir}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+             {/* Kehadiran - Doughnut */}
+             <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-xl p-2 border border-slate-100 dark:border-white/5 shadow-sm">
+               <div className="flex items-center gap-1.5 mb-2">
+                 <div className="p-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
+                   <BookOpen size={12} className="text-emerald-600 dark:text-emerald-400" />
+                 </div>
+                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Kehadiran</span>
+               </div>
+               <div className="flex items-center gap-3">
+                 <div className="w-16 h-16 shrink-0">
+                   {summary.total_sesi > 0 ? (
+                     <Doughnut
+                       data={{
+                         labels: ['Hadir', 'Sakit', 'Izin', 'Alpa'],
+                         datasets: [{
+                           data: [
+                             Math.round((summary.hadir / summary.total_sesi) * 100),
+                             Math.round((summary.sakit / summary.total_sesi) * 100),
+                             Math.round((summary.izin / summary.total_sesi) * 100),
+                             Math.round((summary.alpa / summary.total_sesi) * 100),
+                           ],
+                           backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
+                           borderWidth: 0,
+                         }]
+                       }}
+                       options={chartOptions}
+                     />
+                   ) : (
+                     <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                       <BookOpen size={20} />
+                     </div>
+                   )}
+                 </div>
+                 <div className="flex-1 min-w-0">
+                   <p className="text-lg font-black text-slate-800 dark:text-white">
+                     {summary.kehadiran_pct !== null ? `${summary.kehadiran_pct}%` : 'N/A'}
+                   </p>
+                   <div className="mt-1 space-y-0.5">
+                     <div className="flex items-center gap-1 text-[8px]">
+                       <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                       <span className="text-slate-500 dark:text-slate-400">{summary.hadir} Hadir</span>
+                     </div>
+                     <div className="flex items-center gap-1 text-[8px]">
+                       <span className="w-1 h-1 rounded-full bg-amber-500" />
+                       <span className="text-slate-500 dark:text-slate-400">{summary.sakit} Sakit</span>
+                     </div>
+                     <div className="flex items-center gap-1 text-[8px]">
+                       <span className="w-1 h-1 rounded-full bg-blue-500" />
+                       <span className="text-slate-500 dark:text-slate-400">{summary.izin} Izin</span>
+                     </div>
+                     <div className="flex items-center gap-1 text-[8px]">
+                       <span className="w-1 h-1 rounded-full bg-red-500" />
+                       <span className="text-slate-500 dark:text-slate-400">{summary.alpa} Alpa</span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
 
-            {/* Pelanggaran - Doughnut */}
-            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-2xl p-4 border border-slate-100 dark:border-white/5 shadow-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-900/40">
-                  <ShieldAlert size={14} className="text-rose-600 dark:text-rose-400" />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pelanggaran</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-20 h-20 shrink-0">
-                  <Doughnut
-                    data={{
-                      labels: ['Point', 'Sisa'],
-                      datasets: [{
-                        data: [Math.min(summary.total_pelanggaran, 100), Math.max(100 - summary.total_pelanggaran, 0)],
-                        backgroundColor: ['#ef4444', '#fee2e2'],
-                        borderWidth: 0,
-                      }]
-                    }}
-                    options={chartOptions}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-2xl font-black text-slate-800 dark:text-white">
-                    {summary.total_pelanggaran > 0 ? summary.total_pelanggaran : 0}
-                  </p>
-                  <p className="text-[10px] text-slate-400 font-medium mt-1">
-                    {summary.total_kejadian} kejadian tercatat
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+             {/* Nilai - Per Subject */}
+             <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-xl p-2 border border-slate-100 dark:border-white/5 shadow-sm sm:col-span-2">
+               <div className="flex items-center gap-1.5 mb-2">
+                 <div className="p-1 rounded-lg bg-blue-100 dark:bg-blue-900/40">
+                   <Award size={12} className="text-blue-600 dark:text-blue-400" />
+                 </div>
+                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Rata Nilai Per Mapel</span>
+               </div>
+               <div className="flex items-center gap-3">
+                 <div className="w-16 h-16 shrink-0">
+                   {summary.by_subject?.length > 0 ? (
+                     <Doughnut
+                       data={{
+                         labels: summary.by_subject.map(s => s.subject_name),
+                         datasets: [{
+                           data: summary.by_subject.map(s => s.nilai_akhir),
+                           backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'],
+                           borderWidth: 0,
+                         }]
+                       }}
+                       options={{
+                         cutout: '72%',
+                         plugins: { tooltip: { enabled: true }, legend: { display: false } },
+                         maintainAspectRatio: false,
+                       }}
+                     />
+                   ) : (
+                     <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
+                       <Award size={20} />
+                     </div>
+                   )}
+                 </div>
+                 <div className="flex-1 min-w-0 grid grid-cols-2 gap-x-2 gap-y-0.5">
+                   {summary.by_subject?.map((s, i) => (
+                     <div key={i} className="flex items-center gap-1 text-[9px]">
+                       <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i % 8] }} />
+                       <span className="text-slate-500 dark:text-slate-400 truncate">{s.subject_name}</span>
+                       <span className="font-bold text-slate-700 dark:text-slate-200 ml-auto">{s.nilai_akhir}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             </div>
+
+             {/* Pelanggaran - Doughnut */}
+             <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-xl p-2 border border-slate-100 dark:border-white/5 shadow-sm">
+               <div className="flex items-center gap-1.5 mb-2">
+                 <div className="p-1 rounded-lg bg-rose-100 dark:bg-rose-900/40">
+                   <ShieldAlert size={12} className="text-rose-600 dark:text-rose-400" />
+                 </div>
+                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Pelanggaran</span>
+               </div>
+               <div className="flex items-center gap-3">
+                 <div className="w-16 h-16 shrink-0">
+                   <Doughnut
+                     data={{
+                       labels: ['Point', 'Sisa'],
+                       datasets: [{
+                         data: [Math.min(summary.total_pelanggaran, 100), Math.max(100 - summary.total_pelanggaran, 0)],
+                         backgroundColor: ['#ef4444', '#fee2e2'],
+                         borderWidth: 0,
+                       }]
+                     }}
+                     options={chartOptions}
+                   />
+                 </div>
+                 <div className="flex-1 min-w-0">
+                   <p className="text-lg font-black text-slate-800 dark:text-white">
+                     {summary.total_pelanggaran > 0 ? summary.total_pelanggaran : 0}
+                   </p>
+                   <p className="text-[9px] text-slate-400 font-medium mt-1">
+                     {summary.total_kejadian} kejadian tercatat
+                   </p>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
 
       {/* Minimal Footer */}
       <div className="py-6 text-center">

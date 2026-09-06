@@ -100,6 +100,7 @@ export default function DashboardPage() {
       });
       setTodayHoliday(activeHoliday || null);
 
+
       // Fetch Students & Stats
       let students = [];
       const studentsResponse = await api.get('/students');

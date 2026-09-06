@@ -21,15 +21,10 @@ class SubstitutionRecommendation extends Model
         'substitute_notified_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'date' => 'date',
-            'start_time' => 'datetime:H:i',
-            'end_time' => 'datetime:H:i',
-            'substitute_notified_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'date' => 'date',
+        'substitute_notified_at' => 'datetime',
+    ];
 
     public function schedule(): BelongsTo
     {

@@ -289,7 +289,7 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
       if (izinNames) statusString += `\nIzin: ${izinNames}`;
       if (alpaNames) statusString += `\nAlpa: ${alpaNames}`;
     }
-    if (hadirLine) statusString = hadirLine + '\n' + statusString;
+    if (hadirLine) statusString += '\n' + hadirLine;
 
     const rowData = [
       fmtDate(jurnal.date),
@@ -309,6 +309,7 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
     head: [tableColumn],
     body: tableRows,
     startY: 40,
+    margin: { left: 8, right: 8 },
     theme: 'striped',
     styles: {
       fontSize: 8,
@@ -324,18 +325,20 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
       lineColor: [50, 50, 50],
     },
     columnStyles: {
-      0: { cellWidth: 25 },
+      0: { cellWidth: 22 },
       1: { cellWidth: 15 },
-      2: { cellWidth: 30 },
-      3: { cellWidth: 45 },
-      4: { cellWidth: 42 },
-      5: { cellWidth: 42 },
-      6: { cellWidth: 50, cellHeight: 'auto' },
-      7: { cellWidth: 35 },
+      2: { cellWidth: 28 },
+      3: { cellWidth: 56 },
+      4: { cellWidth: 58 },
+      5: { cellWidth: 46 },
+      6: { cellWidth: 25 },
+      7: { cellWidth: 31 },
     },
     didParseCell: function(data) {
       if (data.column.index === 6 && data.section === 'body') {
-        var lines = data.cell.text.split('\n');
+        var raw = data.cell.text;
+        var text = Array.isArray(raw) ? raw.join('\n') : String(raw == null ? '' : raw);
+        var lines = text.split('\n');
         if (lines.length > 1) {
           data.row.height = Math.max(data.row.height, lines.length * 6);
         }
@@ -347,14 +350,14 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
   const tableEndY = doc.autoTable.previous.finalY;
   doc.setLineWidth(0.1);
   doc.setDrawColor(50, 50, 50);
-  doc.line(14, tableEndY, doc.internal.pageSize.width - 14, tableEndY);
+  doc.line(8, tableEndY, doc.internal.pageSize.width - 8, tableEndY);
 
   // Footer - Two Column Signature
   const finalY = tableEndY + 10; // Get the Y position after the table with some padding
   doc.setFontSize(10);
 
-  const leftColX = 14;
-  const rightColX = doc.internal.pageSize.width - 60;
+  const leftColX = 8;
+  const rightColX = doc.internal.pageSize.width - 8;
 
   // Left Column (Principal)
   if (userProfile?.principalName) {
@@ -370,18 +373,18 @@ export const generateJurnalRecapPDF = (jurnalData, startDate, endDate, teacherNa
   const dateStr = fmtDate(new Date());
   const city = getCity(userProfile);
 
-  doc.text(`${city}, ${dateStr}`, rightColX, finalY + 20);
+  doc.text(`${city}, ${dateStr}`, rightColX, finalY + 20, { align: 'right' });
   // Determine subject for "Guru Mapel"
   const subjectForFooter = jurnalData.length > 0 ? jurnalData[0].subjectName : "Mata Pelajaran";
-  doc.text(`Guru Mapel ${subjectForFooter}`, rightColX, finalY + 30);
+  doc.text(`Guru Mapel ${subjectForFooter}`, rightColX, finalY + 30, { align: 'right' });
 
   doc.setFont('helvetica', 'bold');
-  doc.text(teacherName, rightColX, finalY + 50);
+  doc.text(teacherName, rightColX, finalY + 50, { align: 'right' });
   doc.setFont('helvetica', 'normal');
 
   // Check for NIP in userProfile
   const nip = userProfile?.nip || '....................';
-  doc.text(`NIP. ${nip}`, rightColX, finalY + 56);
+  doc.text(`NIP. ${nip}`, rightColX, finalY + 56, { align: 'right' });
 
   // Page numbering
   const totalPages = doc.internal.getNumberOfPages();
@@ -457,7 +460,7 @@ export const generateNilaiRecapPDF = (nilaiData, schoolName, startDate, endDate,
   const noteY = doc.autoTable.previous.finalY + 10;
   doc.setFontSize(9);
   doc.setFont('helvetica', 'italic');
-  doc.text("Keterangan: Nilai Akhir (NA) dihitung dari Bobot Pengetahuan (40%) dan Bobot Praktik (60%).", 14, noteY);
+  doc.text("Keterangan: Nilai Akhir (NA) dihitung dari Bobot Akademik dan Bobot Sikap sesuai Kesepakatan Kelas, ditambah 10% Keaktifan. Khusus Akademik dari Bobot Pengetahuan dan Bobot Praktik.", 14, noteY);
   doc.setFont('helvetica', 'normal');
 
   // Footer - Two Column Signature

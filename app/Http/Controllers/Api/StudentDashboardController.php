@@ -167,7 +167,7 @@ class StudentDashboardController extends Controller
                     'absen'     => $student->absen ?? '-',
                     'nis'       => $student->nis ?? '-',
                     'nisn'      => $student->nisn ?? '-',
-                    'photo_url' => $student->user->photo_url ?? null,
+                    'photo_url' => $student->authUser?->photo_url ?? null,
                     'gender'    => $student->gender ?? 'L',
                     'class_id'  => $student->class_id,
                     'birth_place' => $student->birth_place ?? '-',
@@ -188,14 +188,85 @@ class StudentDashboardController extends Controller
             ]);
         }
 
+        // [KEGIATAN] Agenda kegiatan (is_holiday=false) — sesi mapel tidak berjalan,
+        // absensi pagi kegiatan dicatat tanpa mapel (subject_id null).
+        $kegiatan = Holiday::where(function($q) use ($today) {
+                $q->whereDate('date', $today)
+                  ->orWhere(function($sq) use ($today) {
+                      $sq->whereDate('start_date', '<=', $today)
+                         ->whereDate('end_date', '>=', $today);
+                  });
+            })
+            ->where('is_holiday', false)
+            ->first();
+
+        if ($kegiatan) {
+            $kegiatanAtt = Attendance::where('student_id', $student->id)
+                ->whereDate('date', $today)
+                ->whereNull('subject_id')
+                ->first();
+
+            $startTime = $kegiatan->start_time ? substr($kegiatan->start_time, 0, 5) : null;
+            $endTime = $kegiatan->end_time ? substr($kegiatan->end_time, 0, 5) : null;
+
+            $kegiatanStatus = 'upcoming';
+            if ($startTime && $endTime) {
+                $cur = $now->format('H:i');
+                if ($cur > $endTime) $kegiatanStatus = 'completed';
+                elseif ($cur >= $startTime && $cur <= $endTime) $kegiatanStatus = 'ongoing';
+            }
+
+            return response()->json([
+                'school_name'      => $this->getSchoolName(),
+                'student'          => [
+                    'id'        => $student->id,
+                    'name'      => $student->name,
+                    'class'     => $student->class->rombel ?? '-',
+                    'absen'     => $student->absen ?? '-',
+                    'nis'       => $student->nis ?? '-',
+                    'nisn'      => $student->nisn ?? '-',
+                    'photo_url' => $student->authUser?->photo_url ?? null,
+                    'gender'    => $student->gender ?? 'L',
+                    'class_id'  => $student->class_id,
+                    'birth_place' => $student->birth_place ?? '-',
+                    'birth_date'  => $student->birth_date ? \Carbon\Carbon::parse($student->birth_date)->format('d F Y') : '-',
+                ],
+                'holiday'          => null,
+                'kegiatan'         => [
+                    'title'            => $kegiatan->title ?: $kegiatan->name,
+                    'description'      => $kegiatan->description,
+                    'start_time'       => $startTime,
+                    'end_time'         => $endTime,
+                    'attendance_status' => $kegiatanAtt?->status ?? null,
+                ],
+                'emergency_holiday' => null,
+                'current_session'  => null,
+                'upcoming_session' => null,
+                'today_schedule'   => [[
+                    'id'               => $kegiatan->id,
+                    'subject_name'     => $kegiatan->name ?: $kegiatan->title,
+                    'teacher_name'     => '-',
+                    'start_time'       => $startTime,
+                    'end_time'         => $endTime,
+                    'type'             => 'kegiatan',
+                    'status'           => $kegiatanStatus,
+                    'is_blocked'       => false,
+                    'block_reason'     => null,
+                    'attendance_status' => $kegiatanAtt?->status ?? null,
+                ]],
+                'daily_narrative'  => null,
+                'graduate_profile' => $this->loadGraduateProfileFromBskap($student),
+                'server_time'      => $now->toIso8601String(),
+                'day'              => $dayName,
+            ]);
+        }
+
         // Fetch all schedules for the student's class today
-        $schedules = Schedule::with(['subject', 'teacher'])
+        $schedules = Schedule::with(['subject', 'teacher', 'class'])
             ->where('class_id', $student->class_id)
-            ->where('type', 'teaching') // Filter strictly teaching sessions
+            ->where('type', 'teaching')
             ->where('day', $dayName)
             ->where(function($q) use ($today) {
-                // [UNIFIED LOGIC] Match if NO dates are set (assume always active for that day)
-                // OR if today is within the set date range
                 $q->where(function($sub) {
                     $sub->whereNull('start_date')->whereNull('end_date');
                 })
@@ -346,7 +417,7 @@ class StudentDashboardController extends Controller
                 'absen'     => $student->absen ?? '-',
                 'nis'       => $student->nis ?? '-',
                 'nisn'      => $student->nisn ?? '-',
-                'photo_url' => $student->user->photo_url ?? null,
+                'photo_url' => $student->authUser?->photo_url ?? null,
                 'gender'    => $student->gender ?? 'L',
                 'class_id'  => $student->class_id,
                 'birth_place' => $student->birth_place ?? '-',
@@ -404,8 +475,8 @@ class StudentDashboardController extends Controller
             return response()->json(['message' => 'Data siswa tidak ditemukan.'], 404);
         }
 
-        // Fetch all recurring schedules for the student's class
-        $schedules = Schedule::with(['subject', 'teacher'])
+        // Fetch all schedules for weekly view
+        $schedules = Schedule::with(['subject', 'teacher', 'class'])
             ->where('class_id', $student->class_id)
             ->where('type', 'teaching')
             ->where(function ($q) {
@@ -460,7 +531,12 @@ class StudentDashboardController extends Controller
             return response()->json(['message' => 'Data siswa tidak ditemukan.'], 404);
         }
 
-        $query = Attendance::where('student_id', $student->id)->with('subject');
+        $request->validate([
+            'date_start' => 'nullable|date',
+            'date_end' => 'nullable|date|after_or_equal:date_start',
+        ]);
+
+        $query = Attendance::where('student_id', $student->id)->with(['subject']);
 
         if ($request->has('date_start') && $request->has('date_end')) {
             $query->whereBetween('date', [$request->date_start, $request->date_end]);
@@ -468,13 +544,61 @@ class StudentDashboardController extends Controller
 
         $attendances = $query->orderBy('date', 'desc')->get();
 
+        // [KEGIATAN] Peta tanggal → nama agenda kegiatan (holiday is_holiday=false),
+        // utk memberi label absen tanpa mapel (subject_id null) mis. Kokurikuler/P5.
+        $attDates = $attendances->pluck('date')
+            ->map(fn($d) => $d ? \Carbon\Carbon::parse($d)->toDateString() : null)
+            ->filter()
+            ->unique()
+            ->values();
+        
+        $agendaByDate = [];
+        if ($attDates->isNotEmpty()) {
+            $minDate = $attDates->min();
+            $maxDate = $attDates->max();
+            
+            $agendaHolidays = \App\Models\Holiday::where(function($q) use ($minDate, $maxDate, $attDates) {
+                $q->whereIn('date', $attDates->toArray())
+                  ->orWhere(function($sub) use ($minDate, $maxDate) {
+                      $sub->where('start_date', '<=', $maxDate)
+                          ->where('end_date', '>=', $minDate);
+                  });
+            })->get();
+            
+            foreach ($attDates as $d) {
+                $holiday = $agendaHolidays->first(function ($h) use ($d) {
+                    if ($h->date) {
+                        return \Carbon\Carbon::parse($h->date)->toDateString() === $d;
+                    }
+                    return $h->start_date && $h->end_date
+                        && $d >= \Carbon\Carbon::parse($h->start_date)->toDateString()
+                        && $d <= \Carbon\Carbon::parse($h->end_date)->toDateString();
+                });
+                if ($holiday) {
+                    $agendaByDate[$d] = $holiday->name ?: $holiday->title ?: 'Kegiatan';
+                }
+            }
+        }
+
         // Group by subject
-        $bySubject = $attendances->groupBy('subject_id')->map(function ($records, $subjectId) {
+        $bySubject = $attendances->groupBy('subject_id')->map(function ($records, $subjectId) use ($agendaByDate) {
             $subject = $records->first()->subject;
             $counts  = $records->countBy('status');
+
+            $subjectName = $subject?->name ?? 'Tanpa Mapel';
+            if (!$subject) {
+                $names = $records->map(function ($r) use ($agendaByDate) {
+                    $d = $r->date ? \Carbon\Carbon::parse($r->date)->toDateString() : null;
+                    return $d && isset($agendaByDate[$d]) ? $agendaByDate[$d] : null;
+                })->filter()->unique()->values();
+                $subjectName = $names->count() === 1
+                    ? 'Kegiatan: ' . $names->first()
+                    : ($names->isNotEmpty() ? 'Kegiatan (Kokurikuler)' : 'Kegiatan');
+            }
+
             return [
                 'subject_id'   => $subjectId,
-                'subject_name' => $subject?->name ?? 'Tanpa Mapel',
+                'subject_name' => $subjectName,
                 'hadir'        => $counts->get('hadir', 0),
                 'sakit'        => $counts->get('sakit', 0),
                 'izin'         => $counts->get('izin', 0),
@@ -486,25 +610,51 @@ class StudentDashboardController extends Controller
             ];
         })->values();
 
-        // Overall totals
-        $overallCounts = $attendances->countBy('status');
+        // Overall totals — basis harian: satu status per hari (prioritas terburuk menang)
+        // alpa > izin > sakit > hadir, konsisten dengan logika daily narrative
+        $overallByDay = $attendances->groupBy(function ($a) {
+            return $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : 'no-date';
+        })->map(function ($records) {
+            $statuses = $records->pluck('status')->map(fn($s) => strtolower($s));
+            if ($statuses->contains('alpa')) return 'alpa';
+            if ($statuses->contains('izin')) return 'izin';
+            if ($statuses->contains('sakit')) return 'sakit';
+            if ($statuses->contains('hadir')) return 'hadir';
+            return 'alpa';
+        });
+
+        $overallCounts = $overallByDay->countBy();
         $overall = [
             'hadir' => $overallCounts->get('hadir', 0),
             'sakit' => $overallCounts->get('sakit', 0),
             'izin'  => $overallCounts->get('izin', 0),
             'alpa'  => $overallCounts->get('alpa', 0),
-            'total' => $attendances->count(),
+            'total' => $overallByDay->count(),
         ];
 
-        // Daily detail (last 30 days by default)
-        $daily = $attendances->map(fn($a) => [
-            'date'           => $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : null,
-            'subject_id'     => $a->subject_id,
-            'subject_name'   => $a->subject?->name ?? '-',
-            'status'         => $a->status,
-            'note'           => $a->note,
-            'planned_material' => $this->getPlannedMaterial($student, $a->subject_id, $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : null),
-        ])->values();
+        // Daily detail (last 30 days) — satu record per hari, ambil status terburuk
+        $daily = $attendances->groupBy(function ($a) {
+            return $a->date ? \Carbon\Carbon::parse($a->date)->toDateString() : null;
+        })->map(function ($records) use ($agendaByDate, $student) {
+            $dateStr = $records->first()->date ? \Carbon\Carbon::parse($records->first()->date)->toDateString() : null;
+            $statuses = $records->pluck('status')->map(fn($s) => strtolower($s));
+            $finalStatus = 'alpa';
+            if ($statuses->contains('alpa')) $finalStatus = 'alpa';
+            elseif ($statuses->contains('izin')) $finalStatus = 'izin';
+            elseif ($statuses->contains('sakit')) $finalStatus = 'sakit';
+            else $finalStatus = 'hadir';
+            $note = $records->first()->note ?? null;
+            $subjectName = $records->first()->subject?->name
+                ?? ($dateStr && isset($agendaByDate[$dateStr]) ? $agendaByDate[$dateStr] : 'Kegiatan');
+            return [
+                'date'             => $dateStr,
+                'subject_id'       =>null,
+                'subject_name'     => $subjectName,
+                'status'           => $finalStatus,
+                'note'             => $note,
+                'planned_material' => $this->getPlannedMaterial($student, null, $dateStr),
+            ];
+        })->values();
 
         return response()->json([
             'student'    => ['name' => $student->name, 'class' => $this->getClassName($student)],
@@ -554,6 +704,62 @@ class StudentDashboardController extends Controller
             'radar_data'         => $calculatedData['radar_data'],
             'warnings'           => $calculatedData['warnings'],
             'overall_nilai_akhir'=> $calculatedData['overall_nilai_akhir'],
+        ]);
+    }
+
+    /**
+     * Get student grade trend per month for the dashboard chart.
+     */
+    public function getGradesTrend(Request $request)
+    {
+        $student = $this->getStudent();
+        if (!$student) {
+            return response()->json(['message' => 'Data siswa tidak ditemukan.'], 404);
+        }
+
+        $query = Grade::where('student_id', $student->id)
+            ->where('date', '>=', Carbon::now()->subDays(30)->toDateString())
+            ->with('subject');
+
+        if ($request->has('semester')) {
+            $query->where('semester', $request->semester);
+        }
+        if ($request->has('academic_year')) {
+            $query->where('academic_year', $request->academic_year);
+        }
+
+        $grades = $query->orderBy('date', 'asc')->get();
+
+        // Group by day (Y-m-d) then by subject
+        $days = $grades->groupBy(fn($g) => $g->date ? Carbon::parse($g->date)->format('Y-m-d') : null)
+            ->filter(fn($group) => $group->first()->date !== null)
+            ->keys()
+            ->values()
+            ->toArray();
+
+        // Per-subject series across days
+        $series = $grades->groupBy('subject_id')->map(function ($records) use ($days) {
+            $subjectName = $records->first()->subject->name ?? 'Mapel';
+            $scoresByDay = $records->groupBy(fn($g) => Carbon::parse($g->date)->format('Y-m-d'))
+                ->map(fn($group) => round($group->avg('score'), 2));
+
+            return [
+                'subject_name' => $subjectName,
+                'scores' => collect($days)->map(fn($d) => $scoresByDay[$d] ?? null)->toArray(),
+            ];
+        })->values();
+
+        // Overall average per day across all subjects
+        $overall = collect($days)->map(function ($d) use ($grades) {
+            $dayGrades = $grades->filter(fn($g) => Carbon::parse($g->date)->format('Y-m-d') === $d);
+            return $dayGrades->count() > 0 ? round($dayGrades->avg('score'), 2) : null;
+        })->toArray();
+
+        return response()->json([
+            'student' => ['name' => $student->name, 'class' => $this->getClassName($student)],
+            'days'    => $days,
+            'series'  => $series,
+            'overall' => $overall,
         ]);
     }
 
@@ -649,17 +855,18 @@ class StudentDashboardController extends Controller
         // Resolve subjects for mapping task materials
         $subjects = Subject::pluck('id', 'name');
 
-        // StudentTask: class-level tasks
+        // StudentTask: class-level tasks (hide completed tasks)
         $studentTasks = StudentTask::where(function($q) use ($student) {
                 $q->where('class_id', $student->class_id)
                   ->orWhereNull('class_id');
             })
+            ->where('status', '!=', 'completed')
             ->orderBy('deadline', 'asc')
             ->get()
             ->map(function($t) use ($student, $subjects) {
                 $subjectId = isset($t->subject_name) ? ($subjects[$t->subject_name] ?? null) : null;
                 $dateStr = $t->deadline instanceof \Illuminate\Support\Carbon ? $t->deadline->toDateString() : \Carbon\Carbon::parse($t->deadline)->toDateString();
-                $isDone = strtolower($t->status) === 'selesai' || strtolower($t->status) === 'complete';
+                $isDone = strtolower($t->status) === 'selesai' || strtolower($t->status) === 'complete' || strtolower($t->status) === 'completed';
                 return [
                     'id'              => $t->id,
                     'type'            => 'task',

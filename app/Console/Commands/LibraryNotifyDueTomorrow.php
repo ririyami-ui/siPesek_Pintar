@@ -44,13 +44,8 @@ class LibraryNotifyDueTomorrow extends Command
             $title = "📚 Pengingat Perpustakaan";
             $body = "Halo {$student->name}, buku \"{$loan->book->title}\" harus dikembalikan besok. Jangan sampai terlambat ya!";
             
-            $sent = PushNotificationService::sendToStudentParent($student, $title, $body, '/siswa/perpustakaan');
-            
-            if ($sent) {
-                $this->info("Notification sent to student: {$student->name}");
-            } else {
-                $this->warn("Failed to send notification to student: {$student->name} (No subscription or error)");
-            }
+            PushNotificationService::sendToStudentParent($student->id, $title, $body, '/siswa/perpustakaan');
+            $this->info("Notification sent to student: {$student->name}");
         }
 
         return Command::SUCCESS;

@@ -21,15 +21,30 @@ class GradeCalculationService
      * @param Collection $grades The raw Grade records associated with the student (filtered by semester/year if needed).
      * @param string|null $semester Optional semester filter for infractions
      * @param string|null $academicYear Optional academic year filter for infractions
+     * @param array|null $subjectIds Optional subject filter (null = semua mapel, [] = kosong/tanpa akses)
      * @return array
      */
-    public function calculateStudentGrades(Student $student, Collection $grades, $semester = null, $academicYear = null): array
+    public function calculateStudentGrades(Student $student, Collection $grades, $semester = null, $academicYear = null, ?array $subjectIds = null): array
     {
         // 1. Attendance Summary
         $attendanceQuery = Attendance::where('student_id', $student->id);
         // Note: attendances table does not have semester/academic_year columns currently.
         // It's Date based. We fetch all for the student for the summary or could filter by date if passed.
-        
+
+        if ($subjectIds !== null) {
+            $attendanceQuery->whereIn('subject_id', $subjectIds);
+        }
+
+        // Filter attendance to the active semester date range so warnings match the selected period
+        if ($semester && $academicYear) {
+            $years = explode('/', $academicYear);
+            $yearStart = (int) ($years[0] ?? date('Y'));
+            $yearEnd = count($years) > 1 ? (int) $years[1] : $yearStart + 1;
+            $startDate = $semester === 'Ganjil' ? "{$yearStart}-07-01" : "{$yearEnd}-01-01";
+            $endDate = $semester === 'Ganjil' ? "{$yearStart}-12-31" : "{$yearEnd}-06-30";
+            $attendanceQuery->whereBetween('date', [$startDate, $endDate]);
+        }
+
         $attendances = $attendanceQuery->get();
         $uniqueDates = $attendances->pluck('date')->unique();
         $numDays = $uniqueDates->count();
@@ -63,7 +78,18 @@ class GradeCalculationService
         $ws = ($agreement?->attitude_weight ?? 50) / 100;
 
         // ── Keaktifan Points ──
-        $totalKeaktifanPoints = StudentActivityPoint::where('student_id', $student->id)->sum('point');
+        // student_activity_points tidak punya kolom semester/academic_year, hanya 'date'.
+        // Filter rentang tanggal semester agar poin semester lain tidak bocor.
+        $keaktifanQuery = StudentActivityPoint::where('student_id', $student->id);
+        if ($semester && $academicYear) {
+            $years = explode('/', $academicYear);
+            $yearStart = (int) ($years[0] ?? date('Y'));
+            $yearEnd = count($years) > 1 ? (int) $years[1] : $yearStart + 1;
+            $startDate = $semester === 'Ganjil' ? "{$yearStart}-07-01" : "{$yearEnd}-01-01";
+            $endDate = $semester === 'Ganjil' ? "{$yearStart}-12-31" : "{$yearEnd}-06-30";
+            $keaktifanQuery->whereBetween('date', [$startDate, $endDate]);
+        }
+        $totalKeaktifanPoints = $keaktifanQuery->sum('point');
         $maxKeaktifanPoints = 50; // 50 poin = 100% (dapat disesuaikan)
         $keaktifanPct = $maxKeaktifanPoints > 0 ? min(100, ($totalKeaktifanPoints / $maxKeaktifanPoints) * 100) : 0;
 
@@ -72,9 +98,9 @@ class GradeCalculationService
             $subject = $records->first()->subject;
             $avg     = round($records->avg('score'), 2);
 
-            $practiceScores  = $records->where('type', 'praktik');
-            $attitudeScores  = $records->where('type', 'sikap');
-            $knowledgeScores = $records->whereNotIn('type', ['praktik', 'sikap']);
+            $practiceScores  = $records->filter(fn($g) => strtolower($g->type) === 'praktik');
+            $attitudeScores  = $records->filter(fn($g) => strtolower($g->type) === 'sikap');
+            $knowledgeScores = $records->filter(fn($g) => !in_array(strtolower($g->type), ['praktik', 'sikap']));
 
             $avg_knowledge = $knowledgeScores->count() > 0 ? $knowledgeScores->avg('score') : 0;
             $avg_practice  = $practiceScores->count()  > 0 ? $practiceScores->avg('score')  : 0;

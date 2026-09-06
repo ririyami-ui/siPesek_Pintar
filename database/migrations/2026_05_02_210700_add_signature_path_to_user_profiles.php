@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->string('signature_path')->nullable()->after('logo_path');
+            if (!Schema::hasColumn('user_profiles', 'signature_path')) {
+                $table->string('signature_path')->nullable()->after('logo_path');
+            }
         });
     }
 

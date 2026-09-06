@@ -59,6 +59,7 @@ const ScheduleCalendar = () => {
         start_date: '',
         end_date: '',
         category: 'semester_ganjil',
+        is_holiday: true,
         is_emergency: false,
         start_time: '',
         end_time: ''
@@ -277,9 +278,14 @@ const ScheduleCalendar = () => {
         try {
             const payload = {
                 ...holidayForm,
-                date: holidayForm.start_date,
+                date: holidayForm.start_date || null,
+                start_date: holidayForm.start_date || null,
+                end_date: holidayForm.end_date || null,
                 // Ensure time fields only sent when emergency is true
-                ...(holidayForm.is_emergency ? { start_time: holidayForm.start_time, end_time: holidayForm.end_time } : {}),
+                ...(holidayForm.is_emergency ? { 
+                    start_time: holidayForm.start_time || null, 
+                    end_time: holidayForm.end_time || null 
+                } : {}),
             };
 
             if (editingHolidayId) {
@@ -291,7 +297,7 @@ const ScheduleCalendar = () => {
             }
             fetchHolidays();
             setEditingHolidayId(null);
-            setHolidayForm({ title: '', start_date: '', end_date: '', category: 'semester_ganjil' });
+            setHolidayForm({ title: '', start_date: '', end_date: '', category: 'semester_ganjil', is_holiday: true, is_emergency: false, start_time: '', end_time: '' });
         } catch (error) {
             console.error('Error saving holiday:', error);
             const errorData = error.response?.data;
@@ -1199,6 +1205,24 @@ const ScheduleCalendar = () => {
                                         <input type="checkbox" id="emergencyToggle" checked={holidayForm.is_emergency} onChange={(e) => setHolidayForm({ ...holidayForm, is_emergency: e.target.checked })} className="mr-2" />
                                         <label htmlFor="emergencyToggle" className="text-[10px] font-bold text-gray-600">Darurat (Blokir Parsial)</label>
                                     </div>
+                                    {/* Kegiatan toggle: is_holiday=false → absensi pagi kegiatan tetap aktif */}
+                                    <div className="flex items-center mt-2">
+                                        <input type="checkbox" id="kegiatanToggle" checked={holidayForm.is_holiday === false} onChange={(e) => setHolidayForm({ ...holidayForm, is_holiday: !e.target.checked })} className="mr-2" />
+                                        <label htmlFor="kegiatanToggle" className="text-[10px] font-bold text-gray-600">Kegiatan (mis. Kokurikuler) — jadwal mapel libur, absensi pagi tetap aktif</label>
+                                    </div>
+                                    {/* Rentang jam kegiatan: wajib saat is_holiday=false */}
+                                    {holidayForm.is_holiday === false && (
+                                        <div className="grid grid-cols-2 gap-2 mt-2">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 ml-1">Dari Jam</label>
+                                                <StyledInput type="time" value={holidayForm.start_time} onChange={(e) => setHolidayForm({ ...holidayForm, start_time: e.target.value })} required />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 ml-1">Sampai Jam</label>
+                                                <StyledInput type="time" value={holidayForm.end_time} onChange={(e) => setHolidayForm({ ...holidayForm, end_time: e.target.value })} required />
+                                            </div>
+                                        </div>
+                                    )}
                                     {holidayForm.is_emergency && (
                                         <div className="grid grid-cols-2 gap-2 mt-2">
                                             <div className="space-y-1">
@@ -1235,7 +1259,7 @@ const ScheduleCalendar = () => {
                                                 <p className="text-[10px] text-gray-400 font-bold uppercase">{moment(h.start_date || h.date).format('DD MMM YYYY')} {h.end_date && `- ${moment(h.end_date).format('DD MMM YYYY')}`}</p>
                                             </div>
                                             <div className="flex gap-1">
-                                                <button onClick={() => { setEditingHolidayId(h.id); setHolidayForm({ title: h.title, start_date: (h.start_date || h.date || '').slice(0, 10), end_date: (h.end_date || '').slice(0, 10), category: h.category || 'lainnya' }); }} className="p-2 text-blue-500 hover:bg-blue-50 rounded-xl"><Edit size={16} /></button>
+                                                <button onClick={() => { setEditingHolidayId(h.id); setHolidayForm({ title: h.title, start_date: (h.start_date || h.date || '').slice(0, 10), end_date: (h.end_date || '').slice(0, 10), category: h.category || 'lainnya', is_holiday: h.is_holiday !== false, is_emergency: !!h.is_emergency, start_time: h.start_time || '', end_time: h.end_time || '' }); }} className="p-2 text-blue-500 hover:bg-blue-50 rounded-xl"><Edit size={16} /></button>
                                                 <button onClick={() => handleDeleteHoliday(h.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-xl"><Trash2 size={16} /></button>
                                             </div>
                                         </div>

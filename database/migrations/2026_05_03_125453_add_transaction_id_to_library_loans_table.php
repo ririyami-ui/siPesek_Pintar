@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('library_loans', function (Blueprint $table) {
-            $table->string('transaction_id')->nullable()->index()->after('id');
+            if (!Schema::hasColumn('library_loans', 'transaction_id')) {
+                $table->string('transaction_id')->nullable()->index()->after('id');
+            }
         });
     }
 

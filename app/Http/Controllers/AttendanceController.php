@@ -17,8 +17,6 @@ class AttendanceController extends Controller
     {
         $query = Attendance::with(['student', 'class', 'subject', 'teacher']);
 
-        // Removed user_id restriction to allow global visibility for the same class/subject
-
         if ($request->filled('class_id')) {
             $query->where('class_id', $request->class_id);
         }
@@ -38,30 +36,102 @@ class AttendanceController extends Controller
         }
 
         if ($request->filled('user_id')) {
+            $request->validate(['user_id' => 'integer|exists:users,id']);
             $query->where('user_id', $request->user_id);
+        }
+
+        // [SECURITY] Non-admin: hanya lihat absensi mapel yang diampu, kecuali wali kelas
+        $user = auth()->user();
+        if ($user && !$user->isAdmin()) {
+            $isWaliKelas = false;
+            if ($request->filled('class_id')) {
+                $isWaliKelas = \App\Models\SchoolClass::where('id', $request->class_id)
+                    ->where('user_id', $user->id)
+                    ->exists();
+            } elseif ($request->filled('student_id')) {
+                $studentClassId = \App\Models\Student::where('id', $request->student_id)->value('class_id');
+                $isWaliKelas = $studentClassId && \App\Models\SchoolClass::where('id', $studentClassId)
+                    ->where('user_id', $user->id)
+                    ->exists();
+            }
+
+            if (!$isWaliKelas) {
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                if (!$teacher) {
+                    return response()->json(['data' => []]);
+                }
+
+                $assignmentQuery = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id);
+                if ($request->filled('class_id')) {
+                    $assignmentQuery->where('class_id', $request->class_id);
+                }
+
+                $assignments = $assignmentQuery->get();
+                $subjectIds = $assignments->pluck('subject_id')->unique()->toArray();
+                $classIdsGuru = $assignments->pluck('class_id')->unique()->toArray();
+
+                if (empty($subjectIds) && empty($classIdsGuru)) {
+                    return response()->json(['data' => []]);
+                }
+
+                // [KEGIATAN] Guru non-wali hanya melihat mapel yang diampu,
+                // ditambah absen kegiatan (subject_id NULL) pada kelas yang diampu.
+                $query->where(function ($q) use ($subjectIds, $classIdsGuru, $request) {
+                    $hasAny = false;
+                    if (!empty($subjectIds)) {
+                        $q->whereIn('subject_id', $subjectIds);
+                        $hasAny = true;
+                    }
+                    if (!empty($classIdsGuru) && !$request->filled('subject_id')) {
+                        $q->orWhere(function ($sq) use ($classIdsGuru) {
+                            $sq->whereNull('subject_id')
+                               ->whereIn('class_id', $classIdsGuru);
+                        });
+                        $hasAny = true;
+                    }
+                    if (!$hasAny) {
+                        $q->whereRaw('1 = 0');
+                    }
+                });
+            }
         }
 
         $attendances = $query->orderBy('date', 'desc')->get();
 
-        // [FIX] Attach time from Schedule for each attendance record
+        // [FIX] Attach time from Schedule — batch load to avoid N+1 queries
         $dayMapping = [
             'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
             'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat',
             'Saturday' => 'Sabtu',
         ];
 
-        $attendances->each(function ($attendance) use ($dayMapping) {
-            $dayName = $dayMapping[Carbon::parse($attendance->date)->format('l')] ?? null;
-            if ($dayName) {
-                $schedule = \App\Models\Schedule::where('class_id', $attendance->class_id)
-                    ->where('subject_id', $attendance->subject_id)
-                    ->where('day', $dayName)
-                    ->first();
-                if ($schedule) {
-                    $attendance->time = Carbon::parse($schedule->start_time)->format('H:i') . ' - ' . Carbon::parse($schedule->end_time)->format('H:i');
+        // Load schedules once for all involved classes/subjects (batch, avoid N+1)
+        $classIds = $attendances->pluck('class_id')->filter()->all();
+        $subjectIds = $attendances->pluck('subject_id')->filter()->all();
+
+        $scheduleMap = [];
+        if (!empty($classIds) || !empty($subjectIds)) {
+            $scheduleQuery = \App\Models\Schedule::query();
+            if (!empty($classIds)) {
+                $scheduleQuery->whereIn('class_id', $classIds);
+            }
+            $schedules = $scheduleQuery->get();
+
+            foreach ($schedules as $schedule) {
+                $scheduleMap[$schedule->class_id . '|' . $schedule->subject_id . '|' . $schedule->day] = $schedule;
+            }
+
+            foreach ($attendances as $attendance) {
+                $dayName = $dayMapping[Carbon::parse($attendance->date)->format('l')] ?? null;
+                if ($dayName) {
+                    $key = $attendance->class_id . '|' . $attendance->subject_id . '|' . $dayName;
+                    $schedule = $scheduleMap[$key] ?? null;
+                    if ($schedule) {
+                        $attendance->time = Carbon::parse($schedule->start_time)->format('H:i') . ' - ' . Carbon::parse($schedule->end_time)->format('H:i');
+                    }
                 }
             }
-        });
+        }
 
         return response()->json(['data' => $attendances]);
     }
@@ -72,8 +142,11 @@ class AttendanceController extends Controller
     public function downloadPdf(Request $request)
     {
         $classId = $request->input('class_id');
-        if (!$classId) {
-            return response()->json(['message' => 'class_id required'], 400);
+        $monthParam = $request->input('month');
+        $yearParam = $request->input('year');
+
+        if (!$classId || !$monthParam || !$yearParam) {
+            return response()->json(['message' => 'class_id, month, and year are required'], 400);
         }
 
         $user = auth()->user();
@@ -83,44 +156,62 @@ class AttendanceController extends Controller
         $semester = $request->input('semester') ?? ($profile->active_semester ?? 'Ganjil');
         $academicYear = $profile->academic_year ?? date('Y') . '/' . (date('Y') + 1);
 
-        // Auto date range based on semester if not provided
-        $startDate = $request->input('date_start');
-        $endDate = $request->input('date_end');
+        // Calculate start and end date for the given month and year
+        $startDate = Carbon::create($yearParam, $monthParam, 1)->startOfMonth()->format('Y-m-d');
+        $endDate = Carbon::create($yearParam, $monthParam, 1)->endOfMonth()->format('Y-m-d');
+        
+        // fetch attendances for class in range
+        $attendanceQuery = Attendance::with(['student'])
+            ->where('class_id', $classId)
+            ->whereBetween('date', [$startDate, $endDate]);
 
-        if (!$startDate || !$endDate) {
-            $year = explode('/', $academicYear)[0];
-            if ($semester === 'Ganjil') {
-                $startDate = "$year-07-01";
-                $endDate = "$year-12-31";
-            } else {
-                $nextYear = count(explode('/', $academicYear)) > 1 ? explode('/', $academicYear)[1] : ($year + 1);
-                $startDate = "$nextYear-01-01";
-                $endDate = "$nextYear-06-30";
+        // [SECURITY] Non-admin: hanya mapel yang diampu, kecuali wali kelas
+        if ($user && !$user->isAdmin()) {
+            $isWaliKelas = \App\Models\SchoolClass::where('id', $classId)
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if (!$isWaliKelas) {
+                $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+                if (!$teacher) {
+                    return response()->json(['message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'], 403);
+                }
+
+                $subjectIds = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                    ->where('class_id', $classId)
+                    ->pluck('subject_id')
+                    ->unique()
+                    ->toArray();
+
+                if (empty($subjectIds)) {
+                    return response()->json(['message' => 'Anda tidak mengampu mata pelajaran di kelas ini.'], 403);
+                }
+
+                $attendanceQuery->whereIn('subject_id', $subjectIds);
             }
         }
 
-        // fetch attendances for class in range
-        $attendances = Attendance::with(['student'])
-            ->where('class_id', $classId)
-            ->whereBetween('date', [$startDate, $endDate])
-            ->orderBy('date')
-            ->get();
+        $attendances = $attendanceQuery->orderBy('date')->get();
 
         // collect unique dates
         $dates = [];
-        foreach ($attendances as $a) {
-            $dateStr = \Carbon\Carbon::parse($a->date)->format('Y-m-d');
-            $dates[$dateStr] = $dateStr;
+        // Generate all dates for the selected month
+        $allDatesInMonth = collect();
+        $currentDate = Carbon::create($yearParam, $monthParam, 1)->startOfMonth();
+        $endDateOfMonth = Carbon::create($yearParam, $monthParam, 1)->endOfMonth();
+        while ($currentDate->lte($endDateOfMonth)) {
+            $allDatesInMonth->push($currentDate->copy());
+            $currentDate->addDay();
         }
-        $dateObjs = collect($dates)->sort()->map(fn($d) => \Carbon\Carbon::parse($d));
+        $dateObjs = $allDatesInMonth->sortBy(fn($date) => $date->timestamp);
 
         // group by student
         $students = [];
-        $summaryMap = [];
-        $attMap = [];
+        $summaryMap = []; // student_id -> status -> count
+        $attMap = []; // student_id -> date -> status_code
         foreach ($attendances as $a) {
             $sid = $a->student_id;
-            $dateStr = \Carbon\Carbon::parse($a->date)->format('Y-m-d');
+            $dateStr = Carbon::parse($a->date)->format('Y-m-d');
             $students[$sid] = $a->student; 
             $status = strtolower($a->status);
             $code = '';
@@ -145,15 +236,15 @@ class AttendanceController extends Controller
             'academicYear' => $academicYear,
             'semester' => $semester,
             'class' => $class,
-            'period' => \Carbon\Carbon::parse($startDate)->format('d/m/Y') . " s/d " . \Carbon\Carbon::parse($endDate)->format('d/m/Y'),
+            'period' => Carbon::create($yearParam, $monthParam, 1)->translatedFormat('F Y'),
             'waliName' => $class->wali?->name ?? auth()->user()->name,
             'students' => collect($students)->sortBy('absen'),
             'dates' => $dateObjs,
             'attMap' => $attMap,
             'summaryMap' => $summaryMap
         ])->setPaper('a4', 'landscape');
-
-        return $pdf->download("Rekap_Absensi_{$class->rombel}_{$semester}.pdf");
+        
+        return $pdf->download("Rekap_Absensi_{$class->rombel}_" . Carbon::create($yearParam, $monthParam, 1)->translatedFormat('F Y') . ".pdf");
     }
 
     /**
@@ -223,7 +314,7 @@ class AttendanceController extends Controller
 
         $date = \Carbon\Carbon::parse($validated['date'])->format('Y-m-d');
         
-        // [FEATURE] Prevent attendance entry on School Agenda / Holidays
+        // [FEATURE] Agenda Kegiatan vs Libur
         $holiday = \App\Models\Holiday::where(function($q) use ($date) {
             $q->where('date', $date)
               ->orWhere(function($sub) use ($date) {
@@ -232,7 +323,34 @@ class AttendanceController extends Controller
               });
         })->first();
 
-        if ($holiday && !auth()->user()->isAdmin()) {
+        // [KEGIATAN] Agenda kegiatan (mis. P5): absensi pagi dicatat TANPA mapel (subject_id = null)
+        $isAgendaKegiatan = $holiday && !$holiday->is_holiday;
+
+        if ($isAgendaKegiatan) {
+            if (!empty($validated['subject_id'])) {
+                return response()->json([
+                    'message' => "Saat agenda kegiatan ({$holiday->name}), absensi dicatat tanpa mata pelajaran."
+                ], 422);
+            }
+
+            // [BATAS JAM] Non-admin: input absen kegiatan HARI INI hanya dalam rentang jam agenda.
+            // Repair mode / tanggal lampau → frontend kirim skip_time_check=true.
+            if (!auth()->user()->isAdmin() && !$request->boolean('skip_time_check')) {
+                $isToday = \Carbon\Carbon::parse($date)->isToday();
+                if ($isToday && $holiday->start_time && $holiday->end_time) {
+                    $now = now();
+                    $start = \Carbon\Carbon::parse($holiday->start_time);
+                    $end = \Carbon\Carbon::parse($holiday->end_time);
+                    if ($now->lt($start) || $now->gt($end)) {
+                        return response()->json([
+                            'message' => "Absensi kegiatan hanya dapat diisi dalam rentang jam "
+                                . $start->format('H:i') . " - " . $end->format('H:i') . "."
+                        ], 422);
+                    }
+                }
+            }
+        } elseif ($holiday && !auth()->user()->isAdmin()) {
+            // Libur: tetap blokir non-admin
             return response()->json([
                 'message' => "Absensi tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name})."
             ], 422);
@@ -249,6 +367,7 @@ class AttendanceController extends Controller
                     'student_id' => $item['student_id'],
                     'date'       => $validated['date'],
                     'subject_id' => $validated['subject_id'],
+                    'class_id'   => $validated['class_id'],
                 ])->first();
 
                 $oldStatus = $existing ? $existing->status : null;
@@ -286,13 +405,17 @@ class AttendanceController extends Controller
                 if ($subject) {
                     $subjectName = $subject->name;
                 }
+            } elseif ($isAgendaKegiatan) {
+                $subjectName = $holiday->name ?: 'Kegiatan';
             }
 
             $statusMap = ['hadir' => 'Hadir', 'sakit' => 'Sakit', 'izin' => 'Izin', 'alpa' => 'Alpa / Tanpa Keterangan'];
             foreach ($validated['attendances'] as $item) {
                 $statusLabel = $statusMap[$item['status']] ?? $item['status'];
                 $title = "Update Absensi: {$statusLabel}";
-                $body = "Status kehadiran ananda pada mata pelajaran {$subjectName} telah tercatat sebagai {$statusLabel}.";
+                $body = $isAgendaKegiatan
+                    ? "Status kehadiran ananda pada kegiatan {$subjectName} telah tercatat sebagai {$statusLabel}."
+                    : "Status kehadiran ananda pada mata pelajaran {$subjectName} telah tercatat sebagai {$statusLabel}.";
                 \App\Services\PushNotificationService::sendToStudentParent($item['student_id'], $title, $body, '/siswa/kehadiran');
             }
             return response()->json(['message' => 'Attendance recorded successfully', 'data' => $records], 201);
@@ -316,9 +439,9 @@ class AttendanceController extends Controller
         $query = Attendance::where('class_id', $validated['class_id'])
             ->whereBetween('date', [$validated['start_date'], $validated['end_date']]);
 
-        $summary = $query->select('student_id', 'status', DB::raw('count(*) as count'))
+        $summary = $query->with('student')
+            ->select('student_id', 'status', DB::raw('count(*) as count'))
             ->groupBy('student_id', 'status')
-            ->with('student')
             ->get();
 
         return response()->json($summary);
@@ -386,12 +509,15 @@ class AttendanceController extends Controller
                 ->with(['class', 'subject', 'teacher']);
 
             if (!$isAdmin) {
-                // If not admin, only show schedules assigned to this teacher
-                $schedules->where('teacher_id', $user->id);
+                $schedules = $schedules->where('teacher_id', $user->id);
             }
 
             $daySchedules = $schedules->get();
-
+            
+            if ($daySchedules->isEmpty()) {
+                continue;
+            }
+            
             foreach ($daySchedules as $sch) {
                 // Check if attendance exists for this date, class, and subject
                 $exists = Attendance::where([

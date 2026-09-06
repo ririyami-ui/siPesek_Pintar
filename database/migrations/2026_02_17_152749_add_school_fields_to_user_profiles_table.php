@@ -13,13 +13,26 @@ return new class extends Migration
     {
         Schema::table('user_profiles', function (Blueprint $table) {
             // New School Fields
-            $table->string('npsn')->nullable()->after('school_level');
-            $table->string('nss')->nullable()->after('npsn');
-            $table->text('address')->nullable()->after('nss');
-            $table->string('logo_path')->nullable()->after('address');
+            if (!Schema::hasColumn('user_profiles', 'npsn')) {
+                $table->string('npsn')->nullable()->after('school_level');
+            }
+            if (!Schema::hasColumn('user_profiles', 'nss')) {
+                $table->string('nss')->nullable()->after('npsn');
+            }
+            if (!Schema::hasColumn('user_profiles', 'address')) {
+                $table->text('address')->nullable()->after('nss');
+            }
+            if (!Schema::hasColumn('user_profiles', 'logo_path')) {
+                $table->string('logo_path')->nullable()->after('address');
+            }
 
             // Remove weight fields
-            $table->dropColumn(['academic_weight', 'attitude_weight']);
+            $dropColumns = [];
+            if (Schema::hasColumn('user_profiles', 'academic_weight')) $dropColumns[] = 'academic_weight';
+            if (Schema::hasColumn('user_profiles', 'attitude_weight')) $dropColumns[] = 'attitude_weight';
+            if (!empty($dropColumns)) {
+                $table->dropColumn($dropColumns);
+            }
         });
     }
 

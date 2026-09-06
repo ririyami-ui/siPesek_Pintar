@@ -24,19 +24,18 @@ class ParentReport extends Model
         'radar_snapshot',
         'is_sent',
         'sent_at',
+        'read_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'period_start'    => 'date',
-            'period_end'      => 'date',
-            'stats_snapshot'  => 'array',
-            'radar_snapshot'  => 'array',
-            'is_sent'         => 'boolean',
-            'sent_at'         => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'period_start'    => 'date',
+        'period_end'      => 'date',
+        'stats_snapshot'  => 'array',
+        'radar_snapshot'  => 'array',
+        'is_sent'         => 'boolean',
+        'sent_at'         => 'datetime',
+        'read_at'         => 'datetime',
+    ];
 
     public function student(): BelongsTo
     {

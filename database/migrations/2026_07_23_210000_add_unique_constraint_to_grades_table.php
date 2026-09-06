@@ -27,10 +27,12 @@ return new class extends Migration
 
         // 2. Add unique constraint
         Schema::table('grades', function (Blueprint $table) {
-            $table->unique(
-                ['user_id', 'student_id', 'class_id', 'subject_id', 'date', 'type', 'topic', 'semester', 'academic_year'],
-                'grades_unique_combination'
-            );
+            if (!Schema::hasIndex('grades', 'grades_unique_combination')) {
+                $table->unique(
+                    ['user_id', 'student_id', 'class_id', 'subject_id', 'date', 'type', 'topic', 'semester', 'academic_year'],
+                    'grades_unique_combination'
+                );
+            }
         });
     }
 

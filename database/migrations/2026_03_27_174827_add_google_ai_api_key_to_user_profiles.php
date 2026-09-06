@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->string('google_ai_api_key')->nullable()->after('gemini_model');
+            $columns = collect(DB::select("SHOW COLUMNS FROM user_profiles"))
+                ->pluck('Field')
+                ->toArray();
+
+            if (!in_array('google_ai_api_key', $columns)) {
+                $table->string('google_ai_api_key')->nullable()->after('gemini_model');
+            }
         });
     }
 

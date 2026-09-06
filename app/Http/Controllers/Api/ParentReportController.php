@@ -55,11 +55,21 @@ class ParentReportController extends Controller
      */
     public function adminIndex(Request $request)
     {
-        $query = ParentReport::with('student.class')->orderByDesc('period_start');
+        $query = ParentReport::with('student.class')
+            ->orderByDesc('period_start')
+            ->orderBy('class_id');
+        
         foreach (['type', 'student_id', 'class_id'] as $f) {
             if ($request->has($f)) $query->where($f, $request->$f);
         }
-        return response()->json($query->paginate($request->get('per_page', 20)));
+        
+        $perPage = (int)$request->get('per_page', 20);
+        $perPage = min($perPage, 1000);
+        
+        $data = $query->paginate($perPage)
+            ->through(fn($r) => $this->formatReport($r, true));
+        
+        return response()->json($data);
     }
 
     /**
@@ -79,6 +89,16 @@ class ParentReportController extends Controller
     {
         $base = [
             'id'           => $r->id,
+            'student_id'   => $r->student_id,
+            'student'      => $r->relationLoaded('student')
+                ? [
+                    'id'    => $r->student?->id,
+                    'name'  => $r->student?->name,
+                    'class' => $r->student?->class
+                        ? ['rombel' => $r->student->class->rombel]
+                        : null,
+                ]
+                : null,
             'type'         => $r->type,
             'period_label' => $r->period_label,
             'period_start' => $r->period_start?->toDateString(),

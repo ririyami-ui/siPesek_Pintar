@@ -26,6 +26,12 @@ const AbsensiPage = () => {
   const [activityCategories, setActivityCategories] = useState([]);
   const [activityPoints, setActivityPoints] = useState({}); // { studentId: [catId, ...] }
   const [showActivityInput, setShowActivityInput] = useState(false);
+  // Mode Absen Pagi Kegiatan (mis. P5) — agenda kegiatan is_holiday=false
+  const [isKegiatanMode, setIsKegiatanMode] = useState(false);
+  const [kegiatanInfo, setKegiatanInfo] = useState(null); // { id, name }
+  const [kegiatanClasses, setKegiatanClasses] = useState([]);
+  const [selectedKegiatanClass, setSelectedKegiatanClass] = useState(null);
+  const [isKegiatanLoading, setIsKegiatanLoading] = useState(false);
 
   const autoSaveTimeout = useRef(null);
 
@@ -35,26 +41,47 @@ const AbsensiPage = () => {
         const now = moment();
         const targetDate = dateFromUrl || now.format('YYYY-MM-DD');
 
-        // Check if target date is a holiday
+        // Check if target date is a holiday or kegiatan (agenda kegiatan)
         try {
           const holidaysRes = await api.get('/holidays');
           const fetched = holidaysRes.data.data || holidaysRes.data || [];
           setHolidays(fetched);
           const selected = moment(targetDate).startOf('day');
-          const isHoliday = fetched.some(h => {
+          const holiday = fetched.find(h => {
             if (h.start_date && h.end_date) {
               const start = moment(h.start_date).startOf('day');
               const end = moment(h.end_date).startOf('day');
               return selected.isBetween(start, end, null, '[]');
             }
-            return moment(h.date).isSame(selected, 'day');
+            return h.date && moment(h.date).isSame(selected, 'day');
           });
-          if (isHoliday) {
-            setActiveSchedule({ isHoliday: true });
-            setStudents([]);
-            setAttendance({});
+          if (holiday) {
+            if (holiday.is_holiday) {
+              // Libur: blokir absensi
+              setActiveSchedule({ isHoliday: true });
+              setStudents([]);
+              setAttendance({});
+              setIsKegiatanMode(false);
+              setKegiatanInfo(null);
+              setSelectedKegiatanClass(null);
+              return;
+            }
+            // Agenda kegiatan (mis. P5): mode Absen Pagi Kegiatan tanpa mapel
+            setIsKegiatanMode(true);
+            setKegiatanInfo({
+              id: holiday.id,
+              name: holiday.name || holiday.title || 'Kegiatan',
+              start_time: holiday.start_time,
+              end_time: holiday.end_time,
+            });
+            setActiveSchedule(null);
+            setSelectedKegiatanClass(null);
+            await loadKegiatanClasses();
             return;
           }
+          setIsKegiatanMode(false);
+          setKegiatanInfo(null);
+          setSelectedKegiatanClass(null);
         } catch (e) {
           console.error('Error fetch holidays', e);
         }
@@ -237,9 +264,12 @@ const AbsensiPage = () => {
             setAttendance(prev => {
               const newAttendance = { ...prev };
               fetchedStudents.forEach(student => {
-                // Priority: Use found attendanceToUse, then fall back to 'hadir'
-                if (!newAttendance[student.id] || currentSubjectAttendance.length === 0) {
-                   newAttendance[student.id] = attendanceToUse[student.id] || 'hadir';
+                // [FIX] Jangan override input guru yang belum tersimpan di semua cabang
+                // (baik currentSubjectAttendance ada maupun pre-fill dari sesi lain)
+                if (prev[student.id] !== undefined && prev[student.id] !== '') {
+                  newAttendance[student.id] = prev[student.id];
+                } else {
+                  newAttendance[student.id] = attendanceToUse[student.id] || 'hadir';
                 }
               });
               return newAttendance;
@@ -282,9 +312,9 @@ const AbsensiPage = () => {
     };
 
     fetchActiveScheduleAndStudentsAndAttendance();
-    // Only auto-refresh in real-time mode
+    // Only auto-refresh in real-time mode AND user tidak sedang edit
     let interval;
-    if (!classIdFromUrl) {
+    if (!classIdFromUrl && !Object.keys(attendance).length) {
       interval = setInterval(fetchActiveScheduleAndStudentsAndAttendance, 60000);
     }
 
@@ -295,6 +325,99 @@ const AbsensiPage = () => {
 
   const handleAttendanceChange = (studentId, status) => {
     setAttendance(prev => ({ ...prev, [studentId]: status }));
+  };
+
+  const loadKegiatanClasses = async () => {
+    setIsKegiatanLoading(true);
+    try {
+      const res = await api.get('/classes?all=true');
+      const cls = res.data.data || res.data || [];
+      setKegiatanClasses([...cls].sort((a, b) => (a.rombel || '').localeCompare(b.rombel || '')));
+    } catch (err) {
+      console.error('Error fetch classes for kegiatan:', err);
+      setKegiatanClasses([]);
+    } finally {
+      setIsKegiatanLoading(false);
+    }
+  };
+
+  const handleSelectKegiatanClass = async (cls) => {
+    setSelectedKegiatanClass(cls);
+    setStudents([]);
+    setAttendance({});
+    try {
+      const targetDate = dateFromUrl || moment().format('YYYY-MM-DD');
+      const studentsRes = await api.get('/students', { params: { class_id: cls.id } });
+      const list = (studentsRes.data.data || studentsRes.data || []).sort((a, b) => {
+        const absenA = parseInt(a.absen) || 0;
+        const absenB = parseInt(b.absen) || 0;
+        return absenA - absenB;
+      });
+      setStudents(list);
+
+      // Prefill absensi kegiatan yang sudah ada (subject_id null) untuk tanggal ini
+      const attendanceRes = await api.get('/attendances', {
+        params: { date: targetDate, class_id: cls.id }
+      });
+      const all = attendanceRes.data.data || [];
+      const kegiatan = all.filter(r => r.subject_id === null || r.subject_id === undefined || r.subject_id === '');
+      const map = {};
+      kegiatan.forEach(r => { map[r.student_id] = r.status; });
+
+      setAttendance(prev => {
+        const next = { ...prev };
+        list.forEach(s => { next[s.id] = map[s.id] || 'hadir'; });
+        return next;
+      });
+    } catch (err) {
+      console.error('Error loading kegiatan students:', err);
+      toast.error('Gagal memuat siswa kelas.');
+    }
+  };
+
+  const handleSaveKegiatanAttendance = async () => {
+    if (!selectedKegiatanClass || students.length === 0) {
+      toast.error('Pilih kelas kegiatan terlebih dahulu.');
+      return;
+    }
+    const targetDate = dateFromUrl || moment().format('YYYY-MM-DD');
+    const isRepairMode = !!dateFromUrl;
+
+    // [BATAS JAM] Non-admin realtime: hanya bisa isi dalam rentang jam kegiatan
+    if (!isAdmin && !isRepairMode && kegiatanInfo?.start_time && kegiatanInfo?.end_time) {
+      const now = moment();
+      const start = moment(String(kegiatanInfo.start_time).slice(0, 5), 'HH:mm');
+      const end = moment(String(kegiatanInfo.end_time).slice(0, 5), 'HH:mm');
+      if (!now.isBetween(start, end, null, '[]')) {
+        toast.error(`Absensi kegiatan hanya dapat diisi dalam rentang jam ${String(kegiatanInfo.start_time).slice(0, 5)} - ${String(kegiatanInfo.end_time).slice(0, 5)}.`);
+        return;
+      }
+    }
+
+    try {
+      const attendanceData = students.map(student => ({
+        student_id: student.id,
+        status: attendance[student.id] || 'hadir',
+        note: null,
+      }));
+
+      await api.post('/attendances/bulk', {
+        date: targetDate,
+        class_id: selectedKegiatanClass.id,
+        subject_id: null,
+        skip_time_check: isRepairMode,
+        attendances: attendanceData,
+      });
+
+      toast.success(`Absensi kegiatan untuk kelas ${selectedKegiatanClass.rombel} berhasil disimpan!`);
+      if (typeof refreshMonitoringData === 'function') {
+        refreshMonitoringData();
+      }
+    } catch (error) {
+      console.error('Error saving kegiatan attendance:', error);
+      const msg = error.response?.data?.message || 'Gagal menyimpan absensi kegiatan.';
+      toast.error(msg);
+    }
   };
 
   const handleToggleActivityPoint = (studentId, catId) => {
@@ -466,6 +589,9 @@ const AbsensiPage = () => {
     }] : []),
   ];
 
+  // Kolom tanpa "Keaktifan" untuk mode kegiatan (poin tidak disimpan di mode ini)
+  const kegiatanColumns = columns.filter(col => (col.header?.label || '') !== '✨ Keaktifan');
+
   return (
     <div className="p-3 sm:p-6 bg-background-light dark:bg-background-dark min-h-screen">
       <h1 className="text-2xl sm:text-3xl font-bold text-primary-dark dark:text-primary-light mb-6">Absensi Siswa</h1>
@@ -494,6 +620,26 @@ const AbsensiPage = () => {
                 <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                   {activeSchedule.class} — {activeSchedule.subject}
                 </h2>
+                <div className="flex items-center justify-center md:justify-start gap-4 mt-2">
+                  <div className="px-3 py-1 bg-primary/10 dark:bg-primary/20 rounded-full text-xs font-bold text-primary dark:text-primary-light border border-primary/20">
+                    Smt {activeSemester}
+                  </div>
+                  <div className="px-3 py-1 bg-slate-100 dark:bg-slate-700 rounded-full text-xs font-bold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                    {academicYear}
+                  </div>
+                </div>
+              </div>
+            ) : isKegiatanMode ? (
+              <div className="space-y-1">
+                <span className="text-[10px] font-bold text-primary dark:text-primary-light uppercase tracking-widest opacity-70">Absensi Pagi Kegiatan</span>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+                  {kegiatanInfo?.name || 'Kegiatan'}
+                </h2>
+                {kegiatanInfo?.start_time && kegiatanInfo?.end_time && (
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                    Rentang Input Absensi: {String(kegiatanInfo.start_time).slice(0, 5)} - {String(kegiatanInfo.end_time).slice(0, 5)}
+                  </p>
+                )}
                 <div className="flex items-center justify-center md:justify-start gap-4 mt-2">
                   <div className="px-3 py-1 bg-primary/10 dark:bg-primary/20 rounded-full text-xs font-bold text-primary dark:text-primary-light border border-primary/20">
                     Smt {activeSemester}
@@ -568,6 +714,67 @@ const AbsensiPage = () => {
             Simpan Absensi
           </button>
         </>
+      ) : isKegiatanMode ? (
+        selectedKegiatanClass ? (
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-black text-slate-800 dark:text-slate-100">
+                Absen Pagi Kegiatan — {selectedKegiatanClass.rombel}
+              </h3>
+              <button
+                onClick={() => { setSelectedKegiatanClass(null); setStudents([]); setAttendance({}); }}
+                className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition"
+              >
+                Ganti Kelas
+              </button>
+            </div>
+            <div className="overflow-x-auto bg-surface-light dark:bg-surface-dark rounded-lg shadow-md">
+              <StyledTable headers={kegiatanColumns.map(col => col.header)}>
+                {students.map((student, index) => (
+                  <tr key={student.id || index} className={
+                    index % 2 === 0 ? 'bg-white dark:bg-gray-700' : 'bg-gray-100 dark:bg-gray-800'
+                  }>
+                    {kegiatanColumns.map((col, colIndex) => (
+                      <td key={colIndex} className={`px-6 py-4 text-sm text-text-light dark:text-text-dark ${col.cellClassName || ''}`}>
+                        {typeof col.accessor === 'function' ? col.accessor(student, index) : student[col.accessor]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </StyledTable>
+            </div>
+            <button
+              onClick={handleSaveKegiatanAttendance}
+              className="mt-6 px-6 py-3 bg-primary text-white rounded-lg shadow-lg hover:bg-primary-dark transition duration-300"
+            >
+              Simpan Absensi Kegiatan
+            </button>
+          </>
+        ) : (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30">
+            <h3 className="text-lg font-black text-slate-800 dark:text-slate-100 mb-1">Pilih Kelas untuk Absen Pagi Kegiatan</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+              Kegiatan {kegiatanInfo?.name || ''} berlangsung hari ini. Pilih kelas yang Anda ampu untuk mencatat kehadiran pagi.
+            </p>
+            {isKegiatanLoading ? (
+              <p className="text-sm text-slate-400 animate-pulse">Memuat kelas...</p>
+            ) : kegiatanClasses.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                {kegiatanClasses.map(cls => (
+                  <button
+                    key={cls.id}
+                    onClick={() => handleSelectKegiatanClass(cls)}
+                    className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-2xl border border-transparent hover:border-blue-500 hover:scale-105 transition-all text-center shadow-md group"
+                  >
+                    <p className="text-sm font-black text-blue-700 dark:text-blue-300">{cls.rombel}</p>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500">Tidak ada kelas yang dapat diinput untuk kegiatan ini.</p>
+            )}
+          </div>
+        )
       ) : (
         <RunningText text="Tidak ada jadwal aktif saat ini. Silakan cek jadwal Anda." />
       )}

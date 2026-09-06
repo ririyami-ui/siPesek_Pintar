@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('journals', function (Blueprint $table) {
-            $table->boolean('is_assignment')->default(false)->after('is_exam');
-        });
+        if (!Schema::hasColumn('journals', 'is_assignment')) {
+            Schema::table('journals', function (Blueprint $table) {
+                $table->boolean('is_assignment')->default(false)->after('is_exam');
+            });
+        }
     }
 
     /**

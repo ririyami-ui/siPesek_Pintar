@@ -9,11 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('quizzes', function (Blueprint $table) {
-            $table->json('visualization')->nullable()->after('quiz_data');
+            if (!Schema::hasColumn('quizzes', 'visualization')) {
+                $table->json('visualization')->nullable()->after('quiz_data');
+            }
         });
 
         Schema::table('lesson_plans', function (Blueprint $table) {
-            $table->json('visualization')->nullable()->after('content');
+            if (!Schema::hasColumn('lesson_plans', 'visualization')) {
+                $table->json('visualization')->nullable()->after('content');
+            }
         });
     }
 

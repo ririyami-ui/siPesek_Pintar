@@ -10,7 +10,7 @@ class GeminiService
 {
     protected string $apiKey;
     protected string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
-    protected string $model = 'gemini-1.5-flash';
+    protected string $model = 'gemini-3.5-flash';
 
     public function __construct()
     {
@@ -58,8 +58,24 @@ class GeminiService
             $this->model = $adminProfile->gemini_model;
         }
 
+        // Jika masih kosong, gunakan default dari config (jangan pernah kosong,
+        // karena URL model kosong akan menghasilkan request 404 dari API Gemini).
+        if (empty($this->model)) {
+            $this->model = (string) config('services.gemini.model', 'gemini-3.5-flash');
+        }
+
         // Clean values
         if ($this->apiKey === 'your_gemini_api_key_here') $this->apiKey = '';
+    }
+
+    /**
+     * Cek apakah Gemini sudah terkonfigurasi (API key tersedia).
+     * Tanpa HTTP call — murah untuk gate eksekusi AI.
+     */
+    public function isConfigured(): bool
+    {
+        $this->resolveSettings();
+        return !empty($this->apiKey);
     }
 
     /**

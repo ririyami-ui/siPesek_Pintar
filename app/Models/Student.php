@@ -13,7 +13,7 @@ class Student extends Model
     protected $fillable = [
         'code', 'nis', 'nisn', 'name', 'gender',
         'birth_place', 'birth_date', 'address', 'absen',
-        'class_id', 'created_by', 'auth_user_id',
+        'class_id', 'created_by', 'user_id', 'auth_user_id',
     ];
 
     public function class()
@@ -21,9 +21,11 @@ class Student extends Model
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
-    /**
-     * The User account used by the parent/student to log in.
-     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function authUser()
     {
         return $this->belongsTo(User::class, 'auth_user_id');
@@ -52,5 +54,10 @@ class Student extends Model
     public function studentNotes()
     {
         return $this->hasMany(StudentNote::class);
+    }
+
+    public function parentReports()
+    {
+        return $this->hasMany(ParentReport::class);
     }
 }

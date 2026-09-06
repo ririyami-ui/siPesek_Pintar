@@ -12,16 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('schedules', function (Blueprint $table) {
-            $table->index(['teacher_id', 'day', 'start_time', 'end_time'], 'idx_schedule_collision');
-            $table->index('type');
+            if (!Schema::hasIndex('schedules', 'idx_schedule_collision')) {
+                $table->index(['teacher_id', 'day', 'start_time', 'end_time'], 'idx_schedule_collision');
+            }
+            if (!Schema::hasIndex('schedules', 'schedules_type_index')) {
+                $table->index('type');
+            }
         });
 
         Schema::table('teacher_assignments', function (Blueprint $table) {
-            $table->index(['class_id', 'subject_id'], 'idx_assignment_lookup');
+            if (!Schema::hasIndex('teacher_assignments', 'idx_assignment_lookup')) {
+                $table->index(['class_id', 'subject_id'], 'idx_assignment_lookup');
+            }
         });
 
         Schema::table('journals', function (Blueprint $table) {
-            $table->index(['class_id', 'subject_id', 'date'], 'idx_journal_monitoring');
+            if (!Schema::hasIndex('journals', 'idx_journal_monitoring')) {
+                $table->index(['class_id', 'subject_id', 'date'], 'idx_journal_monitoring');
+            }
         });
     }
 

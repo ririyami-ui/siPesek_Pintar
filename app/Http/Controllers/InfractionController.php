@@ -14,7 +14,7 @@ class InfractionController extends Controller
         
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        if (!$user->isAdmin()) {
+        if (!$user->isAdmin() && !$request->filled('class_id')) {
             $query->where('user_id', Auth::id());
         }
 

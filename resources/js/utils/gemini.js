@@ -2104,7 +2104,7 @@ export async function generateATP(data) {
     - **Buku**: ${BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.title || `Buku Siswa ${data.subject} Kelas ${data.gradeLevel} Kurikulum Merdeka`}
     - **Peta Bab Resmi**: ${JSON.stringify(BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.chapters || [])}
     
-    **INSTRUKSI**: Anda HARUS menyesuaikan urutan TP (Tujuan Pembelajaran) agar selaras dengan urutan Bab/Topik dalam buku teks resmi di atas.
+    **INSTRUKSI (WAJIB):** Urutan TP (Tujuan Pembelajaran) di ATP Anda **HARUS PERSIS** mengikuti urutan Bab dalam Peta Bab Resmi di atas. ❌ Jangan ubah urutan, jangan lewati bab, jangan tambah bab dari luar list. ✅ Setiap baris ATP = satu bab/topik dari buku. Jika bab > baris, kelompokkan sub‑topik dalam bab yang sama.
     
     **SMART CP FOR ATP CONTEXT (BSKAP 46/2025 COMPLIANCE):**
     Berikut adalah CP LENGKAP untuk referensi konteks: 

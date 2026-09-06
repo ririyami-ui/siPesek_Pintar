@@ -21,39 +21,27 @@ const formatStatus = (status) => {
 export const exportAttendanceMatrixExcel = (attendanceData, dates, meta) => {
     const wsData = [];
 
-    // 1. Kop Surat
+    // 1. Kop Surat (teks biasa, tanpa merge)
     wsData.push([meta.schoolName || 'Sekolah Pintar']);
     if (meta.subjectName) wsData.push([`Mata Pelajaran: ${meta.subjectName}`]);
     wsData.push([`Tahun Ajaran: ${meta.academicYear || '-'}`]);
     wsData.push([`Kelas: ${meta.className || '-'}`]);
+    if (meta.period) wsData.push([`Periode: ${meta.period}`]);
     wsData.push([]); // Baris kosong
 
-    // 2. Header Baris 1
-    const headerRow1 = ['No', 'NISN', 'NAMA SISWA'];
-    const headerRow2 = ['', '', ''];
+    // 2. Header datar satu baris (tanpa merge)
+    const header = ['No', 'NISN', 'NAMA SISWA'];
+    dates.forEach(dateStr => {
+        const dateObj = new Date(dateStr);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        header.push(`${day}/${month}/${year}`);
+    });
+    if (dates.length === 0) header.push('Tanggal');
+    header.push('Hadir', 'Sakit', 'Izin', 'Alpha');
 
-    // Tanggal
-    if (dates.length > 0) {
-        headerRow1.push('TANGGAL');
-        for (let i = 1; i < dates.length; i++) headerRow1.push(''); // Padding untuk merge
-        
-        dates.forEach(dateStr => {
-            const dateObj = new Date(dateStr);
-            const day = String(dateObj.getDate()).padStart(2, '0');
-            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-            headerRow2.push(`${day}/${month}`);
-        });
-    } else {
-        headerRow1.push('TANGGAL');
-        headerRow2.push('-');
-    }
-
-    // Kolom Absen
-    headerRow1.push('Absen', '', '', '');
-    headerRow2.push('H', 'S', 'I', 'A');
-
-    wsData.push(headerRow1);
-    wsData.push(headerRow2);
+    wsData.push(header);
 
     // 3. Isi Data
     attendanceData.forEach((studentData, index) => {
@@ -73,50 +61,23 @@ export const exportAttendanceMatrixExcel = (attendanceData, dates, meta) => {
 
         row.push(studentData.Hadir || 0);
         row.push(studentData.Sakit || 0);
-        row.push(studentData.Ijin || 0);
+        row.push(studentData.Izin || studentData.Ijin || 0);
         row.push(studentData.Alpha || 0);
 
         wsData.push(row);
     });
 
-    // 4. Proses Worksheet & Merged Cells
+    // 4. Worksheet & Column Widths (tanpa merge)
     const ws = XLSX.utils.aoa_to_sheet(wsData);
-    
-    // Tentukan baris awal header (tergantung panjang kop surat)
-    let headerRowIndex = 4;
-    if (meta.subjectName) headerRowIndex++;
-    if (meta.period) headerRowIndex++;
-    
-    const merges = [
-        { s: { r: headerRowIndex, c: 0 }, e: { r: headerRowIndex + 1, c: 0 } }, // No
-        { s: { r: headerRowIndex, c: 1 }, e: { r: headerRowIndex + 1, c: 1 } }, // NISN
-        { s: { r: headerRowIndex, c: 2 }, e: { r: headerRowIndex + 1, c: 2 } }  // NAMA
-    ];
 
-    const numDates = Math.max(1, dates.length);
-    // TANGGAL Merge
-    merges.push({
-        s: { r: headerRowIndex, c: 3 },
-        e: { r: headerRowIndex, c: 3 + numDates - 1 }
-    });
-
-    // Absen Merge
-    const absenStartCol = 3 + numDates;
-    merges.push({
-        s: { r: headerRowIndex, c: absenStartCol },
-        e: { r: headerRowIndex, c: absenStartCol + 3 }
-    });
-
-    ws['!merges'] = merges;
-
-    // Set Column Widths
     const colWidths = [
         { wch: 5 },  // No
         { wch: 15 }, // NISN
         { wch: 30 }, // NAMA
     ];
-    for (let i = 0; i < numDates; i++) colWidths.push({ wch: 6 }); // Tanggal (lebar 6 agar muat DD/MM)
-    colWidths.push({ wch: 4 }, { wch: 4 }, { wch: 4 }, { wch: 4 }); // H S I A
+    dates.forEach(() => colWidths.push({ wch: 11 })); // Tanggal DD/MM/YYYY
+    if (dates.length === 0) colWidths.push({ wch: 11 });
+    colWidths.push({ wch: 7 }, { wch: 7 }, { wch: 7 }, { wch: 7 }); // Hadir Sakit Izin Alpha
     ws['!cols'] = colWidths;
 
     const wb = XLSX.utils.book_new();
@@ -132,8 +93,8 @@ export const exportAttendanceMatrixExcel = (attendanceData, dates, meta) => {
  * Ekspor matriks kehadiran ke format PDF menggunakan jsPDF dan autoTable
  */
 export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
-    // Gunakan orientasi landscape karena kolom banyak
-    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+    // Gunakan orientasi portrait sesuai format unduh PDF kehadiran
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     
     // 1. Kop Surat
     doc.setFontSize(14);
@@ -196,7 +157,7 @@ export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
 
         row.push((studentData.Hadir || 0).toString());
         row.push((studentData.Sakit || 0).toString());
-        row.push((studentData.Ijin || 0).toString());
+        row.push((studentData.Izin || studentData.Ijin || 0).toString());
         row.push((studentData.Alpha || 0).toString());
         
         return row;

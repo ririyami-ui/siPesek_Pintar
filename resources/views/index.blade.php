@@ -13,21 +13,17 @@
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="google" content="notranslate">
         <script>
-            // Robust subfolder detection
-            const getSubfolder = () => {
-                const path = window.location.pathname;
-                if (path.includes('/smart-school-backend')) return '/smart-school-backend';
-                return '';
-            };
-            const subfolder = getSubfolder();
+            // Base path is detected server-side from the actual request.
+            // Works on any hosting (root or subfolder) regardless of APP_URL value.
+            const basePath = @json(request()->getBasePath());
             const origin = window.location.origin;
-            
+
             window.Laravel = {
-                baseUrl: origin + subfolder,
-                basePath: subfolder, 
-                apiBaseUrl: subfolder + '/api'
+                baseUrl: origin + basePath,
+                basePath: basePath,
+                apiBaseUrl: basePath + '/api'
             };
-            
+
             // [FIX] Only set manifest on HTTPS to prevent browser probing HTTPS on dev server
             // php artisan serve is HTTP-only; browser manifest detection causes "Unsupported SSL request" warnings
             if (window.location.protocol === 'https:') {

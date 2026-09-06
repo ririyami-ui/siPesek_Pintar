@@ -619,8 +619,8 @@ $className = $data['className'] ?? 'Kelas';
         if (is_array($attendanceData)) {
             $hCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Hadir') === 0));
             $sCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Sakit') === 0));
-            $iCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Ijin') === 0));
-            $aCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Alpha') === 0));
+            $iCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Izin') === 0));
+            $aCount = count(array_filter($attendanceData, fn($a) => strcasecmp($a['status'] ?? '', 'Alpa') === 0));
             $attSummaryStr = "Hadir: {$hCount}, Sakit: {$sCount}, Ijin: {$iCount}, Alpha: {$aCount}";
         }
 
@@ -1662,13 +1662,22 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         - Jenjang/Kelas: {$gradeLevel}
         - Materi Pokok: {$materi}
         " . ($kd ? "- **KONSTRUKSI TP/KD**: {$kd}" : '') . "
+        " . ($elemen ? "- **ELEMEN KURIKULUM**: {$elemen}" : '') . "
         - Guru: {$teacherTitle} {$teacherName}
+        " . (!empty($data['rppContent']) ? "
+        **SINKRONISASI RPP (WAJIB)**:
+        - Berikut adalah konten RPP yang telah disusun untuk materi ini:
+        --- START RPP ---
+        {$data['rppContent']}
+        --- END RPP ---
+        - Anda **WAJIB** memastikan isi Handout ini selaras dengan langkah-langkah pembelajaran, media, dan istilah yang digunakan dalam RPP di atas. Handout adalah \"pendamping\" siswa saat menjalankan aktivitas di RPP tersebut.
+        " : '') . "
 
         **STRUKTUR MODUL (WAJIB IKUTI FORMAT INI):**
 
         **FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**
         - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**
-        - Inline math: Gunakan `$...$` (contoh: $a^2 + b^2 = c^2$)
+        - Inline math: Gunakan `$...$` (contoh: \$a^2 + b^2 = c^2\$)
         - Display math (rumus baru di baris sendiri): Gunakan `$$...$$` (contoh: $$\int_{a}^{b} f(x) dx$$)
         - Contoh penulisan benar: `$\frac{-b \pm \sqrt{b^2-4ac}}{2a}$`
         - Contoh penulisan SALAH: `\frac{-b \pm \sqrt{b^2-4ac}}{2a}` (tanpa `$`)

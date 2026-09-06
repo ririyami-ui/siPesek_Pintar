@@ -25,8 +25,8 @@ import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import { asBlob } from 'html-docx-js-typescript';
 import { saveAs } from 'file-saver';
+import { generateRppDoc } from '../utils/rppDocx';
 import { getRegionFromSubject } from '../utils/carakan';
 import BSKAP_DATA from '../utils/bskap_2025_intel.json';
 import StyledSelect from '../components/StyledSelect';
@@ -487,73 +487,22 @@ const LessonPlanPage = () => {
     };
 
 
-    const handleDownloadDocx = async () => {
-        const content = document.getElementById('printable-area');
-        if (!content) return;
+const handleDownloadDocx = async () => {
+        if (!generatedRPP && !viewingRPP) return;
 
-        // Clone content to modify for export without affecting display
-        const clone = content.cloneNode(true);
-
-        // Remove buttons/UI from clone if any exist (though print styles handle this, explicit removal is safer for docx)
-        const uiElements = clone.querySelectorAll('button, .no-print');
-        uiElements.forEach(el => el.remove());
-
-        // Remove on-screen signature (CSS Grid doesn't work in Word)
-        const onScreenSig = clone.querySelector('#signature-section');
-        if (onScreenSig) onScreenSig.remove();
-
-        // Get HTML string
-        const htmlString = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <style>
-                    body { 
-                        font-family: Arial, Helvetica, sans-serif; 
-                        font-size: 11pt; 
-                        line-height: 1.5;
-                        color: #000;
-                    }
-                    h1 { text-align: center; text-transform: uppercase; font-size: 14pt; border-bottom: 3px double #000; padding-bottom: 5px; }
-                    h2 { text-transform: uppercase; border-bottom: 2px solid #000; padding-bottom: 3px; font-size: 12pt; margin-top: 20px; }
-                    h3 { border-bottom: 1px solid #ccc; padding-bottom: 2px; font-size: 11pt; margin-top: 15px; }
-                    table { border-collapse: collapse; width: 100%; margin: 15px 0; }
-                    th, td { border: 1px solid black; padding: 8px; font-size: 11pt; color: #000; }
-                    th { background-color: #f0f0f0; font-weight: bold; }
-                    p { margin-bottom: 10px; text-align: justify; }
-                    ol, ul { padding-left: 30px; }
-                    li { margin-bottom: 5px; }
-                    /* Signature table no borders */
-                    table:last-of-type, table:last-of-type td, table:last-of-type th { border: none !important; }
-                </style>
-            </head>
-            <body>
-                <div class="rpp-prose">
-                    ${clone.innerHTML}
-                </div>
-                
-                <table style="border: none; margin-top: 50px; width: 100%;">
-                    <tr style="border: none;">
-                        <td align="center" style="border: none; width: 50%; vertical-align: top;">
-                            Mengetahui,<br/>
-                            Kepala Sekolah<br/><br/><br/><br/>
-                            <strong>${userProfile.principalName || '.....................................'}</strong><br/>
-                            NIP. ${userProfile.principalNip || '...................'}
-                        </td>
-                        <td align="center" style="border: none; width: 50%; vertical-align: top;">
-                            ${signingLocation || 'Jakarta'}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br/>
-                            Guru Mata Pelajaran<br/><br/><br/><br/>
-                            <strong>${userProfile.name || '.....................................'}</strong><br/>
-                            NIP. ${userProfile.nip || '...................'}
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>
-        `;
+        toast.loading("Menyiapkan dokumen Word...", { id: 'word-export' });
 
         try {
+            const content = document.getElementById('printable-area');
+            if (!content) return;
+
+            // Clone content to modify for export without affecting display
+            const previewEl = content.cloneNode(true);
+
+            // Remove buttons/UI from clone if any exist (signature stays: parsed
+            // into a borderless Word table by generateRppDoc)
+            previewEl.querySelectorAll('button, .no-print').forEach(el => el.remove());
+
             const subjectData = subjects.find(s => s.id === selectedSubject);
             const subjectName = subjectData?.name || selectedSubject;
             const topicName = (viewingRPP ? viewingRPP.topic : manualMateri || selectedMaterial?.materi || 'Materi').substring(0, 30);
@@ -562,16 +511,15 @@ const LessonPlanPage = () => {
             const safeSubject = subjectName.replace(/[/\\?%*:|"<>]/g, '-');
             const safeTopic = topicName.replace(/[/\\?%*:|"<>]/g, '-');
             const safeGrade = String(selectedGrade).replace(/[/\\?%*:|"<>]/g, '-');
-
-            const converted = await asBlob(htmlString);
             const fileName = `RPP_${safeSubject}_${safeGrade}_${safeTopic}.docx`;
-            saveAs(converted, fileName);
-            toast.success("RPP sedang didownload (.docx)");
-        } catch (error) {
-            console.error("Download error:", error);
-            toast.error("Gagal membuat file Word");
-        }
 
+            const blob = await generateRppDoc(previewEl);
+            saveAs(blob, fileName);
+            toast.success("RPP sedang didownload (.docx)", { id: 'word-export' });
+        } catch (error) {
+            console.error("Word export error:", error);
+            toast.error("Gagal mengunduh dokumen: " + error.message, { id: 'word-export' });
+        }
     };
 
     // --- LKPD Logic ---

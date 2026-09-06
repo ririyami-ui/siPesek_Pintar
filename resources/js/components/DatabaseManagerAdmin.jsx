@@ -91,6 +91,7 @@ const DatabaseManagerAdmin = () => {
     const formData = new FormData();
     formData.append('backup_file', file);
     formData.append('password', currentPassword);
+    formData.append('confirmation', 'PULIHKAN');
 
     toast.loading('Memulihkan database...', { id: 'restore-loading' });
     try {
@@ -127,7 +128,8 @@ const DatabaseManagerAdmin = () => {
     try {
       await api.post('/admin/database/truncate', { 
         table: tableName,
-        password: currentPassword
+        password: currentPassword,
+        confirmation: 'KOSONGKAN'
       });
       toast.success(`Tabel ${tableName} berhasil dikosongkan.`);
       fetchTables();
@@ -160,7 +162,8 @@ const DatabaseManagerAdmin = () => {
     setLoading(true);
     try {
       await api.post('/admin/database/wipe', {
-        password: currentPassword
+        password: currentPassword,
+        confirmation: 'RESET TOTAL'
       });
       toast.success('Seluruh data aplikasi berhasil dihapus.');
       fetchTables();

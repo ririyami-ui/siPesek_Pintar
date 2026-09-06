@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            $table->string('audio_language')->nullable()->default('id-ID')->after('schedule_notifications_enabled');
+            if (!Schema::hasColumn('user_profiles', 'audio_language')) {
+                $table->string('audio_language')->nullable()->default('id-ID')->after('schedule_notifications_enabled');
+            }
         });
     }
 

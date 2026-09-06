@@ -9,9 +9,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('holidays', function (Blueprint $table) {
-            $table->boolean('is_emergency')->default(false)->after('is_holiday');
-            $table->time('start_time')->nullable()->after('is_emergency');
-            $table->time('end_time')->nullable()->after('start_time');
+            if (!Schema::hasColumn('holidays', 'is_emergency')) {
+                $table->boolean('is_emergency')->default(false)->after('is_holiday');
+            }
+            if (!Schema::hasColumn('holidays', 'start_time')) {
+                $table->time('start_time')->nullable()->after('is_emergency');
+            }
+            if (!Schema::hasColumn('holidays', 'end_time')) {
+                $table->time('end_time')->nullable()->after('start_time');
+            }
         });
     }
 

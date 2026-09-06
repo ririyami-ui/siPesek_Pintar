@@ -12,9 +12,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE teachers CHANGE user_id created_by BIGINT UNSIGNED');
-        DB::statement('ALTER TABLE students CHANGE user_id created_by BIGINT UNSIGNED');
-        DB::statement('ALTER TABLE admins CHANGE user_id created_by BIGINT UNSIGNED');
+        if (Schema::hasColumn('teachers', 'user_id') && !Schema::hasColumn('teachers', 'created_by')) {
+            DB::statement('ALTER TABLE teachers CHANGE user_id created_by BIGINT UNSIGNED');
+        }
+        if (Schema::hasColumn('students', 'user_id') && !Schema::hasColumn('students', 'created_by')) {
+            DB::statement('ALTER TABLE students CHANGE user_id created_by BIGINT UNSIGNED');
+        }
+        if (Schema::hasColumn('admins', 'user_id') && !Schema::hasColumn('admins', 'created_by')) {
+            DB::statement('ALTER TABLE admins CHANGE user_id created_by BIGINT UNSIGNED');
+        }
     }
 
     /**

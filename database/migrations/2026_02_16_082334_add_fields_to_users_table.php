@@ -12,9 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('teacher');
-            $table->string('nip')->nullable();
-            $table->string('status')->default('active');
+            if (!Schema::hasColumn('users', 'role')) {
+                $table->string('role')->default('teacher');
+            }
+            if (!Schema::hasColumn('users', 'nip')) {
+                $table->string('nip')->nullable();
+            }
+            if (!Schema::hasColumn('users', 'status')) {
+                $table->string('status')->default('active');
+            }
         });
     }
 

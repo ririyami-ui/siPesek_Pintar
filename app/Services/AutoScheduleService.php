@@ -1,7 +1,8 @@
 <?php
-if (function_exists('opcache_reset')) { opcache_reset(); }
 
 namespace App\Services;
+
+if (function_exists('opcache_reset')) { opcache_reset(); }
 
 use App\Models\Subject;
 use App\Models\Schedule;
@@ -21,6 +22,7 @@ class AutoScheduleService
     protected $occupiedTeachers = []; // [day][period][] = teacher_id
     protected $occupiedClasses = [];  // [day][period][] = class_id
     protected $teacherAvailability = []; // [teacher_id] = [unavailable_days]
+    protected $seenPermutations = []; // signature permutasi yang sudah dipakai
 
     public function __construct($adminUserId)
     {
@@ -724,6 +726,7 @@ class AutoScheduleService
 
     protected function generateAllValidPermutations($blocks, $totalSlots, $slots)
     {
+        $this->seenPermutations = []; // reset per hari/kelas agar tidak "buntu" lintas hari
         $validPerms = [];
         $this->permuteBlocks($blocks, 0, count($blocks) - 1, $totalSlots, $slots, $validPerms);
         return $validPerms;
@@ -756,9 +759,8 @@ class AutoScheduleService
             if ($isValid) {
                 // Periksa apakah permutasi ini sudah ditambahkan (blok bisa memiliki ukuran dan guru yang sama)
                 $sig = serialize($placed);
-                static $seen = [];
-                if (!isset($seen[$sig])) {
-                    $seen[$sig] = true;
+                if (!isset($this->seenPermutations[$sig])) {
+                    $this->seenPermutations[$sig] = true;
                     $validPerms[] = $placed;
                 }
             }

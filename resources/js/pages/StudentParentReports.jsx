@@ -90,67 +90,63 @@ export default function StudentParentReports() {
           <p className="text-sm mt-1">Laporan akan muncul setelah cron job berjalan (Minggu 19:00 / tgl 1 07:00)</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {filtered.map(report => (
             <div
               key={report.id}
               onClick={() => openDetail(report)}
-              className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all cursor-pointer"
+              className="bg-white dark:bg-slate-800 rounded-xl p-3 shadow-sm border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all cursor-pointer"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2.5 rounded-xl ${
-                    report.type === 'weekly' 
-                      ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600' 
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className={`p-1.5 rounded-lg shrink-0 ${
+                    report.type === 'weekly'
+                      ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-600'
                       : 'bg-purple-100 dark:bg-purple-900/40 text-purple-600'
                   }`}>
-                    {report.type === 'weekly' ? <CalendarDays size={20} /> : <BarChart3 size={20} />}
+                    {report.type === 'weekly' ? <CalendarDays size={16} /> : <BarChart3 size={16} />}
                   </div>
-                  <div>
-                    <p className="font-semibold text-slate-800 dark:text-white">
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs leading-snug text-slate-800 dark:text-white">
                       {TYPE_LABELS[report.type]} — {report.period_label}
                     </p>
-                    <div className="flex items-center gap-3 text-xs text-slate-400 mt-0.5">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400 mt-0.5">
                       <span className="flex items-center gap-1">
-                        <CalendarDays size={12} />
+                        <CalendarDays size={11} />
                         {report.period_start} s/d {report.period_end}
                       </span>
                       {report.is_sent && (
                         <span className="flex items-center gap-1 text-emerald-500">
-                          <CheckCircle2 size={12} />
+                          <CheckCircle2 size={11} />
                           Terkirim
                         </span>
                       )}
                       {report.read_at ? (
                         <span className="flex items-center gap-1 text-blue-500">
-                          <Eye size={12} />
+                          <Eye size={11} />
                           Dibaca
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-amber-500">
-                          <EyeOff size={12} />
+                          <EyeOff size={11} />
                           Belum dibaca
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {report.stats && (
-                    <div className="hidden sm:flex items-center gap-3 text-xs">
-                      {report.stats.avg_nilai_akhir && (
-                        <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded-lg font-medium">
-                          Nilai{' '}{Math.round(report.stats.avg_nilai_akhir)}
-                        </span>
-                      )}
-                      {report.stats.keaktifan !== undefined && report.stats.keaktifan > 0 && (
-                        <span className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 px-2 py-1 rounded-lg font-medium">
-                          +{report.stats.keaktifan} poin
-                        </span>
-                      )}
-                    </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {report.stats?.avg_nilai_akhir != null && (
+                    <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded-lg font-semibold text-xs">
+                      {Math.round(report.stats.avg_nilai_akhir)}
+                    </span>
                   )}
-                  <ChevronRight size={18} className="text-slate-300" />
+                  {report.stats?.total_keaktifan > 0 && (
+                    <span className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 px-2 py-0.5 rounded-lg font-semibold text-xs">
+                      +{report.stats.total_keaktifan}
+                    </span>
+                  )}
+                  <ChevronRight size={16} className="text-slate-300" />
                 </div>
               </div>
             </div>
@@ -179,71 +175,71 @@ export default function StudentParentReports() {
               </div>
             </div>
 
-            {/* Stats Cards */}
-            {selectedReport.stats && (
-              <div className="px-6 py-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {selectedReport.stats.avg_nilai_akhir && (
-                  <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-3 text-center">
-                    <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{Math.round(selectedReport.stats.avg_nilai_akhir)}</p>
-                    <p className="text-xs text-slate-500 mt-1">Nilai Akhir</p>
-                  </div>
-                )}
-                {selectedReport.stats.attendance?.percentage !== undefined && (
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 text-center">
-                    <p className="text-2xl font-bold text-blue-600">{selectedReport.stats.attendance.percentage}%</p>
-                    <p className="text-xs text-slate-500 mt-1">Kehadiran</p>
-                  </div>
-                )}
-                {selectedReport.stats.infraction_points !== undefined && (
-                  <div className="bg-red-50 dark:bg-red-900/20 rounded-xl p-3 text-center">
-                    <p className="text-2xl font-bold text-red-500">{selectedReport.stats.infraction_points}</p>
-                    <p className="text-xs text-slate-500 mt-1">Poin Pelanggaran</p>
-                  </div>
-                )}
-                {selectedReport.stats.total_keaktifan !== undefined && (
-                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-3 text-center">
-                    <p className="text-2xl font-bold text-purple-500">+{selectedReport.stats.total_keaktifan}</p>
-                    <p className="text-xs text-slate-500 mt-1">Poin Keaktifan</p>
-                  </div>
-                )}
-              </div>
-            )}
+             {/* Stats Cards */}
+             {selectedReport.stats && (
+               <div className="px-3 py-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                 {selectedReport.stats.avg_nilai_akhir && (
+                   <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-1.5 text-center">
+                     <p className="text-xl font-bold text-emerald-700 dark:text-emerald-300">{Math.round(selectedReport.stats.avg_nilai_akhir)}</p>
+                     <p className="text-[10px] text-slate-500 mt-0.5">Nilai Akhir</p>
+                   </div>
+                 )}
+                 {selectedReport.stats.attendance?.percentage !== undefined && (
+                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-1.5 text-center">
+                     <p className="text-xl font-bold text-blue-600">{selectedReport.stats.attendance.percentage}%</p>
+                     <p className="text-[10px] text-slate-500 mt-0.5">Kehadiran</p>
+                   </div>
+                 )}
+                 {selectedReport.stats.infraction_points !== undefined && (
+                   <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-1.5 text-center">
+                     <p className="text-xl font-bold text-red-500">{selectedReport.stats.infraction_points}</p>
+                     <p className="text-[10px] text-slate-500 mt-0.5">Poin Pelanggaran</p>
+                   </div>
+                 )}
+                 {selectedReport.stats.total_keaktifan !== undefined && (
+                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-1.5 text-center">
+                     <p className="text-xl font-bold text-purple-500">+{selectedReport.stats.total_keaktifan}</p>
+                     <p className="text-[10px] text-slate-500 mt-0.5">Poin Keaktifan</p>
+                   </div>
+                 )}
+               </div>
+             )}
 
-            {/* AI Summary Sections */}
-            {selectedReport.sections && (
-              <div className="px-6 py-4 space-y-4">
-                {selectedReport.sections.academic && (
-                  <SectionCard icon={<BookOpen size={16} />} title="Akademik" color="emerald">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.academic}</p>
-                  </SectionCard>
-                )}
-                {selectedReport.sections.attendance && (
-                  <SectionCard icon={<Activity size={16} />} title="Kehadiran" color="blue">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.attendance}</p>
-                  </SectionCard>
-                )}
-                {selectedReport.sections.behavior && (
-                  <SectionCard icon={<ShieldAlert size={16} />} title="Perilaku & Disiplin" color="amber">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.behavior}</p>
-                  </SectionCard>
-                )}
-                {selectedReport.sections.activity && (
-                  <SectionCard icon={<TrendingUp size={16} />} title="Keaktifan" color="purple">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.activity}</p>
-                  </SectionCard>
-                )}
-                {selectedReport.sections.recommendation && (
-                  <SectionCard icon={<Award size={16} />} title="Rekomendasi untuk Orang Tua" color="teal">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.recommendation}</p>
-                  </SectionCard>
-                )}
-                {selectedReport.full_report && (
-                  <SectionCard icon={<ScrollText size={16} />} title="Laporan Lengkap" color="slate">
-                    <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.full_report}</p>
-                  </SectionCard>
-                )}
-              </div>
-            )}
+             {/* AI Summary Sections */}
+             {selectedReport.sections && (
+               <div className="px-3 py-2 space-y-2">
+                 {selectedReport.sections.academic && (
+                   <SectionCard icon={<BookOpen size={12} />} title="Akademik" color="emerald">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.academic}</p>
+                   </SectionCard>
+                 )}
+                 {selectedReport.sections.attendance && (
+                   <SectionCard icon={<Activity size={12} />} title="Kehadiran" color="blue">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.attendance}</p>
+                   </SectionCard>
+                 )}
+                 {selectedReport.sections.behavior && (
+                   <SectionCard icon={<ShieldAlert size={12} />} title="Perilaku & Disiplin" color="amber">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.behavior}</p>
+                   </SectionCard>
+                 )}
+                 {selectedReport.sections.activity && (
+                   <SectionCard icon={<TrendingUp size={12} />} title="Keaktifan" color="purple">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.activity}</p>
+                   </SectionCard>
+                 )}
+                 {selectedReport.sections.recommendation && (
+                   <SectionCard icon={<Award size={12} />} title="Rekomendasi untuk Orang Tua" color="teal">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.sections.recommendation}</p>
+                   </SectionCard>
+                 )}
+                 {selectedReport.full_report && (
+                   <SectionCard icon={<ScrollText size={12} />} title="Laporan Lengkap" color="slate">
+                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">{selectedReport.full_report}</p>
+                   </SectionCard>
+                 )}
+               </div>
+             )}
 
             <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 text-center">
               <p className="text-[10px] text-slate-400 uppercase tracking-wider">Ringkasan ini dihasilkan oleh AI • Si Pesek Pintar</p>
@@ -267,12 +263,12 @@ function SectionCard({ icon, title, color, children }) {
   const c = colorMap[color] || colorMap.slate;
 
   return (
-    <div className={`rounded-2xl p-4 ${c.bg}`}>
-      <div className="flex items-center gap-2 mb-2">
-        <div className={`p-1.5 rounded-lg ${c.bg} ${c.text}`}>
+    <div className={`rounded-xl p-2 ${c.bg}`}>
+      <div className="flex items-center gap-1.5 mb-1.5">
+        <div className={`p-1 rounded-md ${c.bg} ${c.text}`}>
           {icon}
         </div>
-        <h3 className={`font-semibold text-sm ${c.text}`}>{title}</h3>
+        <h3 className={`font-semibold text-xs ${c.text}`}>{title}</h3>
       </div>
       {children}
     </div>

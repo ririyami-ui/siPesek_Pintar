@@ -11,6 +11,8 @@ import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
+import katex from 'katex';
+import { mml2omml } from 'mathml2omml';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { getRegionFromSubject } from '../utils/carakan';
@@ -41,6 +43,13 @@ const RenderingSkeleton = () => (
   </div>
 );
 
+// rehype-katex (via remark-math) does NOT treat "$ ... $" (whitespace right after the
+// opening "$" or before the closing "$") as math — it stays literal text in the preview
+// and Word export. Normalize the delimiters so such equations render as math.
+const normalizeLatexDelimiters = (md) =>
+    md.replace(/\$\$\s+([\s\S]+?)\s+\$\$/g, (m, c) => `$$${c}$$`)
+      .replace(/\$\s+([^$\n]+?)\s+\$/g, (m, c) => `$${c}$`);
+
 const HandoutGeneratorPage = () => {
     const { activeSemester, academicYear, geminiModel } = useSettings();
     const navigate = useNavigate();
@@ -51,7 +60,7 @@ const HandoutGeneratorPage = () => {
         mermaid.initialize({
             startOnLoad: false,
             theme: 'base',
-            securityLevel: 'loose',
+            securityLevel: 'strict',
             themeVariables: {
                 primaryColor: '#6366f1', // Indigo 500
                 primaryTextColor: '#1e293b', // Slate 800
@@ -89,6 +98,21 @@ const HandoutGeneratorPage = () => {
                         const { svg } = await mermaid.render(id, content);
                         setSvg(svg);
                     } catch (err) {
+                        // Retry once with quoted square-bracket labels: Mermaid cannot parse
+                        // bare parentheses/semicolons/braces inside node labels (e.g.
+                        // "[Faktorkan: (x + 2)(x + 3) = 0]"), which the AI often emits.
+                        // Quoting the label text fixes the parse error.
+                        try {
+                            const fixed = content.replace(/(\w+)\[([^\[\]"]*[(){};][^\[\]"]*)\]/g, '$1["$2"]');
+                            if (fixed !== content) {
+                                const retryId = `mermaid-${Date.now()}`;
+                                const { svg } = await mermaid.render(retryId, fixed);
+                                setSvg(svg);
+                                return;
+                            }
+                        } catch (err2) {
+                            console.error("Mermaid error:", err2);
+                        }
                         console.error("Mermaid error:", err);
                         setError("Sintaks Mermaid tidak valid.");
                     }
@@ -199,8 +223,23 @@ const HandoutGeneratorPage = () => {
         const qSubject = params.get('subject');
         const qTopic = params.get('topic');
 
-        if (qGrade) setSelectedGrade(qGrade);
-        if (qSubject) setSelectedSubject(qSubject);
+        // Normalize grade from URL (e.g. "8A" -> "8") so it matches the level filter
+        if (qGrade) {
+            const gradeNum = String(qGrade).match(/\d+/)?.[0];
+            setSelectedGrade(gradeNum || qGrade);
+        }
+
+        // Normalize subject from URL: JadwalPage passes the NAME (e.g. "IPA"),
+        // but selectedSubject is expected to hold the subject ID.
+        if (qSubject) {
+            const subjectId = String(qSubject).trim();
+            const subMatch = subjects.find(s =>
+                String(s.id) === subjectId ||
+                s.name.toLowerCase().trim() === subjectId.toLowerCase().trim()
+            );
+            setSelectedSubject(subMatch ? subMatch.id : subjectId);
+        }
+
         if (qTopic) {
             setTopic(qTopic);
             setSelectedRPPId('manual'); // Direct to manual if pre-filled
@@ -243,6 +282,19 @@ const HandoutGeneratorPage = () => {
                 const sortedRPPs = normalizedRPPs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                 setSavedRPPs(sortedRPPs);
 
+                // Fallback: if selectedGrade is still empty (e.g., admin has no class list),
+                // derive grade from the first RPP entry so the dropdown can show options.
+                if (!selectedGrade && sortedRPPs.length > 0) {
+                    const firstRpp = sortedRPPs[0];
+                    const fallbackGrade = String(
+                        firstRpp.gradeLevel ||
+                        firstRpp.grade_level ||
+                        firstRpp.class ||
+                        firstRpp.grade ||
+                        ''
+                    ).trim();
+                    if (fallbackGrade) setSelectedGrade(fallbackGrade);
+                }
                 await fetchHandoutHistory();
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -377,7 +429,7 @@ const HandoutGeneratorPage = () => {
                 setIsGenerating(false);
                 return;
             }
-            setGeneratedContent(result);
+            setGeneratedContent(normalizeLatexDelimiters(result));
             toast.success("Bahan Ajar berhasil dibuat!");
         } catch (error) {
             console.error("Generate Handout Error:", error);
@@ -435,8 +487,8 @@ const HandoutGeneratorPage = () => {
                     await new Promise((resolve, reject) => {
                         img.onload = () => {
                             try {
-                                // High resolution for Word
-                                const scale = 2;
+                                // Rasterize at 1x to keep the exported document small
+                                const scale = 1;
                                 canvas.width = (originalSvg.clientWidth || 800) * scale;
                                 canvas.height = (originalSvg.clientHeight || 600) * scale;
 
@@ -487,32 +539,59 @@ const HandoutGeneratorPage = () => {
                 div.style.textAlign = 'center';
             });
 
-            // Convert KaTeX rendered math back to LaTeX delimiters for Word compatibility
-            previewEl.querySelectorAll('.katex').forEach(el => {
-                const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
-                if (annotation) {
-                    const tex = annotation.textContent.trim();
-                    const span = document.createElement('span');
-                    span.textContent = `$${tex}$`;
-                    el.parentNode.replaceChild(span, el);
+            // Convert rendered KaTeX math into native Word equations (OMML). The LaTeX
+            // source is read directly from each .katex element's MathML annotation
+            // (encoding="application/x-tex"), so conversion is always 1:1 with the DOM —
+            // no markdown regex parsing, so no count-mismatch failures.
+            const katexElements = [...previewEl.querySelectorAll('.katex')];
+            const ommlList = katexElements.map(el => {
+                try {
+                    const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+                    const latex = annotation ? annotation.textContent : null;
+                    if (!latex) return null;
+                    const display = !!el.closest('.katex-display');
+                    const mathml = katex.renderToString(latex, {
+                        output: 'mathml',
+                        throwOnError: false,
+                        displayMode: display,
+                    });
+                    const omml = mml2omml(mathml);
+                    if (!omml || !omml.includes('oMath')) return null;
+                    // Display equations are wrapped in oMathPara so Word centers them
+                    // on their own line.
+                    return display
+                        ? `<m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">${omml}</m:oMathPara>`
+                        : omml;
+                } catch (e) {
+                    console.warn('OMML conversion failed, keeping KaTeX HTML:', e);
+                    return null;
                 }
             });
 
+            // Replace each .katex element with a unique placeholder. The OMML markup is
+            // injected into the final HTML string afterwards to avoid DOM namespace
+            // round-tripping issues.
+            katexElements.forEach((el, i) => {
+                if (!ommlList[i]) return; // keep KaTeX HTML as fallback
+                const ph = document.createComment(`__OMML_${i}__`);
+                el.parentNode.replaceChild(ph, el);
+            });
+
             const contentHtml = `
-    < !DOCTYPE html >
+    <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="UTF-8">
                     <style>
-                        body {font - family: 'Calibri', 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                        body {font-family: 'Calibri', 'Arial', sans-serif; line-height: 1.6; color: #333; }
                         h1 {color: #1e40af; border-bottom: 2px solid #1e40af; padding-bottom: 8px; margin-bottom: 20px; }
                         h2 {color: #1e3a8a; margin-top: 30px; border-left: 5px solid #3b82f6; padding-left: 15px; }
                         h3 {color: #1e40af; margin-top: 20px; }
-                        p {margin - bottom: 15px; text-align: justify; }
+                        p {margin-bottom: 15px; text-align: justify; }
                         blockquote {background: #f8fafc; border-left: 5px solid #6366f1; padding: 15px; margin: 20px 0; color: #475569; font-style: italic; }
-                        table {border - collapse: collapse; width: 100%; margin: 20px 0; }
+                        table {border-collapse: collapse; width: 100%; margin: 20px 0; }
                         th, td {border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
-                        th {background - color: #f1f5f9; font-weight: bold; color: #1e293b; }
+                        th {background-color: #f1f5f9; font-weight: bold; color: #1e293b; }
                         img {display: block; margin: 25px auto; max-width: 100%; height: auto; }
                     </style>
             </head>
@@ -522,7 +601,18 @@ const HandoutGeneratorPage = () => {
         </html>
 `;
 
-            const blob = await asBlob(contentHtml);
+            // Inject the OMML equations into the final HTML (placeholders were put in the
+            // DOM earlier; string replacement avoids DOM namespace round-tripping issues).
+            let finalHtml = contentHtml;
+            if (ommlList.length > 0) {
+                for (let i = 0; i < ommlList.length; i++) {
+                    if (ommlList[i]) {
+                        finalHtml = finalHtml.split(`__OMML_${i}__`).join(ommlList[i]);
+                    }
+                }
+            }
+
+            const blob = await asBlob(finalHtml);
             saveAs(blob, `Bahan Ajar - ${topic}.docx`);
             toast.success("Dokumen Word berhasil diunduh", { id: 'word-export' });
         } catch (error) {
@@ -538,9 +628,12 @@ const HandoutGeneratorPage = () => {
         // If we want duplicate check, we should query API.
         // For now, let's just proceed to save with confirmation if local list has it.
 
+        const subjectObj = subjects.find(s => String(s.id) === String(selectedSubject));
+        const subjectName = subjectObj?.name || selectedSubject;
+
         const duplicate = savedHandouts.find(item =>
             item.topic?.toLowerCase().trim() === topic.toLowerCase().trim() &&
-            item.subject === selectedSubject &&
+            item.subject?.toLowerCase().trim() === subjectName.toLowerCase().trim() &&
             item.gradeLevel === selectedGrade
         );
 
@@ -548,7 +641,7 @@ const HandoutGeneratorPage = () => {
             setConfirmModal({
                 isOpen: true,
                 title: 'Data Duplikat',
-                message: `Sudah ada Bahan Ajar dengan topik "${topic}" untuk ${selectedSubject} Kelas ${selectedGrade}. Apakah Anda yakin ingin menyimpan duplikat ? `,
+                message: `Sudah ada Bahan Ajar dengan topik "${topic}" untuk ${subjectName} Kelas ${selectedGrade}. Apakah Anda yakin ingin menyimpan duplikat ? `,
                 onConfirm: async () => {
                     setConfirmModal(prev => ({ ...prev, isOpen: false }));
                     await executeSave();
@@ -608,7 +701,7 @@ const HandoutGeneratorPage = () => {
     };
 
     const handleLoad = (item) => {
-        setGeneratedContent(item.content);
+        setGeneratedContent(normalizeLatexDelimiters(item.content));
         setTopic(item.topic);
         setSelectedSubject(item.subjectId || item.subject || '');
         setSelectedGrade(item.gradeLevel || '');
@@ -787,21 +880,23 @@ const HandoutGeneratorPage = () => {
                                                 {(() => {
                                                     const subjectObj = subjects.find(s => s.id === selectedSubject);
                                                     const subjectName = subjectObj?.name || '';
+                                                    // Normalize subject key like server getSubjectKey(): strip "(Wajib)" etc.
+                                                    const subjectKey = subjectName.replace(/\s*\(.*?\)\s*/g, '').trim();
                                                     const gradeNum = parseInt(selectedGrade);
                                                     const level = gradeNum <= 6 ? 'SD' : (gradeNum <= 9 ? 'SMP' : 'SMA');
                                                     const gradeStr = String(gradeNum);
 
-                                                    const subjectData = BSKAP_DATA.subjects?.[level]?.[gradeStr]?.[subjectName];
+                                                    const subjectData = BSKAP_DATA.subjects?.[level]?.[gradeStr]?.[subjectKey];
                                                     if (!subjectData) return <option disabled>Tidak ada data kurikulum</option>;
 
                                                     const ganjilMateri = subjectData.ganjil?.materi_inti?.map(m => ({
-                                                        materi: m,
+                                                        materi: m.materi,
                                                         elemen: subjectData.ganjil.elemen?.join(', ') || 'Umum',
                                                         tp: subjectData.ganjil.cp_snippet
                                                     })) || [];
 
                                                     const genapMateri = subjectData.genap?.materi_inti?.map(m => ({
-                                                        materi: m,
+                                                        materi: m.materi,
                                                         elemen: subjectData.genap.elemen?.join(', ') || 'Umum',
                                                         tp: subjectData.genap.cp_snippet
                                                     })) || [];
@@ -893,7 +988,7 @@ const HandoutGeneratorPage = () => {
                                     </div>
                                 </div>
 
-                                <div className={`prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-gray-900 p-10 md:p-16 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-gray-800 min-h-[500px] relative overflow-hidden ${getRegionFromSubject(selectedSubject) === 'Jawa' ? 'font-carakan' : ''}`} id="handout-preview">
+                                <div className={`prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-gray-900 p-10 md:p-16 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-gray-800 min-h-[500px] relative overflow-hidden ${getRegionFromSubject(subjects.find(s => String(s.id) === String(selectedSubject))?.name || '') === 'Jawa' ? 'font-carakan' : ''}`} id="handout-preview">
                                     {/* Decorative Background Elements */}
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 dark:bg-blue-900/10 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
                                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-full -ml-32 -mb-32 blur-3xl pointer-events-none" />
@@ -1078,23 +1173,34 @@ const HandoutGeneratorPage = () => {
                                                     })}
                                                 </ul>
                                             ),
-                                            ol: ({ children }) => (
-                                                <ol className="space-y-4 my-6 list-none p-0">
-                                                    {React.Children.toArray(children).map((child, index) => {
-                                                        if (!child) return null;
-                                                        const content = React.isValidElement(child) ? child.props.children : child;
-                                                        if (typeof content === 'string' && !content.trim()) return null;
-                                                        return (
-                                                            <li key={index} className="flex items-start gap-4 text-gray-700 dark:text-gray-300">
-                                                                <div className="mt-0.5 min-w-[28px] h-[28px] bg-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-xs shadow-sm">
-                                                                    {index + 1}
-                                                                </div>
-                                                                <div className="flex-1 m-0 pt-0.5">{content}</div>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ol>
-                                            ),
+                                            ol: ({ children }) => {
+                                                // react-markdown inserts "\n" text nodes between <li> elements;
+                                                // filter them out first so numbering stays contiguous (1,2,3...)
+                                                const items = React.Children.toArray(children).filter((child) => {
+                                                    if (!child) return false;
+                                                    if (typeof child === 'string') return child.trim().length > 0;
+                                                    if (React.isValidElement(child)) {
+                                                        const content = child.props.children;
+                                                        if (typeof content === 'string') return content.trim().length > 0;
+                                                    }
+                                                    return true;
+                                                });
+                                                return (
+                                                    <ol className="space-y-4 my-6 list-none p-0">
+                                                        {items.map((child, index) => {
+                                                            const content = React.isValidElement(child) ? child.props.children : child;
+                                                            return (
+                                                                <li key={index} className="flex items-start gap-4 text-gray-700 dark:text-gray-300">
+                                                                    <div className="mt-0.5 min-w-[28px] h-[28px] bg-indigo-600 text-white rounded-lg flex items-center justify-center font-bold text-xs shadow-sm">
+                                                                        {index + 1}
+                                                                    </div>
+                                                                    <div className="flex-1 m-0 pt-0.5">{content}</div>
+                                                                </li>
+                                                            );
+                                                        })}
+                                                    </ol>
+                                                );
+                                            },
                                             hr: () => <hr className="my-12 border-gray-100 dark:border-gray-800" />
                                         }}
                                     >

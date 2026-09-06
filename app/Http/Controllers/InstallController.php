@@ -34,13 +34,19 @@ class InstallController extends Controller
 
         $validator = \Validator::make($request->all(), [
             'db_host' => 'required',
-            'db_port' => 'required',
-            'db_name' => 'required',
+            'db_port' => 'required|integer',
+            'db_name' => ['required', 'string', 'max:64', 'regex:/^[A-Za-z0-9_]+$/'],
             'db_user' => 'required',
+            'db_password' => 'nullable|string',
             'admin_name' => 'required',
             'admin_email' => 'required|email',
             'admin_password' => 'required|min:8',
         ]);
+        if (!empty($request->db_name) && !preg_match('/^[A-Za-z0-9_]+$/', $request->db_name)) {
+            http_response_code(422);
+            echo json_encode(['success' => false, 'message' => 'Nama database tidak valid.']);
+            exit;
+        }
         if ($validator->fails()) {
             http_response_code(422);
             echo json_encode(['success' => false, 'message' => $validator->errors()->first()]);
@@ -52,7 +58,8 @@ class InstallController extends Controller
             $pdo = new \PDO($dsn, $request->db_user, $request->db_password);
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$request->db_name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            $dbName = str_replace('`', '``', $request->db_name);
+            $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
             config([
                 'database.connections.mysql.host' => $request->db_host,
@@ -110,7 +117,7 @@ class InstallController extends Controller
             exit;
         } catch (\Exception $e) {
             http_response_code(500);
-            echo json_encode(['success' => false, 'message' => 'Gagal: ' . $e->getMessage()]);
+            echo json_encode(['success' => false, 'message' => 'Gagal instalasi.']);
             exit;
         }
     }

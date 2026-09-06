@@ -28,20 +28,16 @@ class ScheduleController extends Controller
         $query = Schedule::with(['class', 'subject', 'teacher']);
         
         if ($user->role === 'teacher') {
-            // Find teacher record
             $teacher = Teacher::where('auth_user_id', $user->id)->first();
             
             $query->where(function($q) use ($user, $teacher) {
-                // 1. Schedules assigned to this teacher
                 $q->where('teacher_id', $user->id);
                 
-                // 2. School Agenda (non-teaching) - Everyone should see this
                 $q->orWhere('type', 'non-teaching');
                 
-                // 3. Fallback: If for some reason teacher_id is null but assignments exist,
-                // we ONLY allow it if the schedule doesn't have a different teacher_id assigned.
                 if ($teacher) {
-                    foreach ($teacher->assignments as $assignment) {
+                    $assignments = TeacherAssignment::where('teacher_id', $teacher->id)->get();
+                    foreach ($assignments as $assignment) {
                         $q->orWhere(function($subQ) use ($assignment) {
                             $subQ->where('subject_id', $assignment->subject_id)
                                  ->where('class_id', $assignment->class_id)
@@ -787,8 +783,8 @@ class ScheduleController extends Controller
 
         DB::beginTransaction();
         try {
-            // 1. Force delete all existing teaching schedules first to prevent database bloat
-            \App\Models\Schedule::where('type', 'teaching')->forceDelete();
+            // 1. Soft delete all existing teaching schedules (hard delete would cascade journals via FK)
+            \App\Models\Schedule::where('type', 'teaching')->delete();
 
             // 2. Prepare data for bulk insert
             $insertData = array_map(function($item) use ($now) {

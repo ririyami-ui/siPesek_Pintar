@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('device_id')->nullable()->after('status');
-            $table->text('push_subscription')->nullable()->after('device_id');
+            if (!Schema::hasColumn('users', 'device_id')) {
+                $table->string('device_id')->nullable()->after('status');
+            }
+            if (!Schema::hasColumn('users', 'push_subscription')) {
+                $table->text('push_subscription')->nullable()->after('device_id');
+            }
         });
     }
 

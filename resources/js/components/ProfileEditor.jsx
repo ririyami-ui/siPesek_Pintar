@@ -522,11 +522,13 @@ export default function ProfileEditor() {
               value={formData.gemini_model}
               onChange={(e) => handleInputChange('gemini_model', e.target.value)}
             >
-              <option value="gemini-3.5-flash">✨ Gemini 3.5 Flash (Terbaru, Paling Cerdas 2026)</option>
+              <option value="gemini-3.6-flash">🚀 Gemini 3.6 Flash (Terbaru, Hemat Token)</option>
+              <option value="gemini-3.5-flash">✨ Gemini 3.5 Flash (Stabil, Paling Cerdas 2026)</option>
+              <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite (Ringan & Cepat)</option>
               <option value="gemini-3.1-flash-lite">⚡ Gemini 3.1 Flash-Lite (Ringan & Cepat)</option>
               <option value="gemini-3-flash-preview">🧪 Gemini 3 Flash Preview (Eksperimental)</option>
 
-              {!['gemini-3.5-flash','gemini-3.1-flash-lite','gemini-3-flash-preview'].includes(formData.gemini_model) && (
+              {!['gemini-3.6-flash','gemini-3.5-flash','gemini-3.5-flash-lite','gemini-3.1-flash-lite','gemini-3-flash-preview'].includes(formData.gemini_model) && (
                   <option value={formData.gemini_model}>{formData.gemini_model} (Aktif)</option>
                 )}
             </StyledSelect>

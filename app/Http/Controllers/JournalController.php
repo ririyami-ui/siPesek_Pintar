@@ -170,6 +170,10 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
+        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         return response()->json($journal->load(['class', 'subject', 'schedule']));
     }
 
@@ -178,6 +182,10 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
+        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $validated = $request->validate([
             'date' => 'sometimes|required|date',
             'topic' => 'sometimes|required|string',
@@ -204,6 +212,10 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
+        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $journal->delete();
 
         return response()->noContent();

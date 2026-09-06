@@ -66,58 +66,40 @@ export default function StudentAttendance() {
   const hadirPct   = totalDays > 0 ? Math.round((overall.hadir / totalDays) * 100) : 0;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-5">
-      {/* Header */}
-      <div>
-        <h1 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-          <BookOpen size={22} className="text-emerald-600" />
-          Rekap Presensi
-        </h1>
-        <p className="text-sm text-slate-500 mt-0.5">{data?.student?.name} · {data?.student?.class}</p>
-      </div>
+    <div className="max-w-4xl mx-auto space-y-3">
+       {/* Header */}
+       <div className="flex items-center justify-between">
+         <div>
+           <h1 className="text-lg font-bold text-slate-800 dark:text-white">Rekap Presensi Sesi Pembelajaran</h1>
+           <p className="text-xs text-slate-500">{data?.student?.name} · {data?.student?.class}</p>
+         </div>
+         <div className="text-right">
+           <p className={`text-xl font-bold ${hadirPct >= 80 ? 'text-emerald-600' : hadirPct >= 70 ? 'text-amber-600' : 'text-red-600'}`}>{hadirPct}%</p>
+           <p className="text-[10px] text-slate-400">{overall.hadir ?? 0}/{totalDays} hari</p>
+         </div>
+       </div>
 
-      {/* Overall summary cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {STATUSES.map(s => (
-          <div key={s.key} className={`rounded-2xl p-4 border ${s.bg} ${s.border}`}>
-            <p className={`text-2xl font-bold ${s.color}`}>{overall[s.key] ?? 0}</p>
-            <p className={`text-xs font-medium mt-0.5 ${s.color}`}>{s.label}</p>
-            <PercentBar value={overall[s.key] ?? 0} max={totalDays} color={s.bar} />
-          </div>
-        ))}
-      </div>
-
-      {/* Attendance percentage summary */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Award size={16} className="text-emerald-600" />
-            <span className="font-semibold text-slate-700 dark:text-white text-sm">Persentase Kehadiran (Total)</span>
-          </div>
-          <span className={`text-lg font-bold ${hadirPct >= 80 ? 'text-emerald-600' : hadirPct >= 70 ? 'text-amber-600' : 'text-red-600'}`}>
-            {hadirPct}%
-          </span>
-        </div>
-        <div className="w-full h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${hadirPct >= 80 ? 'bg-emerald-500' : hadirPct >= 70 ? 'bg-amber-400' : 'bg-red-500'}`}
-            style={{ width: `${hadirPct}%` }}
-          />
-        </div>
-        <p className="text-xs text-slate-400 mt-2">{overall.hadir ?? 0} dari {totalDays} pertemuan hadir</p>
-      </div>
+       {/* Overall summary inline */}
+       <div className="flex gap-2">
+         {STATUSES.map(s => (
+           <div key={s.key} className={`flex-1 rounded-lg px-2 py-1.5 border ${s.bg} ${s.border} text-center`}>
+             <p className={`text-sm font-bold ${s.color}`}>{overall[s.key] ?? 0}</p>
+             <p className={`text-[9px] font-medium ${s.color}`}>{s.label}</p>
+           </div>
+         ))}
+       </div>
 
       {/* View toggle */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5">
         <button
           onClick={() => setView('bySubject')}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${view === 'bySubject' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+          className={`flex-1 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${view === 'bySubject' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
-          Per Mata Pelajaran
+          Per Mapel
         </button>
         <button
           onClick={() => setView('daily')}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${view === 'daily' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
+          className={`flex-1 px-3 py-1 rounded-lg text-xs font-medium transition-colors ${view === 'daily' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}
         >
           Harian
         </button>
@@ -125,40 +107,41 @@ export default function StudentAttendance() {
 
       {/* Per Subject view */}
       {view === 'bySubject' && (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {bySubject.length === 0 ? (
-            <div className="text-center py-12 text-slate-400 text-sm">
-              <BookOpen size={36} className="mx-auto mb-2 opacity-30" />
+            <div className="text-center py-8 text-slate-400 text-xs">
               Belum ada data kehadiran.
             </div>
           ) : (
             bySubject.map((subj, i) => (
-              <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+              <div key={i} className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
                 <button
-                  className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 text-left"
                   onClick={() => setExpanded(expanded === i ? null : i)}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-slate-800 dark:text-white text-sm truncate">{subj.subject_name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <PercentBar value={subj.hadir} max={subj.total} color="bg-emerald-500" />
-                      <span className={`text-xs font-medium shrink-0 ${subj.pct_hadir >= 80 ? 'text-emerald-600' : subj.pct_hadir >= 70 ? 'text-amber-600' : 'text-red-600'}`}>
+                    <p className="font-medium text-slate-800 dark:text-white text-xs truncate">{subj.subject_name}</p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <div className="flex-1 h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${subj.pct_hadir}%` }} />
+                      </div>
+                      <span className={`text-[10px] font-medium ${subj.pct_hadir >= 80 ? 'text-emerald-600' : subj.pct_hadir >= 70 ? 'text-amber-600' : 'text-red-600'}`}>
                         {subj.pct_hadir}%
                       </span>
                     </div>
                   </div>
                   <ChevronDown
-                    size={16}
-                    className={`ml-4 text-slate-400 transition-transform shrink-0 ${expanded === i ? 'rotate-180' : ''}`}
+                    size={14}
+                    className={`ml-2 text-slate-400 transition-transform ${expanded === i ? 'rotate-180' : ''}`}
                   />
                 </button>
 
                 {expanded === i && (
-                  <div className="px-5 pb-4 grid grid-cols-4 gap-3 border-t border-slate-100 dark:border-slate-700 pt-3">
+                  <div className="px-3 pb-2 flex gap-2 border-t border-slate-100 dark:border-slate-700 pt-2">
                     {STATUSES.map(s => (
-                      <div key={s.key} className="text-center">
-                        <p className={`text-xl font-bold ${s.color}`}>{subj[s.key] ?? 0}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{s.label}</p>
+                      <div key={s.key} className="flex-1 text-center">
+                        <p className={`text-sm font-bold ${s.color}`}>{subj[s.key] ?? 0}</p>
+                        <p className="text-[9px] text-slate-400">{s.label}</p>
                       </div>
                     ))}
                   </div>
@@ -171,35 +154,24 @@ export default function StudentAttendance() {
 
       {/* Daily view */}
       {view === 'daily' && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="flex items-center gap-2 px-5 py-4 border-b border-slate-100 dark:border-slate-700">
-            <Calendar size={16} className="text-emerald-600" />
-            <h2 className="font-semibold text-slate-700 dark:text-white text-sm">Riwayat Kehadiran Harian</h2>
-          </div>
+        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
           {daily.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 text-sm">Belum ada riwayat.</div>
+            <div className="py-8 text-center text-slate-400 text-xs">Belum ada riwayat.</div>
           ) : (
-            <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[640px] overflow-y-auto custom-scrollbar">
+            <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[400px] overflow-y-auto">
               {daily.map((d, i) => (
-                <div key={i} className="flex items-center px-5 py-3 gap-4">
-                  <div className="w-24 shrink-0">
-                    <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <div key={i} className="flex items-center px-3 py-2 gap-3">
+                  <div className="w-16 shrink-0">
+                    <p className="text-[10px] font-medium text-slate-600 dark:text-slate-300">
                       {new Date(d.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-[9px] text-slate-400">
                       {new Date(d.date).toLocaleDateString('id-ID', { weekday: 'short' })}
                     </p>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">{d.subject_name}</p>
-                    {d.planned_material ? (
-                      <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                         Materi: {d.planned_material}
-                      </p>
-                    ) : (
-                      <p className="text-[10px] text-slate-400 italic">Materi tidak terjadwal</p>
-                    )}
-                    {d.note && <p className="text-[10px] text-slate-400 mt-0.5">Catatan: {d.note}</p>}
+                    <p className="text-xs font-medium text-slate-700 dark:text-slate-200 truncate">{d.subject_name}</p>
+                    {d.note && <p className="text-[9px] text-slate-400 truncate">{d.note}</p>}
                   </div>
                   <StatusBadge status={d.status} />
                 </div>

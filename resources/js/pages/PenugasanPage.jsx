@@ -134,15 +134,44 @@ export default function PenugasanPage() {
   };
 
   const toggleTaskStatus = async (taskId, currentStatus) => {
-    try {
-      const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending';
-      await api.put(`/student-tasks/${taskId}`, { status: newStatus });
-      toast.success(`Tugas ditandai sebagai ${newStatus === 'Completed' ? 'Selesai' : 'Tertunda'}`);
-      fetchTasks();
-    } catch (error) {
-      console.error("Error updating task status:", error);
-      toast.error('Gagal memperbarui status tugas.');
+    if (currentStatus === 'Completed') {
+      setConfirmModal({
+        isOpen: true,
+        title: 'Batalkan Penyelesaian',
+        message: 'Apakah Anda yakin ingin mengembalikan tugas ini ke status Belum?',
+        onConfirm: async () => {
+          try {
+            await api.put(`/student-tasks/${taskId}`, { status: 'Pending' });
+            toast.success('Tugas dikembalikan ke status Belum.');
+            fetchTasks();
+          } catch (error) {
+            console.error("Error updating task status:", error);
+            toast.error('Gagal memperbarui status tugas.');
+          } finally {
+            setConfirmModal(prev => ({ ...prev, isOpen: false }));
+          }
+        }
+      });
+      return;
     }
+
+    setConfirmModal({
+      isOpen: true,
+      title: 'Selesaikan Tugas',
+      message: 'Apakah Anda yakin tugas ini sudah selesai? Anda masih dapat mengubahnya kembali ke status Belum.',
+      onConfirm: async () => {
+        try {
+          await api.put(`/student-tasks/${taskId}`, { status: 'Completed' });
+          toast.success('Tugas ditandai sebagai Selesai.');
+          fetchTasks();
+        } catch (error) {
+          console.error("Error updating task status:", error);
+          toast.error('Gagal memperbarui status tugas.');
+        } finally {
+          setConfirmModal(prev => ({ ...prev, isOpen: false }));
+        }
+      }
+    });
   };
 
   const handleDeleteTask = (taskId) => {
@@ -344,13 +373,13 @@ export default function PenugasanPage() {
                 onClick={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
                 className="px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition"
               >
-                Batal
+                Tidak
               </button>
               <button
                 onClick={confirmModal.onConfirm}
                 className="px-6 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 shadow-lg shadow-red-200 dark:shadow-none transition"
               >
-                Hapus
+                Ya
               </button>
             </div>
           </div>

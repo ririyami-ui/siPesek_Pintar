@@ -33,16 +33,19 @@ export default function WaliKelasPage() {
   const [rawAttendanceLogs, setRawAttendanceLogs] = useState([]);
   const [infractions, setInfractions] = useState([]);
   const [grades, setGrades] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // Default to current month
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());   // Default to current year
   const [isLoading, setIsLoading] = useState(true);
   const { activeSemester, academicYear } = useSettings();
 
   useEffect(() => {
     const fetchWaliData = async () => {
       setIsLoading(true);
+      let classData = null;
       try {
         // 1. Get My Class Info
         const classRes = await api.get('/wali/my-class');
-        const classData = classRes.data.data;
+        classData = classRes.data.data;
         setMyClass(classData);
 
         // 2. Get Students
@@ -78,9 +81,9 @@ export default function WaliKelasPage() {
         if (error.response?.status === 404) {
           toast.error("Anda belum ditugaskan sebagai Wali Kelas.");
         }
-      } finally {
-        setIsLoading(false);
       }
+
+      setIsLoading(false);
     };
 
     fetchWaliData();
@@ -125,13 +128,26 @@ export default function WaliKelasPage() {
 
     setDailyRecap(dailyStats);
 
-    // Subject Summary (All sessions)
-    rawDocs.forEach(record => {
-      const s = record.status.toLowerCase();
-      const status = (s === 'izin' || s === 'ijin') ? 'Ijin' : ((s === 'alpa' || s === 'alpha') ? 'Alpha' : (s === 'hadir' ? 'Hadir' : (s === 'sakit' ? 'Sakit' : record.status)));
-      if (summary[status] !== undefined) summary[status]++;
+    // Subject Summary (Daily Presence)
+    const dailySummary = { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0 };
+    Object.values(dailyMap).forEach(day => {
+      Object.values(day.students).forEach(studentRecords => {
+        // Determine overall daily status for this student
+        let dailyStatus = 'Alpha'; // Default to Alpha if no clear status
+        
+        // Prioritize: Hadir > Izin > Sakit > Alpha
+        if (studentRecords.some(r => r.status.toLowerCase() === 'hadir')) {
+          dailyStatus = 'Hadir';
+        } else if (studentRecords.some(r => r.status.toLowerCase() === 'izin' || r.status.toLowerCase() === 'ijin')) {
+          dailyStatus = 'Ijin';
+        } else if (studentRecords.some(r => r.status.toLowerCase() === 'sakit')) {
+          dailyStatus = 'Sakit';
+        }
+
+        if (dailySummary[dailyStatus] !== undefined) dailySummary[dailyStatus]++;
+      });
     });
-    setAttendanceStats(summary);
+    setAttendanceStats(dailySummary);
 
     // Group Today's (or latest date) sessions
     const dates = Object.keys(dailyMap).sort((a, b) => b.localeCompare(a));
@@ -204,15 +220,16 @@ export default function WaliKelasPage() {
 
   const handleDownloadPdf = async () => {
     try {
-      const today = new Date();
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(today.getDate() - 30);
+      if (!myClass) {
+        toast.error("Data kelas tidak ditemukan.");
+        return;
+      }
 
       const response = await api.get('/attendances/pdf', {
         params: {
           class_id: myClass.id,
-          date_start: thirtyDaysAgo.toISOString().split('T')[0],
-          date_end: today.toISOString().split('T')[0]
+          month: selectedMonth,
+          year: selectedYear,
         },
         responseType: 'blob'
       });
@@ -220,7 +237,7 @@ export default function WaliKelasPage() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `Rekap_Absensi_${myClass.rombel}.pdf`);
+      link.setAttribute('download', `Rekap_Absensi_${myClass.rombel}_${selectedMonth}-${selectedYear}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -300,6 +317,7 @@ export default function WaliKelasPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Visual Analytics */}
         <div className="lg:col-span-1 space-y-6">
+          {/* Pie Chart Card */}
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-800">
             <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
               <PieIcon size={20} className="text-purple-600" /> Komposisi Kehadiran
@@ -311,9 +329,10 @@ export default function WaliKelasPage() {
             )}
           </div>
 
+          {/* Perhatian Khusus Card */}
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-800">
             <div className="flex items-center justify-between mb-6">
-               <h3 className="text-lg font-bold flex items-center gap-2">
+              <h3 className="text-lg font-bold flex items-center gap-2">
                 <AlertTriangle size={20} className="text-amber-500" /> Perhatian Khusus
               </h3>
             </div>
@@ -338,8 +357,6 @@ export default function WaliKelasPage() {
 
         {/* Right Column: Detailed Recap */}
         <div className="lg:col-span-2 space-y-6">
-          
-          {/* Today's Sessions Monitoring */}
           <div className="bg-white dark:bg-gray-900 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-gray-800">
             <h3 className="text-lg font-bold flex items-center gap-2 mb-6">
               <CheckCircle size={20} className="text-purple-600" /> Monitoring Sesi Hari Ini
@@ -435,12 +452,35 @@ export default function WaliKelasPage() {
                 >
                   Unduh Log Sesi
                 </button>
-                <button 
-                  onClick={handleDownloadPdf} 
-                  className="px-3 py-1.5 text-xs font-bold rounded-lg border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition shadow-sm dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400"
-                >
-                  Unduh PDF
-                </button>
+                <div className="flex space-x-2">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => setSelectedMonth(Number(e.target.value))}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                  >
+                    {[...Array(12)].map((_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {new Date(0, i).toLocaleString('id-ID', { month: 'long' })}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => setSelectedYear(Number(e.target.value))}
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg border border-gray-300 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                  >
+                    {[...Array(5)].map((_, i) => { // Last 5 years
+                      const year = new Date().getFullYear() - i;
+                      return <option key={year} value={year}>{year}</option>;
+                    })}
+                  </select>
+                  <button 
+                    onClick={handleDownloadPdf} 
+                    className="px-3 py-1.5 text-xs font-bold rounded-lg border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 transition shadow-sm dark:bg-red-900/20 dark:border-red-900/30 dark:text-red-400"
+                  >
+                    Unduh PDF Bulanan
+                  </button>
+                </div>
               </div>
             </div>
             <div className="overflow-x-auto">

@@ -24,6 +24,9 @@ Route::get('/public-settings', [App\Http\Controllers\UserProfileController::clas
 // Secure Backup Download via Ticket (Outside Sanctum to allow direct browser download)
 Route::get('/admin/database/backup/download', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'downloadBackup']);
 
+// Public route for PDF export (uses ticket, no sanctum auth)
+Route::get('/admin/app-installations/export-pdf', [App\Http\Controllers\AppInstallationController::class, 'exportPdf']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -91,6 +94,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/substitutions/{substitution}/suggest', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'suggest']);
         Route::post('/admin/substitutions/{substitution}/assign', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'assign']);
         Route::post('/admin/substitutions/{substitution}/dismiss', [App\Http\Controllers\Admin\SubstitutionAgentController::class, 'dismiss']);
+
+        // App Installation Tracking
+        Route::get('/admin/app-installations', [App\Http\Controllers\AppInstallationController::class, 'index']);
+        Route::post('/admin/app-installations/{student}/reset-device', [App\Http\Controllers\AppInstallationController::class, 'resetDevice']);
+        Route::post('/admin/app-installations/generate-pdf-ticket', [App\Http\Controllers\AppInstallationController::class, 'generatePdfTicket']);
     });
 
     // Student Portal Routes (Accessible by Students)
@@ -152,6 +160,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/auto-fill-journal', [GeminiController::class, 'autoFillJournal']);
         Route::post('/generate-lesson-plan', [App\Http\Controllers\AiFeaturesController::class, 'generateRpp']);
         Route::post('/save-rpp', [App\Http\Controllers\AiFeaturesController::class, 'saveRpp']);
+        Route::post('/export-rpp-docx', [App\Http\Controllers\AiFeaturesController::class, 'exportRppDocx']);
         Route::get('/rpp-history', [App\Http\Controllers\AiFeaturesController::class, 'getRppHistory']);
         Route::delete('/rpp-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteRpp']);
         
@@ -186,6 +195,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/schedule',    [StudentDashboardController::class, 'getWeeklySchedule']);
         Route::get('/attendance',  [StudentDashboardController::class, 'getAttendanceRecap']);
         Route::get('/grades',      [StudentDashboardController::class, 'getGrades']);
+        Route::get('/trend',       [StudentDashboardController::class, 'getGradesTrend']);
         Route::get('/tasks',       [StudentDashboardController::class, 'getMissingTasks']);
         Route::get('/infractions', [StudentDashboardController::class, 'getInfractions']);
         Route::get('/library/loans',[StudentDashboardController::class, 'myLibraryLoans']);

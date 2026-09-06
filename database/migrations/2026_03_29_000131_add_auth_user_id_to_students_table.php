@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('students', function (Blueprint $table) {
-            $table->foreignId('auth_user_id')->nullable()->after('user_id')->constrained('users')->onDelete('set null');
-        });
+        if (!Schema::hasColumn('students', 'auth_user_id')) {
+            Schema::table('students', function (Blueprint $table) {
+                $table->foreignId('auth_user_id')->nullable()->constrained('users')->onDelete('set null');
+            });
+        }
     }
 
     /**

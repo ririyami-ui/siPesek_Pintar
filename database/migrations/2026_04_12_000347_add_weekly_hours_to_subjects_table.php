@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('subjects', function (Blueprint $table) {
-            $table->integer('weekly_hours')->default(2)->after('name');
+            if (!Schema::hasColumn('subjects', 'weekly_hours')) {
+                $table->integer('weekly_hours')->default(2)->after('name');
+            }
         });
     }
 

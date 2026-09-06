@@ -17,12 +17,9 @@ class StudentActivityPoint extends Model
         'note',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'date' => 'date',
-        ];
-    }
+    protected $casts = [
+        'date' => 'date',
+    ];
 
     public function student()
     {
@@ -36,7 +33,7 @@ class StudentActivityPoint extends Model
 
     public function class()
     {
-        return $this->belongsTo(Classes::class, 'class_id');
+        return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
     public function subject()
