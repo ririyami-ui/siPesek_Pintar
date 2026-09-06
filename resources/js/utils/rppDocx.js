@@ -1,12 +1,13 @@
 import {
     Document, Packer, Paragraph, TextRun, HeadingLevel,
     Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType,
-    VerticalAlign, convertInchesToTwip, LineRuleType,
+    VerticalAlign, convertInchesToTwip, LineRuleType, ImageRun,
     Math, MathRun, MathFraction, MathSubScript, MathSuperScript,
     MathSubSuperScript, MathRadical, MathLimitUpper, MathLimitLower,
     MathSum, MathIntegral,
 } from 'docx';
 import { mml2omml } from 'mathml2omml';
+import katex from 'katex';
 
 const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
 const DEFAULT_FONT = 'Arial';
@@ -123,18 +124,94 @@ function convertOmmlToMath(ommlString) {
     return new Math({ children: mathChildren(oMath) });
 }
 
-function katexSpanToMath(el) {
-    let mathElement = el.querySelector('.katex-mathml math');
-    if (!mathElement) {
-        mathElement = el.querySelector('math');
-    }
-    if (!mathElement) return null;
-    const omml = mml2omml(mathElement.outerHTML, { disableDecode: true });
-    if (!omml || !omml.includes('oMath')) return null;
-    return convertOmmlToMath(omml);
+const svgToPng = (svgString, width, height) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+        img.onload = () => {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob((png) => {
+                    URL.revokeObjectURL(url);
+                    if (png) resolve(png.arrayBuffer());
+                    else reject(new Error('canvas.toBlob returned null'));
+                }, 'image/png');
+            } catch (e) {
+                URL.revokeObjectURL(url);
+                reject(e);
+            }
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error('svg image failed to load'));
+        };
+        img.src = url;
+    });
+};
+
+async function katexSpanToImage(el) {
+    const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+    const latex = annotation ? annotation.textContent.trim() : '';
+    if (!latex) throw new Error('no LaTeX annotation available');
+
+    const display = !!el.closest('.katex-display');
+    const svg = katex.renderToString(latex, {
+        output: 'svg',
+        displayMode: display,
+        throwOnError: false
+    });
+
+    const holder = document.createElement('div');
+    holder.innerHTML = svg;
+    const svgEl = holder.querySelector('svg');
+    if (!svgEl) throw new Error('katex produced no svg');
+
+    const ptToPx = (pt) => Math.max(1, Math.round(parseFloat(pt) * 96 / 72));
+    const width = ptToPx(svgEl.getAttribute('width') || '10');
+    const height = ptToPx(svgEl.getAttribute('height') || '10');
+
+    const buffer = await svgToPng(svg, width, height);
+    return new ImageRun({
+        type: 'png',
+        data: new Uint8Array(buffer),
+        transformation: { width, height }
+    });
 }
 
-function parseInline(element) {
+async function equationToDocx(el) {
+    let cause = null;
+    try {
+        const mathElement = el.querySelector('.katex-mathml math') || el.querySelector('math');
+        if (mathElement) {
+            const omml = mml2omml(mathElement.outerHTML, { disableDecode: true });
+            if (omml && omml.includes('oMath')) {
+                const math = convertOmmlToMath(omml);
+                if (math) return math;
+            }
+            cause = new Error('OMML conversion produced no oMath');
+        } else {
+            cause = new Error('no <math> element inside .katex');
+        }
+    } catch (e) {
+        cause = e;
+    }
+    console.warn('Equation OMML path failed, falling back to PNG image:', cause);
+
+    try {
+        return await katexSpanToImage(el);
+    } catch (e) {
+        console.warn('Equation PNG fallback failed, keeping plain text:', e);
+        return null;
+    }
+}
+
+async function parseInline(element) {
     const children = [];
     for (const node of element.childNodes) {
         if (node.nodeType === 3) {
@@ -163,21 +240,21 @@ function parseInline(element) {
                 break;
             case 'span':
                 if (node.classList && node.classList.contains('katex')) {
-                    const math = katexSpanToMath(node);
-                    if (math) {
-                        children.push(math);
+                    const eq = await equationToDocx(node);
+                    if (eq) {
+                        children.push(eq);
                     } else {
                         children.push(new TextRun({ text: node.textContent }));
                     }
                 } else {
-                    children.push(...parseInline(node));
+                    children.push(...await parseInline(node));
                 }
                 break;
             case 'br':
                 children.push(new TextRun(' '));
                 break;
             default:
-                children.push(...parseInline(node));
+                children.push(...await parseInline(node));
                 break;
         }
     }
@@ -219,7 +296,7 @@ const romanNumeral = (n) => {
     return out;
 };
 
-function parseList(listEl, depth = 0) {
+async function parseList(listEl, depth = 0) {
     const container = [];
     const isOrdered = listEl.tagName.toLowerCase() === 'ol';
     const indent = { left: convertInchesToTwip(0.5 + depth * 0.5) };
@@ -237,7 +314,7 @@ function parseList(listEl, depth = 0) {
                 if (n.tagName === 'OL' || n.tagName === 'UL') {
                     nested.push(n);
                 } else {
-                    lead.push(...parseInline(n));
+                    lead.push(...await parseInline(n));
                 }
             }
         }
@@ -259,7 +336,9 @@ function parseList(listEl, depth = 0) {
             spacing: { after: 80, ...LINE },
         }));
 
-        nested.forEach(nl => container.push(...parseList(nl, depth + 1)));
+        for (const nl of nested) {
+            container.push(...await parseList(nl, depth + 1));
+        }
         counter++;
     }
     return container;
@@ -272,15 +351,16 @@ const tableCellBorders = {
     right: { style: BorderStyle.SINGLE, size: 6, color: '000000' }
 };
 
-function parseTable(tableEl) {
+async function parseTable(tableEl) {
     const rows = tableEl.querySelectorAll('tr');
     const tableRows = [];
 
     for (const row of rows) {
         const cells = row.querySelectorAll('th, td');
-        const tableCells = Array.from(cells).map(cell => {
-            const runs = parseInline(cell);
-            return new TableCell({
+        const tableCells = [];
+        for (const cell of cells) {
+            const runs = await parseInline(cell);
+            tableCells.push(new TableCell({
                 children: [new Paragraph({
                     children: runs.length ? runs : [new TextRun('')],
                     alignment: cell.tagName === 'TH' ? AlignmentType.CENTER : AlignmentType.LEFT,
@@ -290,8 +370,8 @@ function parseTable(tableEl) {
                 margins: { top: 120, bottom: 120, left: 180, right: 180 },
                 verticalAlign: VerticalAlign.CENTER,
                 borders: tableCellBorders
-            });
-        });
+            }));
+        }
 
         tableRows.push(new TableRow({
             children: tableCells
@@ -355,7 +435,7 @@ function parseSignature(section) {
     ];
 }
 
-function parseBlock(element) {
+async function parseBlock(element) {
     const children = [];
 
     for (const node of element.childNodes) {
@@ -390,14 +470,14 @@ function parseBlock(element) {
                 break;
             case 'p':
                 children.push(new Paragraph({
-                    children: parseInline(node),
+                    children: await parseInline(node),
                     spacing: { after: 240, ...LINE },
                     alignment: AlignmentType.JUSTIFIED
                 }));
                 break;
             case 'ul':
             case 'ol':
-                children.push(...parseList(node));
+                children.push(...await parseList(node));
                 break;
             case 'pre':
                 children.push(new Paragraph({
@@ -406,17 +486,17 @@ function parseBlock(element) {
                 }));
                 break;
             case 'table':
-                children.push(parseTable(node));
+                children.push(await parseTable(node));
                 break;
             case 'div':
             case 'section':
-                children.push(...parseBlock(node));
+                children.push(...await parseBlock(node));
                 break;
             case 'br':
                 children.push(new Paragraph({ children: [] }));
                 break;
             default:
-                children.push(...parseBlock(node));
+                children.push(...await parseBlock(node));
                 break;
         }
     }
@@ -425,7 +505,7 @@ function parseBlock(element) {
 }
 
 async function generateRppDoc(element) {
-    const children = parseBlock(element);
+    const children = await parseBlock(element);
     const doc = new Document({
         styles: {
             default: {
