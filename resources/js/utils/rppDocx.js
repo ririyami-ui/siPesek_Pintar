@@ -5,6 +5,7 @@ import {
     Math, MathRun, MathFraction, MathSubScript, MathSuperScript,
     MathSubSuperScript, MathRadical, MathLimitUpper, MathLimitLower,
     MathSum, MathIntegral,
+    LevelFormat,
 } from 'docx';
 import { mml2omml } from 'mathml2omml';
 import katex from 'katex';
@@ -12,6 +13,35 @@ import katex from 'katex';
 const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
 const DEFAULT_FONT = 'Arial';
 const LINE = { line: 360, lineRule: LineRuleType.AUTO };
+
+const HD_REF_PREFIX = 'rpp-hd';
+const HD_BULLET_REF_PREFIX = 'rpp-hd-bullet';
+
+const buildIndent = (leftTwips, hangingTwips) => ({ left: leftTwips, hanging: hangingTwips });
+
+const orderedLevels = [
+    { level: 0, format: LevelFormat.DECIMAL, text: '%1.', style: { paragraph: { indent: buildIndent(360, 360) } } },
+    { level: 1, format: LevelFormat.LOWER_LETTER, text: '%2)', style: { paragraph: { indent: buildIndent(720, 360) } } },
+    { level: 2, format: LevelFormat.LOWER_ROMAN, text: '%3.', style: { paragraph: { indent: buildIndent(1080, 360) } } },
+];
+
+const bulletLevels = [
+    { level: 0, format: LevelFormat.BULLET, text: '\u2022', style: { paragraph: { indent: buildIndent(360, 360) } } },
+    { level: 1, format: LevelFormat.BULLET, text: '\u25E6', style: { paragraph: { indent: buildIndent(720, 360) } } },
+    { level: 2, format: LevelFormat.BULLET, text: '\u25AA', style: { paragraph: { indent: buildIndent(1080, 360) } } },
+];
+
+const numberingConfigs = [];
+let ordSeq = 0;
+let bulSeq = 0;
+
+const newListRef = (isOrdered) => {
+    const reference = isOrdered
+        ? `${HD_REF_PREFIX}-${ordSeq++}`
+        : `${HD_BULLET_REF_PREFIX}-${bulSeq++}`;
+    numberingConfigs.push({ reference, levels: isOrdered ? orderedLevels : bulletLevels });
+    return reference;
+};
 
 function mathChildren(container) {
     const children = [];
@@ -172,7 +202,10 @@ async function katexSpanToImage(el) {
     const svgEl = holder.querySelector('svg');
     if (!svgEl) throw new Error('katex produced no svg');
 
-    const ptToPx = (pt) => Math.max(1, Math.round(parseFloat(pt) * 96 / 72));
+    const ptToPx = (pt) => {
+        const px = parseFloat(pt) * 96 / 72;
+        return px > 1 ? globalThis.Math.round(px) : 1;
+    };
     const width = ptToPx(svgEl.getAttribute('width') || '10');
     const height = ptToPx(svgEl.getAttribute('height') || '10');
 
@@ -301,22 +334,11 @@ const headingParagraph = (level, text) => {
     }
 };
 
-const romanNumeral = (n) => {
-    const map = { 10: 'x', 9: 'ix', 5: 'v', 4: 'iv', 1: 'i' };
-    let out = '';
-    for (const [k, v] of Object.entries(map)) {
-        const count = Number.parseInt(n / Number(k), 10);
-        out += v.repeat(count);
-        n -= count * Number(k);
-    }
-    return out;
-};
-
-async function parseList(listEl, depth = 0) {
+async function parseList(listEl, { level = 0, reference } = {}) {
     const container = [];
     const isOrdered = listEl.tagName.toLowerCase() === 'ol';
-    const indent = { left: convertInchesToTwip(0.5 + depth * 0.5) };
-    let counter = 1;
+    if (!reference) reference = newListRef(isOrdered);
+    const currentLevel = level > 2 ? 2 : level;
 
     for (const node of listEl.childNodes) {
         if (node.nodeType !== 1 || node.tagName !== 'LI') continue;
@@ -325,7 +347,10 @@ async function parseList(listEl, depth = 0) {
         const nested = [];
         for (const n of node.childNodes) {
             if (n.nodeType === 3) {
-                if (n.textContent) lead.push(new TextRun(n.textContent));
+                if (n.textContent) {
+                    const eq = await tryRawLatex(n.textContent);
+                    lead.push(eq || new TextRun(n.textContent));
+                }
             } else if (n.nodeType === 1) {
                 if (n.tagName === 'OL' || n.tagName === 'UL') {
                     nested.push(n);
@@ -335,27 +360,17 @@ async function parseList(listEl, depth = 0) {
             }
         }
 
-        let marker;
-        if (!isOrdered) {
-            marker = '\u2022';
-        } else if (depth === 0) {
-            marker = `${counter}.`;
-        } else if (depth === 1) {
-            marker = `${String.fromCharCode(96 + counter)})`;
-        } else {
-            marker = `${romanNumeral(counter)}.`;
-        }
+        const children = lead.length ? lead : [new TextRun(node.textContent)];
 
         container.push(new Paragraph({
-            children: [new TextRun({ text: `${marker} `, bold: true }), ...lead],
-            indent,
+            children,
+            numbering: { reference, level: currentLevel },
             spacing: { after: 80, ...LINE },
         }));
 
         for (const nl of nested) {
-            container.push(...await parseList(nl, depth + 1));
+            container.push(...await parseList(nl, { level: currentLevel + 1, reference }));
         }
-        counter++;
     }
     return container;
 }
@@ -523,6 +538,7 @@ async function parseBlock(element) {
 async function generateRppDoc(element) {
     const children = await parseBlock(element);
     const doc = new Document({
+        numbering: { config: numberingConfigs },
         styles: {
             default: {
                 document: {
