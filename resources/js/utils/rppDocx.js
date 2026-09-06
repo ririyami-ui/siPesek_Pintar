@@ -211,12 +211,28 @@ async function equationToDocx(el) {
     }
 }
 
+const LATEX_RE = /\\[a-zA-Z]+|\{[^}]+\}|[_^]\S/;
+
+async function tryRawLatex(text) {
+    const trimmed = text.trim();
+    if (!LATEX_RE.test(trimmed)) return null;
+    try {
+        const html = katex.renderToString(trimmed, { throwOnError: true, displayMode: false });
+        const tmp = document.createElement('span');
+        tmp.innerHTML = html;
+        const katexEl = tmp.querySelector('.katex');
+        if (!katexEl) return null;
+        return await equationToDocx(katexEl);
+    } catch { return null; }
+}
+
 async function parseInline(element) {
     const children = [];
     for (const node of element.childNodes) {
         if (node.nodeType === 3) {
             if (node.textContent) {
-                children.push(new TextRun(node.textContent));
+                const eq = await tryRawLatex(node.textContent);
+                children.push(eq || new TextRun(node.textContent));
             }
             continue;
         }
