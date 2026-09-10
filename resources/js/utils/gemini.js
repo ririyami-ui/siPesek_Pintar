@@ -1040,7 +1040,7 @@ export const generateLessonPlan = async (data) => {
 
     const level = getLevel(data.gradeLevel);
     const subjectKey = getSubjectKey(data.subject);
-    const verbatimEntry = CP_FULL.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+    const verbatimEntry = CP_FULL?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
     const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
 
     onProgress("Generating Single-Stage RPP (BSKP 46/2025)...");
@@ -2084,7 +2084,7 @@ export async function generateATP(data) {
   const subjectData = (gradeData && gradeData[subjectKey])
     || levelData?.[subjectKey];
 
-  const verbatimEntry = CP_FULL.subjects?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+  const verbatimEntry = CP_FULL?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
   const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
 
   onProgress({ stage: 'analyzing', message: 'Menganalisis Capaian Pembelajaran (CP) & Karakteristik Sekolah...', percentage: 20 });
