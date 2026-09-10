@@ -43,14 +43,34 @@
           "example": "```mermaid\nflowchart TD\n    A[Persamaan] --> B[Pindah Ruas]\n    B --> C[Group Variabel]\n    C --> D[Bagi Koefisien]\n    D --> E[Nilai Variabel]\n```"
         },
         "Fungsi": {
-          "visual_type": "graph_td",
-          "description": "Graph TD untuk konsep fungsi (domain, kodomain, range). Graph LR untuk pemetaan input-output.",
-          "example": "```mermaid\ngraph LR\n    x(x) --> f[f(x)]\n    f --> y(y)\n    y --> f^{-1}(invers)\n```"
+          "visual_type": "function",
+          "description": "Gunakan type 'function' untuk grafik kartesius (parabola, linear, kuadrat). Config: {\"type\":\"function\",\"config\":{\"function\":\"x^2\",\"xRange\":[-5,5],\"yRange\":[-5,10],\"title\":\"Grafik y=x²\"}}. Gunakan mermaid hanya untuk konsep domain/kodomain.",
+          "example": "```visualization\n{\"type\":\"function\",\"config\":{\"function\":\"x^2\",\"xRange\":[-5,5],\"yRange\":[-5,10],\"title\":\"Grafik Fungsi Kuadrat\"}}\n```"
         },
         "Geometri": {
-          "visual_type": "graph_td",
-          "description": "Mindmap atau graph TD untuk klasifikasi bangun datar/ruang. LaTeX untuk rumus luas/volume.",
-          "example": "```mermaid\ngraph TD\n    BangunDatar --> Segitiga\n    BangunDatar --> Segiempat\n    BangunDatar --> Lingkaran\n    Segiempat --> Persegi\n    Segiempat --> PersegiPanjang\n```"
+          "visual_type": "geometry",
+          "description": "Gunakan type 'geometry' untuk bangun datar/ruang interaktif. Config: {\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0]},{\"type\":\"point\",\"coords\":[4,0]},{\"type\":\"point\",\"coords\":[0,3]},{\"type\":\"polygon\",\"parents\":[\"0\",\"1\",\"2\"]}]}}. JANGAN gunakan function untuk geometri.",
+          "example": "```visualization\n{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[4,0],\"id\":\"B\"},{\"type\":\"point\",\"coords\":[0,3],\"id\":\"C\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\",\"C\"]}]}}\n```"
+        },
+        "Pythagoras": {
+          "visual_type": "geometry",
+          "description": "Gunakan type 'geometry' untuk visualisasi segitiga siku-siku dan dalil Pythagoras. JANGAN gunakan function.",
+          "example": "```visualization\n{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[4,0],\"id\":\"B\"},{\"type\":\"point\",\"coords\":[0,3],\"id\":\"C\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\",\"C\"]},{\"type\":\"segment\",\"parents\":[\"A\",\"B\"]},{\"type\":\"segment\",\"parents\":[\"B\",\"C\"]},{\"type\":\"segment\",\"parents\":[\"A\",\"C\"]}]}}\n```"
+        },
+        "Segitiga": {
+          "visual_type": "geometry",
+          "description": "Gunakan type 'geometry' untuk segitiga. JANGAN gunakan function.",
+          "example": "```visualization\n{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[5,0],\"id\":\"B\"},{\"type\":\"point\",\"coords\":[2,4],\"id\":\"C\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\",\"C\"]}]}}\n```"
+        },
+        "Persegi": {
+          "visual_type": "geometry",
+          "description": "Gunakan type 'geometry' untuk persegi. JANGAN gunakan function.",
+          "example": "```visualization\n{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[4,0],\"id\":\"B\"},{\"type\":\"point\",\"coords\":[4,4],\"id\":\"C\"},{\"type\":\"point\",\"coords\":[0,4],\"id\":\"D\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\",\"C\",\"D\"]}]}}\n```"
+        },
+        "Lingkaran": {
+          "visual_type": "geometry",
+          "description": "Gunakan type 'geometry' untuk lingkaran. JANGAN gunakan function.",
+          "example": "```visualization\n{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"circle\",\"parents\":[{\"type\":\"point\",\"coords\":[0,0]} ,3]}]}}\n```"
         },
         "Perbandingan": {
           "visual_type": "flowchart_lr",
@@ -73,9 +93,9 @@
           "example": "```mermaid\nflowchart TD\n    A[Matriks A,B] --> B[Cek Ordo]\n    B -->|Sama| C[Operasikan]\n    B -->|Beda| D[Tidak bisa]\n```"
         },
         "Limit": {
-          "visual_type": "graph_lr",
-          "description": "Graph LR untuk konsep limit kiri/kanan. Function chart untuk visual grafik limit.",
-          "example": "```mermaid\ngraph LR\n    x->a --> Limit\n    Limit --> f(x)->L\n    Limit --> f(x)->≠L\n```"
+          "visual_type": "function",
+          "description": "Gunakan type 'function' untuk grafik limit (visual titik pendekatan). Config: {\"type\":\"function\",\"config\":{\"function\":\"1/x\",\"xRange\":[-5,5],\"yRange\":[-10,10],\"title\":\"Grafik Limit\"}}. Gunakan mermaid untuk konsep limit kiri/kanan.",
+          "example": "```visualization\n{\"type\":\"function\",\"config\":{\"function\":\"1/x\",\"xRange\":[-5,5],\"yRange\":[-10,10],\"title\":\"Grafik Fungsi 1/x\"}}\n```"
         },
         "Turunan": {
           "visual_type": "flowchart_lr",
@@ -88,9 +108,9 @@
           "example": "```mermaid\ngraph TD\n    Integral --> TakTentu\n    Integral --> Tentu\n    TakTentu --> Substitusi\n    Tentu --> LuasDaerah\n```"
         },
         "Trigonometri": {
-          "visual_type": "graph_td",
-          "description": "Graph TD untuk hubungan sin-cos-tan, kuadran. Function chart untuk grafik trigonometri.",
-          "example": "```mermaid\ngraph TD\n    Trigonometri --> Sin\n    Trigonometri --> Cos\n    Trigonometri --> Tan\n    KuadranI --> Sin+\n    KuadranI --> Cos+\n```"
+          "visual_type": "function",
+          "description": "Gunakan type 'function' untuk grafik sin, cos, tan. Config: {\"type\":\"function\",\"config\":{\"function\":\"sin(x)\",\"xRange\":[-6.28,6.28],\"yRange\":[-1.5,1.5],\"title\":\"Grafik sin(x)\"}}. Gunakan mermaid untuk hubungan kuadran.",
+          "example": "```visualization\n{\"type\":\"function\",\"config\":{\"function\":\"sin(x)\",\"xRange\":[-6.28,6.28],\"yRange\":[-1.5,1.5],\"title\":\"Grafik Fungsi Sinus\"}}\n```"
         },
         "Vektor": {
           "visual_type": "graph_lr",
@@ -938,9 +958,9 @@
           "example": "```mermaid\ngraph LR\n    A[Server] --- B[Client]\n    A --- C[Client]\n    Hub --- B\n    Hub --- C\n```"
         },
         "Pemrograman": {
-          "visual_type": "flowchart_td",
-          "description": "Flowchart TD untuk logika pemrograman (sequence, selection, repetition).",
-          "example": "```mermaid\nflowchart TD\n    A[Mulai] --> B[Loop]\n    B --> C{Iterasi}\n    C -->|True| D[Eksekusi]\n    D --> B\n    C -->|False| E[Selesai]\n```"
+          "visual_type": "scratch",
+          "description": "Gunakan type 'scratch' dengan config.code berisi teks scratchblocks. JANGAN gunakan config.blocks.",
+          "example": "```visualization\n{\"type\":\"scratch\",\"config\":{\"code\":\"when flag clicked\\nset [score v] to [0]\\nrepeat (10)\\n    move (10) steps\\n    change [score v] by (1)\\nend\\nsay (join [Skor: ] (score))\"}}\n```"
         },
         "Dampak Sosial": {
           "visual_type": "mindmap",

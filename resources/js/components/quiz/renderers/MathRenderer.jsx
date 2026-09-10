@@ -53,7 +53,7 @@ const MathRenderer = ({ config }) => {
         });
         boardRef.current = board;
 
-        const fns = getProcessedFns(config.expression || "");
+        const fns = getProcessedFns(config.expression || config.function || "");
         const graphObjects = [];
         const palette = [config.color || '#2563eb', '#8b5cf6', '#f43f5e'];
 
@@ -82,7 +82,8 @@ const MathRenderer = ({ config }) => {
           config.elements.forEach((el) => {
             try {
               if (el.type === 'point') {
-                const p = board.create('point', el.parents, {
+                const coords = el.coords || el.parents;
+                const p = board.create('point', coords, {
                   name: el.label || '',
                   withLabel: !!el.label,
                   size: 4,
@@ -151,8 +152,8 @@ const MathRenderer = ({ config }) => {
         <h4 className="text-sm font-semibold text-gray-800">{config.title || 'Visualisasi Grafik Fungsi'}</h4>
       </div>
       <div ref={containerRef} id={containerId} style={{ width: '100%', height: config.height || '400px', border: '1px solid #e5e7eb', borderRadius: '8px' }} />
-      {config.expression && (
-        <p className="text-xs text-gray-500 font-mono mt-1">f(x) = {config.expression}</p>
+      {(config.expression || config.function) && (
+        <p className="text-xs text-gray-500 font-mono mt-1">f(x) = {config.expression || config.function}</p>
       )}
     </div>
   );

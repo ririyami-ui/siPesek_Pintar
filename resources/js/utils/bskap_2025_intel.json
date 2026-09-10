@@ -1,4 +1,4 @@
-{
+﻿{
   "version": "2025.10",
   "name": "Inteligensi Kurikulum Merdeka BSKAP 2025 (Kepka 046/2025)",
   "last_updated": "2026-02-03",
@@ -227,7 +227,7 @@
               },
               {
                 "materi": "Penjumlahan (1)",
-                "elemen": "Geometri"
+                "elemen": "Aljabar"
               },
               {
                 "materi": "Pengurangan (1)",
@@ -235,15 +235,15 @@
               },
               {
                 "materi": "Bentuk-bentuk Bangun (1)",
-                "elemen": "Aljabar"
+                "elemen": "Geometri"
               },
               {
                 "materi": "Bilangan yang Lebih dari 10",
-                "elemen": "Pengukuran"
+                "elemen": "Bilangan"
               },
               {
                 "materi": "Waktu",
-                "elemen": "Geometri"
+                "elemen": "Pengukuran"
               }
             ],
             "cp_snippet": "Menunjukkan pemahaman dan memiliki intuisi bilangan (number sense) pada bilangan cacah sampai 100; membaca, menulis, menentukan nilai tempat, membandingkan, mengurutkan, serta melakukan komposisi (menyusun) dan dekomposisi (mengurai) bilangan; melakukan operasi penjumlahan dan pengurangan menggunakan benda-benda konkret yang banyaknya sampai 20; dan menunjukkan pemahaman pecahan sebagai bagian dari keseluruhan melalui konteks membagi sebuah benda atau kumpulan benda sama banyak (pecahan yang diperkenalkan adalah setengah dan seperempat)."
@@ -265,7 +265,7 @@
               },
               {
                 "materi": "Bilangan sampai 100",
-                "elemen": "Geometri"
+                "elemen": "Bilangan"
               },
               {
                 "materi": "Penjumlahan dan Pengurangan (3)",
@@ -273,11 +273,11 @@
               },
               {
                 "materi": "Bentuk-bentuk Bangun (2)",
-                "elemen": "Pengukuran"
+                "elemen": "Geometri"
               },
               {
                 "materi": "Rangkuman Kelas 1",
-                "elemen": "Geometri"
+                "elemen": "Bilangan"
               }
             ],
             "cp_snippet": "Menunjukkan pemahaman dan memiliki intuisi bilangan (number sense) pada bilangan cacah sampai 100; membaca, menulis, menentukan nilai tempat, membandingkan, mengurutkan, serta melakukan komposisi (menyusun) dan dekomposisi (mengurai) bilangan; melakukan operasi penjumlahan dan pengurangan menggunakan benda-benda konkret yang banyaknya sampai 20; dan menunjukkan pemahaman pecahan sebagai bagian dari keseluruhan melalui konteks membagi sebuah benda atau kumpulan benda sama banyak (pecahan yang diperkenalkan adalah setengah dan seperempat)."
@@ -380,6 +380,7 @@
             "elemen": [
               "Al-Qur'an dan Hadis",
               "Akidah",
+              "Akhlak",
               "Fikih",
               "Sejarah Peradaban Islam"
             ],
@@ -442,42 +443,42 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Pola Gerak Dasar Lokomotor (Jalan, Lari, Lompat)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Pola Gerak Dasar Non-Lokomotor (Memutar, Mengayun, Menekuk)",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Pola Gerak Dasar Manipulatif (Melempar, Menangkap)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan keterampilan gerak fundamental dan menerapkannya dalam berbagai situasi gerak yang berbeda; mengeksplorasi berbagai strategi gerak; dan mengeksplorasi berbagai konsep gerak serta menyimpulkan efektivitasnya."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Aktivitas Gerak Berirama",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Pengenalan Aktivitas Air",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Kebersihan dan Kesehatan Tubuh",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               }
             ],
             "cp_snippet": "Menaati peraturan untuk menumbuhkan fair play di dalam berbagai aktivitas jasmani; menerapkan strategi kolaborasi ketika berpartisipasi dalam aktivitas jasmani."
@@ -487,7 +488,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan",
+              "Mengekspresikan",
               "Merefleksikan"
             ],
             "materi_inti": [
@@ -497,7 +498,7 @@
               },
               {
                 "materi": "Aneka Garis",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Garis yang Menunjukkan Gerakan",
@@ -509,7 +510,7 @@
               },
               {
                 "materi": "Warna",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Mengenali dan menyebutkan unsur-unsur rupa dalam benda-benda di sekitar/karya seni rupa. Merefleksikan dan mengapresiasi karya diri sendiri."
@@ -517,7 +518,7 @@
           "genap": {
             "elemen": [
               "Berpikir dan Bekerja Artistik",
-              "Menciptakan",
+              "Mengekspresikan",
               "Berdampak"
             ],
             "materi_inti": [
@@ -527,7 +528,7 @@
               },
               {
                 "materi": "Tekstur dan Pola",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Wajah dan Perasaan",
@@ -668,7 +669,7 @@
                 "elemen": "Refleksi dan Evaluasi"
               }
             ],
-            "cp_snippet": "Peserta didik menunjukkan pemahaman dan intuisi bilangan (number sense) pada bilangan desimal, menyatakan pecahan desimal persepuluhan dan perseratusan. Peserta didik dapat bernalar secara proporsional untuk menyelesaikan masalah sehari-hari dengan rasio satuan."
+            "cp_snippet": "Mengenal berbagai bahan alam di sekitar; menciptakan karya kerajinan sederhana dari bahan alam."
           }
         }
       },
@@ -686,15 +687,15 @@
               },
               {
                 "materi": "Cara Berhitung",
-                "elemen": "Pengukuran"
-              },
-              {
-                "materi": "Waktu dan Durasi",
                 "elemen": "Bilangan"
               },
               {
-                "materi": "Penjumlahan Bersusun",
+                "materi": "Waktu dan Durasi",
                 "elemen": "Pengukuran"
+              },
+              {
+                "materi": "Penjumlahan Bersusun",
+                "elemen": "Bilangan"
               },
               {
                 "materi": "Pengurangan Bersusun",
@@ -711,6 +712,7 @@
             "elemen": [
               "Analisis Data dan Peluang",
               "Bilangan",
+              "Pengukuran",
               "Geometri"
             ],
             "materi_inti": [
@@ -720,23 +722,23 @@
               },
               {
                 "materi": "Banyaknya Air (Volume)",
-                "elemen": "Bilangan"
+                "elemen": "Pengukuran"
               },
               {
                 "materi": "Penjumlahan dan Pengurangan (Lanjut)",
-                "elemen": "Geometri"
-              },
-              {
-                "materi": "Perkalian",
-                "elemen": "Analisis Data dan Peluang"
-              },
-              {
-                "materi": "Segitiga dan Segiempat",
                 "elemen": "Bilangan"
               },
               {
-                "materi": "Bilangan sampai 10.000",
+                "materi": "Perkalian",
+                "elemen": "Bilangan"
+              },
+              {
+                "materi": "Segitiga dan Segiempat",
                 "elemen": "Geometri"
+              },
+              {
+                "materi": "Bilangan sampai 10.000",
+                "elemen": "Bilangan"
               }
             ],
             "cp_snippet": "Menunjukkan pemahaman dan memiliki intuisi bilangan (number sense) pada bilangan cacah sampai 100; membaca, menulis, menentukan nilai tempat, membandingkan, mengurutkan, serta melakukan komposisi (menyusun) dan dekomposisi (mengurai) bilangan; melakukan operasi penjumlahan dan pengurangan menggunakan benda-benda konkret yang banyaknya sampai 20; dan menunjukkan pemahaman pecahan sebagai bagian dari keseluruhan melalui konteks membagi sebuah benda atau kumpulan benda sama banyak (pecahan yang diperkenalkan adalah setengah dan seperempat)."
@@ -866,8 +868,9 @@
             "elemen": [
               "Akhlak",
               "Al-Qur'an dan Hadis",
+              "Akidah",
               "Fikih",
-              "Akhlak"
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
@@ -893,46 +896,46 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Variasi Pola Gerak Dasar Lokomotor",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Variasi Pola Gerak Dasar Non-Lokomotor",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Belajar Melalui Gerak"
               },
               {
                 "materi": "Variasi Pola Gerak Dasar Manipulatif",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan keterampilan gerak fundamental dan menerapkannya dalam berbagai situasi gerak yang berbeda; mengeksplorasi berbagai strategi gerak; dan mengeksplorasi berbagai konsep gerak serta menyimpulkan efektivitasnya."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Aktivitas Senam Lantai Sederhana",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Aktivitas Gerak Berirama",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               },
               {
                 "materi": "Aktivitas Air (Pengenalan)",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Cara Memilih Makanan Sehat",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               }
             ],
             "cp_snippet": "Menaati peraturan untuk menumbuhkan fair play di dalam berbagai aktivitas jasmani; menerapkan strategi kolaborasi ketika berpartisipasi dalam aktivitas jasmani."
@@ -942,7 +945,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan",
+              "Mengekspresikan",
               "Berpikir dan Bekerja Artistik"
             ],
             "materi_inti": [
@@ -952,7 +955,7 @@
               },
               {
                 "materi": "Gambar dari Bentuk Dasar",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Mencampur Warna",
@@ -967,14 +970,14 @@
           },
           "genap": {
             "elemen": [
-              "Menciptakan",
+              "Mengekspresikan",
               "Merefleksikan",
               "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Kerajinan dari Clay/Plastisin",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Kolase Sederhana",
@@ -1163,11 +1166,11 @@
               },
               {
                 "materi": "Pengukuran Berat (ons, kg)",
-                "elemen": "Geometri"
+                "elemen": "Pengukuran"
               },
               {
                 "materi": "Simetri Lipat dan Putar",
-                "elemen": "Bilangan"
+                "elemen": "Geometri"
               },
               {
                 "materi": "Sudut",
@@ -1329,42 +1332,42 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Kombinasi Gerak Dasar Lokomotor (Jalan-Lari)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Kombinasi Gerak Dasar Non-Lokomotor (Liuk-Ayun)",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Belajar Melalui Gerak"
               },
               {
                 "materi": "Kombinasi Gerak Dasar Manipulatif (Lempar-Tangkap)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan variasi dan kombinasi gerak dasar."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Senam Irama (Gerak Berirama)",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Renang Gaya Dada (Pengenalan)",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               },
               {
                 "materi": "Bahaya Rokok, Minuman Keras, dan Narkoba",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               }
             ],
             "cp_snippet": "Memahami bahaya zat adiktif; mempraktikkan gerak berirama."
@@ -1374,7 +1377,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
@@ -1383,20 +1386,20 @@
               },
               {
                 "materi": "Ragam Hias Dekoratif (Motif Hewan/Tumbuhan)",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat gambar cerita sederhana; membuat ragam hias."
           },
           "genap": {
             "elemen": [
-              "Menciptakan",
+              "Mengekspresikan",
               "Merefleksikan"
             ],
             "materi_inti": [
               {
                 "materi": "Membuat Karya 3D (Bahan Alam/Buatan)",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Pameran Kelas (Apresiasi Karya)",
@@ -1592,11 +1595,11 @@
               },
               {
                 "materi": "Ciri-ciri Bangun Datar (Segi Empat, Segi Tiga, Segi Banyak)",
-                "elemen": "Analisis Data dan Peluang"
+                "elemen": "Geometri"
               },
               {
                 "materi": "Komposisi dan Dekomposisi Bangun Datar",
-                "elemen": "Bilangan"
+                "elemen": "Geometri"
               },
               {
                 "materi": "Pengenalan Sudut",
@@ -1604,7 +1607,7 @@
               },
               {
                 "materi": "Penyajian Data (Piktogram dan Diagram Batang)",
-                "elemen": "Geometri"
+                "elemen": "Analisis Data dan Peluang"
               }
             ],
             "cp_snippet": "Peserta didik dapat membandingkan dan mengurutkan antar-pecahan dengan pembilang satu dan antar-pecahan dengan penyebut yang sama, serta mengenali pecahan senilai. Mereka menunjukkan pemahaman bilangan desimal persepuluhan dan perseratusan serta menghubungkannya dengan konsep persen. Peserta didik dapat mengukur panjang dan berat menggunakan satuan baku, serta mengukur luas dan volume menggunakan satuan tidak baku. Mereka mendeskripsikan ciri bangun datar dan menyusun/mengurai bangun datar. Peserta didik dapat menyajikan dan interpretasi data dalam tabel, piktogram, dan diagram batang."
@@ -1614,8 +1617,8 @@
           "ganjil": {
             "elemen": [
               "Menyimak",
-              "Membaca",
-              "Berbicara",
+              "Membaca dan Memirsa",
+              "Berbicara dan Mempresentasikan",
               "Menulis"
             ],
             "materi_inti": [
@@ -1625,11 +1628,11 @@
               },
               {
                 "materi": "Di Bawah Atap (Tugas Rumah & Teks Deskripsi)",
-                "elemen": "Membaca"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Lihat Sekitar (Lalu Lintas & Teks Prosedur)",
-                "elemen": "Berbicara"
+                "elemen": "Berbicara dan Mempresentasikan"
               },
               {
                 "materi": "Meliuk dan Menerjang (Ide Pokok & Wawancara)",
@@ -1640,17 +1643,19 @@
           },
           "genap": {
             "elemen": [
+              "Menyimak",
+              "Membaca dan Memirsa",
               "Berbicara dan Mempresentasikan",
               "Menulis"
             ],
             "materi_inti": [
               {
                 "materi": "Bertukar atau Membayar (Literasi Keuangan & Teks Infografis)",
-                "elemen": "Berbicara dan Mempresentasikan"
+                "elemen": "Menyimak"
               },
               {
                 "materi": "Satu Titik (Bentang Alam & Puisi)",
-                "elemen": "Menulis"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Asal-usul (Nenek Moyang & Teks Narasi Sejarah)",
@@ -1720,7 +1725,7 @@
           "ganjil": {
             "elemen": [
               "Pancasila",
-              "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
+              "UUD NRI Tahun 1945"
             ],
             "materi_inti": [
               {
@@ -1729,37 +1734,24 @@
               },
               {
                 "materi": "Konstitusi dan Norma di Masyarakat (Aturan di Rumah, Sekolah, Lingkungan)",
-                "elemen": "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
-              },
-              {
-                "materi": "Hak dan Kewajiban Anak (Rumah & Sekolah)",
-                "elemen": "Pancasila"
+                "elemen": "UUD NRI Tahun 1945"
               }
             ],
             "cp_snippet": "Peserta didik mengidentifikasi aturan sederhana yang berlaku di sekolah dan lingkungan tempat tinggal. Peserta didik mengidentifikasi dan melaksanakan hak dan kewajiban sebagai anggota keluarga dan sebagai warga sekolah. Mereka mampu mengaitkan pelaksanaan hak dan kewajiban dengan sikap bertanggung jawab di sekolah."
           },
           "genap": {
             "elemen": [
-              "Pancasila",
               "Bhinneka Tunggal Ika",
-              "Negara Kesatuan Republik Indonesia"
+              "NKRI"
             ],
             "materi_inti": [
-              {
-                "materi": "Membangun Jati Diri (Identitas Pribadi & Lingkungan Masyarakat)",
-                "elemen": "Pancasila"
-              },
               {
                 "materi": "Kerjasama dalam Keberagaman",
                 "elemen": "Bhinneka Tunggal Ika"
               },
               {
                 "materi": "Negaraku Indonesia (NKRI & Karakteristik Wilayah)",
-                "elemen": "Negara Kesatuan Republik Indonesia"
-              },
-              {
-                "materi": "Gotong Royong dalam Kehidupan Sehari-hari",
-                "elemen": "Pancasila"
+                "elemen": "NKRI"
               }
             ],
             "cp_snippet": "Peserta didik menyebutkan makna sila-sila Pancasila beserta simbol dan makna dasarnya, serta menjelaskan contoh sikap yang sesuai dengan nilai-nilai Pancasila di sekolah dan lingkungan. Peserta didik mendeskripsikan sejarah singkat perumusan Pancasila dan meneladani karakter para perumus. Peserta didik menunjukkan sikap bangga menjadi anak Indonesia yang memiliki bahasa Indonesia sebagai bahasa persatuan."
@@ -1768,13 +1760,16 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an",
-              "Akidah"
+              "Al-Qur'an dan Hadis",
+              "Akidah",
+              "Akhlak",
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Mari Mengaji Surat Al-Hujurat",
-                "elemen": "Al-Qur'an"
+                "elemen": "Al-Qur'an dan Hadis"
               },
               {
                 "materi": "Asmaul Husna (Al-Malik, Al-Aziz, Al-Quddus, As-Salam, Al-Mukmin)",
@@ -1782,7 +1777,7 @@
               },
               {
                 "materi": "Indahnya Saling Menghargai",
-                "elemen": "Al-Qur'an"
+                "elemen": "Al-Qur'an dan Hadis"
               },
               {
                 "materi": "Menyambut Usia Baligh",
@@ -1793,21 +1788,24 @@
           },
           "genap": {
             "elemen": [
-              "Sejarah",
-              "Akhlak"
+              "Al-Qur'an dan Hadis",
+              "Akidah",
+              "Akhlak",
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Kisah Hijrah Nabi Muhammad saw.",
-                "elemen": "Sejarah"
+                "elemen": "Sejarah Peradaban Islam"
               },
               {
                 "materi": "Mari Mengaji Surat At-Tin",
-                "elemen": "Akhlak"
+                "elemen": "Al-Qur'an dan Hadis"
               },
               {
                 "materi": "Beriman kepada Rasul Allah",
-                "elemen": "Sejarah"
+                "elemen": "Akidah"
               },
               {
                 "materi": "Aku Anak Saleh (Salam & Tolong Menolong)",
@@ -1820,48 +1818,50 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Besar (Sepakbola/Voli)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Permainan Bola Kecil (Kasti)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Jalan/Lari/Lompat)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Bela Diri (Pencak Silat)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan gerak dasar permainan bola dan atletik."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Aktivitas Senam Lantai",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Gerak Berirama",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Renang Gaya Bebas/Dada",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Kebugaran Jasmani",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               }
             ],
             "cp_snippet": "Melakukan senam lantai dan gerak berirama; menjaga kebugaran."
@@ -1871,7 +1871,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
@@ -1880,7 +1880,7 @@
               },
               {
                 "materi": "Daur Ulang Sampah Plastik (Kriya)",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Bereksperimen dengan Tekstur",
@@ -2069,7 +2069,7 @@
               },
               {
                 "materi": "Pengukuran Sudut pada Bangun Datar",
-                "elemen": "Bilangan"
+                "elemen": "Pengukuran"
               },
               {
                 "materi": "Hubungan Garis Berpotongan dan Sudut",
@@ -2083,8 +2083,8 @@
           "ganjil": {
             "elemen": [
               "Menyimak",
-              "Membaca",
-              "Berbicara",
+              "Membaca dan Memirsa",
+              "Berbicara dan Mempresentasikan",
               "Menulis"
             ],
             "materi_inti": [
@@ -2094,11 +2094,11 @@
               },
               {
                 "materi": "Buku Jendela Dunia (Teks Nonfiksi & Bagian-bagian Buku)",
-                "elemen": "Membaca"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Ekspresi Diri Melalui Hobi (Surat Pribadi & Imbuhan)",
-                "elemen": "Berbicara"
+                "elemen": "Berbicara dan Mempresentasikan"
               },
               {
                 "materi": "Belajar Berwirausaha (Wawancara & Ide Bisnis)",
@@ -2109,25 +2109,27 @@
           },
           "genap": {
             "elemen": [
-              "Menulis",
-              "Berbicara dan Mempresentasikan"
+              "Menyimak",
+              "Membaca dan Memirsa",
+              "Berbicara dan Mempresentasikan",
+              "Menulis"
             ],
             "materi_inti": [
               {
                 "materi": "Teks Eksplanasi (Fenomena Alam & Sosial)",
-                "elemen": "Menulis"
+                "elemen": "Menyimak"
               },
               {
                 "materi": "Eksposisi Persuasif (Iklan & Pidato)",
-                "elemen": "Berbicara dan Mempresentasikan"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Puisi dan Prosa Kreatif",
-                "elemen": "Menulis"
+                "elemen": "Berbicara dan Mempresentasikan"
               },
               {
                 "materi": "Hubungan Kausalitas dalam Teks",
-                "elemen": "Berbicara dan Mempresentasikan"
+                "elemen": "Menulis"
               }
             ],
             "cp_snippet": "Peserta didik mampu menulis teks eksplanasi, laporan, dan eksposisi persuasif dari gagasan, hasil pengamatan, pengalaman, dan imajinasi. Peserta didik mampu menjelaskan hubungan kausalitas yang logis. Mereka mampu menyampaikan perasaan secara indah dan menarik dalam bentuk prosa dan puisi dengan penggunaan kosakata secara kreatif."
@@ -2193,7 +2195,7 @@
           "ganjil": {
             "elemen": [
               "Pancasila",
-              "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
+              "UUD NRI Tahun 1945"
             ],
             "materi_inti": [
               {
@@ -2202,11 +2204,7 @@
               },
               {
                 "materi": "Meneladani Nilai-nilai Juang Para Perumus Pancasila",
-                "elemen": "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
-              },
-              {
-                "materi": "Hubungan Norma, Hak, dan Kewajiban dalam Kehidupan Berbangsa",
-                "elemen": "Pancasila"
+                "elemen": "UUD NRI Tahun 1945"
               }
             ],
             "cp_snippet": "Peserta didik memahami kronologi sejarah kelahiran Pancasila dan meneladani sikap para perumus Pancasila dalam kehidupan sehari-hari. Mereka mengimplementasikan bentuk-bentuk norma, hak, and kewajiban dalam kedudukannya sebagai warga negara. Peserta didik mempraktikkan musyawarah untuk membuat kesepakatan bersama."
@@ -2214,7 +2212,7 @@
           "genap": {
             "elemen": [
               "Bhinneka Tunggal Ika",
-              "Negara Kesatuan Republik Indonesia"
+              "NKRI"
             ],
             "materi_inti": [
               {
@@ -2223,15 +2221,7 @@
               },
               {
                 "materi": "Menghargai Keberagaman Latar Belakang",
-                "elemen": "Negara Kesatuan Republik Indonesia"
-              },
-              {
-                "materi": "NKRI Harga Mati (Persatuan & Kesatuan)",
-                "elemen": "Bhinneka Tunggal Ika"
-              },
-              {
-                "materi": "Gotong Royong dalam Kehidupan Berbangsa",
-                "elemen": "Negara Kesatuan Republik Indonesia"
+                "elemen": "NKRI"
               }
             ],
             "cp_snippet": "Peserta didik menunjukkan perilaku gotong royong untuk menjaga persatuan di lingkungan sekolah dan sekitar sebagai wujud bela negara. Mereka mengenal wilayah dalam konteks kabupaten/kota dan provinsi sebagai bagian dari NKRI."
@@ -2240,13 +2230,16 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
+              "Al-Qur'an dan Hadis",
+              "Akidah",
               "Akhlak",
-              "Akidah"
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Indahnya Saling Menghormati (Surat Al-Kafirun)",
-                "elemen": "Akhlak"
+                "elemen": "Al-Qur'an dan Hadis"
               },
               {
                 "materi": "Hari Akhir (Kiamat)",
@@ -2261,21 +2254,24 @@
           },
           "genap": {
             "elemen": [
-              "Sejarah",
-              "Fikih"
+              "Al-Qur'an dan Hadis",
+              "Akidah",
+              "Akhlak",
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Keteladanan Sahabat Nabi",
-                "elemen": "Sejarah"
+                "elemen": "Sejarah Peradaban Islam"
               },
               {
                 "materi": "Senangnya Berakhlak Terpuji (Simpati/Toleran)",
-                "elemen": "Fikih"
+                "elemen": "Akhlak"
               },
               {
                 "materi": "Ketentuan Makanan Halal dan Haram",
-                "elemen": "Sejarah"
+                "elemen": "Fikih"
               }
             ],
             "cp_snippet": "Meneladani sahabat Nabi; mengonsumsi makanan halal."
@@ -2284,44 +2280,46 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Variasi dan Kombinasi Gerak Dasar Permainan Bola",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan gerak kompleks permainan bola dan atletik."
           },
           "genap": {
             "elemen": [
-              "Kebugaran"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Bela Diri",
-                "elemen": "Kebugaran"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Kebugaran Jasmani",
-                "elemen": "Kebugaran"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Senam Lantai",
-                "elemen": "Kebugaran"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Renang",
-                "elemen": "Kebugaran"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Bahaya Narkoba (Lanjutan)",
-                "elemen": "Kebugaran"
+                "elemen": "Bergaya Hidup Aktif"
               }
             ],
             "cp_snippet": "Melakukan latihan sirkuit; memahami bahaya narkoba."
@@ -2330,32 +2328,32 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Mengenal Perspektif",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Menggambar Ilustrasi Suasana",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Menggambar dengan perspektif."
           },
           "genap": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Membuat Patung Sederhana",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Pameran Akhir Tahun",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat karya patung; menyelenggarakan pameran."
@@ -2482,7 +2480,7 @@
               },
               {
                 "materi": "Operasi Hitung Penjumlahan dan Pengurangan Bilangan Bulat",
-                "elemen": "Geometri"
+                "elemen": "Bilangan"
               },
               {
                 "materi": "Operasi Hitung Perkalian dan Pembagian Bilangan Bulat",
@@ -2490,11 +2488,11 @@
               },
               {
                 "materi": "Operasi Hitung Campuran Bilangan Cacah",
-                "elemen": "Geometri"
+                "elemen": "Bilangan"
               },
               {
                 "materi": "Lingkaran (Unsur-unsur, Keliling, dan Luas)",
-                "elemen": "Bilangan"
+                "elemen": "Geometri"
               }
             ],
             "cp_snippet": "Peserta didik dapat melakukan operasi perkalian dan pembagian pecahan dengan bilangan asli. Mereka menunjukkan pemahaman dan intuisi bilangan (number sense) pada bilangan desimal, menyatakan pecahan desimal persepuluhan dan perseratusan. Peserta didik dapat bernalar secara proporsional untuk menyelesaikan masalah sehari-hari dengan rasio satuan."
@@ -2515,7 +2513,7 @@
               },
               {
                 "materi": "Penyajian Data (Piktogram dan Diagram Batang)",
-                "elemen": "Geometri"
+                "elemen": "Analisis Data dan Peluang"
               },
               {
                 "materi": "Percobaan Acak dan Peluang Sederhana",
@@ -2529,8 +2527,8 @@
           "ganjil": {
             "elemen": [
               "Menyimak",
-              "Membaca",
-              "Berbicara",
+              "Membaca dan Memirsa",
+              "Berbicara dan Mempresentasikan",
               "Menulis"
             ],
             "materi_inti": [
@@ -2540,11 +2538,11 @@
               },
               {
                 "materi": "Musisi Indonesia di Pentas Dunia (Teks Eksplanasi & Biografi)",
-                "elemen": "Membaca"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Taman Nasional (Teks Deskripsi & Opini)",
-                "elemen": "Berbicara"
+                "elemen": "Berbicara dan Mempresentasikan"
               },
               {
                 "materi": "Jeda untuk Iklim (Teks Persuasi & Poster)",
@@ -2555,21 +2553,23 @@
           },
           "genap": {
             "elemen": [
+              "Menyimak",
               "Membaca dan Memirsa",
+              "Berbicara dan Mempresentasikan",
               "Menulis"
             ],
             "materi_inti": [
               {
                 "materi": "Anak-Anak yang Mengubah Dunia (Teks Narasi)",
-                "elemen": "Membaca dan Memirsa"
+                "elemen": "Menyimak"
               },
               {
                 "materi": "Aman di Dunia Maya (Teks Diskusi)",
-                "elemen": "Menulis"
+                "elemen": "Membaca dan Memirsa"
               },
               {
                 "materi": "Aku Bisa Berempati (Teks Cerita Pendek)",
-                "elemen": "Membaca dan Memirsa"
+                "elemen": "Berbicara dan Mempresentasikan"
               },
               {
                 "materi": "Menjadi Warga Dunia (Globalisasi)",
@@ -2635,7 +2635,7 @@
           "ganjil": {
             "elemen": [
               "Pancasila",
-              "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
+              "UUD NRI Tahun 1945"
             ],
             "materi_inti": [
               {
@@ -2644,15 +2644,7 @@
               },
               {
                 "materi": "Sila-sila Pancasila sebagai Kesatuan",
-                "elemen": "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
-              },
-              {
-                "materi": "Makna Nilai Pancasila sebagai Dasar Negara",
-                "elemen": "Pancasila"
-              },
-              {
-                "materi": "Pengenalan Pembukaan UUD NRI 1945",
-                "elemen": "Undang-Undang Dasar Negara Republik Indonesia Tahun 1945"
+                "elemen": "UUD NRI Tahun 1945"
               }
             ],
             "cp_snippet": "Peserta didik mengenal Pembukaan Undang-Undang Dasar Negara Republik Indonesia Tahun 1945. Mereka menghubungkan sila-sila dalam Pancasila sebagai suatu kesatuan yang utuh dan menguraikan makna nilai-nilai Pancasila sebagai dasar negara dan pandangan hidup bangsa."
@@ -2660,7 +2652,7 @@
           "genap": {
             "elemen": [
               "Bhinneka Tunggal Ika",
-              "Negara Kesatuan Republik Indonesia"
+              "NKRI"
             ],
             "materi_inti": [
               {
@@ -2669,15 +2661,7 @@
               },
               {
                 "materi": "Semboyan Bhinneka Tunggal Ika dalam Kehidupan",
-                "elemen": "Negara Kesatuan Republik Indonesia"
-              },
-              {
-                "materi": "Rasa Bangga sebagai Anak Indonesia",
-                "elemen": "Bhinneka Tunggal Ika"
-              },
-              {
-                "materi": "Perilaku yang Menunjukkan Cinta NKRI",
-                "elemen": "Negara Kesatuan Republik Indonesia"
+                "elemen": "NKRI"
               }
             ],
             "cp_snippet": "Peserta didik menyajikan hasil identifikasi sikap menghormati, menjaga, dan melestarikan keberagaman budaya sesuai semboyan Bhinneka Tunggal Ika. Mereka menunjukkan sikap bangga terhadap bangsa dan negara Indonesia melalui perilaku sehari-hari."
@@ -2686,13 +2670,16 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an",
-              "Akidah"
+              "Al-Qur'an dan Hadis",
+              "Akidah",
+              "Akhlak",
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Surat Ad-Duha",
-                "elemen": "Al-Qur'an"
+                "elemen": "Al-Qur'an dan Hadis"
               },
               {
                 "materi": "Beriman kepada Qada dan Qadar",
@@ -2703,13 +2690,16 @@
           },
           "genap": {
             "elemen": [
+              "Al-Qur'an dan Hadis",
+              "Akidah",
               "Akhlak",
-              "Fikih"
+              "Fikih",
+              "Sejarah Peradaban Islam"
             ],
             "materi_inti": [
               {
                 "materi": "Keteladanan Nabi Ulul Azmi",
-                "elemen": "Akhlak"
+                "elemen": "Sejarah Peradaban Islam"
               },
               {
                 "materi": "Ketentuan Jual Beli",
@@ -2722,32 +2712,34 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Besar (Lanjutan)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Lanjutan)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan variasi gerak lanjutan dalam olahraga beregu."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Senam Lantai (Lanjutan)",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Budaya Hidup Sehat",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               }
             ],
             "cp_snippet": "Melakukan senam lantai dengan koordinasi yang baik."
@@ -2756,32 +2748,32 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Menggambar Warna",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Seni Cetak Sederhana",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat karya seni cetak."
           },
           "genap": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Karya Dekoratif",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Pameran Kelas",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat karya dekoratif and berpartisipasi dalam pameran."
@@ -2915,6 +2907,7 @@
             "elemen": [
               "Aljabar",
               "Geometri",
+              "Pengukuran",
               "Analisis Data dan Peluang"
             ],
             "materi_inti": [
@@ -2935,6 +2928,10 @@
                 "elemen": "Geometri"
               },
               {
+                "materi": "Keliling dan Luas Bangun Datar",
+                "elemen": "Pengukuran"
+              },
+              {
                 "materi": "Statistika (Penyajian Data & Pengolahan Data)",
                 "elemen": "Analisis Data dan Peluang"
               }
@@ -2951,6 +2948,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Mengidentifikasi Informasi dari Teks yang Didengar",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Teks Deskripsi (Keindahan Alam & Budaya Indonesia)",
                 "elemen": "Membaca dan Memirsa"
@@ -2978,6 +2979,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Menganalisis Gagasan Utama dari Teks Aural",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Teks Berita (Fakta & Opini di Media Cetak/Digital)",
                 "elemen": "Membaca dan Memirsa"
@@ -3086,25 +3091,29 @@
               {
                 "materi": "Bumi dan Tata Surya (Struktur Bumi & Fenomena Astronomi)",
                 "elemen": "Pemahaman IPA"
+              },
+              {
+                "materi": "Kemagnetan dan Kelistrikan Sederhana",
+                "elemen": "Pemahaman IPA"
               }
             ],
-            "cp_snippet": "Peserta didik mampu mengklasifikasikan makhluk hidup dan benda berdasarkan karakteristiknya. Mereka menganalisis interaksi antar makhluk hidup dan lingkungannya (ekosistem) serta menjelaskan fenomena alam yang terjadi di bumi (struktur bumi) dan tata surya."
+            "cp_snippet": "Peserta didik mampu mengklasifikasikan makhluk hidup dan benda berdasarkan karakteristiknya. Mereka menganalisis interaksi antar makhluk hidup dan lingkungannya (ekosistem) serta menjelaskan fenomena alam yang terjadi di bumi (struktur bumi) dan tata surya. Peserta didik juga memahami konsep kemagnetan dan kelistrikan dalam kehidupan sehari-hari."
           }
         },
         "IPS": {
           "ganjil": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Keluarga Awal Kehidupan (Silsilah Keluarga & Sosialisasi)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Keberagaman Lingkungan Sekitar (Kondisi Geografis & Keragaman Budaya)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Manusia sebagai Makhluk Sosial dan Ekonomi",
@@ -3115,17 +3124,17 @@
           },
           "genap": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Potensi Ekonomi Lingkungan (SDA & Aktivitas Ekonomi)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Pemberdayaan Masyarakat (Uang, Bank, dan Sejarah Lokal)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Kelestarian Lingkungan Hidup",
@@ -3508,42 +3517,42 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Besar (Sepakbola, Basket)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Lari Jarak Pendek",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Seni Beladiri Pencak Silat",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Belajar Melalui Gerak"
               }
             ],
             "cp_snippet": "Peserta didik mampu mempraktikkan teknik dasar permainan bola besar (sepakbola, basket), lari jarak pendek, dan seni beladiri Pencak Silat dengan koordinasi gerak yang baik serta menerapkan nilai sportivitas dan kerja sama tim."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Senam Lantai",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Gerak Berirama",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Bahaya Pergaulan Bebas dan Rokok",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               }
             ],
             "cp_snippet": "Peserta didik mampu melakukan gerak senam lantai dan gerak berirama secara runtut, serta memahami bahaya pergaulan bebas dan rokok bagi kesehatan remaja."
@@ -3553,7 +3562,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan"
+              "Mengekspresikan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -3562,32 +3574,51 @@
               },
               {
                 "materi": "Menggambar Flora, Fauna, dan Alam Benda",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Prinsip Gambar Perspektif",
-                "elemen": "Menciptakan"
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Mengapresiasi Karya Seni Rupa Nusantara",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Seni Rupa dalam Kehidupan Sehari-hari",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
           },
           "genap": {
             "elemen": [
+              "Mengalami",
+              "Mengekspresikan",
               "Merefleksikan",
-              "Berapresiasi"
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Desain Poster dan Tipografi",
-                "elemen": "Merefleksikan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Mengenal Ragam Hias Nusantara",
-                "elemen": "Berapresiasi"
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Pameran Karya Seni Rupa",
-                "elemen": "Berapresiasi"
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Merefleksikan Karya Seni Rupa Teman",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Seni Rupa dan Pelestarian Budaya",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
@@ -3597,7 +3628,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -3606,25 +3640,47 @@
               },
               {
                 "materi": "Teknik Vokal Dasar dan Bernyanyi Bersama",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Apresiasi Karya Musik Nusantara",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Komposisi Musik Sederhana",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Peran Musik dalam Kehidupan Sehari-hari",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami unsur-unsur musik dan bernyanyi bersama. Mereka merefleksikan karya musik Nusantara, menciptakan musik sederhana, dan memahami dampak musik dalam kehidupan."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Apresiasi Karya Musik Nusantara",
-                "elemen": "Merefleksikan"
+                "materi": "Mendengarkan dan Mengapresiasi Musik Nusantara",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Karya Kreatif Musik Sederhana",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pengalaman Bermusik",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Aransemen Musik Sederhana",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Musik dan Pengaruhnya dalam Kehidupan",
@@ -3638,7 +3694,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -3647,25 +3706,47 @@
               },
               {
                 "materi": "Eksplorasi Gerak dan Pola Lantai",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pengalaman Menari",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Menciptakan Pola Lantai Sendiri",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Peran Tari dalam Upacara Adat",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami gerak dasar tari dan mengeksplorasi pola lantai. Mereka merefleksikan tari Nusantara, menciptakan gerak sederhana, dan memahami peran tari dalam budaya masyarakat."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Tari Nusantara dan Makna Simbolik",
-                "elemen": "Merefleksikan"
+                "materi": "Mengenal Tari Nusantara dan Makna Simbolik",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Menciptakan Gerak Tari Sederhana",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Karya Tari Teman",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Koreografi Sederhana dengan Iringan Musik",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Peran Tari dalam Budaya Masyarakat",
@@ -3679,7 +3760,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -3688,25 +3772,47 @@
               },
               {
                 "materi": "Latihan Olah Vokal dan Ekspresi",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pengalaman Berakting",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Membuat Naskah Drama Sederhana",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Teater sebagai Media Ekspresi Diri",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami dasar akting, olah tubuh, dan olah vokal. Mereka merefleksikan naskah drama, menciptakan fragmen pendek, dan memahami teater sebagai media pendidikan."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Mengenal Naskah Drama Sederhana",
-                "elemen": "Merefleksikan"
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Bermain Peran dalam Fragmen Pendek",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pementasan Teman",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Mengarang Adegan dan Dialog",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Teater sebagai Media Pendidikan Karakter",
@@ -3838,6 +3944,7 @@
             "elemen": [
               "Aljabar",
               "Geometri",
+              "Pengukuran",
               "Analisis Data dan Peluang"
             ],
             "materi_inti": [
@@ -3858,6 +3965,10 @@
                 "elemen": "Geometri"
               },
               {
+                "materi": "Luas Permukaan dan Volume Bangun Ruang",
+                "elemen": "Pengukuran"
+              },
+              {
                 "materi": "Statistika (Pemusatan Data) & Peluang",
                 "elemen": "Analisis Data dan Peluang"
               }
@@ -3874,6 +3985,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Mengidentifikasi Informasi dari Teks Aural (Berita, Wawancara)",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Laporan Hasil Observasi (Struktur & Kebahasaan)",
                 "elemen": "Membaca dan Memirsa"
@@ -3897,6 +4012,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Mengidentifikasi Gagasan Utama dari Teks yang Didengar",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Teks Karya Fiksi (Resensi Novel/Cerpen)",
                 "elemen": "Membaca dan Memirsa"
@@ -3997,25 +4116,29 @@
               {
                 "materi": "Struktur Bumi dan Perkembangannya (Gunung Api & Gempa)",
                 "elemen": "Keterampilan Proses"
+              },
+              {
+                "materi": "Pewarisan Sifat (Genetika Sederhana)",
+                "elemen": "Pemahaman IPA"
               }
             ],
-            "cp_snippet": "Peserta didik mampu memahami konsep getaran, gelombang, dan cahaya (optik). Mereka mendeskripsikan atom dan senyawa (unsur, senyawa, campuran), serta menjelaskan struktur bumi dan fenomena geologi (gunung api dan gempa)."
+            "cp_snippet": "Peserta didik mampu memahami konsep getaran, gelombang, dan cahaya (optik). Mereka mendeskripsikan atom dan senyawa (unsur, senyawa, campuran), menjelaskan struktur bumi dan fenomena geologi (gunung api dan gempa), serta memahami konsep pewarisan sifat (genetika sederhana)."
           }
         },
         "IPS": {
           "ganjil": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Kondisi Geografis dan Pelestarian SDA (Lokal & Nasional)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Kemajemukan Masyarakat Indonesia (Keberagaman Budaya & Sosial)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Interaksi Budaya dan Peradaban",
@@ -4026,17 +4149,17 @@
           },
           "genap": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Nasionalisme dan Jati Diri Bangsa (Sejarah Pergerakan Nasional)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Pembangunan Perekonomian Indonesia (Globalisasi & Ekonomi Digital)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Kebutuhan dan Tantangan Pembangunan",
@@ -4419,42 +4542,42 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Kecil (Softball/Bulu Tangkis)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Lompat Jauh)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Beladiri (Lanjutan)",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Belajar Melalui Gerak"
               }
             ],
             "cp_snippet": "Peserta didik mampu mempraktikkan teknik permainan bola kecil (softball, bulu tangkis), atletik lompat jauh, dan beladiri lanjutan dengan strategi yang tepat serta menjunjung tinggi fair play."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Aktivitas Kebugaran Jasmani",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Bahaya Narkoba dan Psikotropika",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               },
               {
                 "materi": "Sex Education (Dasar)",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               }
             ],
             "cp_snippet": "Peserta didik mampu menyusun program kebugaran jasmani, memahami bahaya narkoba dan psikotropika, serta menerapkan pengetahuan sex education dasar dalam kehidupan sehari-hari."
@@ -4464,7 +4587,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan"
+              "Mengekspresikan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -4473,32 +4599,51 @@
               },
               {
                 "materi": "Melukis dengan Berbagai Media",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Menggambar Ragam Hias Nusantara",
-                "elemen": "Menciptakan"
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Merefleksikan Karya Seni Rupa Daerah",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Seni Rupa dan Identitas Budaya",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
           },
           "genap": {
             "elemen": [
+              "Mengalami",
+              "Mengekspresikan",
               "Merefleksikan",
-              "Berapresiasi"
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Desain Grafis dan Tipografi Dasar",
+                "elemen": "Mengekspresikan"
+              },
+              {
+                "materi": "Mengenal Karya Seni Rupa Daerah",
+                "elemen": "Mengalami"
+              },
+              {
+                "materi": "Merefleksikan Nilai Estetis Karya Seni",
                 "elemen": "Merefleksikan"
               },
               {
-                "materi": "Apresiasi Karya Seni Rupa Daerah",
-                "elemen": "Berapresiasi"
+                "materi": "Persiapan dan Pelaksanaan Pameran",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
-                "materi": "Persiapan dan Pelaksanaan Pameran",
-                "elemen": "Berapresiasi"
+                "materi": "Seni Rupa dan Pelestarian Warisan Budaya",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
@@ -4508,7 +4653,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -4517,25 +4665,47 @@
               },
               {
                 "materi": "Aransemen Musik Sederhana dan Improvisasi",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Perkembangan Musik Nusantara",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Komposisi Kelompok Musik Sederhana",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Musik sebagai Sarana Komunikasi Budaya",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami alat musik tradisional dan modern serta mengaransemen musik sederhana."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Apresiasi Musik Kontemporer Nusantara",
-                "elemen": "Merefleksikan"
+                "materi": "Mendengarkan Musik Kontemporer Nusantara",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Menciptakan Karya Musik Bertema",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pengalaman Bermusik",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Aransemen Ulang Lagu Nusantara",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Musik sebagai Sarana Ekspresi dan Komunikasi",
@@ -4549,7 +4719,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -4558,25 +4731,47 @@
               },
               {
                 "materi": "Eksplorasi Koreografi Kelompok",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Makna Tari Tradisional",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Membuat Komposisi Koreografi Sederhana",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Tari sebagai Media Ekspresi Budaya",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami ragam gerak tari tradisional dan mengeksplorasi koreografi kelompok."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Apresiasi Karya Tari Kontemporer",
-                "elemen": "Merefleksikan"
+                "materi": "Mengenal Tari Kontemporer Nusantara",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Menciptakan Tari Kreasi Sederhana",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Karya Tari Kreasi",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Koreografi dengan Properti Sederhana",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Tari sebagai Identitas Budaya Bangsa",
@@ -4590,7 +4785,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -4599,25 +4797,47 @@
               },
               {
                 "materi": "Blocking Panggung dan Tata Artistik",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Proses Rekaman",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Menyusun Rancangan Pementasan",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Teater sebagai Media Kolaborasi",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami karakterisasi tokoh dan blocking panggung."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Analisis Naskah dan Tema",
-                "elemen": "Merefleksikan"
+                "materi": "Menganalisis Naskah Drama",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Pementasan Fragmen Drama",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Pementasan Teman",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Membuat Adaptasi Naskah Sederhana",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Teater sebagai Kritik Sosial",
@@ -4743,7 +4963,8 @@
           "genap": {
             "elemen": [
               "Geometri",
-              "Pengukuran"
+              "Pengukuran",
+              "Analisis Data dan Peluang"
             ],
             "materi_inti": [
               {
@@ -4757,9 +4978,17 @@
               {
                 "materi": "Bangun Ruang Sisi Lengkung (Luas Permukaan & Volume Tabung, Kerucut, Bola)",
                 "elemen": "Pengukuran"
+              },
+              {
+                "materi": "Statistik Deskriptif (Mean, Median, Modus, Jangkauan)",
+                "elemen": "Analisis Data dan Peluang"
+              },
+              {
+                "materi": "Peluang dan Frekuensi Relatif",
+                "elemen": "Analisis Data dan Peluang"
               }
             ],
-            "cp_snippet": "Peserta didik dapat melakukan transformasi tunggal (refleksi, translasi, rotasi, dilatasi) pada bidang koordinat Kartesius. Mereka dapat menjelaskan sifat-sifat kekongruenan dan kesebangunan pada segitiga dan segiempat, serta menjelaskan cara menentukan luas permukaan dan volume bangun ruang sisi lengkung (tabung, kerucut, bola)."
+            "cp_snippet": "Peserta didik dapat melakukan transformasi tunggal (refleksi, translasi, rotasi, dilatasi) pada bidang koordinat Kartesius. Mereka dapat menjelaskan sifat-sifat kekongruenan dan kesebangunan pada segitiga dan segiempat, serta menjelaskan cara menentukan luas permukaan dan volume bangun ruang sisi lengkung (tabung, kerucut, bola). Peserta didik juga mampu menyajikan dan menganalisis data menggunakan mean, median, modus, serta menentukan peluang dalam percobaan sederhana."
           }
         },
         "Bahasa Indonesia": {
@@ -4771,6 +5000,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Menganalisis Informasi dari Teks Aural (Berita, Wawancara)",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Teks Laporan Percobaan (Struktur & Ciri Kebahasaan)",
                 "elemen": "Menulis"
@@ -4794,6 +5027,10 @@
               "Menulis"
             ],
             "materi_inti": [
+              {
+                "materi": "Mengidentifikasi Gagasan Utama dari Teks yang Didengar",
+                "elemen": "Menyimak"
+              },
               {
                 "materi": "Teks Diskusi (Pro dan Kontra Suatu Isu)",
                 "elemen": "Berbicara dan Mempresentasikan"
@@ -4873,9 +5110,17 @@
               {
                 "materi": "Tekanan Zat (Hukum Pascal, Archimedes, Tekanan Gas)",
                 "elemen": "Pemahaman IPA"
+              },
+              {
+                "materi": "Usaha, Energi, dan Daya",
+                "elemen": "Pemahaman IPA"
+              },
+              {
+                "materi": "Kalor dan Perpindahannya",
+                "elemen": "Pemahaman IPA"
               }
             ],
-            "cp_snippet": "Peserta didik mampu mendeskripsikan proses pertumbuhan dan perkembangan manusia serta menjelaskan cara kerja sistem saraf, reproduksi, dan homeostasis untuk menjaga kesehatan. Mereka menerapkan prinsip tekanan zat (Pascal, Archimedes) dalam kehidupan sehari-hari."
+            "cp_snippet": "Peserta didik mampu mendeskripsikan proses pertumbuhan dan perkembangan manusia serta menjelaskan cara kerja sistem saraf, reproduksi, dan homeostasis untuk menjaga kesehatan. Mereka menerapkan prinsip tekanan zat (Pascal, Archimedes), usaha dan energi, serta kalor dalam kehidupan sehari-hari."
           },
           "genap": {
             "elemen": [
@@ -4894,25 +5139,37 @@
               {
                 "materi": "Pewarisan Sifat (Genetika) dan Bioteknologi Modern",
                 "elemen": "Keterampilan Proses"
+              },
+              {
+                "materi": "Gelombang Bunyi dan Cahaya",
+                "elemen": "Pemahaman IPA"
+              },
+              {
+                "materi": "Tata Surya dan Gerak Bumi",
+                "elemen": "Pemahaman IPA"
+              },
+              {
+                "materi": "Zat Aditif dan Adiktif",
+                "elemen": "Keterampilan Proses"
               }
             ],
-            "cp_snippet": "Peserta didik mampu memahami konsep kemagnetan dan induksi elektromagnetik serta pemanfaatan sumber energi terbarukan. Mereka menjelaskan ciri-ciri reaksi kimia dan mendeskripsikan mekanisme pewarisan sifat (genetika) serta manfaat bioteknologi bagi kehidupan."
+            "cp_snippet": "Peserta didik mampu memahami konsep kemagnetan dan induksi elektromagnetik serta pemanfaatan sumber energi terbarukan. Mereka menjelaskan ciri-ciri reaksi kimia, mendeskripsikan mekanisme pewarisan sifat (genetika), memahami gelombang bunyi dan cahaya, serta mengevaluasi pengaruh zat aditif dan adiktif bagi kesehatan."
           }
         },
         "IPS": {
           "ganjil": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Manusia dan Perubahan (Modernisasi & Globalisasi)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Perkembangan Ekonomi Digital (E-commerce & Literasi Keuangan)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Kesejahteraan dan Tantangan Sosial",
@@ -4923,17 +5180,17 @@
           },
           "genap": {
             "elemen": [
-              "Pemahaman Konsep IPS",
+              "Pemahaman Konsep",
               "Keterampilan Proses"
             ],
             "materi_inti": [
               {
                 "materi": "Tantangan Pembangunan Indonesia (SDM, SDA, Infrastruktur)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Kerja Sama Dunia (Organisasi Internasional & Politik Luar Negeri)",
-                "elemen": "Pemahaman Konsep IPS"
+                "elemen": "Pemahaman Konsep"
               },
               {
                 "materi": "Pembangunan Berkelanjutan (SDGs)",
@@ -5316,42 +5573,42 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak",
-              "Pengetahuan Gerak"
+              "Terampil Bergerak",
+              "Belajar Melalui Gerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Basket (Strategi Tim)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Estafet/Lompat Tinggi)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Aktivitas Air (Renang)",
-                "elemen": "Pengetahuan Gerak"
+                "elemen": "Belajar Melalui Gerak"
               }
             ],
             "cp_snippet": "Peserta didik mampu mengaplikasikan strategi tim dalam permainan bola basket, melakukan estafet dan lompat tinggi, serta menguasai teknik renang gaya dasar dengan efisien."
           },
           "genap": {
             "elemen": [
-              "Pemanfaatan Gerak",
-              "Pengembangan Karakter"
+              "Bergaya Hidup Aktif",
+              "Memilih Hidup yang Menyehatkan"
             ],
             "materi_inti": [
               {
                 "materi": "Penyusunan Rencana Aktivitas Jasmani",
-                "elemen": "Pemanfaatan Gerak"
+                "elemen": "Bergaya Hidup Aktif"
               },
               {
                 "materi": "Kesehatan Reproduksi (Lanjutan)",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               },
               {
                 "materi": "Etika Berolahraga",
-                "elemen": "Pengembangan Karakter"
+                "elemen": "Memilih Hidup yang Menyehatkan"
               }
             ],
             "cp_snippet": "Peserta didik mampu menyusun rencana aktivitas jasmani mandiri, memahami kesehatan reproduksi secara komprehensif, dan menerapkan etika berolahraga dalam kegiatan fisik sehari-hari."
@@ -5361,7 +5618,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Menciptakan"
+              "Mengekspresikan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -5370,32 +5630,51 @@
               },
               {
                 "materi": "Seni Patung (Media dan Teknik)",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Prosedur Berkarya Seni Lukis",
-                "elemen": "Menciptakan"
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Merefleksikan Karya Seni Lukis",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Seni Rupa dan Perkembangan Zaman",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
           },
           "genap": {
             "elemen": [
+              "Mengalami",
+              "Mengekspresikan",
               "Merefleksikan",
-              "Berapresiasi"
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Seni Grafis (Cetak Tinggi, Cetak Dalam)",
-                "elemen": "Merefleksikan"
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Penyelenggaraan Pameran Seni Rupa",
-                "elemen": "Berapresiasi"
+                "elemen": "Mengekspresikan"
               },
               {
-                "materi": "Apresiasi Karya Seni Rupa Modern",
-                "elemen": "Berapresiasi"
+                "materi": "Merefleksikan Karya Seni Rupa Modern",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Desain Portofolio Seni Rupa",
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Seni Rupa sebagai Ekspresi Sosial",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Experiencing) Menganalisis unsur rupa dan prinsip desain dalam benda-benda di sekitar/karya seni rupa.   (Reflecting) Merefleksikan dan mengapresiasi karya diri sendiri dan teman sekelas; membandingkan unsur rupa, prinsip desain, dan fungsi karya seni rupa menggunakan kosa kata seni rupa yang sesuai. Artistik (Thinking and Working Artistically) Mengaplikasikan variasi teknik penggunaan alat dan bahan yang dimiliki untuk berkarya; mengeksplorasi alternatif/potensi alat dan bahan yang ada di li..."
@@ -5405,7 +5684,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -5414,28 +5696,50 @@
               },
               {
                 "materi": "Komposisi Musik dan Aransemen Lagu",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Kritik Musik dan Apresiasi Estetis",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Membuat Komposisi Musik Bertema",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Musik dalam Industri Kreatif dan Ekonomi",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami genre musik populer dan mengomposisi lagu sederhana."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Kritik Musik dan Apresiasi Estetis",
-                "elemen": "Merefleksikan"
+                "materi": "Mendengarkan dan Menganalisis Musik Berbagai Genre",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Menciptakan Musik Orkestrasi Sederhana",
                 "elemen": "Menciptakan"
               },
               {
-                "materi": "Musik dalam Industri Kreatif dan Ekonomi",
+                "materi": "Merefleksikan Pengalaman Bermusik",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Aransemen Ulang Lagu Populer",
+                "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Peran Musik dalam Kampanye Sosial",
                 "elemen": "Berdampak"
               }
             ],
@@ -5446,7 +5750,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -5455,25 +5762,47 @@
               },
               {
                 "materi": "Desain Koreografi dan Dramaturgi Tari",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Analisis Kritis Karya Tari",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Membuat Rancangan Koreografi Mandiri",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Tari sebagai Media Advokasi Sosial",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami tari kreasi kontemporer dan mendesain koreografi."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Analisis Kritis Karya Tari",
-                "elemen": "Merefleksikan"
+                "materi": "Mengenal Tari Kreasi Kontemporer",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Menciptakan Karya Tari untuk Pementasan",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Proses Koreografi",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Koreografi dengan Kolaborasi Multidisiplin",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Tari sebagai Daya Tarik Pariwisata dan Ekonomi Kreatif",
@@ -5487,7 +5816,10 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Berpikir dan Bekerja Artistik"
+              "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
+              "Berdampak"
             ],
             "materi_inti": [
               {
@@ -5496,25 +5828,47 @@
               },
               {
                 "materi": "Sutradara dan Manajemen Pementasan",
+                "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Kritik dan Apresiasi Teater",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Menyusun Konsep Pementasan",
                 "elemen": "Berpikir dan Bekerja Artistik"
+              },
+              {
+                "materi": "Teater sebagai Media Advokasi Sosial",
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Peserta didik mengalami teknik akting berbagai metode dan manajemen pementasan."
           },
           "genap": {
             "elemen": [
-              "Merefleksikan",
+              "Mengalami",
               "Menciptakan",
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik",
               "Berdampak"
             ],
             "materi_inti": [
               {
-                "materi": "Kritik dan Apresiasi Teater",
-                "elemen": "Merefleksikan"
+                "materi": "Menganalisis Naskah Drama Modern",
+                "elemen": "Mengalami"
               },
               {
                 "materi": "Pementasan Drama Satu Babak",
                 "elemen": "Menciptakan"
+              },
+              {
+                "materi": "Merefleksikan Proses Pementasan",
+                "elemen": "Merefleksikan"
+              },
+              {
+                "materi": "Menulis Naskah Adaptasi",
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Teater dalam Pemberdayaan Masyarakat",
@@ -6216,20 +6570,20 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Besar (Sepakbola/Basket)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Lari Jarak Pendek)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Bela Diri",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan teknik dasar permainan bola dan atletik."
@@ -6258,32 +6612,32 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Penggunaan Alat dan Bahan",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Unsur dan Prinsip Seni Rupa",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Bereksperimen dengan alat dan bahan seni rupa."
           },
           "genap": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Berkarya Seni Rupa Dua Dimensi",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Publikasi Karya Seni",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat karya seni rupa dua dimensi."
@@ -6910,20 +7264,20 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Voli (Lanjutan)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Bulu Tangkis",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Lompat Jauh)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Mempraktikkan teknik lanjutan permainan bola."
@@ -6952,16 +7306,16 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Karya Seni Rupa 3D",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Pameran Seni Rupa",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Membuat karya seni rupa tiga dimensi."
@@ -7589,20 +7943,20 @@
         "PJOK": {
           "ganjil": {
             "elemen": [
-              "Keterampilan Gerak"
+              "Terampil Bergerak"
             ],
             "materi_inti": [
               {
                 "materi": "Permainan Bola Basket (Taktik)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Permainan Bola Voli (Formasi)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               },
               {
                 "materi": "Atletik (Lari Estafet)",
-                "elemen": "Keterampilan Gerak"
+                "elemen": "Terampil Bergerak"
               }
             ],
             "cp_snippet": "Merancang strategi dan taktik permainan bola."
@@ -7647,16 +8001,16 @@
           },
           "genap": {
             "elemen": [
-              "Menciptakan"
+              "Mengekspresikan"
             ],
             "materi_inti": [
               {
                 "materi": "Portofolio Seni Rupa",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               },
               {
                 "materi": "Proyek Seni Kolaboratif",
-                "elemen": "Menciptakan"
+                "elemen": "Mengekspresikan"
               }
             ],
             "cp_snippet": "Menyusun portofolio seni rupa."

@@ -185,6 +185,28 @@ const svgToPng = (svgString, width, height) => {
     });
 };
 
+async function tryCaptureVisualization(el) {
+    try {
+        const svg = el.querySelector('svg');
+        if (svg) {
+            const w = svg.getAttribute('width') || svg.viewBox?.baseVal?.width || 600;
+            const h = svg.getAttribute('height') || svg.viewBox?.baseVal?.height || 400;
+            return await svgToPng(svg.outerHTML, Number(w) || 600, Number(h) || 400);
+        }
+        const canvas = el.querySelector('canvas');
+        if (canvas) {
+            const blob = await new Promise((res) => {
+                try { canvas.toBlob((b) => res(b), 'image/png'); }
+                catch { res(null); }
+            });
+            if (blob) return await blob.arrayBuffer();
+        }
+    } catch (e) {
+        console.warn('tryCaptureVisualization failed:', e);
+    }
+    return null;
+}
+
 async function katexSpanToImage(el) {
     const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
     const latex = annotation ? annotation.textContent.trim() : '';
@@ -520,9 +542,24 @@ async function parseBlock(element) {
                 children.push(await parseTable(node));
                 break;
             case 'div':
-            case 'section':
-                children.push(...await parseBlock(node));
+            case 'section': {
+                const vizEl = node.querySelector('.mermaid, .mermaid-container, .jxgbox, .scratchblocks, canvas, .katex-display');
+                if (vizEl && !node.classList?.contains('no-print')) {
+                    const imgData = await tryCaptureVisualization(node);
+                    if (imgData) {
+                        children.push(new Paragraph({
+                            children: [new ImageRun({ data: imgData, transformation: { width: 500, height: 300 } })],
+                            spacing: { after: 240, ...LINE },
+                            alignment: AlignmentType.CENTER
+                        }));
+                    } else {
+                        children.push(...await parseBlock(node));
+                    }
+                } else {
+                    children.push(...await parseBlock(node));
+                }
                 break;
+            }
             case 'br':
                 children.push(new Paragraph({ children: [] }));
                 break;

@@ -536,7 +536,12 @@ const LkpdGeneratorPage = () => {
                                                 }
                                             }
                                             if (!inline && match && match[1] === 'mermaid') {
-                                                const content = String(children).replace(/\n$/, '');
+                                                let content = String(children).replace(/\n$/, '');
+                                                try {
+                                                    const parsed = JSON.parse(content);
+                                                    if (parsed?.config?.diagram) content = parsed.config.diagram;
+                                                    else if (parsed?.config?.code) content = parsed.config.code;
+                                                } catch (_) {}
                                                 return <InlineMermaid content={content} />;
                                             }
                                             return <code className={className} {...props}>{children}</code>;

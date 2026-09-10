@@ -345,7 +345,7 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
             $bookPrompt .= "Detail Sub-topik: {$subTopicNames}\n";
             $bookPrompt .= "Key Terms/Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
-            $bookPrompt .= "Visual Hints: " . ($bookData['chapter']['visual_hints'] ?? 'Gunakan Mermaid untuk diagram alur') . "\n";
+            $bookPrompt .= "Visual Hints: " . ($bookData['chapter']['visual_hints'] ?? 'Gunakan tipe visual interaktif sesuai mata pelajaran: function untuk Matematika, scratch untuk Informatika, chemistry untuk IPA') . "\n";
             $bookPrompt .= "INSTRUKSI: Gunakan sub-topik sebagai kerangka modul. Visual Hints menentukan tipe visualisasi. Key terms wajib muncul di glosarium.\n";
             $prompt .= $bookPrompt;
         }
@@ -914,18 +914,39 @@ $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
       **VISUALISASI INTERAKTIF (WAJIB)**: Setiap bagian Materi/LKPD WAJIB mengandung minimal 1 blok visualisasi interaktif.
 
       **PILIH TIPE VISUALISASI BERDASARKAN KONTEN MATERI**:
-      - **chart** (bar/line/pie) → hanya jika ada data numerik dalam materi (jumlah, persentase, tren). Gunakan data NYATA dari materi.
-      - **mermaid** → untuk diagram alur, flowchart, peta konsep, timeline, siklus. Ini pilihan terbaik jika materi berupa teks/konsep.
-      - **function** → grafik fungsi matematika (sin, cos, kuadrat)
-      - **chemistry** → struktur kimia via SMILES
-      - **music** → notasi musik ABC
-      - **mindmap** → peta konsep
-      - **map** → peta geografis
-      - **code** → blok kode
-      - **spreadsheet** → data grid
-      - **3d_model** → objek 3D
-      - **scratch** → blok Scratch
-      - **logic** → gerbang logika
+      - **function** → untuk Matematika: grafik fungsi. Format: {\"type\":\"function\",\"config\":{\"expression\":\"x^2\",\"xRange\":[-5,5],\"yRange\":[-5,10]}}
+      - **geometry** → untuk Matematika: bangun datar/ruang. Format: {\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[4,0],\"id\":\"B\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\"]}]}}
+      - **chart** → untuk Matematika: statistika, peluang. Format: {\"type\":\"chart\",\"config\":{\"type\":\"bar\",\"data\":[{\"x\":\"A\",\"y\":10}],\"title\":\"Judul\"}}
+      - **scratch** → WAJIB untuk Informatika. Format: {\"type\":\"scratch\",\"config\":{\"code\":\"when flag clicked\\nmove (10) steps\"}}
+      - **mermaid** → untuk diagram alur, peta konsep. Format: {\"type\":\"mermaid\",\"config\":{\"diagram\":\"graph TD\\nA-->B\"}}
+      - **chemistry** → struktur kimia. Format: {\"type\":\"chemistry\",\"config\":{\"smiles\":\"CCO\",\"name\":\"Ethanol\"}}
+      - **music** → notasi musik. Format: {\"type\":\"music\",\"config\":{\"abc\":\"CDEF|CDEF|\"}}
+      - **mindmap** → peta konsep. Format: {\"type\":\"mindmap\",\"config\":{\"nodes\":[],\"edges\":[]}}
+      - **code** → blok kode. Format: {\"type\":\"code\",\"config\":{\"language\":\"python\",\"code\":\"print('Hello')\"}}
+
+      **ATURAN WAJIB TIPE VISUAL**:
+      1. **Matematika**: 
+         - Topik Fungsi, Trigonometri, Limit → gunakan type 'function' (grafik kartesius)
+         - Topik Geometri, Pythagoras, Segitiga, Persegi, Lingkaran, Pengukuran → gunakan type 'geometry' (bangun datar/ruang)
+         - Topik Statistika, Peluang → gunakan type 'chart' (grafik data)
+         - Topik Bilangan, Aljabar, Matriks → gunakan type 'mermaid' (peta konsep)
+      2. **Informatika** (Pemrograman) → WAJIB gunakan type 'scratch', BUKAN mermaid
+      3. **IPA** (Fisika, Kimia) → gunakan 'chemistry' untuk struktur molekul, 'function' untuk grafik
+      4. Hanya gunakan mermaid jika TIDAK ada tipe visual interaktif yang sesuai
+
+      **DILARANG KERAS**:
+      - JANGAN gunakan 'function' untuk materi Geometri/Pythagoras/Segitiga/Persegi/Lingkaran
+      - JANGAN gunakan 'geometry' untuk materi Fungsi/Trigonometri/Limit
+      - JANGAN gunakan 'mermaid' untuk materi yang punya tipe visual interaktif (function/geometry/scratch/chart)
+
+      **FORMAT WAJIB VISUALISASI (SANGAT PENTING):**
+      Setiap blok visualisasi WAJIB dibungkus dalam code block dengan tag \"visualization\". JANGAN keluarkan JSON mentah tanpa bungkus.
+      Contoh benar:
+      \\`\\`\\`visualization
+      {\"type\":\"geometry\",\"config\":{\"shapes\":[{\"type\":\"triangle\",\"points\":[[0,0],[4,0],[0,3]]}]}}
+      \\`\\`\\`
+      Contoh SALAH (JANGAN lakukan ini):
+      {\"type\":\"geometry\",\"config\":{\"shapes\":[{\"type\":\"triangle\",\"points\":[[0,0],[4,0],[0,3]]}]}}
 
       **SUMBER MATERI WAJIB (BUKU TEKS KURIKULUM):**
       - Buku: {$bookRefTitle} ({$bookRefPublisher})
@@ -940,7 +961,7 @@ $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
       3. Key terms WAJIB muncul di Materi Ajar dan Glosarium.
       4. JANGAN gunakan data, konsep, atau istilah di luar buku ini.
 
-      **KRUSIAL**: JANGAN gunakan data contoh. Extract data NYATA dari materi ajar. Jika materi tidak mengandung data numerik, maka JANGAN gunakan tipe chart, gunakan mermaid/mindmap/flowchart. Gunakan tipe visual yang disarankan oleh Visual Hints.
+      **KRUSIAL**: JANGAN gunakan data contoh. Extract data NYATA dari materi ajar. Gunakan tipe visual yang disarankan oleh Visual Hints. UBAH default dari mermaid ke tipe visual interaktif (function/geometry/scratch) sesuai mata pelajaran.
 
 
 
@@ -1075,6 +1096,13 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
       **INSTRUKSI**: 
       1. Jika materi \"{$materi}\" cocok dengan salah satu bab di atas, Anda **WAJIB** menyebutkan nama bab tersebut secara spesifik di bagian \"Buku Sumber\".
       2. Gunakan urutan logika dari buku tersebut untuk menyusun langkah pembelajaran.
+
+      **FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**
+      - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**
+      - Inline math: Gunakan `\$...\$` (contoh: \$a^2 + b^2 = c^2\$)
+      - Display math (rumus baru di baris sendiri): Gunakan `\$\$...\$\$` (contoh: \$\$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}\$\$)
+      - Contoh penulisan benar: `\$\\frac{1}{2} \\times base \\times height\$`
+      - Contoh penulisan SALAH: `1/2 * base * height` (tanpa LaTeX)
 
       **STRUKTUR RPP YANG HARUS DIHASILKAN (Gunakan Format Markdown Ini):**
 
@@ -1469,12 +1497,26 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         - Visual Hints: {$bookVisualHints}
 
         **PILIH TIPE BERDASARKAN ISI MATERI & VISUAL HINTS**:
-        - Ada data numerik? → chart (bar/line/pie) dengan data NYATA
-        - Hanya teks/konsep? → mermaid / mindmap / flowchart
-        - Rumus/fungsi? → function
+        - **Matematika**: Fungsi/Trigonometri/Limit → 'function'; Geometri/Pythagoras/Segitiga/Persegi → 'geometry'; Statistika/Peluang → 'chart'; Bilangan/Aljabar → 'mermaid'
+        - **Informatika** (Pemrograman) → WAJIB gunakan type 'scratch' dengan config.code
+        - Ada data numerik? → chart
         - Struktur kimia? → chemistry
+        - Hanya teks/konsep? → mermaid (terakhir)
+
+        **FORMAT JSON WAJIB**:
+        - function: {\"type\":\"function\",\"config\":{\"expression\":\"x^2\",\"xRange\":[-5,5]}}
+        - geometry: {\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"}]}}
+        - scratch: {\"type\":\"scratch\",\"config\":{\"code\":\"when flag clicked\\nmove (10) steps\"}}
+        - chart: {\"type\":\"chart\",\"config\":{\"type\":\"bar\",\"data\":[{\"x\":\"A\",\"y\":10}]}}
+        - mermaid: {\"type\":\"mermaid\",\"config\":{\"diagram\":\"graph TD\\nA-->B\"}}
 
         **KRUSIAL**: JANGAN buat chart jika tidak ada data numerik asli dari materi. JANGAN gunakan data contoh fiktif. Ikuti Visual Hints dari buku.
+
+        **FORMAT WAJIB VISUALISASI**: Setiap blok visualisasi WAJIB dibungkus dalam code block:
+        \\`\\`\\`visualization
+        {\"type\":\"function\",\"config\":{\"function\":\"x^2\",\"xRange\":[-5,5]}}
+        \\`\\`\\`
+        JANGAN keluarkan JSON mentah tanpa bungkus \\`\\`\\`visualization.
 
         ## IV. LAMPIRAN
 
@@ -1677,10 +1719,10 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
 
         **FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**
         - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**
-        - Inline math: Gunakan `$...$` (contoh: \$a^2 + b^2 = c^2\$)
-        - Display math (rumus baru di baris sendiri): Gunakan `$$...$$` (contoh: $$\int_{a}^{b} f(x) dx$$)
-        - Contoh penulisan benar: `$\frac{-b \pm \sqrt{b^2-4ac}}{2a}$`
-        - Contoh penulisan SALAH: `\frac{-b \pm \sqrt{b^2-4ac}}{2a}` (tanpa `$`)
+        - Inline math: Gunakan `\$...\$` (contoh: \$a^2 + b^2 = c^2\$)
+        - Display math (rumus baru di baris sendiri): Gunakan `\$\$...\$\$` (contoh: \$\$\\int_{a}^{b} f(x) dx\$\$)
+        - Contoh penulisan benar: `\$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}\$`
+        - Contoh penulisan SALAH: `\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}` (tanpa `\$`)
 
         ---
 
@@ -1801,15 +1843,29 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         **SUMBER MATERI WAJIB (BUKU TEKS KURIKULUM):**
         - Buku / RPP Sumber: {$subjectName} Kelas {$gradeFromRpp}
         - Referensi utama adalah RPP di atas dan buku kurikulum resmi.
-        - Visual Hints: Pilih tipe visual paling sesuai dengan jenis aktivitas LKPD (chart untuk data numerik, mermaid untuk alur/proses).
+        - Visual Hints: Pilih tipe visual paling sesuai dengan jenis aktivitas LKPD. UBAH default dari mermaid ke tipe interaktif: function untuk Matematika, scratch untuk Informatika.
 
         **PILIH TIPE BERDASARKAN ISI MATERI**:
-        - Ada data numerik? → chart (bar/line/pie) dengan data NYATA
-        - Hanya teks/konsep? → mermaid / mindmap / flowchart
-        - Rumus/fungsi? → function
+        - **Matematika**: Fungsi/Trigonometri/Limit → 'function'; Geometri/Pythagoras/Segitiga/Persegi → 'geometry'; Statistika/Peluang → 'chart'; Bilangan/Aljabar → 'mermaid'
+        - **Informatika** (Pemrograman) → WAJIB gunakan type 'scratch' dengan config.code
+        - Ada data numerik? → chart
         - Struktur kimia? → chemistry
+        - Hanya teks/konsep? → mermaid (terakhir)
+
+        **FORMAT JSON WAJIB**:
+        - function: {\"type\":\"function\",\"config\":{\"expression\":\"x^2\",\"xRange\":[-5,5]}}
+        - geometry: {\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"}]}}
+        - scratch: {\"type\":\"scratch\",\"config\":{\"code\":\"when flag clicked\\nmove (10) steps\"}}
+        - chart: {\"type\":\"chart\",\"config\":{\"type\":\"bar\",\"data\":[{\"x\":\"A\",\"y\":10}]}}
+        - mermaid: {\"type\":\"mermaid\",\"config\":{\"diagram\":\"graph TD\\nA-->B\"}}
 
         **KRUSIAL**: JANGAN buat chart jika tidak ada data numerik asli. JANGAN gunakan data contoh fiktif.
+
+        **FORMAT WAJIB VISUALISASI**: Setiap blok visualisasi WAJIB dibungkus dalam code block:
+        \\`\\`\\`visualization
+        {\"type\":\"function\",\"config\":{\"function\":\"x^2\",\"xRange\":[-5,5]}}
+        \\`\\`\\`
+        JANGAN keluarkan JSON mentah tanpa bungkus \\`\\`\\`visualization.
 
         ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
 
