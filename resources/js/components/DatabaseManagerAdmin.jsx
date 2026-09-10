@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Trash2, Download, Upload, AlertTriangle, Database, RefreshCw, Zap, Sparkles } from 'lucide-react';
+import { Trash2, Download, Upload, AlertTriangle, Database, RefreshCw, Sparkles } from 'lucide-react';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
-import StyledButton from './StyledButton';
 import Modal from './Modal';
 
 const DatabaseManagerAdmin = () => {
@@ -12,6 +11,10 @@ const DatabaseManagerAdmin = () => {
   const [confirmationText, setConfirmationText] = useState('');
   const [password, setPassword] = useState('');
   const restoreInputRef = useRef(null);
+  const [backupModalOpen, setBackupModalOpen] = useState(false);
+  const [backupSelection, setBackupSelection] = useState([]);
+  const [restoreTables, setRestoreTables] = useState([]);
+  const [restoreSelection, setRestoreSelection] = useState([]);
   const [confirmModal, setConfirmModal] = useState({
     isOpen: false,
     title: '',
@@ -38,25 +41,37 @@ const DatabaseManagerAdmin = () => {
     fetchTables();
   }, [fetchTables]);
 
-  const handleBackup = async () => {
+  const handleBackupClick = () => {
+    setBackupSelection(tables.map(t => t.name));
+    setBackupModalOpen(true);
+  };
+
+  const toggleBackupTable = (name) => {
+    setBackupSelection(prev =>
+      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+    );
+  };
+
+  const performBackup = async () => {
+    if (backupSelection.length === 0) {
+      toast.error('Pilih minimal satu tabel untuk backup.');
+      return;
+    }
+
     try {
       toast.loading('Menyiapkan backup (Proses ini mungkin memakan waktu)...', { id: 'backup-loading' });
-      
-      // Phase 1: Request the backup ticket
-      const response = await api.get('/admin/database/backup');
+
+      const response = await api.post('/admin/database/backup', { tables: backupSelection });
       const { ticket } = response.data;
-      
+
       if (!ticket) {
         throw new Error('Gagal mendapatkan tiket backup.');
       }
 
-      // Phase 2: Redirect to the public direct download route with the ticket
-      // We use the full API URL to ensure the browser hits the correct endpoint
       const downloadUrl = `${api.defaults.baseURL}/admin/database/backup/download?ticket=${ticket}`;
-      
-      // Trigger native browser download by redirecting
+
       window.location.assign(downloadUrl);
-      
+
       toast.success('Backup database sedang diunduh!', { id: 'backup-loading' });
     } catch (error) {
       console.error('Error backing up database:', error);
@@ -65,40 +80,85 @@ const DatabaseManagerAdmin = () => {
     }
   };
 
-  const handleRestoreClick = (e) => {
+  const extractTablesFromSql = async (file) => {
+    const text = await file.text();
+    const names = [];
+    const regex = /^\s*DROP\s+TABLE\s+IF\s+EXISTS\s+`([^`]+)`\s*;/gim;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      names.push(match[1]);
+    }
+    return names;
+  };
+
+  const handleRestoreClick = async (e) => {
     const file = e.target.files[0];
+    // Reset file input so same file can be selected again
+    e.target.value = '';
     if (!file) return;
+
+    const known = new Map(tables.map(t => [t.name, t]));
+
+    let detected = [];
+    try {
+      detected = await extractTablesFromSql(file);
+    } catch (error) {
+      console.error('Error reading backup file:', error);
+      toast.error('Gagal membaca file backup.');
+      return;
+    }
+
+    const restorable = detected
+      .filter(name => known.has(name))
+      .map(name => known.get(name));
+
+    if (restorable.length === 0) {
+      toast.error('File tidak mengandung tabel yang dapat dipulihkan.');
+      return;
+    }
 
     setConfirmationText('');
     setPassword('');
+    setRestoreTables(restorable);
+    setRestoreSelection(restorable.filter(t => !t.protected).map(t => t.name));
     setConfirmModal({
       isOpen: true,
       title: 'Pulihkan Database (SQL)',
-      message: 'PERHATIAN: Memulihkan database akan mengganti data yang ada dengan data dari file cadangan. Pastikan file backup valid.',
+      message: 'PERHATIAN: Memulihkan database akan mengganti data tabel terpilih dengan data dari file cadangan. Tabel kritis (admin, user, migrasi) tidak dapat dipilih.',
       requiresInput: true,
       requiresPassword: true,
       confirmPhrase: 'PULIHKAN',
       onConfirm: async (currentPassword) => {
         setConfirmModal(prev => ({ ...prev, isOpen: false }));
-        await performRestore(file, currentPassword);
+        await performRestore(file, currentPassword, restoreSelection);
       }
     });
-    // Reset file input so same file can be selected again
-    e.target.value = '';
   };
 
-  const performRestore = async (file, currentPassword) => {
+  const toggleRestoreTable = (name) => {
+    setRestoreSelection(prev =>
+      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+    );
+  };
+
+  const performRestore = async (file, currentPassword, selectedTables) => {
+    if (!selectedTables || selectedTables.length === 0) {
+      toast.error('Pilih minimal satu tabel untuk dipulihkan.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('backup_file', file);
     formData.append('password', currentPassword);
     formData.append('confirmation', 'PULIHKAN');
+    selectedTables.forEach(name => formData.append('tables[]', name));
 
     toast.loading('Memulihkan database...', { id: 'restore-loading' });
     try {
-      await api.post('/admin/database/restore', formData, {
+      const response = await api.post('/admin/database/restore', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      toast.success('Database berhasil dipulihkan!', { id: 'restore-loading' });
+      toast.success(response.data?.message || 'Database berhasil dipulihkan!', { id: 'restore-loading' });
       fetchTables();
     } catch (error) {
       console.error('Error restoring database:', error);
@@ -147,7 +207,7 @@ const DatabaseManagerAdmin = () => {
     setConfirmModal({
       isOpen: true,
       title: 'DANGER: Reset Total Database',
-      message: 'Anda akan menghapus SELURUH data aplikasi (Siswa, Jadwal, Nilai, dll). Akun admin tetap aman. Ketik "RESET TOTAL" untuk melanjutkan.',
+      message: 'Anda akan menghapus SELURUH data aplikasi (Siswa, Jadwal, Nilai, dll). Akun admin dan akun pengguna TETAP AMAN (tidak dihapus). Ketik "RESET TOTAL" untuk melanjutkan.',
       requiresInput: true,
       requiresPassword: true,
       confirmPhrase: 'RESET TOTAL',
@@ -165,7 +225,7 @@ const DatabaseManagerAdmin = () => {
         password: currentPassword,
         confirmation: 'RESET TOTAL'
       });
-      toast.success('Seluruh data aplikasi berhasil dihapus.');
+      toast.success('Data aplikasi berhasil direset. Akun admin tetap aman.');
       fetchTables();
     } catch (error) {
       console.error('Error wiping database:', error);
@@ -219,7 +279,7 @@ const DatabaseManagerAdmin = () => {
         </div>
         <div className="flex flex-wrap gap-4 w-full md:w-auto">
           <button 
-            onClick={handleBackup} 
+            onClick={handleBackupClick} 
             className="flex-1 md:flex-none flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black rounded-2xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-1 transition-all duration-300 active:scale-95 group"
           >
             <div className="p-2 bg-white/20 rounded-xl group-hover:rotate-12 transition-transform">
@@ -313,6 +373,47 @@ const DatabaseManagerAdmin = () => {
               {confirmModal.message}
             </p>
 
+            {restoreTables.length > 0 && (
+              <div className="mb-6 text-left">
+                <p className="text-xs font-bold text-blue-500 uppercase tracking-widest mb-3">0. Pilih Tabel yang Akan Dipulihkan:</p>
+                <div className="max-h-56 overflow-y-auto border-2 border-slate-100 dark:border-slate-700 rounded-2xl p-3 bg-white dark:bg-slate-900">
+                  {restoreTables.map((table) => {
+                    const disabled = table.protected;
+                    const checked = restoreSelection.includes(table.name);
+                    return (
+                      <label
+                        key={table.name}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
+                          disabled
+                            ? 'opacity-50 cursor-not-allowed bg-slate-50 dark:bg-slate-800/50'
+                            : 'cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          className="w-5 h-5 rounded accent-blue-600"
+                          checked={checked}
+                          disabled={disabled}
+                          onChange={() => toggleRestoreTable(table.name)}
+                        />
+                        <span className="flex-1 text-sm font-bold text-gray-700 dark:text-gray-200">
+                          {table.label}
+                        </span>
+                        <span className="text-[10px] font-mono text-gray-400">
+                          {table.name}
+                        </span>
+                        {disabled && (
+                          <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">
+                            Dilindungi
+                          </span>
+                        )}
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {confirmModal.requiresInput && (
               <div className="mb-6">
                 <p className="text-xs font-bold text-rose-500 uppercase tracking-widest mb-3 text-left">1. Ketik Kalimat Konfirmasi:</p>
@@ -350,12 +451,73 @@ const DatabaseManagerAdmin = () => {
               <button
                 onClick={() => confirmModal.onConfirm(password)}
                 disabled={
+                  (restoreTables.length > 0 && restoreSelection.length === 0) ||
                   (confirmModal.requiresInput && confirmationText.trim().toUpperCase() !== confirmModal.confirmPhrase) ||
                   (confirmModal.requiresPassword && !password)
                 }
                 className="px-6 py-3 bg-rose-600 text-white font-bold rounded-2xl hover:bg-rose-700 shadow-xl shadow-rose-200 dark:shadow-none transition-all flex-1 disabled:opacity-20 disabled:cursor-not-allowed"
               >
                 Konfirmasi
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Backup Selection Modal */}
+      {backupModalOpen && (
+        <Modal onClose={() => setBackupModalOpen(false)}>
+          <div className="p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600 dark:text-emerald-400">
+                <Download size={20} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-gray-900 dark:text-white">Pilih Tabel untuk Backup</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  Centang tabel yang ingin di-backup ({backupSelection.length}/{tables.length} dipilih).
+                </p>
+              </div>
+            </div>
+
+            <div className="max-h-72 overflow-y-auto border-2 border-slate-100 dark:border-slate-700 rounded-2xl p-3 bg-white dark:bg-slate-900 mb-6">
+              {tables.map((table) => (
+                <label
+                  key={table.name}
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all"
+                >
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5 rounded accent-emerald-600"
+                    checked={backupSelection.includes(table.name)}
+                    onChange={() => toggleBackupTable(table.name)}
+                  />
+                  <span className="flex-1 text-sm font-bold text-gray-700 dark:text-gray-200">
+                    {table.label}
+                  </span>
+                  <span className="text-[10px] font-mono text-gray-400">
+                    {table.name}
+                  </span>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={() => setBackupModalOpen(false)}
+                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-500 font-bold rounded-2xl hover:bg-gray-200 transition-all flex-1"
+              >
+                Batal
+              </button>
+              <button
+                onClick={() => {
+                  setBackupModalOpen(false);
+                  performBackup();
+                }}
+                disabled={backupSelection.length === 0}
+                className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 shadow-xl shadow-emerald-200 dark:shadow-none transition-all flex-1 disabled:opacity-20 disabled:cursor-not-allowed"
+              >
+                Mulai Backup
               </button>
             </div>
           </div>

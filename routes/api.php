@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StudentDashboardController;
+use App\Http\Controllers\GeminiController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SchoolClassController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
-use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\Api\StudentDashboardController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,23 +31,23 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/save-push-subscription', [AuthController::class, 'savePushSubscription']);
-    
+
     // Verify user password securely
     Route::post('/verify-password', function (Request $request) {
         $request->validate([
             'password' => 'required|string',
         ]);
-        
+
         if (\Illuminate\Support\Facades\Hash::check($request->password, $request->user()->password)) {
             return response()->json(['success' => true]);
         }
-        
+
         return response()->json([
             'success' => false,
-            'message' => 'Password yang Anda masukkan salah!'
+            'message' => 'Password yang Anda masukkan salah!',
         ], 422);
     });
-    
+
     Route::apiResource('classes', SchoolClassController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('teachers', App\Http\Controllers\TeacherController::class);
@@ -69,15 +69,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/admin/dashboard/monitoring', [App\Http\Controllers\DashboardController::class, 'getMonitoringData']);
         Route::get('/admin/grades/monitoring', [App\Http\Controllers\DashboardController::class, 'getGradeMonitoringData']);
         Route::get('/admin/online-users', [App\Http\Controllers\DashboardController::class, 'onlineUsers']);
-        
+
         // Database Management
         Route::get('/admin/database/tables', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'getTables']);
         Route::post('/admin/database/truncate', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'truncateTable']);
-        Route::get('/admin/database/backup', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'backupDatabase']);
+        Route::post('/admin/database/backup', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'backupDatabase']);
         Route::post('/admin/database/wipe', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'wipeDatabase']);
         Route::post('/admin/database/restore', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'restoreDatabase']);
         Route::post('/admin/database/clean-logs', [App\Http\Controllers\Admin\DatabaseManagementController::class, 'cleanSystemLogs']);
-        
+
         // Student Photo Upload
         Route::post('/admin/students/upload-photos', [App\Http\Controllers\StudentPhotoController::class, 'uploadZip']);
 
@@ -163,12 +163,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/export-rpp-docx', [App\Http\Controllers\AiFeaturesController::class, 'exportRppDocx']);
         Route::get('/rpp-history', [App\Http\Controllers\AiFeaturesController::class, 'getRppHistory']);
         Route::delete('/rpp-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteRpp']);
-        
+
         Route::post('/generate-quiz', [App\Http\Controllers\AiFeaturesController::class, 'generateQuiz']);
         Route::post('/save-quiz', [App\Http\Controllers\AiFeaturesController::class, 'saveQuiz']);
         Route::get('/quiz-history', [App\Http\Controllers\AiFeaturesController::class, 'getQuizHistory']);
         Route::delete('/quiz-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteQuiz']);
-        
+
         Route::post('/generate-handout', [App\Http\Controllers\AiFeaturesController::class, 'generateHandout']);
         Route::post('/save-handout', [App\Http\Controllers\AiFeaturesController::class, 'saveHandout']);
         Route::get('/handout-history', [App\Http\Controllers\AiFeaturesController::class, 'getHandoutHistory']);
@@ -180,7 +180,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/worksheet-history/{id}', [App\Http\Controllers\AiFeaturesController::class, 'deleteWorksheet']);
 
         Route::post('/generate-atp', [App\Http\Controllers\AiFeaturesController::class, 'generateAtp']);
-        
+
         Route::post('/analyze-student', [GeminiController::class, 'analyzeStudent']);
         Route::post('/analyze-class', [App\Http\Controllers\AiFeaturesController::class, 'analyzeClass']);
         Route::post('/chat', [GeminiController::class, 'chat']);
@@ -191,15 +191,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Accessible only by users with role = 'student'
     // ──────────────────────────────────────────────────────────────────────────
     Route::prefix('student')->group(function () {
-        Route::get('/realtime',    [StudentDashboardController::class, 'getRealtimeLearning']);
-        Route::get('/schedule',    [StudentDashboardController::class, 'getWeeklySchedule']);
-        Route::get('/attendance',  [StudentDashboardController::class, 'getAttendanceRecap']);
-        Route::get('/grades',      [StudentDashboardController::class, 'getGrades']);
-        Route::get('/trend',       [StudentDashboardController::class, 'getGradesTrend']);
-        Route::get('/tasks',       [StudentDashboardController::class, 'getMissingTasks']);
+        Route::get('/realtime', [StudentDashboardController::class, 'getRealtimeLearning']);
+        Route::get('/schedule', [StudentDashboardController::class, 'getWeeklySchedule']);
+        Route::get('/attendance', [StudentDashboardController::class, 'getAttendanceRecap']);
+        Route::get('/grades', [StudentDashboardController::class, 'getGrades']);
+        Route::get('/trend', [StudentDashboardController::class, 'getGradesTrend']);
+        Route::get('/tasks', [StudentDashboardController::class, 'getMissingTasks']);
         Route::get('/infractions', [StudentDashboardController::class, 'getInfractions']);
-        Route::get('/library/loans',[StudentDashboardController::class, 'myLibraryLoans']);
-        Route::post('/chat',       [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1');
+        Route::get('/library/loans', [StudentDashboardController::class, 'myLibraryLoans']);
+        Route::post('/chat', [\App\Http\Controllers\Api\StudentChatController::class, 'chat'])->middleware('throttle:10,1');
     });
 
     // Parent Reports (accessible by students/parents)
@@ -217,14 +217,14 @@ Route::middleware('auth:sanctum')->group(function () {
         // Public (Auth) routes for Library (accessible by students)
         Route::get('/books', [App\Http\Controllers\BookController::class, 'index']);
         Route::get('/books/{book}', [App\Http\Controllers\BookController::class, 'show']);
-        
+
         // Admin / Librarian only
         Route::group(['middleware' => ['librarian']], function () {
             Route::get('/books/lookup/{isbn}', [App\Http\Controllers\BookController::class, 'lookup']);
             Route::post('/books', [App\Http\Controllers\BookController::class, 'store']);
             Route::put('/books/{book}', [App\Http\Controllers\BookController::class, 'update']);
             Route::delete('/books/{book}', [App\Http\Controllers\BookController::class, 'destroy']);
-            
+
             Route::get('/loans/stats', [App\Http\Controllers\LibraryLoanController::class, 'stats']);
             Route::get('/loans/transaction/{transactionId}', [App\Http\Controllers\LibraryLoanController::class, 'getTransaction']);
             Route::get('/reports/classification', [App\Http\Controllers\LibraryLoanController::class, 'getClassificationReport']);
