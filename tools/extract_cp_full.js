@@ -125,6 +125,7 @@ let currentSubjectLine = 0;
 let inCapaianPembelajaran = false;
 let currentPhase = null;
 let currentPhaseText = [];
+let smkRegion = false;
 
 // Result: { "SD": { "1": { "Matematika": { "ganjil": { "cp_full": "..." }, "genap": { "cp_full": "..." } } } } }
 const result = {};
@@ -182,7 +183,14 @@ for (let i = 0; i < cleanLines.length; i++) {
       i++;
     }
 
-    currentSubject = normalizeSubject(subjectLine);
+    // Skip the SMK/MAK and Pendidikan Khusus blocks entirely: headings there can
+    // carry the same names as mainstream subjects (e.g. "PENDIDIKAN KHUSUS
+    // PENDIDIKAN AGAMA ISLAM ..."), which would otherwise overwrite the correct
+    // SD/SMP/SMA content with SLB/SMK variants later in the document.
+    const isSmkBlock = /SMK\/MAK/.test(subjectLine);
+    const isSpecial = /PENDIDIKAN KHUSUS|KEBUTUHAN KHUSUS|MUATAN/.test(subjectLine.toUpperCase());
+    if (isSmkBlock) smkRegion = true;
+    currentSubject = (smkRegion || isSpecial) ? null : normalizeSubject(subjectLine);
     currentSubjectLine = i;
     inCapaianPembelajaran = false;
     currentPhase = null;
@@ -222,6 +230,23 @@ for (let i = 0; i < cleanLines.length; i++) {
     const phaseLetter = faseMatch[1];
     currentPhase = 'Fase ' + phaseLetter;
     currentPhaseText = [];
+
+    // Skim the remainder of the phase-heading parenthetical
+    // (e.g. "SMP/MTs/Program Paket B)") so it isn't captured as CP text.
+    if (!line.includes(')')) {
+      let guard = 0;
+      while (i + 1 < cleanLines.length && guard < 4) {
+        const nxt = cleanLines[i + 1];
+        const isContinuation = nxt.length <= 60
+          && /^[A-Za-z0-9,./()\s-]+$/.test(nxt)
+          && !/^Pada\s+akhir/i.test(nxt)
+          && !/^[0-9]+\./.test(nxt);
+        if (!isContinuation) break;
+        i++;
+        guard++;
+        if (nxt.includes(')')) break;
+      }
+    }
     // console.log(`  ${currentPhase} at line ${i}`);
     continue;
   }

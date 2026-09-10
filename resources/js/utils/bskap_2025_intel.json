@@ -2897,7 +2897,7 @@
                 "elemen": "Aljabar"
               },
               {
-                "materi": "Himpunan (Konsep, Notasi, Operasi Himpunan)",
+                "materi": "Bilangan Real (Operasi Aritmetika, Estimasi) dan Notasi Ilmiah",
                 "elemen": "Bilangan"
               }
             ],
@@ -3309,7 +3309,7 @@
           "ganjil": {
             "elemen": [
               "Kitab Suci Weda",
-              "Sraddha and Bhakti",
+              "Sraddha dan Bhakti",
               "Susila"
             ],
             "materi_inti": [
@@ -3319,7 +3319,7 @@
               },
               {
                 "materi": "Sraddha dan Bhakti kepada Tuhan",
-                "elemen": "Sraddha and Bhakti"
+                "elemen": "Sraddha dan Bhakti"
               },
               {
                 "materi": "Dasar-dasar Susila dalam Agama Hindu",
@@ -3462,9 +3462,7 @@
           "ganjil": {
             "elemen": [
               "Berpikir Komputasional",
-              "Teknologi Informasi dan Komunikasi",
-              "Sistem Komputer",
-              "Jaringan Komputer dan Internet"
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
@@ -3473,42 +3471,40 @@
               },
               {
                 "materi": "TIK (Antarmuka Pengguna (GUI), Pengelolaan Folder dan File, Peramban dan Mesin Pencari, Aplikasi Pengolah Kata)",
-                "elemen": "Teknologi Informasi dan Komunikasi"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Sistem Komputer (Perangkat Keras, OS, Interaksi Manusia & Komputer)",
-                "elemen": "Sistem Komputer"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Jaringan Komputer dan Internet (Koneksi, Proteksi Data)",
-                "elemen": "Jaringan Komputer dan Internet"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu menerapkan berpikir komputasional (algoritma, optimasi, representasi data) untuk menyelesaikan masalah. Mereka menggunakan aplikasi perkantoran secara efisien, menjelaskan komponen sistem komputer, serta memahami cara kerja jaringan dan keamanan internet."
           },
           "genap": {
             "elemen": [
-              "Analisis Data",
-              "Algoritma dan Pemrograman",
-              "Dampak Sosial Informatika",
-              "Praktik Lintas Bidang"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Analisis Data (Pengolahan Data Sederhana & Visualisasi)",
-                "elemen": "Analisis Data"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Algoritma dan Pemrograman (Visual Scratch & Logika Pemrograman)",
-                "elemen": "Algoritma dan Pemrograman"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Dampak Sosial Informatika (Informasi Palsu, Etika Digital)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Praktik Lintas Bidang (Proyek Informatika)",
-                "elemen": "Praktik Lintas Bidang"
+                "elemen": "Berpikir Komputasional"
               }
             ],
             "cp_snippet": "Peserta didik mampu mengolah dan menganalisis data digital serta merancang algoritma dan membuat program visual (Scratch) sederhana. Mereka mengevaluasi dampak sosial informatika (etika digital) serta berkolaborasi dalam praktik lintas bidang."
@@ -3562,7 +3558,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -3574,7 +3570,7 @@
               },
               {
                 "materi": "Menggambar Flora, Fauna, dan Alam Benda",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Prinsip Gambar Perspektif",
@@ -3594,7 +3590,7 @@
           "genap": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -3602,7 +3598,7 @@
             "materi_inti": [
               {
                 "materi": "Desain Poster dan Tipografi",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Mengenal Ragam Hias Nusantara",
@@ -3957,7 +3953,7 @@
                 "elemen": "Aljabar"
               },
               {
-                "materi": "Lingkaran (Garis Singgung & Hubungan Sudut)",
+                "materi": "Lingkaran (Panjang Busur, Sudut, dan Luas Juring)",
                 "elemen": "Geometri"
               },
               {
@@ -4093,7 +4089,7 @@
                 "elemen": "Pemahaman IPA"
               },
               {
-                "materi": "Usaha, Energi, dan Pesawat Sederhana",
+                "materi": "Usaha dan Energi (Hubungan serta Penerapannya)",
                 "elemen": "Pemahaman IPA"
               }
             ],
@@ -4114,7 +4110,7 @@
                 "elemen": "Pemahaman IPA"
               },
               {
-                "materi": "Struktur Bumi dan Perkembangannya (Gunung Api & Gempa)",
+                "materi": "Interaksi Makhluk Hidup dan Lingkungannya (Upaya Mengatasi Perubahan Iklim)",
                 "elemen": "Keterampilan Proses"
               },
               {
@@ -4247,7 +4243,7 @@
                 "elemen": "Fikih"
               },
               {
-                "materi": "Jual Beli dan Hutang Piutang (Fikih Muamalah)",
+                "materi": "Rukhsah dalam Beribadah (Perspektif Mazhab Fikih)",
                 "elemen": "Fikih"
               },
               {
@@ -4334,7 +4330,7 @@
           "ganjil": {
             "elemen": [
               "Kitab Suci Weda",
-              "Sraddha and Bhakti",
+              "Sraddha dan Bhakti",
               "Susila"
             ],
             "materi_inti": [
@@ -4344,10 +4340,10 @@
               },
               {
                 "materi": "Konsep Sraddha dan Penerapan Bhakti",
-                "elemen": "Sraddha and Bhakti"
+                "elemen": "Sraddha dan Bhakti"
               },
               {
-                "materi": "Susila dalam Ajaran Tri Kaya Parisudha",
+                "materi": "Susila: Panca Yama Brata dan Panca Niyama Brata",
                 "elemen": "Susila"
               }
             ],
@@ -4487,9 +4483,7 @@
           "ganjil": {
             "elemen": [
               "Berpikir Komputasional",
-              "Teknologi Informasi dan Komunikasi",
-              "Sistem Komputer",
-              "Jaringan Komputer dan Internet"
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
@@ -4498,42 +4492,40 @@
               },
               {
                 "materi": "TIK (Integrasi Konten Aplikasi Perkantoran, Fitur Lanjutan Aplikasi, Laboratorium Maya)",
-                "elemen": "Teknologi Informasi dan Komunikasi"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Sistem Komputer (Komponen Dalam Komputer, Pengalamatan Memori, Sistem Operasi)",
-                "elemen": "Sistem Komputer"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Jaringan Komputer dan Internet (Keamanan Data Cloud, Enkripsi Sederhana)",
-                "elemen": "Jaringan Komputer dan Internet"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu menerapkan berbagai teknik berpikir komputasional (dekomposisi, abstraksi, algoritma) untuk menyelesaikan masalah. Mereka menggunakan teknologi digital untuk berbagi informasi secara aman (enkripsi) serta menjelaskan mekanisme internal sistem komputer."
           },
           "genap": {
             "elemen": [
-              "Analisis Data",
-              "Algoritma dan Pemrograman",
-              "Dampak Sosial Informatika",
-              "Praktik Lintas Bidang"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Analisis Data (Visualisasi Data, Fitur Pencarian & Filter pada Spreadsheet)",
-                "elemen": "Analisis Data"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Algoritma dan Pemrograman (Struktur Kontrol: Percabangan & Perulangan)",
-                "elemen": "Algoritma dan Pemrograman"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Dampak Sosial Informatika (Etika Digital, Cyber Bullying, Dampak Teknologi)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Praktik Lintas Bidang (Proyek Informatika Terpadu)",
-                "elemen": "Praktik Lintas Bidang"
+                "elemen": "Berpikir Komputasional"
               }
             ],
             "cp_snippet": "Peserta didik mampu mengolah data digital menggunakan fitur lanjutan; merancang program dengan struktur kontrol yang benar; mengevaluasi masalah sosial akibat teknologi; serta melaksanakan proyek informatika secara kolaboratif."
@@ -4587,7 +4579,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -4599,7 +4591,7 @@
               },
               {
                 "materi": "Melukis dengan Berbagai Media",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Menggambar Ragam Hias Nusantara",
@@ -4619,7 +4611,7 @@
           "genap": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -4627,7 +4619,7 @@
             "materi_inti": [
               {
                 "materi": "Desain Grafis dan Tipografi Dasar",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Mengenal Karya Seni Rupa Daerah",
@@ -4950,11 +4942,11 @@
                 "elemen": "Bilangan"
               },
               {
-                "materi": "Persamaan Kuadrat (Akar-akar & Aplikasi)",
+                "materi": "Menyelesaikan Masalah dengan Relasi, Fungsi, dan Persamaan Linear",
                 "elemen": "Aljabar"
               },
               {
-                "materi": "Fungsi Kuadrat (Grafik & Karakterisitik)",
+                "materi": "Fungsi Linear dan Non-Linear (Membedakan melalui Grafik)",
                 "elemen": "Aljabar"
               }
             ],
@@ -5365,7 +5357,7 @@
           "ganjil": {
             "elemen": [
               "Kitab Suci Weda",
-              "Sraddha and Bhakti",
+              "Sraddha dan Bhakti",
               "Susila"
             ],
             "materi_inti": [
@@ -5375,10 +5367,10 @@
               },
               {
                 "materi": "Sraddha dan Bhakti dalam Teologi Hindu Modern",
-                "elemen": "Sraddha and Bhakti"
+                "elemen": "Sraddha dan Bhakti"
               },
               {
-                "materi": "Susila dan Catur Asrama dalam Kehidupan",
+                "materi": "Susila: Catur Purusa Artha (Dharma, Artha, Kama, Moksa)",
                 "elemen": "Susila"
               }
             ],
@@ -5518,53 +5510,49 @@
           "ganjil": {
             "elemen": [
               "Berpikir Komputasional",
-              "Teknologi Informasi dan Komunikasi",
-              "Sistem Komputer",
-              "Jaringan Komputer dan Internet"
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
-                "materi": "Berpikir Komputasional (Struktur Data Graf & Pohon, Logika Proposisi)",
+                "materi": "Berpikir Komputasional (Himpunan Data Terstruktur dan Pseudocode untuk Masalah Sehari-hari)",
                 "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "TIK (Integrasi Aplikasi Perkantoran Lanjut, Blog/Vlog untuk Konten Positif)",
-                "elemen": "Teknologi Informasi dan Komunikasi"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Sistem Komputer (Keamanan Komputer & Proteksi Data Pribadi)",
-                "elemen": "Sistem Komputer"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Jaringan Komputer dan Internet (Konfigurasi Jaringan Sederhana & Troubleshooting)",
-                "elemen": "Jaringan Komputer dan Internet"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu menerapkan berpikir komputasional pada masalah kompleks (graf & pohon) dan mengintegrasikan berbagai aplikasi perkantoran secara lanjut. Mereka menjelaskan prinsip keamanan komputer dan proteksi data pribadi serta melakukan konfigurasi jaringan dasar."
           },
           "genap": {
             "elemen": [
-              "Analisis Data",
-              "Algoritma dan Pemrograman",
-              "Dampak Sosial Informatika",
-              "Praktik Lintas Bidang"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Analisis Data (Prediksi Tren & Pemodelan Data Sederhana)",
-                "elemen": "Analisis Data"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Algoritma dan Pemrograman (Modularisasi Program, Pemrograman Visual/Blockly Lanjut)",
-                "elemen": "Algoritma dan Pemrograman"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Dampak Sosial Informatika (Isu Keamanan Siber, Karir Bidang Informatika)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Praktik Lintas Bidang (Proyek Inovasi Digital untuk Solusi Masalah)",
-                "elemen": "Praktik Lintas Bidang"
+                "elemen": "Berpikir Komputasional"
               }
             ],
             "cp_snippet": "Peserta didik mampu melakukan prediksi tren berdasarkan pemodelan data sederhana dan membuat program modular (Blockly/Scratch). Mereka mengevaluasi dampak sosial informatika (karir & siber) serta menciptakan solusi digital kreatif melalui proyek lintas bidang."
@@ -5618,7 +5606,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -5630,7 +5618,7 @@
               },
               {
                 "materi": "Seni Patung (Media dan Teknik)",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Prosedur Berkarya Seni Lukis",
@@ -5650,7 +5638,7 @@
           "genap": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berpikir dan Bekerja Artistik",
               "Berdampak"
@@ -5662,7 +5650,7 @@
               },
               {
                 "materi": "Penyelenggaraan Pameran Seni Rupa",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Merefleksikan Karya Seni Rupa Modern",
@@ -8575,7 +8563,7 @@
             "Bab 2: Bilangan Rasional",
             "Bab 3: Rasio",
             "Bab 4: Bentuk Aljabar",
-            "Bab 5: Kesebangunan",
+            "Bab 5: Bilangan Real dan Notasi Ilmiah",
             "Bab 6: Data dan Statistika"
           ]
         },
@@ -8629,15 +8617,14 @@
           "title": "Informatika Kelas VII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Informatika dan Keterampilan Generik",
-            "Bab 2: Berpikir Komputasional",
-            "Bab 3: Teknologi Informasi dan Komunikasi",
-            "Bab 4: Sistem Komputer",
-            "Bab 5: Jaringan Komputer dan Internet",
-            "Bab 6: Analisis Data",
-            "Bab 7: Algoritma dan Pemrograman",
-            "Bab 8: Dampak Sosial Informatika",
-            "Bab 9: Praktika Lintas Bidang"
+            "Bab 1: Berpikir Komputasional",
+            "Bab 2: Teknologi Informasi dan Komunikasi",
+            "Bab 3: Sistem Komputer",
+            "Bab 4: Jaringan Komputer dan Internet",
+            "Bab 5: Analisis Data",
+            "Bab 6: Algoritma dan Pemrograman",
+            "Bab 7: Dampak Sosial Informatika",
+            "Bab 8: Praktik Lintas Bidang"
           ]
         },
         "Bahasa Inggris": {
@@ -8840,7 +8827,7 @@
           "chapters": [
             "Bab 1: Pengenalan Sel",
             "Bab 2: Struktur dan Fungsi Tubuh Makhluk Hidup",
-            "Bab 3: Usaha, Energi, dan Pesawat Sederhana",
+            "Bab 3: Usaha dan Energi",
             "Bab 4: Getaran, Gelombang, dan Cahaya",
             "Bab 5: Unsur, Senyawa, dan Campuran",
             "Bab 6: Struktur Bumi dan Perkembangannya"
@@ -8893,11 +8880,14 @@
           "title": "Informatika Kelas VIII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Informatika dan Profil Pelajar Pancasila",
-            "Bab 2: Berpikir Komputasional",
-            "Bab 3: Teknologi Informasi dan Komunikasi",
-            "Bab 4: Sistem Komputer",
-            "Bab 5: Jaringan Komputer dan Internet"
+            "Bab 1: Berpikir Komputasional",
+            "Bab 2: Teknologi Informasi dan Komunikasi",
+            "Bab 3: Sistem Komputer",
+            "Bab 4: Jaringan Komputer dan Internet",
+            "Bab 5: Analisis Data",
+            "Bab 6: Algoritma dan Pemrograman",
+            "Bab 7: Dampak Sosial Informatika",
+            "Bab 8: Praktik Lintas Bidang"
           ]
         },
         "Pendidikan Agama Islam": {
@@ -8907,8 +8897,8 @@
             "Bab 1: Inspirasi Al-Qur'an: Melestarikan Alam",
             "Bab 2: Meyakini Kitab-Kitab Allah",
             "Bab 3: Menjadi Pribadi Berintegritas dengan Amanah dan Jujur",
-            "Bab 4: Ibadah dengan Disiplin dan Penuh Harap",
-            "Bab 5: Meneladani Produktivitas Ilmuwan Muslim"
+            "Bab 4: Ibadah Shalat Gerhana dan Jenazah",
+            "Bab 5: Masa Keemasan Bani Abbasiyah di Baghdad"
           ]
         },
         "Pendidikan Agama Kristen": {
@@ -8938,8 +8928,8 @@
           "publisher": "Kemdikbudristek",
           "chapters": [
             "Bab 1: Kitab Suci Weda (Sruti dan Smerti)",
-            "Bab 2: Catur Guru dan Catur Asrama",
-            "Bab 3: Catur Purusa Artha dan Karma Yoga",
+            "Bab 2: Sraddha dan Penerapan Bhakti",
+            "Bab 3: Susila (Panca Yama Brata dan Panca Niyama Brata)",
             "Bab 4: Upacara dan Upakara Yadnya",
             "Bab 5: Perkembangan Agama Hindu di Indonesia"
           ]
@@ -9027,12 +9017,13 @@
           "title": "Matematika Kelas IX",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Bilangan Berpangkat",
-            "Bab 2: Teorema Pythagoras",
-            "Bab 3: Persamaan dan Pertidaksamaan Linear Satu Variabel",
-            "Bab 4: Relasi dan Fungsi",
-            "Bab 5: Persamaan Garis Lurus",
-            "Bab 6: Statistika"
+            "Bab 1: Bilangan Berpangkat dan Bentuk Akar",
+            "Bab 2: Relasi, Fungsi, dan Persamaan Linear",
+            "Bab 3: Fungsi Linear dan Non-Linear",
+            "Bab 4: Transformasi Geometri",
+            "Bab 5: Kesebangunan dan Kekongruenan",
+            "Bab 6: Bangun Ruang Sisi Lengkung",
+            "Bab 7: Data, Statistika, dan Peluang"
           ]
         },
         "Bahasa Indonesia": {
@@ -9106,11 +9097,14 @@
           "title": "Informatika Kelas IX",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Informatika dan Keterampilan Generik",
-            "Bab 2: Berpikir Komputasional",
-            "Bab 3: Teknologi Informasi dan Komunikasi",
-            "Bab 4: Sistem Komputer",
-            "Bab 5: Jaringan Komputer dan Internet"
+            "Bab 1: Berpikir Komputasional (Struktur Data dan Pseudocode)",
+            "Bab 2: Teknologi Informasi dan Komunikasi (Konten Digital Lanjut)",
+            "Bab 3: Sistem Komputer (Keamanan dan Proteksi Data)",
+            "Bab 4: Jaringan Komputer dan Internet (Konfigurasi dan Troubleshooting)",
+            "Bab 5: Analisis Data (Prediksi dan Pemodelan)",
+            "Bab 6: Algoritma dan Pemrograman (Modularisasi dan Blockly)",
+            "Bab 7: Dampak Sosial Informatika (Keamanan Siber)",
+            "Bab 8: Praktik Lintas Bidang (Proyek Inovasi Digital)"
           ]
         },
         "Pendidikan Agama Islam": {
@@ -9119,9 +9113,10 @@
           "chapters": [
             "Bab 1: Al-Qur'an dan Hadis: Menuntut Ilmu",
             "Bab 2: Meyakini Hari Akhir dengan Optimisme",
-            "Bab 3: Menjadi Pribadi Unggul dengan Kejujuran and Menepati Janji",
-            "Bab 4: Ibadah untuk Kesehatan Jiwa",
-            "Bab 5: Keteladanan Tokoh Penyebar Islam di Indonesia"
+            "Bab 3: Etika Komunikasi dan Media Sosial",
+            "Bab 4: Penyembelihan Hewan, Akikah, dan Kurban",
+            "Bab 5: Haji dan Umrah (Rukun dan Syarat)",
+            "Bab 6: Daulah Usmani dan Perkembangan Islam"
           ]
         },
         "Pendidikan Agama Kristen": {
@@ -9151,8 +9146,8 @@
           "publisher": "Kemdikbudristek",
           "chapters": [
             "Bab 1: Weda sebagai Wahyu dan Sumber Hukum Hindu",
-            "Bab 2: Catur Marga Yoga dan Catur Warna",
-            "Bab 3: Etika Hindu (Tri Kaya Parisudha, Catur Paramita)",
+            "Bab 2: Sraddha dan Bhakti dalam Teologi Hindu Modern",
+            "Bab 3: Susila (Catur Purusa Artha)",
             "Bab 4: Filsafat Hindu (Darsana)",
             "Bab 5: Eksistensi Agama Hindu Era Global"
           ]
