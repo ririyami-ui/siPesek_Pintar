@@ -9297,36 +9297,38 @@
           "title": "Cerdas Cergas Berbahasa Indonesia Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Mengungkap Fakta Alam",
-            "Bab 2: Mengungkapkan Kritik Lewat Senyuman",
-            "Bab 3: Menyusuri Nilai dalam Hikayat",
-            "Bab 4: Belajar Menjadi Negosiator Ulung",
-            "Bab 5: Memetik Keteladanan dari Biografi",
-            "Bab 6: Berkarya melalui Puisi"
+            "Bab 1: Laporan Hasil Observasi (Struktur, Ciri Kebahasaan, & Objektivitas)",
+            "Bab 2: Teks Anekdot (Kritik Sosial dengan Sindiran Halus & Humor)",
+            "Bab 3: Hikayat dan Cerpen (Membandingkan Nilai-nilai & Karakterisasi)",
+            "Bab 4: Teks Negosiasi (Strategi Pencapaian Kesepakatan & Bahasa Persuasif)",
+            "Bab 5: Biografi Tokoh (Menganalisis Pola Penyajian & Keteladanan)",
+            "Bab 6: Puisi (Analisis Struktur Fisik & Batin, Musikalisasi Puisi)"
           ]
         },
         "Matematika": {
           "title": "Matematika untuk SMA/SMK Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Eksponen dan Logaritma",
-            "Bab 2: Barisan dan Deret",
-            "Bab 3: Vektor dan Operasinya",
-            "Bab 4: Trigonometri",
-            "Bab 5: Sistem Persamaan dan Pertidaksamaan Linear",
-            "Bab 6: Fungsi Kuadrat",
-            "Bab 7: Statistika",
-            "Bab 8: Peluang"
+            "Bab 1: Eksponen dan Logaritma (Sifat, Grafik, & Aplikasi)",
+            "Bab 2: Barisan dan Deret (Aritmatika, Geometri, Konvergensi)",
+            "Bab 3: Sistem Persamaan Linear Tiga Variabel (SPLTV) & Metode Penyelesaian",
+            "Bab 4: Trigonometri Dasar (Perbandingan Trigonometri pada Segitiga Siku-Siku)",
+            "Bab 5: Sistem Pertidaksamaan Linear Dua Variabel (Grafik Himpunan Penyelesaian)",
+            "Bab 6: Persamaan dan Fungsi Kuadrat (Kaitan Grafik & Diskriminan)",
+            "Bab 7: Statistika Deskriptif (Ukuran Pemusatan & Penyebaran Data Kelompok)",
+            "Bab 8: Peluang Kejadian Saling Lepas & Saling Bebas"
           ]
         },
         "Pendidikan Pancasila": {
           "title": "Pendidikan Pancasila Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bagian 1: Pancasila sebagai Dasar Negara",
-            "Bagian 2: Undang-Undang Dasar NRI 1945",
-            "Bagian 3: Bhinneka Tunggal Ika",
-            "Bagian 4: Negara Kesatuan Republik Indonesia"
+            "Bagian 1: Pancasila sebagai Ideologi Negara (Sejarah Kelahiran & Fungsi)",
+            "Bagian 2: Pancasila dalam Kehidupan Sehari-hari (Tantangan & Peluang di Era Digital)",
+            "Bagian 3: Pengenalan Konstitusi (Norma & Aturan dalam Perundang-undangan)",
+            "Bagian 4: Identitas Individu dan Kelompok (Keragaman Budaya & Toleransi)",
+            "Bagian 5: Kolaborasi antar-Budaya di Indonesia & Global",
+            "Bagian 6: Sengketa Batas Wilayah NKRI (Pentingnya Menjaga Kedaulatan)"
           ]
         },
         "IPA": {
@@ -9357,60 +9359,58 @@
           "title": "Informatika Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Informatika dan Keterampilan Generik",
-            "Bab 2: Berpikir Komputasional",
-            "Bab 3: Teknologi Informasi dan Komunikasi",
-            "Bab 4: Sistem Komputer",
-            "Bab 5: Jaringan Komputer dan Internet",
-            "Bab 6: Analisis Data",
-            "Bab 7: Algoritma dan Pemrograman",
-            "Bab 8: Dampak Sosial Informatika",
-            "Bab 9: Praktika Lintas Bidang"
+            "Bab 1: Integrasi Aplikasi Perkantoran (Mail Merge, Object Linking & Embedding)",
+            "Bab 2: Sistem Komputer (Hardware, Software, & Brainware Interaksi)",
+            "Bab 3: Jaringan Lokal dan Internet (Konsep IP Address & Keamanan Data)",
+            "Bab 4: Analisis Data (Eksplorasi Data Sederhana Menggunakan Python/Spreadsheet)",
+            "Bab 5: Algoritma dan Pemrograman (Struktur Kontrol, Variabel, & Tipe Data)",
+            "Bab 6: Dampak Sosial Informatika (HAKI, Etika Digital, & Karir IT)"
           ]
         },
         "Bahasa Inggris": {
           "title": "English for Change Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Chapter 1: Great Athletes",
-            "Chapter 2: Sports Events",
-            "Chapter 3: Sports and Health",
-            "Chapter 4: Healthy Foods",
-            "Chapter 5: Graffiti",
-            "Chapter 6: Fractured Stories"
+            "Chapter 1: Descriptive Text (Iconic Athletes, Historical Places, Sports Events)",
+            "Chapter 2: Recount Text (Memorable Experiences, Scientific Discoveries)",
+            "Chapter 3: Narrative Text (Fractured Fairy Tales, Urban Legends)",
+            "Chapter 4: Procedure Text (Healthy Life Tips, Technology Manuals)",
+            "Chapter 5: Exposition Text (Analytical: Environmental/Social Issues)",
+            "Chapter 6: Report Text (Classifying Natural and Social Phenomena)"
           ]
         },
         "PJOK": {
           "title": "PJOK Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Unit 1: Permainan Bola Basket",
-            "Unit 2: Permainan Sepak Bola",
-            "Unit 3: Permainan Bola Tangan",
-            "Unit 4: Permainan Bola Voli",
-            "Unit 5: Atletik",
-            "Unit 6: Bela Diri"
+            "Unit 1: Permainan Bola Besar (Sepakbola/Basket)",
+            "Unit 2: Atletik (Lari Jarak Pendek)",
+            "Unit 3: Bela Diri",
+            "Unit 4: Kebugaran Jasmani",
+            "Unit 5: Senam Lantai",
+            "Unit 6: Pergaulan Sehat"
           ]
         },
         "Pendidikan Agama Islam": {
           "title": "PAI dan Budi Pekerti Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Meraih Kesuksesan dengan Kompetisi dalam Kebaikan",
-            "Bab 2: Memahami Syu'abul Iman (Cabang-cabang Iman)",
-            "Bab 3: Menjalani Hidup Penuh Manfaat dengan Menghindari Berfoya-foya",
+            "Bab 1: Meraih Kesuksesan dengan Kompetisi (Q.S. Al-Maidah)",
+            "Bab 2: Syu'abul Iman (Cabang Iman)",
+            "Bab 3: Menghindari Akhlak Madzmumah (Foya-foya)",
             "Bab 4: Asuransi, Bank, dan Koperasi Syariah",
-            "Bab 5: Meneladani Peran Ulama Penyebar Islam di Indonesia"
+            "Bab 5: Peran Tokoh Ulama di Indonesia",
+            "Bab 6: Menjauhi Pergaulan Bebas dan Zina (Q.S. Al-Isra)"
           ]
         },
         "Seni Rupa": {
           "title": "Seni Rupa Kelas X",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Pengenalan Seni Rupa di Sekitar Kita",
-            "Bab 2: Mengamati dan Mendeskripsikan Karya Seni Rupa",
-            "Bab 3: Mengenal Materi dan Teknik Seni Rupa 2 Dimensi",
-            "Bab 4: Mengenal Materi dan Teknik Seni Rupa 3 Dimensi"
+            "Bab 1: Penggunaan Alat dan Bahan",
+            "Bab 2: Unsur dan Prinsip Seni Rupa",
+            "Bab 3: Berkarya Seni Rupa Dua Dimensi",
+            "Bab 4: Publikasi Karya Seni"
           ]
         }
       },
@@ -9419,124 +9419,133 @@
           "title": "Cerdas Cergas Berbahasa Indonesia Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Mengenalkan Produk Pangan Lokal",
-            "Bab 2: Menyajikan Berita Inovasi",
-            "Bab 3: Nilai Sejarah dalam Cerpen",
-            "Bab 4: Menulis Puisi Menginspirasi",
-            "Bab 5: Keberagaman Lewat Drama",
-            "Bab 6: Konservasi Alam Lewat Karya Ilmiah"
+            "Bab 1: Teks Argumentasi (Mengonstruksi Opini & Fakta Ketahanan Pangan Lokal)",
+            "Bab 2: Teks Berita (Menyusun Berita Berbasis Inovasi & Teknologi)",
+            "Bab 3: Cerpen (Menggali Karakter & Latar Sejarah dalam Cerpen)",
+            "Bab 4: Puisi (Analisis Semantik & Musikalisasi Puisi Kontemporer)",
+            "Bab 5: Drama (Menulis Naskah & Pementasan Berbasis Isu Sosial)",
+            "Bab 6: Karya Ilmiah (Prosedur Penelitian Sederhana & Penulisan Sistematik)"
           ]
         },
         "Matematika": {
           "title": "Matematika Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Komposisi Fungsi dan Fungsi Invers",
-            "Bab 2: Lingkaran",
-            "Bab 3: Statistika"
+            "Bab 1: Komposisi Fungsi dan Fungsi Invers (Konsep & Aplikasi)",
+            "Bab 2: Lingkaran (Persamaan, Garis Singgung, & Hubungan Antar Lingkaran)",
+            "Bab 3: Logika Matematika (Pernyataan Majemuk & Penarikan Kesimpulan)",
+            "Bab 4: Statistika Inferensial (Regresi Linear & Korelasi)",
+            "Bab 5: Limit Fungsi Aljabar (Metode Substitusi, Pemfaktoran, & Perkalian Sekawan)",
+            "Bab 6: Turunan Fungsi Aljabar (Sifat-sifat & Aplikasi Turunan)"
           ]
         },
         "Pendidikan Pancasila": {
           "title": "Pendidikan Pancasila Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Menjiwai Pancasila",
-            "Bab 2: Demokrasi Berdasarkan UUD NRI 1945",
-            "Bab 3: Harmoni dalam Keberagaman",
-            "Bab 4: Menjaga Keutuhan NKRI"
+            "Bab 1: Harmoni dalam Keberagaman (Mengatasi Intoleransi & Konflik Sosial)",
+            "Bab 2: Keadilan Sosial (Pelaksanaan Hak & Kewajiban Warga Negara)",
+            "Bab 3: Analisis Kasus Pelanggaran Ham dan Produk Perundang-undangan",
+            "Bab 4: Demokrasi Pancasila (Periodisasi & Pelaksanaannya di Indonesia)",
+            "Bab 5: Sistem Hukum dan Peradilan (Peran Lembaga Penegak Hukum)",
+            "Bab 6: Internasionalisasi Nilai Pancasila (Kirana Pancasila di Kancah Global)"
           ]
         },
         "Fisika": {
           "title": "Fisika Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Vektor",
-            "Bab 2: Kinematika",
-            "Bab 3: Dinamika Gerak Partikel",
-            "Bab 4: Fluida",
-            "Bab 5: Gelombang, Bunyi, dan Cahaya",
-            "Bab 6: Kalor",
-            "Bab 7: Termodinamika"
+            "Bab 1: Vektor Lanjut & Kinematika (Gerak Lurus, Parabola, & Melingkar)",
+            "Bab 2: Dinamika Gerak (Hukum Newton & Penerapannya pada Berbagai Sistem)",
+            "Bab 3: Fluida Statis (Hukum Archimedes, Pascal, & Tekanan Hidrostatis)",
+            "Bab 4: Fluida Dinamis (Hukum Bernoulli & Kontinuitas)",
+            "Bab 5: Suhu, Kalor, dan Termodinamika (Hukum ke-0, 1, & 2)",
+            "Bab 6: Gelombang Mekanik (Ciri, Sifat, & Gejala Gelombang)"
           ]
         },
         "Kimia": {
           "title": "Kimia Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Struktur Atom dan Sistem Periodik",
-            "Bab 2: Ikatan Kimia",
-            "Bab 3: Stoikiometri",
-            "Bab 4: Hidrokarbon",
-            "Bab 5: Termokimia",
-            "Bab 6: Kesetimbangan Kimia",
-            "Bab 7: Asam-Basa",
-            "Bab 8: Kelarutan"
+            "Bab 1: Kimia Karbon (Hidrokarbon: Alkan, Alkena, Alkuna)",
+            "Bab 2: Minyak Bumi (Proses Pembentukan, Fraksinasi, & Dampak Pembakaran)",
+            "Bab 3: Termokimia (Entalpi, Reaksi Eksoterm & Endoterm)",
+            "Bab 4: Laju Reaksi (Teori Tumbukan & Faktor yang Mempengaruhi)",
+            "Bab 5: Kesetimbangan Kimia (Tetapan Kesetimbangan & Pergeseran)",
+            "Bab 6: Asam-Basa (pH, Indikator, & Titrasi Asam Basa)"
           ]
         },
         "Biologi": {
           "title": "Biologi Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Menjelajah Sel",
-            "Bab 2: Pergerakan Zat melalui Membran Sel",
-            "Bab 3: Proses Pengaturan pada Tumbuhan",
-            "Bab 4: Transpor dan Pertukaran Zat Manusia",
-            "Bab 5: Sistem Pertahanan Tubuh",
-            "Bab 6: Mobilitas pada Manusia",
-            "Bab 7: Hormon dan Reproduksi",
-            "Bab 8: Tumbuh Kembang"
+            "Bab 1: Sel sebagai Unit Terkecil Kehidupan (Struktur & Organel)",
+            "Bab 2: Transpor pada Membran Pasif & Aktif (Difusi, Osmosis)",
+            "Bab 3: Jaringan Tumbuhan & Hewan (Struktur Spesifik & Fungsinya)",
+            "Bab 4: Sistem Koordinasi (Saraf, Hormon, & Alat Indera)",
+            "Bab 5: Sistem Reproduksi Manusia & Keluarga Berencana",
+            "Bab 6: Sistem Pertahanan Tubuh (Imunitas Spesifik & Non-spesifik)"
           ]
         },
         "Ekonomi": {
           "title": "Ekonomi Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Badan Usaha dalam Perekonomian",
-            "Bab 2: Pendapatan Nasional dan Kesenjangan",
-            "Bab 3: Ketenagakerjaan",
-            "Bab 4: Teori Uang dan Inflasi",
-            "Bab 5: Kebijakan Moneter dan Fiskal"
+            "Bab 1: Pendapatan Nasional (Metode Penghitungan & Distribusi Pendapatan)",
+            "Bab 2: Pertumbuhan & Pembangunan Ekonomi (Teori & Indikator Keberhasilan)",
+            "Bab 3: Ketenagakerjaan (Upah, Pengangguran, & Strategi Peningkatan Kualitas SDM)",
+            "Bab 4: Indeks Harga dan Inflasi (Perhitungan & Cara Mengatasi)",
+            "Bab 5: Kebijakan Moneter dan Fiskal (Instrumen & Peran dalam Stabilitas)",
+            "Bab 6: APBN & APBD (Fungsi, Penyusunan, & Pengaruh Terhadap Ekonomi)",
+            "Bab 7: Perpajakan (Konsep, Perhitungan, & Manfaat Pajak bagi Negara)"
           ]
         },
         "Sosiologi": {
           "title": "Sosiologi Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Kelompok Sosial",
-            "Bab 2: Permasalahan Sosial Akibat Pengelompokan",
-            "Bab 3: Konflik Sosial",
-            "Bab 4: Membangun Harmoni Sosial"
+            "Bab 1: Kelompok Sosial (Klasifikasi, Dinamika, & Masalah Antar-kelompok)",
+            "Bab 2: Permasalahan Sosial Akibat Eksklusi (Kemiskinan, Ketidakadilan, & Marginalisasi)",
+            "Bab 3: Prinsip Kesetaraan dan Inklusi Sosial dalam Masyarakat Multikultural",
+            "Bab 4: Konflik Sosial (Teori, Akar Masalah, & Dampaknya)",
+            "Bab 5: Kekerasan dan Transformasi Konflik (Upaya Resolusi & Perdamaian)",
+            "Bab 6: Integrasi dan Reintegrasi Sosial setelah Konflik"
           ]
         },
         "Geografi": {
           "title": "Geografi Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Posisi Strategis Indonesia dan SDA",
-            "Bab 2: Keragaman Hayati",
-            "Bab 3: Lingkungan dan Kependudukan",
-            "Bab 4: Mitigasi Kebencanaan"
+            "Bab 1: Posisi Strategis Indonesia (Poros Maritim Dunia & Letak Astronomis/Geografis)",
+            "Bab 2: Keanekaragaman Hayati (Sebaran Flora Fauna di Indonesia & Dunia)",
+            "Bab 3: Sumber Daya Alam (Sebaran Potensi SDA Kehutanan, Pertambangan, Kelautan, & Pariwisata)",
+            "Bab 4: Lingkungan Hidup dan Ketahanan Pangan (Potensi Pertanian, Perkebunan, Peternakan)",
+            "Bab 5: Dinamika Kependudukan Indonesia (Kualitas SDM, Bonus Demografi, & Migrasi)",
+            "Bab 6: Mitigasi Bencana Alam (Adaptasi Kebencanaan di Wilayah Rawan)"
           ]
         },
         "Sejarah": {
           "title": "Sejarah Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Kolonialisme dan Perlawanan",
-            "Bab 2: Pergerakan Kebangsaan Indonesia",
-            "Bab 3: Di Bawah Tirani Jepang",
-            "Bab 4: Proklamasi Kemerdekaan"
+            "Bab 1: Kolonialisme dan Perlawanan Bangsa Indonesia (Strategi Perang & Tokoh Perjuangan)",
+            "Bab 2: Kebangkitan Nasional (Organisasi Pergerakan & Sumpah Pemuda)",
+            "Bab 3: Dampak Pendudukan Jepang di Indonesia (Sosial, Ekonomi, & Politik)",
+            "Bab 4: Proklamasi Kemerdekaan Indonesia (Peristiwa Rengasdengklok & Perumusan Teks)",
+            "Bab 5: Perjuangan Diplomasi dan Fisik Mempertahankan Kemerdekaan (1945-1949)",
+            "Bab 6: Peran Tokoh-Tokoh Proklamator dan Pejuang Daerah"
           ]
         },
         "Informatika": {
           "title": "Informatika Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Tentang Informatika",
-            "Bab 2: Strategi Algoritmik dan Pemrograman",
-            "Bab 3: Berpikir Kritis dan Dampak Sosial Inf",
-            "Bab 4: Jaringan Komputer dan Internet",
-            "Bab 5: Pengembangan Aplikasi Mobile"
+            "Bab 1: Strategi Algoritmik (Pencarian, Pengurutan, & Optimasi)",
+            "Bab 2: Topologi Jaringan dan Konfigurasi Router/Switch",
+            "Bab 3: Keamanan Informasi (Enkripsi, Digital Signature, & Sertifikat Digital)",
+            "Bab 4: Literasi Digital (Verifikasi Berita & Etika di Media Sosial)",
+            "Bab 5: Pengembangan Proyek Informatika (Analisis Kebutuhan & Desain Solusi)",
+            "Bab 6: Praktek Lintas Bidang (Kolaborasi dalam Membangun Produk IT Sederhana)"
           ]
         },
         "Antropologi": {
@@ -9555,31 +9564,34 @@
           "title": "PAI dan Budi Pekerti Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Membiasakan Berpikir Kritis dan Semangat Mencintai Iptek",
-            "Bab 2: Bukti Beriman: Memenuhi Janji, Mensyukuri Nikmat, Memelihara Lisan",
-            "Bab 3: Menghindari Perkelahian Pelajar, Minuman Keras, dan Narkoba",
-            "Bab 4: Menebarkan Islam dengan Santun: Khutbah, Tabligh, dan Dakwah",
-            "Bab 5: Meneladani Jejak Langkah Ulama Indonesia yang Mendunia"
+            "Bab 1: Berpikir Kritis (Q.S. Ali Imran)",
+            "Bab 2: Memenuhi Janji dan Mensyukuri Nikmat",
+            "Bab 3: Menghindari Perkelahian Pelajar",
+            "Bab 4: Fikih Jenazah",
+            "Bab 5: Khutbah, Tabligh, dan Dakwah",
+            "Bab 6: Tokoh Islam Modern"
           ]
         },
         "PJOK": {
           "title": "PJOK Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Unit 1: Permainan Bola Besar (Sepak Bola, Basket, Voli)",
-            "Unit 2: Permainan Bola Kecil (Softball, Bulutangkis, Tenis Meja)",
-            "Unit 3: Atletik",
-            "Unit 4: Bela Diri Pencak Silat",
-            "Unit 5: Kebugaran Jasmani"
+            "Unit 1: Permainan Bola Voli (Lanjutan)",
+            "Unit 2: Bulu Tangkis",
+            "Unit 3: Atletik (Lompat Jauh)",
+            "Unit 4: Latihan Sirkuit",
+            "Unit 5: Pola Hidup Sehat",
+            "Unit 6: Renang Penyelamatan"
           ]
         },
         "Seni Rupa": {
           "title": "Seni Rupa Kelas XI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Menciptakan Karya Seni Rupa yang Berdampak bagi Lingkungan",
-            "Bab 2: Apresiasi Seni Rupa Kontemporer",
-            "Bab 3: Membuat Produk Kreatif Berbasis Seni Rupa"
+            "Bab 1: Karya Seni Rupa 3D",
+            "Bab 2: Pameran Seni Rupa",
+            "Bab 3: Kritik Seni",
+            "Bab 4: Analisis Karya Seni"
           ]
         }
       },
@@ -9588,97 +9600,108 @@
           "title": "Cerdas Cergas Berbahasa Indonesia Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Mengkritisi Informasi Tokoh",
-            "Bab 2: Mempresentasikan Ide Kewirausahaan",
-            "Bab 3: Fenomena AI",
-            "Bab 4: Opini Isu Sosial",
-            "Bab 5: Karya Sastra"
+            "Bab 1: Surat Lamaran Pekerjaan (Sistematika, Unsur Kebahasaan, & Etika Penulisan)",
+            "Bab 2: Teks Editorial (Menganalisis Isu Aktual, Fakta, & Opini Redaksi)",
+            "Bab 3: Novel Sejarah (Menganalisis Nilai-nilai & Struktur Teks Cerita Sejarah)",
+            "Bab 4: Artikel Opini dan Esai (Konstruksi Argumen & Gaya Bahasa)",
+            "Bab 5: Kritik Sastra dan Esai (Apresiasi & Evaluasi Karya Sastra)",
+            "Bab 6: Presentasi Ilmiah dan Orasi (Teknik Komunikasi Publik & Retorika)"
           ]
         },
         "Matematika": {
           "title": "Matematika Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Geometri Ruang",
-            "Bab 2: Statistika",
-            "Bab 3: Peluang Kejadian Majemuk"
+            "Bab 1: Geometri Ruang (Jarak antar Titik, Garis, & Bidang dalam Dimensi Tiga)",
+            "Bab 2: Integral Tentu dan Tak Tentu (Konsep, Sifat, & Teknik Pengintegralan)",
+            "Bab 3: Aplikasi Integral (Luas Daerah & Volume Benda Putar)",
+            "Bab 4: Kombinatorial (Aturan Penjumlahan, Perkalian, Permutasi, & Kombinasi)",
+            "Bab 5: Peluang Kejadian Majemuk (Saling Bebas, Saling Lepas, & Bersyarat)",
+            "Bab 6: Distribusi Peluang Binomial (Konsep & Penerapan dalam Uji Hipotesis Sederhana)"
           ]
         },
         "Pendidikan Pancasila": {
           "title": "Pendidikan Pancasila Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab I: Elemen Pancasila",
-            "Bab III: Elemen UUD NRI 1945",
-            "Bab V: Elemen Bhinneka Tunggal Ika",
-            "Bab VI: Elemen NKRI"
+            "Bab 1: Pelanggaran Hak dan Pengingkaran Kewajiban Warga Negara (Penyebab & Cara Mengatasi)",
+            "Bab 2: Perlindungan dan Penegakan Hukum di Indonesia (Peran Polisi, Jaksa, Hakim, & Advokat)",
+            "Bab 3: Tata Kelola Pemerintahan yang Baik (Good Governance & Anti Korupsi)",
+            "Bab 4: Pengaruh IPTEK terhadap NKRI (Dampak Positif & Negatif dalam Berbagai Aspek Life)",
+            "Bab 5: Persatuan dan Kesatuan Bangsa dalam Wadah NKRI (Tantangan Disintegrasi)",
+            "Bab 6: Literasi Digital Berbasis Nilai Pancasila"
           ]
         },
         "Fisika": {
           "title": "Fisika Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Listrik Arus Searah",
-            "Bab 2: Listrik Statis",
-            "Bab 3: Kemagnetan",
-            "Bab 4: Arus Bolak-Balik",
-            "Bab 5: Gelombang Elektromagnetik",
-            "Bab 6: Instrumentasi Digital",
-            "Bab 7: Relativitas",
-            "Bab 8: Fenomena Kuantum",
-            "Bab 9: Fisika Inti"
+            "Bab 1: Listrik Statis dan Dinamis (Hukum Coulomb, Kirchhoff, & Energi Listrik)",
+            "Bab 2: Kemagnetan (Induksi Magnetik & Gaya Lorentz)",
+            "Bab 3: Induksi Elektromagnetik (Hukum Faraday, Lenz, & Terapan GGL)",
+            "Bab 4: Arus Bolak-Balik (AC: Rangkaian R-L-C & Resonansi)",
+            "Bab 5: Radiasi Elektromagnetik (Spektrum & Dampaknya bagi Kesehatan)",
+            "Bab 6: Pengantar Fisika Modern (Relativitas Khusus, Teori Kuantum, & Inti Atom)"
           ]
         },
         "Biologi": {
           "title": "Biologi Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Pertumbuhan dan Perkembangan",
-            "Bab 2: Metabolisme",
-            "Bab 3: Materi Genetik",
-            "Bab 4: Pembelahan Sel",
-            "Bab 5: Pewarisan Sifat",
-            "Bab 6: Evolusi",
-            "Bab 7: Bioteknologi"
+            "Bab 1: Enzim dan Metabolisme (Anabolisme & Katabolisme Karbohidrat)",
+            "Bab 2: Materi Genetik (Sintesis Protein: Transkripsi & Translasi)",
+            "Bab 3: Hukum Mendel dan Penyimpangan Semu Hukum Mendel",
+            "Bab 4: Pola Hereditas pada Manusia (Golongan Darah & Penyakit Menurun)",
+            "Bab 5: Evolusi (Mekanisme Seleksi Alam & Studi Perbandingan)",
+            "Bab 6: Bioteknologi Modern (Rekayasa Genetika & Kultur Jaringan)"
           ]
         },
         "Ekonomi": {
           "title": "Ekonomi Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Pertumbuhan dan Pembangunan Ekonomi",
-            "Bab 2: Ekonomi Internasional",
-            "Bab 3: APBN dan APBD",
-            "Bab 4: Akuntansi dan Laporan Keuangan"
+            "Bab 1: Akuntansi sebagai Sistem Informasi (Karakteristik & Pemakai Informasi)",
+            "Bab 2: Persamaan Dasar Akuntansi (Analisis Transaksi & Laporan Keuangan Sederhana)",
+            "Bab 3: Siklus Akuntansi Perusahaan Jasa (Jurnal Umum, Buku Besar, & Neraca Saldo)",
+            "Bab 4: Siklus Akuntansi Perusahaan Dagang (Jurnal Khusus, Persediaan Barang, & HPP)",
+            "Bab 5: Laporan Keuangan Perusahaan Dagang (Laba Rugi, Perubahan Modal, & Neraca)",
+            "Bab 6: Manajemen dan Koperasi (Implementasi Fungsi Manajemen dalam Bisnis)"
           ]
         },
         "Sosiologi": {
           "title": "Sosiologi Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Perubahan Sosial",
-            "Bab 2: Globalisasi dan Masyarakat Digital",
-            "Bab 3: Masalah Sosial",
-            "Bab 4: Berdaya Mengatasi Masalah Sosial"
+            "Bab 1: Perubahan Sosial (Teori, Bentuk, & Faktor Pendorong/Penghambat)",
+            "Bab 2: Globalisasi dan Modernisasi (Dampak pada Gaya Hidup & Eksistensi Lokal)",
+            "Bab 3: Ketimpangan Sosial (Akar Masalah & Kesenjangan di Berbagai Bidang)",
+            "Bab 4: Kearifan Lokal dan Pemberdayaan Komunitas (Inisiatif Lokal & Keberlanjutan)",
+            "Bab 5: Penelitian Sosial Lanjutan (Evaluasi Program Pemberdayaan)",
+            "Bab 6: Etika Sosiologi dalam Memandang Masalah Sosial Kontemporer"
           ]
         },
         "Sejarah": {
           "title": "Sejarah Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Perjuangan Ancaman Disintegrasi",
-            "Bab 2: Indonesia Orde Baru - Reformasi",
-            "Bab 3: Indonesia di Dunia Internasional",
-            "Bab 4: Iptek Era Kemerdekaan"
+            "Bab 1: Perjuangan Menghadapi Ancaman Disintegrasi Bangsa (Pemberontakan PKI Madiun, DI/TII, PRRI/Permesta, G30S/PKI)",
+            "Bab 2: Indonesia Masa Demokrasi Liberal dan Terpimpin (Sistem Politik & Kebijakan Ekonomi)",
+            "Bab 3: Kehidupan Politik dan Ekonomi Masa Orde Baru (Stabilitas & Pembangunan Nasional)",
+            "Bab 4: Indonesia Masa Reformasi (Latar Belakang & Perubahan Sistem Ketatanegaraan)",
+            "Bab 5: Perkembangan Iptek di Indonesia dalam Arus Globalisasi",
+            "Bab 6: Peran Aktif Indonesia dalam Perdamaian Dunia (KAA, Gerakan Non-Blok, & Misi Garuda)"
           ]
         },
         "Informatika": {
           "title": "Informatika Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Informatika Sekarang dan Masa Depan",
-            "Bab 2: Sistem Komputer Lanjut",
-            "Bab 3: Berpikir Komputasional dan Algoritma"
+            "Bab 1: Siklus Hidup Pengembangan Perangkat Lunak (SDLC: Analisis, Desain, Coding, Testing)",
+            "Bab 2: Pengembangan Aplikasi Sederhana (Web/Mobile) Berorientasi Objek",
+            "Bab 3: Manajemen Proyek IT dan Kolaborasi Tim Menggunakan Version Control",
+            "Bab 4: Hukum dan Etika Cyber (UU ITE, Privasi Data, & Hak Kekayaan Intelektual)",
+            "Bab 5: Masa Depan Teknologi (AI, IoT, Cloud Computing, & Big Data)",
+            "Bab 6: Persiapan Karir di Bidang Informatika dan Portofolio Digital"
           ]
         },
         "Antropologi": {
@@ -9697,52 +9720,58 @@
           "title": "Kimia Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Sifat Koligatif Larutan",
-            "Bab 2: Redoks dan Sel Elektrokimia",
-            "Bab 3: Kimia Unsur",
-            "Bab 4: Senyawa Turunan Alkana",
-            "Bab 5: Makromolekul"
+            "Bab 1: Sifat Koligatif Larutan (Penurunan Tekanan Uap, Titik Beku, & Tekanan Osmotik)",
+            "Bab 2: Reaksi Redoks dan Sel Elektrokimia (Sel Volta & Elektrolisis)",
+            "Bab 3: Kimia Unsur (Logam Alkali, Halogen, & Unsur Periode ke-3/4)",
+            "Bab 4: Senyawa Turunan Alkana (Haloalkana, Alkohol, Eter, Aldehid, Keton, Karboksilat)",
+            "Bab 5: Benzena dan Turunannya (Struktur, Tata Nama, & Kegunaan)",
+            "Bab 6: Makromolekul (Polimer, Karbohidrat, Protein, & Lipid)"
           ]
         },
         "Geografi": {
           "title": "Geografi Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Konsep Wilayah dan Tata Ruang",
-            "Bab 2: Pembangunan dan Pertumbuhan Wilayah",
-            "Bab 3: Pemanfaatan Peta dan SIG",
-            "Bab 4: Kerja Sama Negara Maju dan Berkembang"
+            "Bab 1: Konsep Wilayah dan Tata Ruang (Pusat Pertumbuhan & Pembangunan Wilayah)",
+            "Bab 2: Dinamika Keruangan Desa dan Kota (Struktur, Interaksi, & Perkembangan Kota)",
+            "Bab 3: Pembangunan Berkelanjutan (SDGs) dan Ketahanan Nasional",
+            "Bab 4: Interpretasi Peta dan PJ untuk Perencanaan Wilayah (GIS Project)",
+            "Bab 5: Kerja Sama Negara Maju dan Berkembang (Globalisasi & Pasar Bebas)",
+            "Bab 6: Isu-isu Global (Perubahan Iklim, Kelaparan, & Kemiskinan Dunia)"
           ]
         },
         "Pendidikan Agama Islam": {
           "title": "PAI dan Budi Pekerti Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Sabar dalam Menghadapi Musibah dan Ujian",
-            "Bab 2: Menyakini Qada dan Qadar",
-            "Bab 3: Indahnya Membangun Mahligai Rumah Tangga",
-            "Bab 4: Mawaris: Kewarisan dalam Islam",
-            "Bab 5: Strategi Dakwah dan Perkembangan Islam di Indonesia"
+            "Bab 1: Berpikir Kritis dan Demokratis (Q.S. Ali Imran)",
+            "Bab 2: Saling Menasihati dan Berbuat Baik (Q.S Luqman)",
+            "Bab 3: Pernikahan dalam Islam",
+            "Bab 4: Waris dalam Islam",
+            "Bab 5: Strategi Dakwah Islam di Indonesia",
+            "Bab 6: Islam Rahmatan Lil Alamin"
           ]
         },
         "PJOK": {
           "title": "PJOK Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Unit 1: Merancang Taktik dan Strategi Permainan Bola Besar",
-            "Unit 2: Merancang Taktik dan Strategi Permainan Bola Kecil",
-            "Unit 3: Simulasi Perlombaan Atletik",
-            "Unit 4: Merancang Program Latihan Kebugaran Jasmani"
+            "Unit 1: Permainan Bola Basket (Taktik)",
+            "Unit 2: Permainan Bola Voli (Formasi)",
+            "Unit 3: Atletik (Lari Estafet)",
+            "Unit 4: Penyakit Menular Seksual (PMS)",
+            "Unit 5: Senam Aerobik",
+            "Unit 6: Penyelamatan di Air"
           ]
         },
         "Seni Rupa": {
           "title": "Seni Rupa Kelas XII",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Apresiasi Karya Seni Rupa Dua Dimensi",
-            "Bab 2: Apresiasi Karya Seni Rupa Tiga Dimensi",
-            "Bab 3: Pameran Seni Rupa",
-            "Bab 4: Kritik Seni Rupa"
+            "Bab 1: Manajemen Pameran Seni Rupa",
+            "Bab 2: Evaluasi Karya Seni",
+            "Bab 3: Portofolio Seni Rupa",
+            "Bab 4: Proyek Seni Kolaboratif"
           ]
         }
       }
