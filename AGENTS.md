@@ -38,5 +38,5 @@
 - Berdasarkan AGENTS rule 1-2, selalu verifikasi ke `bskap_clean.txt` / SIBI / kode sebelum ubah data.
 
 ### Git state
-- Commit terakhir terkait: (proses) gap buku SD/SMA diisi via `fill_gap_books.js`, sebelum `df3c033` (peta bab SMA → materi_inti), `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
+- Commit terakhir terkait: `7068ceb` (gap buku SD/SMA diisi via `fill_gap_books.js`), `df3c033` (peta bab SMA → materi_inti), `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
 - Artefak `vite.config.js.timestamp-*.mjs` (untracked) jangan di-commit.
