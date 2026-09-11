@@ -24,12 +24,19 @@
 - `node tools/extract_cp_full.js` → regenerasi `resources/js/utils/bskap_full_cp.json` dari `bskap_clean.txt` (sumber dokumen resmi, header "TINGKAT LANJUT" sudah dipetakan ke key terpisah).
 - `storage/app/json/bskap_2025_verbatim.json` = fallback lama (11 mapel SMP), hanya dipakai bila `bskap_full_cp.json` tidak ada (lihat `AiGeneratorService::loadBskapData()`, app/Services/AiGeneratorService.php:157-188).
 
-### Sisa yang pernah diindikasikan (belum dikerjakan, verifikasi dulu sebelum action)
+### Gap buku yang SUDAH diisi (2026-09-11, judul diverifikasi via SIBI/katalog resmi)
+- SD Seni Rupa 1-6 ("Seni Rupa untuk SD/MI Kelas I–VI"), SD PAI 2/3/4/5 (pola judul mengikuti file: "PAI dan Budi Pekerti Kelas II..V"), SD B.Inggris 2/3 ("My Next Words Kelas II/III", prefix Unit). Seluruh bab = materi_inti 1:1 (ganjil lalu genap).
+- SMA B.Inggris 11 "English for Change" & 12 "Life Today" (judul resmi SIBI), bab = materi_inti 1:1.
+- Koreksi judul SMA 10 B.Inggris: sebelumnya "English for Change Kelas X" (itu judul kelas XI) → "Bahasa Inggris: Work in Progress untuk SMA/SMK/MA Kelas X" (resmi).
+
+### Gap buku yang BELUM diisi (TANPA buku resmi nasional — jangan diisi karangan; tidak bisa diverifikasi)
+- Bahasa Daerah SD 1-6 & SMP 7-9: muatan lokal, tak ada buku nasional resmi.
+- Prakarya SD 1-6 & SMA 10-12: mapel inti ada tapi tak ada buku siswa resmi Kemdikbud untuk SD (Prakarya SD = muatan lokal) & SMA.
+- SMA 10 per-mapel Fisika/Kimia/Biologi/Ekonomi/Sosiologi/Geografi/Sejarah (buku yg ada hanya gabungan "IPA"/"IPS" kelas 10 — dan keduanya sudah ada di `textbooks.SMA['10']`).
+- Antropologi 11/12: buku SUDAH ada di data, tapi tanpa mapel inti.
 - `cp_snippet` Hindu SMP 8 "Tri Kaya Parisudha" & SMP 9 "Catur Asrama" adalah kutipan CP resmi (bukan materi) — JANGAN diubah.
-- Gap buku SD (bukan konflik, butuh buku asli utk pengisian): `textbooks.SD` belum punya Seni Rupa, Prakarya, Bahasa Daerah (semua kelas 1-6), Pendidikan Agama Islam kelas 2/3, Bahasa Inggris kelas 2/3.
-- Gap buku SMA: Bahasa Inggris 11/12, Prakarya 10-12, buku per-mapel kelas 10 utk Fisika/Kimia/Biologi/Ekonomi/Sosiologi/Geografi/Sejarah (buku yg ada hanya gabungan "IPA/IPS Terpadu" kelas 10, tak punya mapel inti), dan Antropologi 11/12 tanpa mapel inti yg cocok. Verifikasi ke `bskap_clean.txt`/materi dulu sebelum ubah.
-- Berdasarkan AGENTS rule 1-2, selalu verifikasi ke `bskap_clean.txt` / kode sebelum ubah data.
+- Berdasarkan AGENTS rule 1-2, selalu verifikasi ke `bskap_clean.txt` / SIBI / kode sebelum ubah data.
 
 ### Git state
-- Commit terakhir terkait: `df3c033` (peta bab SMA → materi_inti), `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), sebelum `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
+- Commit terakhir terkait: (proses) gap buku SD/SMA diisi via `fill_gap_books.js`, sebelum `df3c033` (peta bab SMA → materi_inti), `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
 - Artefak `vite.config.js.timestamp-*.mjs` (untracked) jangan di-commit.
