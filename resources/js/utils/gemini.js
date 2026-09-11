@@ -314,6 +314,34 @@ const getSubjectKey = (subject) => {
 };
 
 /**
+ * Fase E (SMA kelas 10) memakai taksonomi payung CP resmi: "IPA" & "IPS".
+ * Mapel rumpun sains/sosial dipetakan ke payung bila key per-mapel tidak ada
+ * di CP_FULL / textbooks.
+ */
+const FASE_E_UMBRELLA = {
+  Fisika: 'IPA',
+  Kimia: 'IPA',
+  Biologi: 'IPA',
+  Ekonomi: 'IPS',
+  Sosiologi: 'IPS',
+  Geografi: 'IPS',
+  Sejarah: 'IPS',
+};
+
+const resolveBskapKey = (level, grade, subjectKey) => {
+  if (level === 'SMA' && String(grade) === '10') {
+    return FASE_E_UMBRELLA[subjectKey] || subjectKey;
+  }
+  return subjectKey;
+};
+
+const getBskapEntry = (container, level, grade, subjectKey) => {
+  const direct = container?.[level]?.[grade]?.[subjectKey];
+  if (direct) return direct;
+  return container?.[level]?.[grade]?.[resolveBskapKey(level, grade, subjectKey)] || null;
+};
+
+/**
  * Gets a human-readable label for the semester.
  */
 const getSemesterLabel = (semester) => {
@@ -1040,8 +1068,9 @@ export const generateLessonPlan = async (data) => {
 
     const level = getLevel(data.gradeLevel);
     const subjectKey = getSubjectKey(data.subject);
-    const verbatimEntry = CP_FULL?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+    const verbatimEntry = getBskapEntry(CP_FULL, level, data.gradeLevel, subjectKey) || {};
     const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
+    const bookEntry = getBskapEntry(BSKAP_DATA.textbooks, level, data.gradeLevel, subjectKey) || {};
 
     onProgress("Generating Single-Stage RPP (BSKP 46/2025)...");
 
@@ -1276,9 +1305,9 @@ ${(BSKAP_DATA.standards?.profile_lulusan_2025 || []).filter(d => d.id !== 1).map
 
       **OFFICIAL TEXTBOOK REFERENCE (INTERNAL ONLY - DO NOT SHOW IN RPP OUTPUT):**
       Berdasarkan database BSKAP_DATA, berikut adalah buku yang relevan untuk materi "${data.materi}":
-      - **Buku**: ${BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.title || `Buku Siswa ${data.subject} Kelas ${data.gradeLevel} Kurikulum Merdeka`}
-      - **Penerbit**: ${BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.publisher || 'Kemendikbudristek'}
-      - **Peta Bab Resmi**: ${JSON.stringify(BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.chapters || [])}
+      - **Buku**: ${bookEntry.title || `Buku Siswa ${data.subject} Kelas ${data.gradeLevel} Kurikulum Merdeka`}
+      - **Penerbit**: ${bookEntry.publisher || 'Kemendikbudristek'}
+      - **Peta Bab Resmi**: ${JSON.stringify(bookEntry.chapters || [])}
 
       **INSTRUKSI**: 
       1. Jika materi "${data.materi}" cocok dengan salah satu bab di atas, Anda **WAJIB** menyebutkan nama bab tersebut secara spesifik di bagian "Buku Sumber".
@@ -2084,8 +2113,9 @@ export async function generateATP(data) {
   const subjectData = (gradeData && gradeData[subjectKey])
     || levelData?.[subjectKey];
 
-  const verbatimEntry = CP_FULL?.[level]?.[data.gradeLevel]?.[subjectKey] || {};
+  const verbatimEntry = getBskapEntry(CP_FULL, level, data.gradeLevel, subjectKey) || {};
   const cpFullVerbatim = verbatimEntry.cp_full || "Lihat list elemen dan materi.";
+  const bookEntry = getBskapEntry(BSKAP_DATA.textbooks, level, data.gradeLevel, subjectKey) || {};
 
   onProgress({ stage: 'analyzing', message: 'Menganalisis Capaian Pembelajaran (CP) & Karakteristik Sekolah...', percentage: 20 });
 
@@ -2101,8 +2131,8 @@ export async function generateATP(data) {
     - **LINGKUP MATERI RESMI (MANDATORY)**: ${JSON.stringify(subjectData?.[getSemesterKey(semester)]?.materi_inti || [])}
     
     **📚 REFERENSI BUKU TEKS UTAMA (MANDATORY):**
-    - **Buku**: ${BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.title || `Buku Siswa ${data.subject} Kelas ${data.gradeLevel} Kurikulum Merdeka`}
-    - **Peta Bab Resmi**: ${JSON.stringify(BSKAP_DATA.textbooks?.[getLevel(data.gradeLevel)]?.[data.gradeLevel]?.[getSubjectKey(data.subject)]?.chapters || [])}
+    - **Buku**: ${bookEntry.title || `Buku Siswa ${data.subject} Kelas ${data.gradeLevel} Kurikulum Merdeka`}
+    - **Peta Bab Resmi**: ${JSON.stringify(bookEntry.chapters || [])}
     
     **INSTRUKSI (WAJIB):** Urutan TP (Tujuan Pembelajaran) di ATP Anda **HARUS PERSIS** mengikuti urutan Bab dalam Peta Bab Resmi di atas. ❌ Jangan ubah urutan, jangan lewati bab, jangan tambah bab dari luar list. ✅ Setiap baris ATP = satu bab/topik dari buku. Jika bab > baris, kelompokkan sub‑topik dalam bab yang sama.
     

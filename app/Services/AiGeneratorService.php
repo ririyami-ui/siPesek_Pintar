@@ -268,7 +268,8 @@ class AiGeneratorService extends GeminiService
             Log::warning("BSKAP Verbatim data not loaded. Using fallback CP text.");
             $cpFullVerbatim = "Data Capaian Pembelajaran resmi tidak tersedia di server. Silakan susun berdasarkan elemen: " . ($data['elemen'] ?? 'N/A');
         } else {
-            $verbatimEntry = $this->bskapVerbatim['subjects'][$level][$data['gradeLevel']][$subjectKey] ?? [];
+            $resolvedKey = $this->resolveBskapSubjectKey($level, $data['gradeLevel'], $subjectKey);
+            $verbatimEntry = $this->bskapVerbatim['subjects'][$level][$data['gradeLevel']][$resolvedKey] ?? [];
             $cpFullVerbatim = $verbatimEntry['cp_full'] ?? null;
 
             if (!$cpFullVerbatim) {
@@ -2099,6 +2100,33 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         if (str_starts_with($clean, "Bahasa Daerah")) return "Bahasa Daerah";
 
         return $clean;
+    }
+
+    /**
+     * Fase E (SMA kelas 10) memakai taksonomi payung CP resmi: "IPA" & "IPS".
+     * Mapel rumpun sains/sosial diarahkan ke payung bila key per-mapel tidak
+     * memiliki CP full di database nasional.
+     */
+    protected function resolveBskapSubjectKey($level, $gradeLevel, $subjectKey) {
+        if ($level === 'SMA' && (string) $gradeLevel === '10') {
+            $umbrella = [
+                'Fisika' => 'IPA',
+                'Kimia' => 'IPA',
+                'Biologi' => 'IPA',
+                'Ekonomi' => 'IPS',
+                'Sosiologi' => 'IPS',
+                'Geografi' => 'IPS',
+                'Sejarah' => 'IPS',
+            ];
+            if (isset($umbrella[$subjectKey])) {
+                $umbrellaKey = $umbrella[$subjectKey];
+                $entry = $this->bskapVerbatim['subjects'][$level][$gradeLevel][$umbrellaKey] ?? null;
+                if (!empty($entry['cp_full'])) {
+                    return $umbrellaKey;
+                }
+            }
+        }
+        return $subjectKey;
     }
 
     protected function getSemesterKey($semester) {
