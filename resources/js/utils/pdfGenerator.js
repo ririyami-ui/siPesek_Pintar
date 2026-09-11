@@ -1820,3 +1820,301 @@ export const generateKktpAssessmentPDF = ({
 
   doc.save(`Penilaian_KKTP_${selectedClass}_${topic.substring(0, 20)}.pdf`);
 };
+
+// Helper: schedule day ordering (Senin..Minggu)
+const scheduleDayOrder = (day) => ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'].indexOf(day);
+
+// Helper: normalize schedule rows for PDF (accepts JadwalPage mapped or student API format)
+const normalizeScheduleRow = (s) => ({
+  day: s.day || '-',
+  subject: s.subject || s.subject_name || s.activity_name || 'Kegiatan',
+  class: typeof s.class === 'object' && s.class !== null ? (s.class.rombel || '-') : (s.class || s.class_name || '-'),
+  teacher: s.teacher_name || s.teacher?.name || '-',
+  startPeriod: parseInt(s.startPeriod ?? s.start_period) || 0,
+  endPeriod: parseInt(s.endPeriod ?? s.end_period) || 0,
+  startTime: s.startTime || s.start_time || '',
+  endTime: s.endTime || s.end_time || '',
+});
+
+// Helper: get city for signature from userProfile
+const getScheduleCity = (userProfile) => {
+  const saved = localStorage.getItem('QUIZ_SIGNING_LOCATION');
+  if (saved) return saved;
+  if (userProfile?.address) {
+    const addr = userProfile.address;
+    const cityMatch = addr.match(/(?:Kabupaten|Kota|Kab\.?)\s+([A-Za-z\s]+?)(?:\s*,|\s*\n|$)/i);
+    if (cityMatch) return cityMatch[1].trim();
+    const parts = addr.trim().split(/[,\n]/);
+    if (parts.length > 1) {
+      const last = parts[parts.length - 1].trim();
+      if (last.length > 2 && isNaN(last)) return last;
+    }
+  }
+  if (userProfile?.school_name) {
+    const last = userProfile.school_name.trim().split(' ').pop();
+    if (last.length > 2 && isNaN(last)) return last;
+  }
+  return 'Jakarta';
+};
+
+// Day color palette for matrix headers
+const dayHeaderColors = {
+  'Senin':  [41, 98, 255],
+  'Selasa': [16, 185, 129],
+  'Rabu':   [245, 158, 11],
+  'Kamis':  [239, 68, 68],
+  'Jumat':  [124, 58, 237],
+  'Sabtu':  [236, 72, 153],
+  'Minggu': [107, 114, 128],
+};
+
+// Helper: print schedule header block (school, title, subtitle) for landscape A4
+const schedulePdfHeader = (doc, schoolName, title, subtitleLines = []) => {
+  const pageWidth = doc.internal.pageSize.width;
+
+  doc.setFillColor(16, 185, 129);
+  doc.rect(0, 0, pageWidth, 8, 'F');
+
+  doc.setFontSize(15);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(30, 30, 30);
+  doc.text(schoolName || 'Si Pesek Pintar', pageWidth / 2, 16, { align: 'center' });
+
+  doc.setFontSize(13);
+  doc.text(title, pageWidth / 2, 24, { align: 'center' });
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(80, 80, 80);
+  subtitleLines.forEach((line, idx) => {
+    doc.text(line, pageWidth / 2, 31 + (idx * 6), { align: 'center' });
+  });
+
+  doc.setTextColor(0, 0, 0);
+};
+
+// Helper: draw a colored day header cell
+const drawDayHeader = (doc, x, y, w, h, day) => {
+  const rgb = dayHeaderColors[day] || [107, 114, 128];
+  doc.setFillColor(...rgb);
+  doc.roundedRect(x, y, w, h, 2, 2, 'F');
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(255, 255, 255);
+  doc.text(day.toUpperCase(), x + w / 2, y + h / 2 + 1.5, { align: 'center' });
+  doc.setTextColor(0, 0, 0);
+};
+
+export const generateTeacherSchedulePDF = (schedules, schoolName, teacherName, academicYear, activeSemester, userProfile) => {
+  const doc = new jsPDF('landscape');
+  const pageWidth = doc.internal.pageSize.width;
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+  schedulePdfHeader(doc, schoolName, 'JADWAL MENGAJAR GURU', [
+    `Nama Guru: ${teacherName || '-'}`,
+    `Semester ${activeSemester || '-'} | Tahun Ajaran ${academicYear || '-'}`,
+  ]);
+
+  const rows = (schedules || []).map(normalizeScheduleRow).filter(r => r.day !== '-');
+
+  const allPeriods = new Set();
+  rows.forEach(r => {
+    for (let p = r.startPeriod; p <= r.endPeriod; p++) allPeriods.add(p);
+  });
+  const periods = [...allPeriods].sort((a, b) => a - b);
+
+  if (periods.length === 0) {
+    doc.setFontSize(11);
+    doc.text('Tidak ada jadwal mengajar.', pageWidth / 2, 60, { align: 'center' });
+    doc.save('Jadwal_Mengajar_Guru.pdf');
+    return;
+  }
+
+  const gridLeft = 14;
+  const periodColW = 22;
+  const colW = (pageWidth - gridLeft - periodColW - 14) / days.length;
+  const rowH = 14;
+  const headerH = 10;
+  const gridTop = 52;
+
+  // Draw header row
+  doc.setFillColor(245, 245, 245);
+  doc.rect(gridLeft, gridTop, pageWidth - 28, headerH, 'F');
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(100, 100, 100);
+  doc.text('JAM KE', gridLeft + periodColW / 2, gridTop + headerH / 2 + 1.5, { align: 'center' });
+
+  days.forEach((day, i) => {
+    drawDayHeader(doc, gridLeft + periodColW + i * colW, gridTop, colW, headerH, day);
+  });
+
+  doc.setTextColor(0, 0, 0);
+
+  // Draw period rows
+  periods.forEach((period, rIdx) => {
+    const y = gridTop + headerH + rIdx * rowH;
+
+    if (rIdx % 2 === 0) {
+      doc.setFillColor(250, 250, 250);
+    } else {
+      doc.setFillColor(255, 255, 255);
+    }
+    doc.rect(gridLeft, y, pageWidth - 28, rowH, 'F');
+
+    doc.setDrawColor(220, 220, 220);
+    doc.line(gridLeft, y, pageWidth - 14, y);
+    doc.line(gridLeft, y + rowH, pageWidth - 14, y + rowH);
+    doc.line(gridLeft, y, gridLeft, y + rowH);
+    doc.line(pageWidth - 14, y, pageWidth - 14, y + rowH);
+    doc.line(gridLeft + periodColW, y, gridLeft + periodColW, y + rowH);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(60, 60, 60);
+    doc.text(String(period), gridLeft + periodColW / 2, y + rowH / 2 + 1.5, { align: 'center' });
+
+    // Vertical lines between day columns
+    days.forEach((_, i) => {
+      const colX = gridLeft + periodColW + i * colW;
+      doc.setDrawColor(220, 220, 220);
+      doc.line(colX, y, colX, y + rowH);
+    });
+    doc.line(gridLeft + periodColW + days.length * colW, y, gridLeft + periodColW + days.length * colW, y + rowH);
+
+    days.forEach((day, cIdx) => {
+      const cellX = gridLeft + periodColW + cIdx * colW + 1;
+      const match = rows.find(r => r.day === day && period >= r.startPeriod && period <= r.endPeriod);
+      if (match) {
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 30, 30);
+        const subjectText = match.subject.length > 18 ? match.subject.substring(0, 16) + '...' : match.subject;
+        doc.text(subjectText, cellX + colW / 2 - 1, y + rowH / 2 - 0.5, { align: 'center' });
+        doc.setFontSize(6);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(match.class, cellX + colW / 2 - 1, y + rowH / 2 + 4, { align: 'center' });
+      }
+    });
+  });
+
+  const gridBottom = gridTop + headerH + periods.length * rowH;
+
+  // Footer: date + city centered
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 100, 100);
+  const dateStr = fmtDate(new Date());
+  const city = getScheduleCity(userProfile);
+  doc.text(`${city}, ${dateStr}`, pageWidth - 14, gridBottom + 8, { align: 'right' });
+
+  doc.save('Jadwal_Mengajar_Guru.pdf');
+};
+
+export const generateStudentSchedulePDF = (schedule, schoolName, studentName, studentClass, academicYear, activeSemester, userProfile) => {
+  const doc = new jsPDF('landscape');
+  const pageWidth = doc.internal.pageSize.width;
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+  schedulePdfHeader(doc, schoolName, 'JADWAL PELAJARAN', [
+    `Nama Siswa: ${studentName || '-'}`,
+    `Kelas: ${studentClass || '-'}`,
+    `Semester ${activeSemester || '-'} | Tahun Ajaran ${academicYear || '-'}`,
+  ]);
+
+  const rows = (schedule || []).map(normalizeScheduleRow).filter(r => r.day !== '-');
+
+  const allPeriods = new Set();
+  rows.forEach(r => {
+    for (let p = r.startPeriod; p <= (r.endPeriod || r.startPeriod); p++) allPeriods.add(p);
+  });
+  const periods = [...allPeriods].sort((a, b) => a - b);
+
+  if (periods.length === 0) {
+    doc.setFontSize(11);
+    doc.text('Tidak ada jadwal pelajaran.', pageWidth / 2, 60, { align: 'center' });
+    doc.save('Jadwal_Pelajaran.pdf');
+    return;
+  }
+
+  const gridLeft = 14;
+  const periodColW = 22;
+  const colW = (pageWidth - gridLeft - periodColW - 14) / days.length;
+  const rowH = 14;
+  const headerH = 10;
+  const gridTop = 58;
+
+  doc.setFillColor(245, 245, 245);
+  doc.rect(gridLeft, gridTop, pageWidth - 28, headerH, 'F');
+
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(100, 100, 100);
+  doc.text('JAM KE', gridLeft + periodColW / 2, gridTop + headerH / 2 + 1.5, { align: 'center' });
+
+  days.forEach((day, i) => {
+    drawDayHeader(doc, gridLeft + periodColW + i * colW, gridTop, colW, headerH, day);
+  });
+
+  doc.setTextColor(0, 0, 0);
+
+  periods.forEach((period, rIdx) => {
+    const y = gridTop + headerH + rIdx * rowH;
+
+    if (rIdx % 2 === 0) {
+      doc.setFillColor(250, 250, 250);
+    } else {
+      doc.setFillColor(255, 255, 255);
+    }
+    doc.rect(gridLeft, y, pageWidth - 28, rowH, 'F');
+
+    doc.setDrawColor(220, 220, 220);
+    doc.line(gridLeft, y, pageWidth - 14, y);
+    doc.line(gridLeft, y + rowH, pageWidth - 14, y + rowH);
+    doc.line(gridLeft, y, gridLeft, y + rowH);
+    doc.line(pageWidth - 14, y, pageWidth - 14, y + rowH);
+    doc.line(gridLeft + periodColW, y, gridLeft + periodColW, y + rowH);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(60, 60, 60);
+    doc.text(String(period), gridLeft + periodColW / 2, y + rowH / 2 + 1.5, { align: 'center' });
+
+    days.forEach((_, i) => {
+      const colX = gridLeft + periodColW + i * colW;
+      doc.setDrawColor(220, 220, 220);
+      doc.line(colX, y, colX, y + rowH);
+    });
+    doc.line(gridLeft + periodColW + days.length * colW, y, gridLeft + periodColW + days.length * colW, y + rowH);
+
+    days.forEach((day, cIdx) => {
+      const cellX = gridLeft + periodColW + cIdx * colW + 1;
+      const match = rows.find(r => r.day === day && period >= r.startPeriod && period <= (r.endPeriod || r.startPeriod));
+      if (match) {
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 30, 30);
+        const subjectText = match.subject.length > 18 ? match.subject.substring(0, 16) + '...' : match.subject;
+        doc.text(subjectText, cellX + colW / 2 - 1, y + rowH / 2 - 0.5, { align: 'center' });
+        doc.setFontSize(6);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 100, 100);
+        doc.text(match.teacher, cellX + colW / 2 - 1, y + rowH / 2 + 4, { align: 'center' });
+      }
+    });
+  });
+
+  const gridBottom = gridTop + headerH + periods.length * rowH;
+
+  // Footer: date + city centered
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(100, 100, 100);
+  const dateStr = fmtDate(new Date());
+  const city = getScheduleCity(userProfile);
+  doc.text(`${city}, ${dateStr}`, pageWidth - 14, gridBottom + 8, { align: 'right' });
+
+  doc.save('Jadwal_Pelajaran.pdf');
+};

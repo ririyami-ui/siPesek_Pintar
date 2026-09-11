@@ -511,6 +511,8 @@ class StudentDashboardController extends Controller
                 'teacher_name' => $teacherName,
                 'start_time'   => substr($schedule->start_time, 0, 5),
                 'end_time'     => substr($schedule->end_time, 0, 5),
+                'start_period' => $schedule->start_period,
+                'end_period'   => $schedule->end_period,
                 'day'          => $schedule->day,
             ];
         });

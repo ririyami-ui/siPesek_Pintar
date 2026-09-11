@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { CalendarDays, Clock, User, BookOpen, Loader2, ChevronRight } from 'lucide-react';
+import { CalendarDays, Clock, User, BookOpen, Loader2, ChevronRight, Download } from 'lucide-react';
 import api from '../lib/axios';
 import { useSettings } from '../utils/SettingsContext';
 import moment from 'moment';
+import { generateStudentSchedulePDF } from '../utils/pdfGenerator';
 
 const DAYS = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
 export default function StudentSchedule() {
   const [loading, setLoading] = useState(true);
   const [schedules, setSchedules] = useState({});
-  const { activeSemester, academicYear } = useSettings();
+  const [allSchedules, setAllSchedules] = useState([]);
+  const [studentInfo, setStudentInfo] = useState(null);
+  const { activeSemester, academicYear, userProfile } = useSettings();
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -17,7 +20,9 @@ export default function StudentSchedule() {
         setLoading(true);
         const res = await api.get('/student/schedule');
         const allSchedules = res.data.schedule || [];
-        
+        setAllSchedules(allSchedules);
+        setStudentInfo(res.data.student || null);
+
         // Group by day
         const grouped = {};
         DAYS.forEach(day => {
@@ -45,6 +50,18 @@ export default function StudentSchedule() {
     );
   }
 
+  const handleDownloadPdf = () => {
+    generateStudentSchedulePDF(
+      allSchedules,
+      userProfile?.school_name || '',
+      studentInfo?.name || '',
+      studentInfo?.class || '',
+      academicYear,
+      activeSemester,
+      userProfile
+    );
+  };
+
   return (
     <div className="space-y-4 animate-fade-in-premium">
       {/* Compact Header */}
@@ -56,7 +73,7 @@ export default function StudentSchedule() {
           <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-xl shadow-emerald-500/20">
             <CalendarDays size={20} />
           </div>
-          <div>
+          <div className="flex-1">
             <h2 className="text-xl font-black text-gray-800 dark:text-white tracking-tight leading-none mb-2">Jadwal Pelajaran</h2>
             <div className="flex items-center">
               <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em] bg-gray-50 dark:bg-gray-900/50 px-3 py-1.5 rounded-xl italic leading-none">
@@ -64,6 +81,15 @@ export default function StudentSchedule() {
               </p>
             </div>
           </div>
+          {allSchedules.length > 0 && (
+            <button
+              onClick={handleDownloadPdf}
+              className="shrink-0 flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-500/20 transition-all"
+            >
+              <Download size={14} />
+              Download PDF
+            </button>
+          )}
         </div>
       </div>
 

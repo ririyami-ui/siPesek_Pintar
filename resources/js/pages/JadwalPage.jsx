@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import api from '../lib/axios';
 import moment from 'moment';
-import { Book, Users, Clock, Zap, X, ExternalLink } from 'lucide-react';
+import { Book, Users, Clock, Zap, X, ExternalLink, Download } from 'lucide-react';
 import { useSettings } from '../utils/SettingsContext';
 import { getTopicForSchedule } from '../utils/topicUtils';
+import { generateTeacherSchedulePDF } from '../utils/pdfGenerator';
 
 export default function JadwalPage() {
-  const { activeSemester, academicYear } = useSettings();
+  const { activeSemester, academicYear, userProfile } = useSettings();
   const [schedules, setSchedules] = useState([]);
   const [programs, setPrograms] = useState([]);
   const [classes, setClasses] = useState([]);
@@ -149,13 +150,29 @@ export default function JadwalPage() {
     'Minggu': 'bg-slate-600',
   };
 
+  const handleDownloadPdf = () => {
+    const printable = schedules.filter(s => s.type !== 'non-teaching');
+    generateTeacherSchedulePDF(printable, userProfile?.school_name || '', userProfile?.name || '', academicYear, activeSemester, userProfile);
+  };
+
   return (
     <div className="rounded-2xl bg-white p-4 sm:p-6 shadow-lg dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-      <div className="mb-6">
-        <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Jadwal Mengajar</h2>
-        <p className="text-sm font-bold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest">
-          Semester {activeSemester} | TA {academicYear}
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Jadwal Mengajar</h2>
+          <p className="text-sm font-bold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest">
+            Semester {activeSemester} | TA {academicYear}
+          </p>
+        </div>
+        {schedules.length > 0 && (
+          <button
+            onClick={handleDownloadPdf}
+            className="shrink-0 flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 transition-all"
+          >
+            <Download size={15} />
+            Download PDF
+          </button>
+        )}
       </div>
 
       {schedules.length === 0 ? (
