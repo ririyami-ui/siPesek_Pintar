@@ -17,6 +17,7 @@
 - `storage/app/json/bskap_2025_intel.json`: salinan tanpa BOM utk konsistensi (DIGITIGNORE, tidak di-commit).
 - `resources/js/utils/bskap_full_cp.json`: diekstrak dari `bskap_clean.txt` via `tools/extract_cp_full.js`. CP SMA kelas 11/12 kini reguler (bukan "Tingkat Lanjut"); varian Tingkat Lanjut disimpan terpisah di key `"... Tingkat Lanjut"` (B. Indonesia, Matematika, B. Inggris, Sejarah — hanya Fase F/kls 11-12). Struktur file: `{SD:{...},SMP:{...},SMA:{...}}` (TIDAK ada pembungkus `subjects`).
 - `gemini.js` (line 1043 & 2087): membaca CP_FULL langsung `CP_FULL?.[level]?.[grade]?.[subject]` — jangan dikembalikan ke `.subjects?.[level]`.
+- `gemini.js` & `AiGeneratorService.php` (`resolveBskapSubjectKey`): fallback Fase E (SMA kelas 10) — CP_FULL & textbooks mapel Fisika/Kimia/Biologi dipetakan ke payung `"IPA"`, Ekonomi/Sosiologi/Geografi/Sejarah ke `"IPS"` (CP resmi Fase E memakai taksonomi payung). Tanpa ini RPP/ATP kelas 10 rumpun sains/sosial tak mendapatkan cp_full & peta bab.
 
 ### Cara regenerasi
 - `node tools/extract_cp_full.js` → regenerasi `resources/js/utils/bskap_full_cp.json` dari `bskap_clean.txt` (sumber dokumen resmi, header "TINGKAT LANJUT" sudah dipetakan ke key terpisah).
@@ -25,8 +26,9 @@
 ### Sisa yang pernah diindikasikan (belum dikerjakan, verifikasi dulu sebelum action)
 - `cp_snippet` Hindu SMP 8 "Tri Kaya Parisudha" & SMP 9 "Catur Asrama" adalah kutipan CP resmi (bukan materi) — JANGAN diubah.
 - Gap buku SD (bukan konflik, butuh buku asli utk pengisian): `textbooks.SD` belum punya Seni Rupa, Prakarya, Bahasa Daerah (semua kelas 1-6), Pendidikan Agama Islam kelas 2/3, Bahasa Inggris kelas 2/3.
+- SMA: periksa bab-buku vs materi_inti kelas 11/12 yg dianggap misalign saat audit (mis. Kimia 11 bab "Struktur Atom"/"Stoikiometri"/"Kelarutan", MTK 12 "Statistika", PJOK 11/12 Bela Diri & Kebugaran, Biologi 12 "Pewarisan Sifat", Ekonomi 12 "Ekonomi Internasional", B.Indonesia 12 Bab 1-3, Pancasila 12 Bab III/V, PAI 12 "Mawaris"); gap buku SMA tak terisi: Bahasa Inggris 11/12, Prakarya 10-12, dan buku Antropologi 11/12 tanpa mapel inti yg cocok. Verifikasi ke `bskap_clean.txt`/materi dulu sebelum ubah.
 - Berdasarkan AGENTS rule 1-2, selalu verifikasi ke `bskap_clean.txt` / kode sebelum ubah data.
 
 ### Git state
-- Commit terakhir terkait: `b4d43d7` (peta bab & data IPAS SD), sebelum `16cc66c` (AGENTS.md handoff), `6a5b4fb` (SMA Tingkat Lanjut + fix CP_FULL frontend), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
+- Commit terakhir terkait: `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), sebelum `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
 - Artefak `vite.config.js.timestamp-*.mjs` (untracked) jangan di-commit.
