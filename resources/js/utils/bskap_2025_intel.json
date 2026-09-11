@@ -1236,6 +1236,58 @@
             "cp_snippet": "Memahami ide pokok, ide pendukung, pesan, dan informasi dalam teks sastra dan nonsastra berbentuk cetak dan/atau elektronik."
           }
         },
+        "IPAS": {
+          "ganjil": {
+            "elemen": [
+              "Pemahaman IPAS",
+              "Keterampilan Proses"
+            ],
+            "materi_inti": [
+              {
+                "materi": "Mari Kenali Hewan di Sekitar Kita (Ciri dan Kegunaan Pancaindra)",
+                "elemen": "Pemahaman IPAS"
+              },
+              {
+                "materi": "Siklus pada Makhluk Hidup dan Upaya Pelestariannya",
+                "elemen": "Pemahaman IPAS"
+              },
+              {
+                "materi": "Hidup Bersama Alam (Pelestarian Sumber Daya Alam & Mitigasi Iklim)",
+                "elemen": "Keterampilan Proses"
+              },
+              {
+                "materi": "Berkenalan dengan Energi (Sumber dan Perubahan Bentuk Energi)",
+                "elemen": "Pemahaman IPAS"
+              }
+            ],
+            "cp_snippet": "Peserta didik menjelaskan bentuk dan fungsi pancaindra; menganalisis siklus hidup makhluk hidup dan upaya pelestariannya; menyimpulkan proses perubahan wujud zat; menjelaskan sumber dan bentuk energi serta proses perubahan bentuk energi dalam kehidupan sehari-hari; serta membedakan jenis gaya dan pengaruhnya terhadap arah, gerak, dan bentuk benda."
+          },
+          "genap": {
+            "elemen": [
+              "Pemahaman IPAS",
+              "Keterampilan Proses"
+            ],
+            "materi_inti": [
+              {
+                "materi": "Aku dan Lingkungan Sekitarku (Interaksi Sosial di Rumah dan Sekolah)",
+                "elemen": "Pemahaman IPAS"
+              },
+              {
+                "materi": "Aku Bagian dari Masyarakat (Peran, Tugas, dan Tanggung Jawab)",
+                "elemen": "Keterampilan Proses"
+              },
+              {
+                "materi": "Cerita dari Kampung Halaman (Sejarah Masyarakat Setempat)",
+                "elemen": "Pemahaman IPAS"
+              },
+              {
+                "materi": "Bentang Alam Indonesia (Ragam Bentang Alam, Profesi, dan Budaya)",
+                "elemen": "Keterampilan Proses"
+              }
+            ],
+            "cp_snippet": "Peserta didik menjelaskan peran, tugas, dan tanggung jawab serta interaksi sosial yang terjadi di sekitar tempat tinggal dan sekolah; mengenali letak kabupaten/kota dan provinsi tempat tinggalnya dengan peta; mengklasifikasikan ragam bentang alam dan keterkaitannya dengan profesi masyarakat, ragam budaya, serta upaya melestarikannya; dan menganalisis sejarah masyarakat di lingkungan tempat tinggal."
+          }
+        },
         "Pendidikan Pancasila": {
           "ganjil": {
             "elemen": [
@@ -8221,25 +8273,17 @@
             "Bab 4: Aku Peduli Lingkungan"
           ]
         },
-        "IPAS": {
-          "title": "IPAS Kelas II",
-          "publisher": "Kemdikbudristek",
-          "chapters": [
-            "Bab 1: Makhluk Hidup dan Lingkungannya",
-            "Bab 2: Pembiasaan Hidup Sehat",
-            "Bab 3: Makhluk Hidup dan Benda Mati",
-            "Bab 4: Manusia sebagai Makhluk Sosial"
-          ]
-        },
         "PJOK": {
           "title": "PJOK Kelas II",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Unit 1: Nilai dan Tujuan Pendidikan Jasmani",
-            "Unit 2: Kebiasaan Hidup Bersih",
-            "Unit 3: Sosial Emosional dalam Olahraga",
-            "Unit 4: Gerakan Dasar Non-Lokomotor",
-            "Unit 5: Permainan Air Sederhana"
+            "Unit 1: Variasi Pola Gerak Dasar Lokomotor",
+            "Unit 2: Variasi Pola Gerak Dasar Non-Lokomotor",
+            "Unit 3: Variasi Pola Gerak Dasar Manipulatif",
+            "Unit 4: Aktivitas Senam Lantai Sederhana",
+            "Unit 5: Aktivitas Gerak Berirama",
+            "Unit 6: Aktivitas Air (Pengenalan)",
+            "Unit 7: Cara Memilih Makanan Sehat"
           ]
         }
       },
@@ -8297,10 +8341,12 @@
           "title": "PJOK Kelas III",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Aktivitas Permainan",
-            "Bab 2: Gerak Dasar Lokomotor",
-            "Bab 3: Latihan Senam Keseimbangan",
-            "Bab 4: Manfaat Istirahat"
+            "Bab 1: Kombinasi Gerak Dasar Lokomotor (Jalan-Lari)",
+            "Bab 2: Kombinasi Gerak Dasar Non-Lokomotor (Liuk-Ayun)",
+            "Bab 3: Kombinasi Gerak Dasar Manipulatif (Lempar-Tangkap)",
+            "Bab 4: Senam Irama (Gerak Berirama)",
+            "Bab 5: Renang Gaya Dada (Pengenalan)",
+            "Bab 6: Bahaya Rokok, Minuman Keras, dan Narkoba"
           ]
         }
       },
@@ -8377,13 +8423,14 @@
           "title": "PJOK Kelas IV",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Ayo, Bergerak!",
-            "Bab 2: Ayo, Bermain!",
-            "Bab 3: Ayo, Merangkai Gerak!",
-            "Bab 4: Aktivitas Gerak Berirama",
-            "Bab 5: Olahraga Air",
-            "Bab 6: Kebugaran Kesehatan",
-            "Bab 7: Kesehatan Reproduksi"
+            "Bab 1: Permainan Bola Besar (Sepakbola/Voli)",
+            "Bab 2: Permainan Bola Kecil (Kasti)",
+            "Bab 3: Atletik (Jalan/Lari/Lompat)",
+            "Bab 4: Bela Diri (Pencak Silat)",
+            "Bab 5: Aktivitas Senam Lantai",
+            "Bab 6: Aktivitas Gerak Berirama",
+            "Bab 7: Renang Gaya Bebas/Dada",
+            "Bab 8: Kebugaran Jasmani"
           ]
         }
       },
@@ -8461,11 +8508,13 @@
           "title": "PJOK Kelas V",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Aktivitas Lempar Tangkap Bola",
-            "Bab 2: Menendang dan Menghentikan Bola",
-            "Bab 3: Permainan Bola Besar",
-            "Bab 4: Latihan Daya Tahan Jantung",
-            "Bab 5: Kebugaran Jasmani Dasar"
+            "Bab 1: Variasi dan Kombinasi Gerak Dasar Permainan Bola",
+            "Bab 2: Atletik (Jalan/Lari/Lompat)",
+            "Bab 3: Bela Diri (Pencak Silat)",
+            "Bab 4: Kebugaran Jasmani",
+            "Bab 5: Senam Lantai",
+            "Bab 6: Renang (Gaya Dada/Bebas)",
+            "Bab 7: Bahaya Narkoba (Lanjutan)"
           ]
         }
       },
@@ -8474,10 +8523,12 @@
           "title": "Matematika untuk SD Kelas VI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Pecahan dan Desimal",
-            "Bab 2: Rasio",
-            "Bab 3: Kubus dan Balok",
-            "Bab 4: Peluang"
+            "Bab 1: Bilangan Bulat Negatif",
+            "Bab 2: Operasi Hitung Bilangan Bulat",
+            "Bab 3: Lingkaran (Unsur-unsur, Keliling, dan Luas)",
+            "Bab 4: Bangun Ruang (Prisma, Tabung, Limas, Kerucut, Bola)",
+            "Bab 5: Jaring-jaring Bangun Ruang",
+            "Bab 6: Penyajian Data (Piktogram dan Diagram Batang) dan Peluang Sederhana"
           ]
         },
         "Bahasa Indonesia": {
@@ -8522,11 +8573,10 @@
           "title": "PJOK Kelas VI",
           "publisher": "Kemdikbudristek",
           "chapters": [
-            "Bab 1: Variasi Gerak Permainan Bola Besar",
-            "Bab 2: Variasi Gerak Permainan Bola Kecil",
-            "Bab 3: Variasi Gerak Atletik",
-            "Bab 4: Bela Diri Sederhana",
-            "Bab 5: Kebugaran Jasmani Lanjutan"
+            "Bab 1: Permainan Bola Besar (Lanjutan)",
+            "Bab 2: Atletik (Lanjutan)",
+            "Bab 3: Senam Lantai (Lanjutan)",
+            "Bab 4: Budaya Hidup Sehat"
           ]
         },
         "Pendidikan Agama Islam": {
