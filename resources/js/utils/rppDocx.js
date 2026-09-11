@@ -541,9 +541,41 @@ async function parseBlock(element) {
             case 'table':
                 children.push(await parseTable(node));
                 break;
+            case 'span': {
+                if (node.classList?.contains('katex-display')) {
+                    const katexEl = node.querySelector('.katex');
+                    if (katexEl) {
+                        const eq = await equationToDocx(katexEl);
+                        if (eq) {
+                            children.push(new Paragraph({
+                                children: [eq],
+                                spacing: { after: 240, ...LINE },
+                                alignment: AlignmentType.CENTER
+                            }));
+                            break;
+                        }
+                    }
+                }
+                children.push(...await parseBlock(node));
+                break;
+            }
             case 'div':
             case 'section': {
-                const vizEl = node.querySelector('.mermaid, .mermaid-container, .jxgbox, .scratchblocks, canvas, .katex-display');
+                if (node.classList?.contains('katex-display')) {
+                    const katexEl = node.querySelector('.katex');
+                    if (katexEl) {
+                        const eq = await equationToDocx(katexEl);
+                        if (eq) {
+                            children.push(new Paragraph({
+                                children: [eq],
+                                spacing: { after: 240, ...LINE },
+                                alignment: AlignmentType.CENTER
+                            }));
+                            break;
+                        }
+                    }
+                }
+                const vizEl = node.querySelector('.mermaid, .mermaid-container, .jxgbox, .scratchblocks, canvas');
                 if (vizEl && !node.classList?.contains('no-print')) {
                     const imgData = await tryCaptureVisualization(node);
                     if (imgData) {
