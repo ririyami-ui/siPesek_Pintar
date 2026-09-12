@@ -27,6 +27,21 @@
           "name": "Menulis Laporan Observasi yang Menarik",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Mengidentifikasi Informasi dari Teks Aural (Berita, Wawancara)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Laporan Hasil Observasi (Struktur & Kebahasaan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mengidentifikasi Gagasan Utama dari Teks yang Didengar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -60,6 +75,11 @@
         },
         {
           "name": "Etika Beriklan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Iklan, Slogan, dan Poster (Media Komunikasi Visual)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
@@ -97,6 +117,16 @@
           "name": "Etika Mengutip Karya Orang Lain",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Artikel Ilmiah Populer (Gagasan & Fakta)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membaca dan Mencintai Karya Ilmiah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -132,6 +162,11 @@
           "name": "Bahasa Evaluatif",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Teks Karya Fiksi (Resensi Novel/Cerpen)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -153,7 +188,13 @@
     {
       "no": 6,
       "title": "Menulis Teks Pidato",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menulis Naskah Pidato (Persuasi & Retorika)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

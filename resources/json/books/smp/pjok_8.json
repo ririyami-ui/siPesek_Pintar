@@ -32,6 +32,11 @@
           "name": "Program Latihan",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Aktivitas Kebugaran Jasmani",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [

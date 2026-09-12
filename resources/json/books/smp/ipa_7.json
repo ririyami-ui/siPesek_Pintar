@@ -32,6 +32,11 @@
           "name": "Pelaporan Hasil Percobaan",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Hakikat Ilmu Sains dan Metode Ilmiah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -65,6 +70,11 @@
         },
         {
           "name": "Kerapatan Zat (Massa Jenis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Zat dan Perubahannya (Wujud Zat & Sifat Fisika Kimia)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
@@ -102,6 +112,11 @@
           "name": "Pemuaian Benda",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Suhu, Kalor, dan Pemuaian",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -117,7 +132,13 @@
     {
       "no": 4,
       "title": "Gerak dan Gaya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Gerak dan Gaya (Hukum Newton I, II, III)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -138,6 +159,11 @@
           "name": "Kingdom Monera, Protista, Fungi, Plantae, Animalia",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Klasifikasi Makhluk Hidup (Ciri-ciri & Kunci Determinasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -152,13 +178,25 @@
     {
       "no": 6,
       "title": "Ekosistem dan Konservasi Indonesia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ekosistem dan Lingkungan (Interaksi & Pencemaran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Bumi dan Tata Surya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bumi dan Tata Surya (Struktur Bumi & Fenomena Astronomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

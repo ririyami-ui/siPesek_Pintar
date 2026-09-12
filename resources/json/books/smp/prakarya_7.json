@@ -5,7 +5,13 @@
     {
       "no": 1,
       "title": "Kerajinan Serat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kerajinan Bahan Alam (Lunak/Keras)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -30,6 +36,11 @@
         },
         {
           "name": "Perawatan dan Panen",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Budi Daya Tanaman Sayuran",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
@@ -58,6 +69,11 @@
         },
         {
           "name": "Membuat Jus dan Sirup",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pengolahan Bahan Pangan Buah & Sayur",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }

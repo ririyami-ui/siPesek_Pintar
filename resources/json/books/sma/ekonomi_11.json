@@ -5,43 +5,85 @@
     {
       "no": 1,
       "title": "Pendapatan Nasional (Metode Penghitungan & Distribusi Pendapatan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pendapatan Nasional (Metode Penghitungan & Distribusi Pendapatan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Pertumbuhan & Pembangunan Ekonomi (Teori & Indikator Keberhasilan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pertumbuhan & Pembangunan Ekonomi (Teori & Indikator Keberhasilan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Ketenagakerjaan (Upah, Pengangguran, & Strategi Peningkatan Kualitas SDM)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ketenagakerjaan (Upah, Pengangguran, & Strategi Peningkatan Kualitas SDM)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Indeks Harga dan Inflasi (Perhitungan & Cara Mengatasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Indeks Harga dan Inflasi (Perhitungan & Cara Mengatasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kebijakan Moneter dan Fiskal (Instrumen & Peran dalam Stabilitas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kebijakan Moneter dan Fiskal (Instrumen & Peran dalam Stabilitas)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "APBN & APBD (Fungsi, Penyusunan, & Pengaruh Terhadap Ekonomi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "APBN & APBD (Fungsi, Penyusunan, & Pengaruh Terhadap Ekonomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Perpajakan (Konsep, Perhitungan, & Manfaat Pajak bagi Negara)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perpajakan (Konsep, Perhitungan, & Manfaat Pajak bagi Negara)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

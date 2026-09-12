@@ -27,6 +27,11 @@
           "name": "Penetapan Pancasila sebagai Dasar Negara",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Sejarah Kelahiran Pancasila (BPUPK & PPKI)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -42,7 +47,13 @@
     {
       "no": 2,
       "title": "Penerapan Nilai-Nilai Pancasila",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penerapan Nilai-nilai Pancasila dalam Kehidupan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -74,6 +85,11 @@
           "name": "Kerja Sama dalam Keberagaman",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Bekerja Sama dan Bergotong Royong dalam Keberagaman",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -89,7 +105,13 @@
     {
       "no": 5,
       "title": "Wilayah Negara Kesatuan Republik Indonesia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kesatuan Indonesia dan Karakteristik Wilayah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

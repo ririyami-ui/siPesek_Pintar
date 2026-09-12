@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Pelanggaran Hak dan Pengingkaran Kewajiban Warga Negara (Penyebab & Cara Mengatasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pelanggaran Hak dan Pengingkaran Kewajiban Warga Negara (Penyebab & Cara Mengatasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Perlindungan dan Penegakan Hukum di Indonesia (Peran Polisi, Jaksa, Hakim, & Advokat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perlindungan dan Penegakan Hukum di Indonesia (Peran Polisi, Jaksa, Hakim, & Advokat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Tata Kelola Pemerintahan yang Baik (Good Governance & Anti Korupsi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Tata Kelola Pemerintahan yang Baik (Good Governance & Anti Korupsi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Pengaruh IPTEK terhadap NKRI (Dampak Positif & Negatif dalam Berbagai Aspek Life)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengaruh IPTEK terhadap NKRI (Dampak Positif & Negatif dalam Berbagai Aspek Life)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Persatuan dan Kesatuan Bangsa dalam Wadah NKRI (Tantangan Disintegrasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Persatuan dan Kesatuan Bangsa dalam Wadah NKRI (Tantangan Disintegrasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Literasi Digital Berbasis Nilai Pancasila",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Literasi Digital Berbasis Nilai Pancasila",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

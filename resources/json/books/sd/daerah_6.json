@@ -1,205 +1,205 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sd-dae-6",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-dae-6",
+  "chapters": [
+    {
+      "no": 1,
+      "pages": "1-32",
+      "sub_topics": [
         {
-            "no": 1,
-            "pages": "1-32",
-            "sub_topics": [
-                {
-                    "name": "Struktur Teks Pidato",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pembuka Pidato",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Isi Pidato",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penutup Pidato",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "pidato",
-                "sesorah",
-                "wicara"
-            ],
-            "semester": "Ganjil",
-            "title": "Teks Pidato"
+          "name": "Struktur Teks Pidato",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "pages": "33-62",
-            "sub_topics": [
-                {
-                    "name": "Karya Tulis Sederhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menyusun Kerangka Karangan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karya Tulis Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mempresentasikan Karya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "karya tulis",
-                "karangan",
-                "presentasi"
-            ],
-            "semester": "Ganjil",
-            "title": "Karya Tulis"
+          "name": "Pembuka Pidato",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "pages": "63-94",
-            "sub_topics": [
-                {
-                    "name": "Macapat dan Jenisnya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Gending Tradisional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Tembang Macapat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menyanyikan Macapat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "macapat",
-                "gending",
-                "tembang"
-            ],
-            "semester": "Ganjil",
-            "title": "Gending dan Macapat"
+          "name": "Isi Pidato",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "pages": "95-126",
-            "sub_topics": [
-                {
-                    "name": "Cerita Rakyat Nusantara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Legenda Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mite dan Folklor",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai Budaya Cerita Rakyat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "cerita rakyat",
-                "legenda",
-                "folklor"
-            ],
-            "semester": "Genap",
-            "title": "Cerita Rakyat Daerah"
-        },
-        {
-            "no": 5,
-            "pages": "127-156",
-            "sub_topics": [
-                {
-                    "name": "Mengapresiasi Karya Sastra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kritik Sastra Sederhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Resensi Buku Sastra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karya Sastra Unggulan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "apresiasi",
-                "sastra",
-                "resensi"
-            ],
-            "semester": "Genap",
-            "title": "Apresiasi Sastra"
-        },
-        {
-            "no": 6,
-            "pages": "157-188",
-            "sub_topics": [
-                {
-                    "name": "Proyek Pengenalan Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dokumentasi Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pameran Budaya Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelestarian Bahasa Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "proyek",
-                "budaya",
-                "pelestarian"
-            ],
-            "semester": "Genap",
-            "title": "Proyek Budaya"
+          "name": "Penutup Pidato",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ],
-    "isbn": "978-623-194-836-5"
+      ],
+      "key_terms": [
+        "pidato",
+        "sesorah",
+        "wicara"
+      ],
+      "semester": "Ganjil",
+      "title": "Teks Pidato"
+    },
+    {
+      "no": 2,
+      "pages": "33-62",
+      "sub_topics": [
+        {
+          "name": "Karya Tulis Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menyusun Kerangka Karangan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Karya Tulis Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mempresentasikan Karya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "karya tulis",
+        "karangan",
+        "presentasi"
+      ],
+      "semester": "Ganjil",
+      "title": "Karya Tulis"
+    },
+    {
+      "no": 3,
+      "pages": "63-94",
+      "sub_topics": [
+        {
+          "name": "Macapat dan Jenisnya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Gending Tradisional",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Makna Tembang Macapat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menyanyikan Macapat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "macapat",
+        "gending",
+        "tembang"
+      ],
+      "semester": "Ganjil",
+      "title": "Gending dan Macapat"
+    },
+    {
+      "no": 4,
+      "pages": "95-126",
+      "sub_topics": [
+        {
+          "name": "Cerita Rakyat Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Legenda Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mite dan Folklor",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Nilai Budaya Cerita Rakyat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "cerita rakyat",
+        "legenda",
+        "folklor"
+      ],
+      "semester": "Genap",
+      "title": "Cerita Rakyat Daerah"
+    },
+    {
+      "no": 5,
+      "pages": "127-156",
+      "sub_topics": [
+        {
+          "name": "Mengapresiasi Karya Sastra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kritik Sastra Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Resensi Buku Sastra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Karya Sastra Unggulan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "apresiasi",
+        "sastra",
+        "resensi"
+      ],
+      "semester": "Genap",
+      "title": "Apresiasi Sastra"
+    },
+    {
+      "no": 6,
+      "pages": "157-188",
+      "sub_topics": [
+        {
+          "name": "Proyek Pengenalan Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Dokumentasi Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pameran Budaya Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pelestarian Bahasa Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "proyek",
+        "budaya",
+        "pelestarian"
+      ],
+      "semester": "Genap",
+      "title": "Proyek Budaya"
+    }
+  ],
+  "isbn": "978-623-194-836-5"
 }

@@ -5,7 +5,18 @@
     {
       "no": 1,
       "title": "Belajar Pancasila dengan Menyenangkan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sejarah Kelahiran Pancasila (Kronologi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sila-sila Pancasila sebagai Kesatuan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

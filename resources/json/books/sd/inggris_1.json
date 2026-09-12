@@ -5,31 +5,66 @@
     {
       "no": 1,
       "title": "How Are You?",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "How Are You? (Greetings)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "I am Cici",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "At Cici's Farm (Animals)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "My Name is Joshua",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Name is Joshua",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Joshua's Family",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "My Number is...",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Number is Ten",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "I Have Five Apples",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "I Have Pencils (School Objects)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -67,7 +102,13 @@
     {
       "no": 7,
       "title": "My House",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My House",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

@@ -25,6 +25,11 @@
           "name": "Soal Cerita Bilangan Bulat",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Bilangan Bulat Negatif (Membaca, Menulis, Membandingkan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -37,31 +42,76 @@
     {
       "no": 2,
       "title": "Operasi Hitung Bilangan Bulat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Operasi Hitung Penjumlahan dan Pengurangan Bilangan Bulat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Operasi Hitung Perkalian dan Pembagian Bilangan Bulat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Operasi Hitung Campuran Bilangan Cacah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Lingkaran (Unsur-unsur, Keliling, dan Luas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Lingkaran (Unsur-unsur, Keliling, dan Luas)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Bangun Ruang (Prisma, Tabung, Limas, Kerucut, Bola)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bangun Ruang (Prisma, Tabung, Limas, Kerucut, Bola)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Jaring-jaring Bangun Ruang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jaring-jaring Bangun Ruang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Penyajian Data (Piktogram dan Diagram Batang) dan Peluang Sederhana",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penyajian Data (Piktogram dan Diagram Batang)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Percobaan Acak dan Peluang Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

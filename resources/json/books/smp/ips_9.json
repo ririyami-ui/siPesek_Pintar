@@ -7,25 +7,59 @@
     {
       "no": 1,
       "title": "Manusia dan Perubahan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Manusia dan Perubahan (Modernisasi & Globalisasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Perkembangan Ekonomi Digital",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perkembangan Ekonomi Digital (E-commerce & Literasi Keuangan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Tantangan Pembangunan Indonesia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kesejahteraan dan Tantangan Sosial",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Tantangan Pembangunan Indonesia (SDM, SDA, Infrastruktur)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pembangunan Berkelanjutan (SDGs)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Kerja Sama Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kerja Sama Dunia (Organisasi Internasional & Politik Luar Negeri)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

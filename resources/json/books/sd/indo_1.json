@@ -5,49 +5,97 @@
     {
       "no": 1,
       "title": "Bunyi Apa?",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bunyi Apa? (Bunyi dan Panca Indra)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Ayo Bermain!",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ayo Bermain! (Tempat dan Aturan Bermain)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Awas Kuman!",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Awas Kuman! (Kebersihan dan Kesehatan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Aku Bisa!",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Bisa! (Gerakan dan Bermain)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Teman Baru",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Teman Baru (Bersikap Baik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Berbeda Itu Tak Apa",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Berbeda Itu Tak Apa (Keberagaman)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Aku Ingin",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Ingin (Kebutuhan dan Keinginan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Di Sekitar Rumah",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Di Sekitar Kita (Arah dan Letak)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Menggambar Rumah Tetangga",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menggambar Rumah Tetangga",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Daur Ulang Sampah Plastik (Kriya)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Daur Ulang Sampah Plastik (Kriya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Bereksperimen dengan Tekstur",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bereksperimen dengan Tekstur",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Membuat Bendera Hias",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Bendera Hias",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Seni Cetak (Grafis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Seni Cetak (Grafis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Membuat Komik Sederhana",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Komik Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

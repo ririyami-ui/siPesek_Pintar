@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Harmoni dalam Keberagaman (Mengatasi Intoleransi & Konflik Sosial)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Harmoni dalam Keberagaman (Mengatasi Intoleransi & Konflik Sosial)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Keadilan Sosial (Pelaksanaan Hak & Kewajiban Warga Negara)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Keadilan Sosial (Pelaksanaan Hak & Kewajiban Warga Negara)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Analisis Kasus Pelanggaran Ham dan Produk Perundang-undangan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Analisis Kasus Pelanggaran Ham dan Produk Perundang-undangan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Demokrasi Pancasila (Periodisasi & Pelaksanaannya di Indonesia)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Demokrasi Pancasila (Periodisasi & Pelaksanaannya di Indonesia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Sistem Hukum dan Peradilan (Peran Lembaga Penegak Hukum)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Hukum dan Peradilan (Peran Lembaga Penegak Hukum)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Internasionalisasi Nilai Pancasila (Kirana Pancasila di Kancah Global)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Internasionalisasi Nilai Pancasila (Kirana Pancasila di Kancah Global)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

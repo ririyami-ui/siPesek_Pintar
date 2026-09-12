@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Berpikir Komputasional (Struktur Data dan Pseudocode)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Berpikir Komputasional (Himpunan Data Terstruktur dan Pseudocode untuk Masalah Sehari-hari)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Teknologi Informasi dan Komunikasi (Konten Digital Lanjut)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "TIK (Integrasi Aplikasi Perkantoran Lanjut, Blog/Vlog untuk Konten Positif)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Sistem Komputer (Keamanan dan Proteksi Data)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Komputer (Keamanan Komputer & Proteksi Data Pribadi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Jaringan Komputer dan Internet (Konfigurasi dan Troubleshooting)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jaringan Komputer dan Internet (Konfigurasi Jaringan Sederhana & Troubleshooting)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Analisis Data (Prediksi dan Pemodelan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Analisis Data (Prediksi Tren & Pemodelan Data Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Algoritma dan Pemrograman (Modularisasi dan Blockly)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Algoritma dan Pemrograman (Modularisasi Program, Pemrograman Visual/Blockly Lanjut)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -63,6 +99,11 @@
           "name": "Etika Penggunaan Kecerdasan Buatan (AI)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Dampak Sosial Informatika (Isu Keamanan Siber, Karir Bidang Informatika)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -77,7 +118,13 @@
     {
       "no": 8,
       "title": "Praktik Lintas Bidang (Proyek Inovasi Digital)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Praktik Lintas Bidang (Proyek Inovasi Digital untuk Solusi Masalah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

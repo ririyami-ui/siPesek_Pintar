@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Permainan Bola Voli (Lanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Permainan Bola Voli (Lanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Bulu Tangkis",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bulu Tangkis",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Atletik (Lompat Jauh)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Atletik (Lompat Jauh)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Latihan Sirkuit",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Latihan Sirkuit",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Pola Hidup Sehat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Hidup Sehat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Renang Penyelamatan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Renang Penyelamatan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

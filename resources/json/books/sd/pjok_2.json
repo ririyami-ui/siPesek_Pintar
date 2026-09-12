@@ -5,19 +5,37 @@
     {
       "no": 1,
       "title": "Variasi Pola Gerak Dasar Lokomotor",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Variasi Pola Gerak Dasar Lokomotor",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Variasi Pola Gerak Dasar Non-Lokomotor",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Variasi Pola Gerak Dasar Non-Lokomotor",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Variasi Pola Gerak Dasar Manipulatif",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Variasi Pola Gerak Dasar Manipulatif",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -43,6 +61,11 @@
           "name": "Sikap Lilin",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Aktivitas Senam Lantai Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -55,19 +78,37 @@
     {
       "no": 5,
       "title": "Aktivitas Gerak Berirama",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aktivitas Gerak Berirama",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Aktivitas Air (Pengenalan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aktivitas Air (Pengenalan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Cara Memilih Makanan Sehat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Cara Memilih Makanan Sehat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

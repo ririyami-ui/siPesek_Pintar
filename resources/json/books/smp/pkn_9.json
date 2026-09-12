@@ -7,19 +7,47 @@
     {
       "no": 1,
       "title": "Dinamika Perwujudan Pancasila",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dinamika Perwujudan Pancasila sebagai Dasar Negara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menjaga dan Melestarikan Nilai Pancasila",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Pembukaan UUD NRI 1945",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pembukaan UUD NRI Tahun 1945 (Makna Alinea & Pokok Pikiran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Kedaulatan Negara Kesatuan Republik Indonesia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kedaulatan Negara RI (Bentuk & Prinsip Kedaulatan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Bela Negara dan Keutuhan Wilayah (Peran Serta Warga Negara)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

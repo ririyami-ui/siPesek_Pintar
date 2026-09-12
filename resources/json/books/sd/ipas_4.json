@@ -5,49 +5,97 @@
     {
       "no": 1,
       "title": "Tumbuhan, Sumber Kehidupan di Bumi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Tumbuhan, Sumber Kehidupan (Bagian Tubuh & Fotosintesis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Wujud Zat dan Perubahannya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Wujud Zat dan Perubahannya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Gaya di Sekitar Kita",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Gaya di Sekitar Kita (Otot, Gesek, Magnet, Gravitasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Mengubah Bentuk Energi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mengubah Bentuk Energi (Energi Kinetik, Potensial, Panas, Listrik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Cerita Tentang Daerahku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Cerita Tentang Daerahku (Sejarah Lokal)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Indonesia Kaya Budaya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Indonesiaku Kaya Budaya (Keanekaragaman Hayati & Budaya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Bagaimana Mendapatkan Semua Keperluan Kita?",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bagaimana Mendapatkan Keperluan Kita? (Ekonomi & Kebutuhan Dasar)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Membangun Masyarakat yang Beradab",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membangun Masyarakat yang Beradab (Norma & Adat Istiadat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

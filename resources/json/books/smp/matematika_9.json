@@ -7,19 +7,37 @@
     {
       "no": 1,
       "title": "Bilangan Berpangkat dan Bentuk Akar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perpangkatan dan Bentuk Akar (Lanjutan & Aplikasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Relasi, Fungsi, dan Persamaan Linear",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menyelesaikan Masalah dengan Relasi, Fungsi, dan Persamaan Linear",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Fungsi Linear dan Non-Linear",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Fungsi Linear dan Non-Linear (Membedakan melalui Grafik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -45,6 +63,11 @@
           "name": "Dilatasi (Perkalian)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Transformasi Geometri (Refleksi, Translasi, Rotasi, Dilatasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -59,19 +82,37 @@
     {
       "no": 5,
       "title": "Kesebangunan dan Kekongruenan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kesebangunan dan Kekongruenan Antar Bangun Datar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Bangun Ruang Sisi Lengkung",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bangun Ruang Sisi Lengkung (Luas Permukaan & Volume Tabung, Kerucut, Bola)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Data, Statistika, dan Peluang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Peluang dan Frekuensi Relatif",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

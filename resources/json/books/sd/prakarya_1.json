@@ -1,205 +1,215 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sd-pra-1",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-pra-1",
+  "chapters": [
+    {
+      "no": 1,
+      "pages": "1-28",
+      "sub_topics": [
         {
-            "no": 1,
-            "pages": "1-28",
-            "sub_topics": [
-                {
-                    "name": "Mengenal Gunting",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknik Melipat Kertas",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membuat Bentuk Sederhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Proyek Lipatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "gunting",
-                "lipat",
-                "kertas"
-            ],
-            "semester": "Ganjil",
-            "title": "Menggunting dan Melipat"
+          "name": "Mengenal Gunting",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "pages": "29-56",
-            "sub_topics": [
-                {
-                    "name": "Apa Itu Meronce?",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Meronce dengan Manik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Meronce dengan Bahan Alam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membuat Gelang Meronce",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "meronce",
-                "manik",
-                "bahan alam"
-            ],
-            "semester": "Ganjil",
-            "title": "Meronce"
+          "name": "Teknik Melipat Kertas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "pages": "57-84",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Mozaik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mozaik Kertas",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mozaik Biji-Bijian",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mozaik Daun Kering",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "mozaik",
-                "tempel",
-                "biji"
-            ],
-            "semester": "Ganjil",
-            "title": "Mozaik"
+          "name": "Membuat Bentuk Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "pages": "85-112",
-            "sub_topics": [
-                {
-                    "name": "Apa Itu Kolase?",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kolase Kertas Warna",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kolase Bahan Bekas",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membuat Kolase Hewan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "kolase",
-                "tempel",
-                "kertas"
-            ],
-            "semester": "Genap",
-            "title": "Kolase"
+          "name": "Proyek Lipatan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 5,
-            "pages": "113-140",
-            "sub_topics": [
-                {
-                    "name": "Anyaman Kertas",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknik Dasar Anyam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pola Anyaman Sederhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tikar Kertas Anyam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "anyaman",
-                "anyam",
-                "pola"
-            ],
-            "semester": "Genap",
-            "title": "Anyaman Sederhana"
-        },
-        {
-            "no": 6,
-            "pages": "141-168",
-            "sub_topics": [
-                {
-                    "name": "Mengenal Plastisin",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membentuk Bola dan Silinder",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membentuk Hewan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membentuk Buah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "plastisin",
-                "bentuk",
-                "lilin"
-            ],
-            "semester": "Genap",
-            "title": "Membentuk Plastisin"
+          "name": "Kerajinan Kertas (Melipat, Menggunting, Menempel)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ],
-    "isbn": "978-623-194-841-9"
+      ],
+      "key_terms": [
+        "gunting",
+        "lipat",
+        "kertas"
+      ],
+      "semester": "Ganjil",
+      "title": "Menggunting dan Melipat"
+    },
+    {
+      "no": 2,
+      "pages": "29-56",
+      "sub_topics": [
+        {
+          "name": "Apa Itu Meronce?",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Meronce dengan Manik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Meronce dengan Bahan Alam",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membuat Gelang Meronce",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "meronce",
+        "manik",
+        "bahan alam"
+      ],
+      "semester": "Ganjil",
+      "title": "Meronce"
+    },
+    {
+      "no": 3,
+      "pages": "57-84",
+      "sub_topics": [
+        {
+          "name": "Pengertian Mozaik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mozaik Kertas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mozaik Biji-Bijian",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mozaik Daun Kering",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "mozaik",
+        "tempel",
+        "biji"
+      ],
+      "semester": "Ganjil",
+      "title": "Mozaik"
+    },
+    {
+      "no": 4,
+      "pages": "85-112",
+      "sub_topics": [
+        {
+          "name": "Apa Itu Kolase?",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kolase Kertas Warna",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kolase Bahan Bekas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membuat Kolase Hewan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "kolase",
+        "tempel",
+        "kertas"
+      ],
+      "semester": "Genap",
+      "title": "Kolase"
+    },
+    {
+      "no": 5,
+      "pages": "113-140",
+      "sub_topics": [
+        {
+          "name": "Anyaman Kertas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Teknik Dasar Anyam",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pola Anyaman Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Tikar Kertas Anyam",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membuat Produk Mainan Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "anyaman",
+        "anyam",
+        "pola"
+      ],
+      "semester": "Genap",
+      "title": "Anyaman Sederhana"
+    },
+    {
+      "no": 6,
+      "pages": "141-168",
+      "sub_topics": [
+        {
+          "name": "Mengenal Plastisin",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membentuk Bola dan Silinder",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membentuk Hewan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membentuk Buah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "plastisin",
+        "bentuk",
+        "lilin"
+      ],
+      "semester": "Genap",
+      "title": "Membentuk Plastisin"
+    }
+  ],
+  "isbn": "978-623-194-841-9"
 }

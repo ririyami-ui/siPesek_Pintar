@@ -5,49 +5,97 @@
     {
       "no": 1,
       "title": "Bangga Menjadi Anak Indonesia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bangga Menjadi Anak Indonesia (Laporan Hasil Pengamatan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Musisi Indonesia di Pentas Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Musisi Indonesia di Pentas Dunia (Teks Eksplanasi & Biografi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Taman Nasional dan Situs Warisan Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Taman Nasional (Teks Deskripsi & Opini)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Jeda untuk Iklim",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jeda untuk Iklim (Teks Persuasi & Poster)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Anak-Anak yang Mengubah Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Anak-Anak yang Mengubah Dunia (Teks Narasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Aman di Dunia Maya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aman di Dunia Maya (Teks Diskusi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Aku Bisa Berempati",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Bisa Berempati (Teks Cerita Pendek)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Menjadi Warga Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menjadi Warga Dunia (Globalisasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

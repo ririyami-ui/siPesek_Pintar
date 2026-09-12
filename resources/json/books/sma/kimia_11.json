@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Kimia Karbon (Hidrokarbon: Alkan, Alkena, Alkuna)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kimia Karbon (Hidrokarbon: Alkan, Alkena, Alkuna)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Minyak Bumi (Proses Pembentukan, Fraksinasi, & Dampak Pembakaran)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Minyak Bumi (Proses Pembentukan, Fraksinasi, & Dampak Pembakaran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Termokimia (Entalpi, Reaksi Eksoterm & Endoterm)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Termokimia (Entalpi, Reaksi Eksoterm & Endoterm)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Laju Reaksi (Teori Tumbukan & Faktor yang Mempengaruhi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Laju Reaksi (Teori Tumbukan & Faktor yang Mempengaruhi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kesetimbangan Kimia (Tetapan Kesetimbangan & Pergeseran)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kesetimbangan Kimia (Tetapan Kesetimbangan & Pergeseran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Asam-Basa (pH, Indikator, & Titrasi Asam Basa)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Asam-Basa (pH, Indikator, & Titrasi Asam Basa)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

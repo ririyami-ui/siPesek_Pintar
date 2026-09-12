@@ -29,7 +29,13 @@
     {
       "no": 5,
       "title": "Menjelajahi Bumi dan Antariksa",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Fenomena Alam di Permukaan Bumi dan Luar Angkasa",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

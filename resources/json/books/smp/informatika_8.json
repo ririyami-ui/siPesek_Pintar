@@ -27,6 +27,11 @@
           "name": "Algoritma: Struktur Data Queue (Antrean)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Berpikir Komputasional (Fungsi, Algoritma, Struktur Data,Sistem Bilangan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -68,6 +73,11 @@
           "name": "Enkripsi Data Sederhana",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Komputer (Komponen Dalam Komputer, Pengalamatan Memori, Sistem Operasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -83,7 +93,13 @@
     {
       "no": 4,
       "title": "Jaringan Komputer dan Internet",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jaringan Komputer dan Internet (Keamanan Data Cloud, Enkripsi Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -109,6 +125,11 @@
           "name": "Prediksi Data Sederhana",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Analisis Data (Visualisasi Data, Fitur Pencarian & Filter pada Spreadsheet)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -123,19 +144,37 @@
     {
       "no": 6,
       "title": "Algoritma dan Pemrograman",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Algoritma dan Pemrograman (Struktur Kontrol: Percabangan & Perulangan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Dampak Sosial Informatika",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dampak Sosial Informatika (Etika Digital, Cyber Bullying, Dampak Teknologi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Praktik Lintas Bidang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Praktik Lintas Bidang (Proyek Informatika Terpadu)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

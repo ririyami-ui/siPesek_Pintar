@@ -5,19 +5,42 @@
     {
       "no": 1,
       "title": "Bilangan Cacah sampai 1.000",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan Cacah sampai 1.000",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Kalimat Matematika",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kalimat Matematika Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Pengukuran Panjang dan Berat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengukuran Panjang (cm, m)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pengukuran Berat (ons, kg)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

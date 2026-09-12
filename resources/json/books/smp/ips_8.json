@@ -1,148 +1,173 @@
 {
-    "bookId": "smp-ips-8",
-    "isbn": "978-602-244-308-7",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "IPS SMP Kelas VIII",
-    "chapters": [
+  "bookId": "smp-ips-8",
+  "isbn": "978-602-244-308-7",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPS SMP Kelas VIII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Kondisi Geografis dan Pelestarian Sumber Daya Alam",
+      "pages": "1-50",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Kondisi Geografis dan Pelestarian Sumber Daya Alam",
-            "pages": "1-50",
-            "sub_topics": [
-                {
-                    "name": "Keragaman Alam Indonesia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pemanfaatan Sumber Daya Alam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sumber Daya Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Lembaga Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Letak Geologis",
-                "Kualitas SDM",
-                "Institusi Sosial",
-                "Lingkungan Hidup"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel potensi sumber daya tambang di tiap pulau.",
-            "semester": "Ganjil"
+          "name": "Keragaman Alam Indonesia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Kemajemukan Masyarakat Indonesia",
-            "pages": "51-100",
-            "sub_topics": [
-                {
-                    "name": "Keragaman Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mobilitas Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Interaksi Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Konflik dan Integrasi Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pluralitas",
-                "Stratifikasi",
-                "Asimilasi",
-                "Harmoni"
-            ],
-            "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan faktor pendorong dan penghambat mobilitas sosial.",
-            "semester": "Genap"
+          "name": "Pemanfaatan Sumber Daya Alam",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Nasionalisme dan Jati Diri Bangsa",
-            "pages": "101-150",
-            "sub_topics": [
-                {
-                    "name": "Penjelajahan Samudra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perlawanan terhadap Kolonialisme",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pergerakan Nasional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Proklamasi Kemerdekaan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Kolonialisme",
-                "Imperialisme",
-                "Organisasi Modern",
-                "Nasionalisme"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan lini masa perjuangan bangsa Indonesia.",
-            "semester": "Ganjil"
+          "name": "Sumber Daya Manusia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "title": "Pembangunan Ekonomi dan Pemberdayaan Masyarakat",
-            "pages": "151-200",
-            "sub_topics": [
-                {
-                    "name": "Keragaman Ekonomi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perdagangan Antarpulau",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Literasi Keuangan Lanjut",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peranan Pasar dalam Pembangunan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Rantai Pasok",
-                "Investasi",
-                "Kewirausahaan",
-                "Siklus Ekonomi"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi rencana usaha kecil menengah (UMKM).",
-            "semester": "Genap"
+          "name": "Lembaga Sosial",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kondisi Geografis dan Pelestarian SDA (Lokal & Nasional)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Letak Geologis",
+        "Kualitas SDM",
+        "Institusi Sosial",
+        "Lingkungan Hidup"
+      ],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk menyajikan tabel potensi sumber daya tambang di tiap pulau.",
+      "semester": "Ganjil"
+    },
+    {
+      "no": 2,
+      "title": "Kemajemukan Masyarakat Indonesia",
+      "pages": "51-100",
+      "sub_topics": [
+        {
+          "name": "Keragaman Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mobilitas Sosial",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Interaksi Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Konflik dan Integrasi Sosial",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kemajemukan Masyarakat Indonesia (Keberagaman Budaya & Sosial)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Pluralitas",
+        "Stratifikasi",
+        "Asimilasi",
+        "Harmoni"
+      ],
+      "visual_hints": "Gunakan Mermaid Mindmap untuk memetakan faktor pendorong dan penghambat mobilitas sosial.",
+      "semester": "Genap"
+    },
+    {
+      "no": 3,
+      "title": "Nasionalisme dan Jati Diri Bangsa",
+      "pages": "101-150",
+      "sub_topics": [
+        {
+          "name": "Penjelajahan Samudra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Perlawanan terhadap Kolonialisme",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pergerakan Nasional",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Proklamasi Kemerdekaan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Nasionalisme dan Jati Diri Bangsa (Sejarah Pergerakan Nasional)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Kolonialisme",
+        "Imperialisme",
+        "Organisasi Modern",
+        "Nasionalisme"
+      ],
+      "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan lini masa perjuangan bangsa Indonesia.",
+      "semester": "Ganjil"
+    },
+    {
+      "no": 4,
+      "title": "Pembangunan Ekonomi dan Pemberdayaan Masyarakat",
+      "pages": "151-200",
+      "sub_topics": [
+        {
+          "name": "Keragaman Ekonomi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Perdagangan Antarpulau",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Literasi Keuangan Lanjut",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Peranan Pasar dalam Pembangunan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pembangunan Perekonomian Indonesia (Globalisasi & Ekonomi Digital)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kebutuhan dan Tantangan Pembangunan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Rantai Pasok",
+        "Investasi",
+        "Kewirausahaan",
+        "Siklus Ekonomi"
+      ],
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk simulasi rencana usaha kecil menengah (UMKM).",
+      "semester": "Genap"
+    }
+  ]
 }

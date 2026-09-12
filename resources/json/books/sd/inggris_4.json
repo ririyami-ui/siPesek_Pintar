@@ -5,31 +5,61 @@
     {
       "no": 1,
       "title": "What are you doing",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "What Are You Doing? (Verbs -ing)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "There are sixty seven English books",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "There are 67 Books (Numbers 50-100)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "My living room is beside the kitchen",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Living Room is Messy (Prepositions)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Cici Cooks in The Kitchen",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Cici Cooks in The Kitchen",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Where is My Pencil?",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Where is My Pencil?",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -65,7 +95,13 @@
     {
       "no": 11,
       "title": "How Do You Go to School?",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "I Go to School by Bus (Transportation)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

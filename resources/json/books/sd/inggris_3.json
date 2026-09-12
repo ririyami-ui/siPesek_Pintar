@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "I Like Spinach (Food & Drinks)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "I Like Spinach (Food & Drinks)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "I Go to School by Bike (Transportation)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "I Go to School by Bike (Transportation)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "My House is Clean (Rooms)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My House is Clean (Rooms)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "I Can Swim (Hobbies & Activities)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "I Can Swim (Hobbies & Activities)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Where is the Chair? (Prepositions)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Where is the Chair? (Prepositions)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "My School (Places in School)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My School (Places in School)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Sel sebagai Unit Terkecil Kehidupan (Struktur & Organel)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sel sebagai Unit Terkecil Kehidupan (Struktur & Organel)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Transpor pada Membran Pasif & Aktif (Difusi, Osmosis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Transpor pada Membran Pasif & Aktif (Difusi, Osmosis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Jaringan Tumbuhan & Hewan (Struktur Spesifik & Fungsinya)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jaringan Tumbuhan & Hewan (Struktur Spesifik & Fungsinya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Sistem Koordinasi (Saraf, Hormon, & Alat Indera)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Koordinasi (Saraf, Hormon, & Alat Indera)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Sistem Reproduksi Manusia & Keluarga Berencana",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Reproduksi Manusia & Keluarga Berencana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Sistem Pertahanan Tubuh (Imunitas Spesifik & Non-spesifik)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Pertahanan Tubuh (Imunitas Spesifik & Non-spesifik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

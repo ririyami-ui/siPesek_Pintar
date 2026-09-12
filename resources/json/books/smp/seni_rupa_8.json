@@ -5,31 +5,81 @@
     {
       "no": 1,
       "title": "Unsur, Prinsip, dan Komposisi Seni Rupa",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Seni Rupa dan Identitas Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Seni Rupa dan Pelestarian Warisan Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Teknik Menggambar dan Melukis",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menggambar Perspektif Satu Titik Hilang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Melukis dengan Berbagai Media",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menggambar Ragam Hias Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Seni Grafis dan Desain Komunikasi Visual",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Desain Grafis dan Tipografi Dasar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Seni Rupa Daerah dan Kontemporer",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Merefleksikan Karya Seni Rupa Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mengenal Karya Seni Rupa Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Apresiasi dan Kritik Karya Seni Rupa",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Merefleksikan Nilai Estetis Karya Seni",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

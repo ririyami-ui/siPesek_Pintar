@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Sifat Koligatif Larutan (Penurunan Tekanan Uap, Titik Beku, & Tekanan Osmotik)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sifat Koligatif Larutan (Penurunan Tekanan Uap, Titik Beku, & Tekanan Osmotik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Reaksi Redoks dan Sel Elektrokimia (Sel Volta & Elektrolisis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Reaksi Redoks dan Sel Elektrokimia (Sel Volta & Elektrolisis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Kimia Unsur (Logam Alkali, Halogen, & Unsur Periode ke-3/4)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kimia Unsur (Logam Alkali, Halogen, & Unsur Periode ke-3/4)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Senyawa Turunan Alkana (Haloalkana, Alkohol, Eter, Aldehid, Keton, Karboksilat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Senyawa Turunan Alkana (Haloalkana, Alkohol, Eter, Aldehid, Keton, Karboksilat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Benzena dan Turunannya (Struktur, Tata Nama, & Kegunaan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Benzena dan Turunannya (Struktur, Tata Nama, & Kegunaan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Makromolekul (Polimer, Karbohidrat, Protein, & Lipid)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Makromolekul (Polimer, Karbohidrat, Protein, & Lipid)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

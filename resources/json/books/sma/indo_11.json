@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Teks Argumentasi (Mengonstruksi Opini & Fakta Ketahanan Pangan Lokal)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Teks Argumentasi (Mengonstruksi Opini & Fakta Ketahanan Pangan Lokal)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Teks Berita (Menyusun Berita Berbasis Inovasi & Teknologi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Teks Berita (Menyusun Berita Berbasis Inovasi & Teknologi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Cerpen (Menggali Karakter & Latar Sejarah dalam Cerpen)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Cerpen (Menggali Karakter & Latar Sejarah dalam Cerpen)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Puisi (Analisis Semantik & Musikalisasi Puisi Kontemporer)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Puisi (Analisis Semantik & Musikalisasi Puisi Kontemporer)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Drama (Menulis Naskah & Pementasan Berbasis Isu Sosial)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Drama (Menulis Naskah & Pementasan Berbasis Isu Sosial)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Karya Ilmiah (Prosedur Penelitian Sederhana & Penulisan Sistematik)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Karya Ilmiah (Prosedur Penelitian Sederhana & Penulisan Sistematik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

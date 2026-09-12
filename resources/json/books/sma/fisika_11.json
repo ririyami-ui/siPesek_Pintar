@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Vektor Lanjut & Kinematika (Gerak Lurus, Parabola, & Melingkar)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Vektor Lanjut & Kinematika (Gerak Lurus, Parabola, & Melingkar)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Dinamika Gerak (Hukum Newton & Penerapannya pada Berbagai Sistem)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dinamika Gerak (Hukum Newton & Penerapannya pada Berbagai Sistem)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Fluida Statis (Hukum Archimedes, Pascal, & Tekanan Hidrostatis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Fluida Statis (Hukum Archimedes, Pascal, & Tekanan Hidrostatis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Fluida Dinamis (Hukum Bernoulli & Kontinuitas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Fluida Dinamis (Hukum Bernoulli & Kontinuitas)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Suhu, Kalor, dan Termodinamika (Hukum ke-0, 1, & 2)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Suhu, Kalor, dan Termodinamika (Hukum ke-0, 1, & 2)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Gelombang Mekanik (Ciri, Sifat, & Gejala Gelombang)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Gelombang Mekanik (Ciri, Sifat, & Gejala Gelombang)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

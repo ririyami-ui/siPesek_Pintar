@@ -1,122 +1,127 @@
 {
-    "bookId": "smp-daerah-7",
-    "publisher": "Kemendikbudristek",
-    "chapters": [
+  "bookId": "smp-daerah-7",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Sastra Daerah Ganjil",
+      "pages": "1-50",
+      "semester": "Ganjil",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Sastra Daerah Ganjil",
-            "pages": "1-50",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Puisi Tradisional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Cerita Rakyat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai Budaya dalam Sastra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Sastra Daerah",
-                "Puisi Tradisional",
-                "Cerita Rakyat",
-                "Folklor"
-            ]
+          "name": "Puisi Tradisional",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Aksara dan Budaya Ganjil",
-            "pages": "51-100",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Pengenalan Aksara Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menulis Aksara Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Upacara Adat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Aksara Daerah",
-                "Budaya Lokal",
-                "Tradisi",
-                "Adat Istiadat"
-            ]
+          "name": "Cerita Rakyat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Sastra Daerah Genap",
-            "pages": "101-150",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Drama Tradisional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Legenda dan Mitos",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pesan Moral dalam Sastra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Drama",
-                "Legenda",
-                "Mitos",
-                "Moral"
-            ]
+          "name": "Nilai Budaya dalam Sastra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "title": "Aksara dan Budaya Genap",
-            "pages": "151-200",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Seni Pertunjukan Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pakaian Adat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelestarian Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Seni Pertunjukan",
-                "Pakaian Adat",
-                "Pelestarian",
-                "Kearifan Lokal"
-            ]
+          "name": "Aksara Daerah (Dasar & Sandhangan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Sastra Daerah",
+        "Puisi Tradisional",
+        "Cerita Rakyat",
+        "Folklor"
+      ]
+    },
+    {
+      "no": 2,
+      "title": "Aksara dan Budaya Ganjil",
+      "pages": "51-100",
+      "semester": "Ganjil",
+      "sub_topics": [
+        {
+          "name": "Pengenalan Aksara Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menulis Aksara Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Upacara Adat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Aksara Daerah",
+        "Budaya Lokal",
+        "Tradisi",
+        "Adat Istiadat"
+      ]
+    },
+    {
+      "no": 3,
+      "title": "Sastra Daerah Genap",
+      "pages": "101-150",
+      "semester": "Genap",
+      "sub_topics": [
+        {
+          "name": "Drama Tradisional",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Legenda dan Mitos",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pesan Moral dalam Sastra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Drama",
+        "Legenda",
+        "Mitos",
+        "Moral"
+      ]
+    },
+    {
+      "no": 4,
+      "title": "Aksara dan Budaya Genap",
+      "pages": "151-200",
+      "semester": "Genap",
+      "sub_topics": [
+        {
+          "name": "Seni Pertunjukan Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pakaian Adat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pelestarian Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Seni Pertunjukan",
+        "Pakaian Adat",
+        "Pelestarian",
+        "Kearifan Lokal"
+      ]
+    }
+  ]
 }

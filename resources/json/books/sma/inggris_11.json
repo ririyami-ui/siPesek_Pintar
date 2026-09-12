@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Legends and Fairy Tales (Linguistic Features & Moral Lessons)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Legends and Fairy Tales (Linguistic Features & Moral Lessons)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Analytical Exposition (Developing Arguments on Global Issues)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Analytical Exposition (Developing Arguments on Global Issues)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Healthy Environment (Sustainable Living & Conservation)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Healthy Environment (Sustainable Living & Conservation)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Hortatory Exposition (Persuading Others with Strong Evidence)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Hortatory Exposition (Persuading Others with Strong Evidence)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Discussion Text (Presenting Different Points of View)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Discussion Text (Presenting Different Points of View)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Appreciating Arts (Interpreting Songs and Creating Poems)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Appreciating Arts (Interpreting Songs and Creating Poems)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

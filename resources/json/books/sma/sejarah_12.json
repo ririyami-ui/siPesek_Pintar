@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Perjuangan Menghadapi Ancaman Disintegrasi Bangsa (Pemberontakan PKI Madiun, DI/TII, PRRI/Permesta, G30S/PKI)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perjuangan Menghadapi Ancaman Disintegrasi Bangsa (Pemberontakan PKI Madiun, DI/TII, PRRI/Permesta, G30S/PKI)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Indonesia Masa Demokrasi Liberal dan Terpimpin (Sistem Politik & Kebijakan Ekonomi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Indonesia Masa Demokrasi Liberal dan Terpimpin (Sistem Politik & Kebijakan Ekonomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Kehidupan Politik dan Ekonomi Masa Orde Baru (Stabilitas & Pembangunan Nasional)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kehidupan Politik dan Ekonomi Masa Orde Baru (Stabilitas & Pembangunan Nasional)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Indonesia Masa Reformasi (Latar Belakang & Perubahan Sistem Ketatanegaraan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Indonesia Masa Reformasi (Latar Belakang & Perubahan Sistem Ketatanegaraan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Perkembangan Iptek di Indonesia dalam Arus Globalisasi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perkembangan Iptek di Indonesia dalam Arus Globalisasi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Peran Aktif Indonesia dalam Perdamaian Dunia (KAA, Gerakan Non-Blok, & Misi Garuda)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Peran Aktif Indonesia dalam Perdamaian Dunia (KAA, Gerakan Non-Blok, & Misi Garuda)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

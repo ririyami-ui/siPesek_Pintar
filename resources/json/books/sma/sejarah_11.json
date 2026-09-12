@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Kolonialisme dan Perlawanan Bangsa Indonesia (Strategi Perang & Tokoh Perjuangan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kolonialisme dan Perlawanan Bangsa Indonesia (Strategi Perang & Tokoh Perjuangan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Kebangkitan Nasional (Organisasi Pergerakan & Sumpah Pemuda)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kebangkitan Nasional (Organisasi Pergerakan & Sumpah Pemuda)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Dampak Pendudukan Jepang di Indonesia (Sosial, Ekonomi, & Politik)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dampak Pendudukan Jepang di Indonesia (Sosial, Ekonomi, & Politik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Proklamasi Kemerdekaan Indonesia (Peristiwa Rengasdengklok & Perumusan Teks)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Proklamasi Kemerdekaan Indonesia (Peristiwa Rengasdengklok & Perumusan Teks)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Perjuangan Diplomasi dan Fisik Mempertahankan Kemerdekaan (1945-1949)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perjuangan Diplomasi dan Fisik Mempertahankan Kemerdekaan (1945-1949)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Peran Tokoh-Tokoh Proklamator dan Pejuang Daerah",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Peran Tokoh-Tokoh Proklamator dan Pejuang Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

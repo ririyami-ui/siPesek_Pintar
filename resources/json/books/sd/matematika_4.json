@@ -5,37 +5,108 @@
     {
       "no": 1,
       "title": "Bilangan Cacah sampai 10.000",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan Cacah sampai 10.000 (Membaca, Menulis, Membandingkan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Komposisi dan Dekomposisi Bilangan Cacah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Nilai Tempat Bilangan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Operasi Penjumlahan & Pengurangan Bilangan Cacah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Operasi Perkalian & Pembagian Bilangan Cacah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Pecahan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pecahan Senilai",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pecahan dengan Pembilang 1",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Pola Gambar dan Pola Bilangan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Gambar dan Pola Bilangan (Membesar/Mengecil)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Pengukuran Luas dan Volume",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengukuran Volume Bangun Ruang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Bangun Datar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengukuran Luas Bangun Datar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Ciri-ciri Bangun Datar (Segi Empat, Segi Tiga, Segi Banyak)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Komposisi dan Dekomposisi Bangun Datar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Piktogram dan Diagram Batang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penyajian Data (Piktogram dan Diagram Batang)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

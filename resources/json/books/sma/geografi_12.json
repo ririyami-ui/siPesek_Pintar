@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Konsep Wilayah dan Tata Ruang (Pusat Pertumbuhan & Pembangunan Wilayah)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Konsep Wilayah dan Tata Ruang (Pusat Pertumbuhan & Pembangunan Wilayah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Dinamika Keruangan Desa dan Kota (Struktur, Interaksi, & Perkembangan Kota)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dinamika Keruangan Desa dan Kota (Struktur, Interaksi, & Perkembangan Kota)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Pembangunan Berkelanjutan (SDGs) dan Ketahanan Nasional",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pembangunan Berkelanjutan (SDGs) dan Ketahanan Nasional",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Interpretasi Peta dan PJ untuk Perencanaan Wilayah (GIS Project)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Interpretasi Peta dan PJ untuk Perencanaan Wilayah (GIS Project)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kerja Sama Negara Maju dan Berkembang (Globalisasi & Pasar Bebas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kerja Sama Negara Maju dan Berkembang (Globalisasi & Pasar Bebas)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Isu-isu Global (Perubahan Iklim, Kelaparan, & Kemiskinan Dunia)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Isu-isu Global (Perubahan Iklim, Kelaparan, & Kemiskinan Dunia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

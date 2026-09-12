@@ -5,13 +5,30 @@
     {
       "no": 1,
       "title": "Mengenal Serelia dan Umbi-umbian",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengolahan Serealia, Umbi, & Kacang-kacangan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Modifikasi Produk Olahan Pangan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kemasan Produk Limbah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Wirausaha Produk Prakarya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

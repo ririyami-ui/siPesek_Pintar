@@ -5,49 +5,97 @@
     {
       "no": 1,
       "title": "Do You Like Apple? (Fruits)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Do You Like Apple? (Fruits)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "My Father Likes Watermelon",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Father Likes Watermelon",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Where is My Pen? (Preposition)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Where is My Pen? (Preposition)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "How Many Books? (Numbers)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "How Many Books? (Numbers)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "My Classroom",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Classroom",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "He is My Brother (Family)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "He is My Brother (Family)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "My Hobby",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "My Hobby",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Clean and Healthy Environment",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Clean and Healthy Environment",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

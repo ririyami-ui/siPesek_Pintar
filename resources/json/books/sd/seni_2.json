@@ -5,43 +5,85 @@
     {
       "no": 1,
       "title": "Warna dan Garis Ekspresif",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Warna dan Garis Ekspresif",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Gambar dari Bentuk Dasar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Gambar dari Bentuk Dasar",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Mencampur Warna",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mencampur Warna",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Menggambar Pola",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menggambar Pola",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kerajinan dari Clay/Plastisin",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kerajinan dari Clay/Plastisin",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Kolase Sederhana",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kolase Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Membuat Bentuk 3D (Kerdus Bekas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Bentuk 3D (Kerdus Bekas)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

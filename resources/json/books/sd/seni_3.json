@@ -5,25 +5,49 @@
     {
       "no": 1,
       "title": "Menggambar Cerita (Gambar Ilustrasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menggambar Cerita (Gambar Ilustrasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Ragam Hias Dekoratif (Motif Hewan/Tumbuhan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ragam Hias Dekoratif (Motif Hewan/Tumbuhan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Membuat Karya 3D (Bahan Alam/Buatan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Karya 3D (Bahan Alam/Buatan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Pameran Kelas (Apresiasi Karya)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pameran Kelas (Apresiasi Karya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

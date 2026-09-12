@@ -27,6 +27,11 @@
           "name": "Faktor Bilangan Bulat (KPK dan FPB)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Bilangan Bulat (Operasi & Sifat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -42,13 +47,25 @@
     {
       "no": 2,
       "title": "Bilangan Rasional",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan Rasional (Pecahan & Desimal)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Rasio",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Rasio dan Proporsi (Skala, Perbandingan Senilai & Berbalik Nilai)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -74,6 +91,11 @@
           "name": "Pemodelan Matematika",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Bentuk Aljabar (Unsur, Suku Sejenis, Operasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -89,13 +111,25 @@
     {
       "no": 5,
       "title": "Bilangan Real dan Notasi Ilmiah",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan Real (Operasi Aritmetika, Estimasi) dan Notasi Ilmiah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Data dan Statistika",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Statistika (Penyajian Data & Pengolahan Data)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

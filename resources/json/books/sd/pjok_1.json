@@ -5,25 +5,49 @@
     {
       "no": 1,
       "title": "Gerak Jalan, Lari, Lompat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Gerak Dasar Lokomotor (Jalan, Lari, Lompat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Gerak Dasar Memutar dan Mengayun",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Gerak Dasar Non-Lokomotor (Memutar, Mengayun, Menekuk)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Gerak Dasar Manipulatif",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Gerak Dasar Manipulatif (Melempar, Menangkap)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Sikap Tubuh",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kebersihan dan Kesehatan Tubuh",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -35,7 +59,13 @@
     {
       "no": 6,
       "title": "Gerak Berirama",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aktivitas Gerak Berirama",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -59,6 +89,11 @@
         },
         {
           "name": "Gerakan Dasar Renang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pengenalan Aktivitas Air",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }

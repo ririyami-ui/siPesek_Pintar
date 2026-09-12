@@ -5,49 +5,102 @@
     {
       "no": 1,
       "title": "Melihat karena Cahaya, Mendengar karena Bunyi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Melihat Karena Cahaya, Mendengar Karena Bunyi (Sifat Cahaya & Bunyi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Harmoni dalam Ekosistem",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Harmoni dalam Ekosistem (Rantai Makanan & Jaring-jaring Makanan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Magnet, Listrik, dan Teknologi untuk Kehidupan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Magnet, Listrik, dan Teknologi untuk Kehidupan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Ayo Berkenalan dengan Bumi Kita",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mari Berkenalan dengan Bumi Kita (Struktur Bumi & Litosfer/Atmosfer)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Tata Surya (Rotasi & Revolusi Bumi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Bagaimana Kita Hidup dan Bertumbuh",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bagaimana Kita Hidup dan Bertumbuh (Sistem Pernapasan, Pencernaan, Peredaran Darah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Indonesiaku Kaya Raya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Indonesiaku Kaya Raya (Keanekaragaman Alam Indonesia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Daerahku Kebanggaanku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Daerahku dan Kekayaan Alamnya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Bumiku Sayang, Bumiku Malang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bumiku Sayang, Bumiku Malang (Masalah Lingkungan & Perubahan Iklim)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -27,6 +27,11 @@
           "name": "Daily Activities",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "About Me (Greetings, Introductions, Personal Info)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -95,6 +100,11 @@
           "name": "Describing Your Room",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Home Sweet Home (Rooms, Furniture, Household Tasks)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -129,6 +139,16 @@
           "name": "Extracurricular Activities",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "My School Activities (Class Schedules, School Events)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "School Uniform & Regulations",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -143,7 +163,13 @@
     {
       "no": 5,
       "title": "This is My School",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "This is My School (Places in School, Directions, Rules)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

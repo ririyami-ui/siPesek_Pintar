@@ -5,43 +5,85 @@
     {
       "no": 1,
       "title": "Variasi dan Kombinasi Gerak Dasar Permainan Bola",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Variasi dan Kombinasi Gerak Dasar Permainan Bola",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Atletik (Jalan/Lari/Lompat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Atletik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Bela Diri (Pencak Silat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bela Diri",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Kebugaran Jasmani",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kebugaran Jasmani",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Senam Lantai",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Senam Lantai",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Renang (Gaya Dada/Bebas)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Renang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Bahaya Narkoba (Lanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bahaya Narkoba (Lanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

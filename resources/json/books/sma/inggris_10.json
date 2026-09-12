@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Descriptive Text (Iconic Athletes, Historical Places, Sports Events)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Descriptive Text (Iconic Athletes, Historical Places, Sports Events)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Recount Text (Memorable Experiences, Scientific Discoveries)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Recount Text (Memorable Experiences, Scientific Discoveries)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Narrative Text (Fractured Fairy Tales, Urban Legends)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Narrative Text (Fractured Fairy Tales, Urban Legends)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Procedure Text (Healthy Life Tips, Technology Manuals)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Procedure Text (Healthy Life Tips, Technology Manuals)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Exposition Text (Analytical: Environmental/Social Issues)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Exposition Text (Analytical: Environmental/Social Issues)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Report Text (Classifying Natural and Social Phenomena)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Report Text (Classifying Natural and Social Phenomena)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

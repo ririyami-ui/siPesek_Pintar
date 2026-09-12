@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Akuntansi sebagai Sistem Informasi (Karakteristik & Pemakai Informasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Akuntansi sebagai Sistem Informasi (Karakteristik & Pemakai Informasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Persamaan Dasar Akuntansi (Analisis Transaksi & Laporan Keuangan Sederhana)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Persamaan Dasar Akuntansi (Analisis Transaksi & Laporan Keuangan Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Siklus Akuntansi Perusahaan Jasa (Jurnal Umum, Buku Besar, & Neraca Saldo)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Siklus Akuntansi Perusahaan Jasa (Jurnal Umum, Buku Besar, & Neraca Saldo)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Siklus Akuntansi Perusahaan Dagang (Jurnal Khusus, Persediaan Barang, & HPP)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Siklus Akuntansi Perusahaan Dagang (Jurnal Khusus, Persediaan Barang, & HPP)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Laporan Keuangan Perusahaan Dagang (Laba Rugi, Perubahan Modal, & Neraca)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Laporan Keuangan Perusahaan Dagang (Laba Rugi, Perubahan Modal, & Neraca)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Manajemen dan Koperasi (Implementasi Fungsi Manajemen dalam Bisnis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Manajemen dan Koperasi (Implementasi Fungsi Manajemen dalam Bisnis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

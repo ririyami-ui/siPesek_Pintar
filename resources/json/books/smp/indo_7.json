@@ -124,7 +124,13 @@
     {
       "no": 6,
       "title": "Sampaikan dengan Surat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Surat Pribadi dan Surat Resmi (Format & Ragam Bahasa)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

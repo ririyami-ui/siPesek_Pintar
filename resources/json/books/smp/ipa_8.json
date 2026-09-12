@@ -27,6 +27,11 @@
           "name": "Spesialisasi Sel dan Organisme Multiseluler",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Pengenalan Sel (Mikroskop, Sel Hewan & Tumbuhan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -62,6 +67,16 @@
           "name": "Sistem Ekskresi",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Struktur dan Fungsi Tubuh (Pencernaan, Pernapasan, Peredaran Darah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Interaksi Makhluk Hidup dan Lingkungannya (Upaya Mengatasi Perubahan Iklim)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -77,19 +92,37 @@
     {
       "no": 3,
       "title": "Usaha dan Energi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Usaha dan Energi (Hubungan serta Penerapannya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Getaran, Gelombang, dan Cahaya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Getaran, Gelombang, dan Cahaya (Optik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Unsur, Senyawa, dan Campuran",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Unsur, Senyawa, dan Campuran",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

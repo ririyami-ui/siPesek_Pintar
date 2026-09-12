@@ -5,25 +5,49 @@
     {
       "no": 1,
       "title": "Aku yang Unik",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku yang Unik (Kata Sifat & Sinonim-Antonim)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Buku Jendela Dunia",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Buku Jendela Dunia (Teks Nonfiksi & Bagian-bagian Buku)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Ekspresi Diri melalui Hobi",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ekspresi Diri Melalui Hobi (Surat Pribadi & Imbuhan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Belajar Berwirausaha",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Belajar Berwirausaha (Wawancara & Ide Bisnis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

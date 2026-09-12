@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Kelompok Sosial (Klasifikasi, Dinamika, & Masalah Antar-kelompok)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kelompok Sosial (Klasifikasi, Dinamika, & Masalah Antar-kelompok)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Permasalahan Sosial Akibat Eksklusi (Kemiskinan, Ketidakadilan, & Marginalisasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Permasalahan Sosial Akibat Eksklusi (Kemiskinan, Ketidakadilan, & Marginalisasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Prinsip Kesetaraan dan Inklusi Sosial dalam Masyarakat Multikultural",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Prinsip Kesetaraan dan Inklusi Sosial dalam Masyarakat Multikultural",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Konflik Sosial (Teori, Akar Masalah, & Dampaknya)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Konflik Sosial (Teori, Akar Masalah, & Dampaknya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kekerasan dan Transformasi Konflik (Upaya Resolusi & Perdamaian)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kekerasan dan Transformasi Konflik (Upaya Resolusi & Perdamaian)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Integrasi dan Reintegrasi Sosial setelah Konflik",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Integrasi dan Reintegrasi Sosial setelah Konflik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -5,19 +5,37 @@
     {
       "no": 1,
       "title": "Surat Lamaran Pekerjaan (Sistematika, Unsur Kebahasaan, & Etika Penulisan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Surat Lamaran Pekerjaan (Sistematika, Unsur Kebahasaan, & Etika Penulisan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Teks Editorial (Menganalisis Isu Aktual, Fakta, & Opini Redaksi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Teks Editorial (Menganalisis Isu Aktual, Fakta, & Opini Redaksi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Novel Sejarah (Menganalisis Nilai-nilai & Struktur Teks Cerita Sejarah)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Novel Sejarah (Menganalisis Nilai-nilai & Struktur Teks Cerita Sejarah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -43,6 +61,11 @@
           "name": "Menulis Artikel",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Artikel Opini dan Esai (Konstruksi Argumen & Gaya Bahasa)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -56,13 +79,25 @@
     {
       "no": 5,
       "title": "Kritik Sastra dan Esai (Apresiasi & Evaluasi Karya Sastra)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kritik Sastra dan Esai (Apresiasi & Evaluasi Karya Sastra)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Presentasi Ilmiah dan Orasi (Teknik Komunikasi Publik & Retorika)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Presentasi Ilmiah dan Orasi (Teknik Komunikasi Publik & Retorika)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

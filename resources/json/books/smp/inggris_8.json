@@ -27,6 +27,11 @@
           "name": "Writing a Personal Recount",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Celebrating Independence Day (Historical Events, Identity)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -42,7 +47,13 @@
     {
       "no": 2,
       "title": "Kindness Begins with Me",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kindness and Resilience (Describing Character & Feelings)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -66,6 +77,16 @@
         },
         {
           "name": "Designing a Poster for Environment",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Love Our World (Environmental Issues, Sustainability)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Our Environment (Describing Natural Phenomena)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
@@ -100,6 +121,11 @@
         },
         {
           "name": "Writing a Short Report",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "No Littering (Rules, Prohibitions, Giving Instructions)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }

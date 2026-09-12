@@ -1,64 +1,137 @@
 {
- "bookId": "sma-ipa-10",
- "isbn": "978-623-118-461-0",
- "publisher": "Pusat Kurikulum dan Perbukuan",
- "title": "Ilmu Pengetahuan Alam untuk SMA/MA Kelas X (Edisi Revisi)",
- "chapters": [
-  {
-   "no": 1,
-   "title": "Bab 1: Pengukuran dalam Kerja Ilmiah",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 2,
-   "title": "Bab 2: Virus dan Peranannya",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 3,
-   "title": "Bab 3: Kimia Hijau dalam Pembangunan Berkelanjutan",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 4,
-   "title": "Bab 4: Hukum Dasar Kimia di Sekitar Kita",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 5,
-   "title": "Bab 5: Struktur Atom dan Sistem Periodik",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 6,
-   "title": "Bab 6: Energi Terbarukan",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 7,
-   "title": "Bab 7: Keanekaragaman Hayati",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 8,
-   "title": "Bab 8: Pemanasan Global",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  }
- ]
+  "bookId": "sma-ipa-10",
+  "isbn": "978-623-118-461-0",
+  "publisher": "Pusat Kurikulum dan Perbukuan",
+  "title": "Ilmu Pengetahuan Alam untuk SMA/MA Kelas X (Edisi Revisi)",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bab 1: Pengukuran dalam Kerja Ilmiah",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Hakikat Fisika dan Prosedur Ilmiah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pengukuran dan Ketidakpastian (Alat Ukur & Angka Penting)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Bab 2: Virus dan Peranannya",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Virus (Struktur, Replikasi, & Peranan dalam Penyakit)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Bab 3: Kimia Hijau dalam Pembangunan Berkelanjutan",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Kimia Hijau dalam Pembangunan Berkelanjutan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Ikatan Kimia (Ion, Kovalen, Logam) & Bentuk Molekul",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Stoikiometri (Konsep Mol & Perhitungan Kimia Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Bab 4: Hukum Dasar Kimia di Sekitar Kita",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Hukum-hukum Dasar Kimia (Lavoisier, Proust, Dalton, Gay-Lussac)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Bab 5: Struktur Atom dan Sistem Periodik",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Struktur Atom (Model Atom, Isotop, & Konfigurasi Elektron Bohr)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Periodik Unsur (Sifat Periodik & Golongan Unsur)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Bab 6: Energi Terbarukan",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Energi Terbarukan (Pemanfaatan Energi Matahari, Angin, Air)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Ekosistem (Komponen, Aliran Energi, & Daur Biogeokimia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "Bab 7: Keanekaragaman Hayati",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Keanekaragaman Hayati (Tingkat Gen, Jenis, & Ekosistem)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 8,
+      "title": "Bab 8: Pemanasan Global",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pemanasan Global (Penyebab, Mekanisme Efek Rumah Kaca)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    }
+  ]
 }

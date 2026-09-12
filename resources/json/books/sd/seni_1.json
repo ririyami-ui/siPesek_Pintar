@@ -5,55 +5,109 @@
     {
       "no": 1,
       "title": "Seni di Sekitarku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Seni di Sekitarku",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Aneka Garis",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aneka Garis",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Garis yang Menunjukkan Gerakan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Garis yang Menunjukkan Gerakan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Garis Membuat Bentuk",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Garis Membuat Bentuk",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Warna",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Warna",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Membuat Model Bangunan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Model Bangunan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Tekstur dan Pola",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Tekstur dan Pola",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Wajah dan Perasaan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Wajah dan Perasaan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 9,
       "title": "Membuat Bentuk 3D",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membuat Bentuk 3D",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

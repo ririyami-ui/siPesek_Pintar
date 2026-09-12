@@ -5,7 +5,13 @@
     {
       "no": 1,
       "title": "Pancasila dalam Kehidupanku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Meneladani Nilai-nilai Juang Para Perumus Pancasila",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -17,7 +23,13 @@
     {
       "no": 3,
       "title": "Keragaman Budaya Indonesiaku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Jati Diri dan Kebhinekaan (Budaya Indonesia & Dunia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

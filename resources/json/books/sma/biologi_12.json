@@ -7,37 +7,73 @@
     {
       "no": 1,
       "title": "Enzim dan Metabolisme (Anabolisme & Katabolisme Karbohidrat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Enzim dan Metabolisme (Anabolisme & Katabolisme Karbohidrat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Materi Genetik (Sintesis Protein: Transkripsi & Translasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Materi Genetik (Sintesis Protein: Transkripsi & Translasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Hukum Mendel dan Penyimpangan Semu Hukum Mendel",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Hukum Mendel dan Penyimpangan Semu Hukum Mendel",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Pola Hereditas pada Manusia (Golongan Darah & Penyakit Menurun)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pola Hereditas pada Manusia (Golongan Darah & Penyakit Menurun)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Evolusi (Mekanisme Seleksi Alam & Studi Perbandingan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Evolusi (Mekanisme Seleksi Alam & Studi Perbandingan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Bioteknologi Modern (Rekayasa Genetika & Kultur Jaringan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bioteknologi Modern (Rekayasa Genetika & Kultur Jaringan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

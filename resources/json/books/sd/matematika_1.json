@@ -5,49 +5,102 @@
     {
       "no": 1,
       "title": "Bilangan sampai 10",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan sampai 10",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Bilangan sampai 100",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Menguraikan dan Menyusun Bilangan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menguraikan dan Menyusun Bilangan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Bilangan untuk Menunjukkan Urutan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan untuk Menunjukkan Urutan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Penjumlahan (1)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penjumlahan (1)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Pengurangan (1)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Pengurangan (1)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Bentuk-bentuk Bangun (1)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bentuk-bentuk Bangun (1)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Bilangan yang Lebih dari 10",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bilangan yang Lebih dari 10",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Waktu",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Waktu",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -65,13 +118,25 @@
     {
       "no": 11,
       "title": "Pengurangan (2)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penjumlahan dan Pengurangan (2)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 12,
       "title": "Membandingkan Ukuran",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Membandingkan Ukuran",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -83,13 +148,25 @@
     {
       "no": 14,
       "title": "Penjumlahan dan Pengurangan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penjumlahan dan Pengurangan (3)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 15,
       "title": "Bentuk-bentuk Bangun (2)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bentuk-bentuk Bangun (2)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

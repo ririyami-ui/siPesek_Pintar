@@ -30,6 +30,11 @@
           "name": "Grafik Fungsi Logaritma",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Eksponen dan Logaritma (Sifat, Grafik, & Aplikasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -67,6 +72,11 @@
           "name": "Deret Geometri Tak Hingga",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Barisan dan Deret (Aritmatika, Geometri, Konvergensi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -80,37 +90,73 @@
     {
       "no": 3,
       "title": "Sistem Persamaan Linear Tiga Variabel (SPLTV) & Metode Penyelesaian",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Persamaan Linear Tiga Variabel (SPLTV) & Metode Penyelesaian",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Trigonometri Dasar (Perbandingan Trigonometri pada Segitiga Siku-Siku)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Trigonometri Dasar (Perbandingan Trigonometri pada Segitiga Siku-Siku)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Sistem Pertidaksamaan Linear Dua Variabel (Grafik Himpunan Penyelesaian)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sistem Pertidaksamaan Linear Dua Variabel (Grafik Himpunan Penyelesaian)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Persamaan dan Fungsi Kuadrat (Kaitan Grafik & Diskriminan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Persamaan dan Fungsi Kuadrat (Kaitan Grafik & Diskriminan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Statistika Deskriptif (Ukuran Pemusatan & Penyebaran Data Kelompok)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Statistika Deskriptif (Ukuran Pemusatan & Penyebaran Data Kelompok)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Peluang Kejadian Saling Lepas & Saling Bebas",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Peluang Kejadian Saling Lepas & Saling Bebas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

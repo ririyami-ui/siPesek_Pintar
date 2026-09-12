@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Permainan Bola Basket (Taktik)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Permainan Bola Basket (Taktik)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Permainan Bola Voli (Formasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Permainan Bola Voli (Formasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Atletik (Lari Estafet)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Atletik (Lari Estafet)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Penyakit Menular Seksual (PMS)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penyakit Menular Seksual (PMS)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Senam Aerobik",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Senam Aerobik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Penyelamatan di Air",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penyelamatan di Air",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

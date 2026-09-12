@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Perubahan Sosial (Teori, Bentuk, & Faktor Pendorong/Penghambat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Perubahan Sosial (Teori, Bentuk, & Faktor Pendorong/Penghambat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Globalisasi dan Modernisasi (Dampak pada Gaya Hidup & Eksistensi Lokal)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Globalisasi dan Modernisasi (Dampak pada Gaya Hidup & Eksistensi Lokal)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Ketimpangan Sosial (Akar Masalah & Kesenjangan di Berbagai Bidang)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Ketimpangan Sosial (Akar Masalah & Kesenjangan di Berbagai Bidang)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Kearifan Lokal dan Pemberdayaan Komunitas (Inisiatif Lokal & Keberlanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kearifan Lokal dan Pemberdayaan Komunitas (Inisiatif Lokal & Keberlanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Penelitian Sosial Lanjutan (Evaluasi Program Pemberdayaan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Penelitian Sosial Lanjutan (Evaluasi Program Pemberdayaan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Etika Sosiologi dalam Memandang Masalah Sosial Kontemporer",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Etika Sosiologi dalam Memandang Masalah Sosial Kontemporer",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

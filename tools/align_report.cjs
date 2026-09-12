@@ -28,7 +28,7 @@ for (const level of ['SD','SMP','SMA']) {
     for (const subj of Object.keys(intel.subjects[level][grade] || {})) {
       if (isAgama(subj)) continue;
 
-      const entry = idx.find(x => x.jenjang === level && String(x.kelas) === String(grade) && norm(x.mapel) === norm(UMBRELLA[subj] || subj));
+      const entry = idx.find(x => x.jenjang === level && String(x.kelas) === String(grade) && norm(x.mapel) === norm((level === 'SMA' && grade == 10 && UMBRELLA[subj]) ? UMBRELLA[subj] : subj));
       let bookText = null, bookChaps = [];
       if (entry) {
         const f = path.join(root, 'resources/json/books', entry.path);

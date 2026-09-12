@@ -27,6 +27,11 @@
           "name": "Aktivitas Memenuhi Kebutuhan",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Keluarga Awal Kehidupan (Silsilah Keluarga & Sosialisasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -42,13 +47,35 @@
     {
       "no": 2,
       "title": "Keberagaman Lingkungan Sekitar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Keberagaman Lingkungan Sekitar (Kondisi Geografis & Keragaman Budaya)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kelestarian Lingkungan Hidup",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Potensi Ekonomi Lingkungan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Manusia sebagai Makhluk Sosial dan Ekonomi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Potensi Ekonomi Lingkungan (SDA & Aktivitas Ekonomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -72,6 +99,11 @@
         },
         {
           "name": "Peranan Komunitas",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pemberdayaan Masyarakat (Uang, Bank, dan Sejarah Lokal)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }

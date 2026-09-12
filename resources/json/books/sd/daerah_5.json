@@ -1,205 +1,220 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sd-dae-5",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-dae-5",
+  "chapters": [
+    {
+      "no": 1,
+      "pages": "1-32",
+      "sub_topics": [
         {
-            "no": 1,
-            "pages": "1-32",
-            "sub_topics": [
-                {
-                    "name": "Apa Itu Wacana?",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Wacana Narasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Wacana Deskripsi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menganalisis Wacana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "wacana",
-                "narasi",
-                "deskripsi"
-            ],
-            "semester": "Ganjil",
-            "title": "Wacana"
+          "name": "Apa Itu Wacana?",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "pages": "33-64",
-            "sub_topics": [
-                {
-                    "name": "Piwulang Luhur",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pitutur dari Leluhur",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pepatah dan Peribahasa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Piwulang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "piwulang",
-                "pitutur",
-                "pepatah"
-            ],
-            "semester": "Ganjil",
-            "title": "Piwulang dan Pitutur"
+          "name": "Wacana Narasi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "pages": "65-96",
-            "sub_topics": [
-                {
-                    "name": "Aksara Lengkap",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Angka dalam Aksara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menulis Wacana dengan Aksara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membaca Aksara Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "aksara",
-                "lengkap",
-                "tulisan"
-            ],
-            "semester": "Ganjil",
-            "title": "Aksara Lengkap"
+          "name": "Wacana Deskripsi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "pages": "97-128",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Drama Tradisi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ketoprak",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ludruk",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Lenong",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "drama",
-                "tradisi",
-                "ketoprak"
-            ],
-            "semester": "Genap",
-            "title": "Drama Tradisi"
-        },
-        {
-            "no": 5,
-            "pages": "129-158",
-            "sub_topics": [
-                {
-                    "name": "Apa Itu Sesorah?",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Struktur Pidato",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Berlatih Sesorah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sesorah di Acara Sekolah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "sesorah",
-                "pidato",
-                "wicara"
-            ],
-            "semester": "Genap",
-            "title": "Sesorah"
-        },
-        {
-            "no": 6,
-            "pages": "159-188",
-            "sub_topics": [
-                {
-                    "name": "Jenis Sastra Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Novel dan Cerpen Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Puisi Daerah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Apresiasi Karya Sastra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "sastra",
-                "apresiasi",
-                "karya"
-            ],
-            "semester": "Genap",
-            "title": "Pengetahuan Sastra"
+          "name": "Menganalisis Wacana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ],
-    "isbn": "978-623-194-835-8"
+      ],
+      "key_terms": [
+        "wacana",
+        "narasi",
+        "deskripsi"
+      ],
+      "semester": "Ganjil",
+      "title": "Wacana"
+    },
+    {
+      "no": 2,
+      "pages": "33-64",
+      "sub_topics": [
+        {
+          "name": "Piwulang Luhur",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pitutur dari Leluhur",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pepatah dan Peribahasa",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Makna Piwulang",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "piwulang",
+        "pitutur",
+        "pepatah"
+      ],
+      "semester": "Ganjil",
+      "title": "Piwulang dan Pitutur"
+    },
+    {
+      "no": 3,
+      "pages": "65-96",
+      "sub_topics": [
+        {
+          "name": "Aksara Lengkap",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Angka dalam Aksara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menulis Wacana dengan Aksara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membaca Aksara Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Aksara Jawa (Angka Jawa)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Aksara Jawa (Paragraf Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "aksara",
+        "lengkap",
+        "tulisan"
+      ],
+      "semester": "Ganjil",
+      "title": "Aksara Lengkap"
+    },
+    {
+      "no": 4,
+      "pages": "97-128",
+      "sub_topics": [
+        {
+          "name": "Pengertian Drama Tradisi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Ketoprak",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Ludruk",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Lenong",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "drama",
+        "tradisi",
+        "ketoprak"
+      ],
+      "semester": "Genap",
+      "title": "Drama Tradisi"
+    },
+    {
+      "no": 5,
+      "pages": "129-158",
+      "sub_topics": [
+        {
+          "name": "Apa Itu Sesorah?",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Struktur Pidato",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Berlatih Sesorah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sesorah di Acara Sekolah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Teks Pidato (Sesorah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "sesorah",
+        "pidato",
+        "wicara"
+      ],
+      "semester": "Genap",
+      "title": "Sesorah"
+    },
+    {
+      "no": 6,
+      "pages": "159-188",
+      "sub_topics": [
+        {
+          "name": "Jenis Sastra Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Novel dan Cerpen Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Puisi Daerah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Apresiasi Karya Sastra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "sastra",
+        "apresiasi",
+        "karya"
+      ],
+      "semester": "Genap",
+      "title": "Pengetahuan Sastra"
+    }
+  ],
+  "isbn": "978-623-194-835-8"
 }

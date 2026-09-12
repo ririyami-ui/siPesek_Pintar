@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Posisi Strategis Indonesia (Poros Maritim Dunia & Letak Astronomis/Geografis)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Posisi Strategis Indonesia (Poros Maritim Dunia & Letak Astronomis/Geografis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Keanekaragaman Hayati (Sebaran Flora Fauna di Indonesia & Dunia)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Keanekaragaman Hayati (Sebaran Flora Fauna di Indonesia & Dunia)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Sumber Daya Alam (Sebaran Potensi SDA Kehutanan, Pertambangan, Kelautan, & Pariwisata)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sumber Daya Alam (Sebaran Potensi SDA Kehutanan, Pertambangan, Kelautan, & Pariwisata)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Lingkungan Hidup dan Ketahanan Pangan (Potensi Pertanian, Perkebunan, Peternakan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Lingkungan Hidup dan Ketahanan Pangan (Potensi Pertanian, Perkebunan, Peternakan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Dinamika Kependudukan Indonesia (Kualitas SDM, Bonus Demografi, & Migrasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Dinamika Kependudukan Indonesia (Kualitas SDM, Bonus Demografi, & Migrasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Mitigasi Bencana Alam (Adaptasi Kebencanaan di Wilayah Rawan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mitigasi Bencana Alam (Adaptasi Kebencanaan di Wilayah Rawan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

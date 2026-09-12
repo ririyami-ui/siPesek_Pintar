@@ -25,6 +25,31 @@
           "name": "Ragam Gerak Dasar",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Gerak Dasar Tari dan Ruang Gerak",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Peran Tari dalam Upacara Adat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menciptakan Gerak Tari Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Merefleksikan Karya Tari Teman",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Peran Tari dalam Budaya Masyarakat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -38,13 +63,35 @@
     {
       "no": 2,
       "title": "Level, Pola Lantai, dan Iringan Tari",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Eksplorasi Gerak dan Pola Lantai",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Menciptakan Pola Lantai Sendiri",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Koreografi Sederhana dengan Iringan Musik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Tari Nusantara",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mengenal Tari Nusantara dan Makna Simbolik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

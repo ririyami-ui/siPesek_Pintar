@@ -5,25 +5,79 @@
     {
       "no": 1,
       "title": "Unsur dan Prinsip Seni Rupa",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Rupa Dasar (Titik, Garis, Bidang)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Prinsip Gambar Perspektif",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Seni Rupa dalam Kehidupan Sehari-hari",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Pameran Karya Seni Rupa",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Merefleksikan Karya Seni Rupa Teman",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Seni Rupa dan Pelestarian Budaya",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Menggambar dan Melukis",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Menggambar Flora, Fauna, dan Alam Benda",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Seni Desain dan Kriya",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Desain Poster dan Tipografi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Seni Rupa Nusantara",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Mengapresiasi Karya Seni Rupa Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mengenal Ragam Hias Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

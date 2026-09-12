@@ -27,6 +27,11 @@
           "name": "Menghayati Nilai Pancasila dalam Keseharian",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Kedudukan dan Fungsi Pancasila (Dasar Negara, Pandangan Hidup)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -77,13 +82,25 @@
     {
       "no": 3,
       "title": "Tata Negara dan Pemerintahan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Tata Urutan Peraturan Perundang-undangan di Indonesia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Kebangkitan Nasional",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kebangkitan Nasional dan Sumpah Pemuda",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {

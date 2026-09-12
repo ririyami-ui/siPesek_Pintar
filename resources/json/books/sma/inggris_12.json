@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Application Letter and CV (Professional Identity & Career Goals)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Application Letter and CV (Professional Identity & Career Goals)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "News Items (Analyzing Hard News, Features, & Ethical Reporting)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "News Items (Analyzing Hard News, Features, & Ethical Reporting)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Caption Text (Information Graphics & Social Media Context)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Caption Text (Information Graphics & Social Media Context)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Review Text (Critiquing Films, Books, or Performances)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Review Text (Critiquing Films, Books, or Performances)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Explanation Text (Describing Processes of Natural/Social Phenomena)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Explanation Text (Describing Processes of Natural/Social Phenomena)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Philosophical Songs and Poems (Deep Interpretation & Expression)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Philosophical Songs and Poems (Deep Interpretation & Expression)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

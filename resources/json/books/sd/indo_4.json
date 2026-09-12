@@ -5,49 +5,97 @@
     {
       "no": 1,
       "title": "Sudah Besar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sudah Besar (Tokoh Cerita & Kalimat Transitif-Intransitif)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Di Bawah Atap",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Di Bawah Atap (Tugas Rumah & Teks Deskripsi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Lihat Sekitar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Lihat Sekitar (Lalu Lintas & Teks Prosedur)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Meliuk dan Menerjang",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Meliuk dan Menerjang (Ide Pokok & Wawancara)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Bertukar atau Membayar",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Bertukar atau Membayar (Literasi Keuangan & Teks Infografis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Satu Titik",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Satu Titik (Bentang Alam & Puisi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 7,
       "title": "Asal-Usul",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Asal-usul (Nenek Moyang & Teks Narasi Sejarah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 8,
       "title": "Sehatlah Ragaku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Sehatlah Ragaku (Kesehatan & Teks Eksplanasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

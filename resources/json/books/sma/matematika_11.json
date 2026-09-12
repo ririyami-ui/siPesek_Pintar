@@ -30,6 +30,11 @@
           "name": "Fungsi Invers dari Komposisi",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Komposisi Fungsi dan Fungsi Invers (Konsep & Aplikasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -43,31 +48,61 @@
     {
       "no": 2,
       "title": "Lingkaran (Persamaan, Garis Singgung, & Hubungan Antar Lingkaran)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Lingkaran (Persamaan, Garis Singgung, & Hubungan Antar Lingkaran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Logika Matematika (Pernyataan Majemuk & Penarikan Kesimpulan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Logika Matematika (Pernyataan Majemuk & Penarikan Kesimpulan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Statistika Inferensial (Regresi Linear & Korelasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Statistika Inferensial (Regresi Linear & Korelasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Limit Fungsi Aljabar (Metode Substitusi, Pemfaktoran, & Perkalian Sekawan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Limit Fungsi Aljabar (Metode Substitusi, Pemfaktoran, & Perkalian Sekawan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Turunan Fungsi Aljabar (Sifat-sifat & Aplikasi Turunan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Turunan Fungsi Aljabar (Sifat-sifat & Aplikasi Turunan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

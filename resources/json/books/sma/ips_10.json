@@ -1,36 +1,90 @@
 {
- "bookId": "sma-ips-10",
- "isbn": "978-623-118-469-6",
- "publisher": "Pusat Kurikulum dan Perbukuan",
- "title": "Ilmu Pengetahuan Sosial untuk SMA/MA Kelas X (Edisi Revisi)",
- "chapters": [
-  {
-   "no": 1,
-   "title": "Bab 1: Sejarah Indonesia: Manusia, Ruang, dan Waktu",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 2,
-   "title": "Bab 2: Sosiologi: Individu dan Masyarakat",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 3,
-   "title": "Bab 3: Ekonomi: Kelangkaan dan Biaya Peluang",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  },
-  {
-   "no": 4,
-   "title": "Bab 4: Geografi: Pengantar Ilmu Geografi",
-   "pages": "",
-   "sub_topics": [],
-   "key_terms": []
-  }
- ]
+  "bookId": "sma-ips-10",
+  "isbn": "978-623-118-469-6",
+  "publisher": "Pusat Kurikulum dan Perbukuan",
+  "title": "Ilmu Pengetahuan Sosial untuk SMA/MA Kelas X (Edisi Revisi)",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bab 1: Sejarah Indonesia: Manusia, Ruang, dan Waktu",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Pengantar Ilmu Sejarah (Manusia, Ruang, & Waktu)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Peran Indonesia dalam Sejarah Maritim Dunia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Bab 2: Sosiologi: Individu dan Masyarakat",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Sosiologi sebagai Ilmu Paradigma Ganda",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Lembaga Sosial dan Sosialisasi dalam Keluarga & Masyarakat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Bab 3: Ekonomi: Kelangkaan dan Biaya Peluang",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Kelangkaan dan Biaya Peluang (Masalah Ekonomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Ekonomi di Dunia & Indonesia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kegiatan Ekonomi (Perilaku Konsumen & Produsen dalam Ekonomi Digital)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Manajemen dan Koperasi (Peran Koperasi dalam Ekonomi Nasional)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Masa Praaksara di Indonesia (Kehidupan Sosial & Ekonomi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Bab 4: Geografi: Pengantar Ilmu Geografi",
+      "pages": "",
+      "sub_topics": [
+        {
+          "name": "Konsep Dasar dan Prinsip Geografi (Objek Studi & Aspek Geografi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": []
+    }
+  ]
 }

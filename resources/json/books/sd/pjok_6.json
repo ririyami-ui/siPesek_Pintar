@@ -5,25 +5,49 @@
     {
       "no": 1,
       "title": "Permainan Bola Besar (Lanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Permainan Bola Besar (Lanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Atletik (Lanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Atletik (Lanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Senam Lantai (Lanjutan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Senam Lantai (Lanjutan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Budaya Hidup Sehat",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Budaya Hidup Sehat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -5,7 +5,23 @@
     {
       "no": 1,
       "title": "Unsur-Unsur Musik",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Unsur-unsur Musik (Irama, Melodi, Harmoni)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Peran Musik dalam Kehidupan Sehari-hari",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Musik dan Pengaruhnya dalam Kehidupan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
@@ -37,6 +53,11 @@
           "name": "Dinamika dan Ekspresi",
           "bloom_level": "LOTS",
           "suggested_jp": 1
+        },
+        {
+          "name": "Teknik Vokal Dasar dan Bernyanyi Bersama",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -50,13 +71,40 @@
     {
       "no": 4,
       "title": "Musik Nusantara",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Apresiasi Karya Musik Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Mendengarkan dan Mengapresiasi Musik Nusantara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Kreativitas Musik Sederhana",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Komposisi Musik Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Karya Kreatif Musik Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Aransemen Musik Sederhana",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ]

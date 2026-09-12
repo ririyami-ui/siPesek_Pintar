@@ -5,25 +5,49 @@
     {
       "no": 1,
       "title": "Aku Patuh Aturan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Patuh Aturan (di Sekolah & Rumah)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Aku Berperilaku Pancasila",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Berperilaku Pancasila (Penerapan Sila)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Aku dan Teman-temanku",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku dan Teman-Temanku (Kerjasama)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Aku Peduli Lingkungan",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aku Peduli Lingkungan (Kebersihan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],

@@ -5,37 +5,73 @@
     {
       "no": 1,
       "title": "Geometri Ruang (Jarak antar Titik, Garis, & Bidang dalam Dimensi Tiga)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Geometri Ruang (Jarak antar Titik, Garis, & Bidang dalam Dimensi Tiga)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 2,
       "title": "Integral Tentu dan Tak Tentu (Konsep, Sifat, & Teknik Pengintegralan)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Integral Tentu dan Tak Tentu (Konsep, Sifat, & Teknik Pengintegralan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 3,
       "title": "Aplikasi Integral (Luas Daerah & Volume Benda Putar)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Aplikasi Integral (Luas Daerah & Volume Benda Putar)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 4,
       "title": "Kombinatorial (Aturan Penjumlahan, Perkalian, Permutasi, & Kombinasi)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Kombinatorial (Aturan Penjumlahan, Perkalian, Permutasi, & Kombinasi)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 5,
       "title": "Peluang Kejadian Majemuk (Saling Bebas, Saling Lepas, & Bersyarat)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Peluang Kejadian Majemuk (Saling Bebas, Saling Lepas, & Bersyarat)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     },
     {
       "no": 6,
       "title": "Distribusi Peluang Binomial (Konsep & Penerapan dalam Uji Hipotesis Sederhana)",
-      "sub_topics": [],
+      "sub_topics": [
+        {
+          "name": "Distribusi Peluang Binomial (Konsep & Penerapan dalam Uji Hipotesis Sederhana)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
       "key_terms": []
     }
   ],
