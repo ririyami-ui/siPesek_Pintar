@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-khonghucu-7",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Sejarah dan Kitab Suci Agama Khonghucu",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Konsep Tian dan Manusia",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Watak Sejati dan Kebajikan",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Sembahyang dan Doa",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Hari Raya dan Tradisi Khonghucu",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-913-3"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-khonghucu-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Riwayat Nabi Kongzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Nabi Kongzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Perjalanan Hidup Nabi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pengaruh Nabi Kongzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Kongzi",
+                "Konfusius",
+                "nabi"
+            ],
+            "semester": "Ganjil",
+            "title": "Nabi Kongzi"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Si Shu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ta Xue",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Zhong Yong",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lun Yu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Si Shu",
+                "Lun Yu",
+                "kitab suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Si Shu"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Wu Jing",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kitab Sanjak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kitab Sejarah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kitab Perubahan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Wu Jing",
+                "kitab klasik",
+                "Yijing"
+            ],
+            "semester": "Ganjil",
+            "title": "Wu Jing"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Li Ji",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Aturan Kesusilaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ritual dan Tradisi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Li",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Li Ji",
+                "kesusilaan",
+                "ritual"
+            ],
+            "semester": "Genap",
+            "title": "Li Ji"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Xiao Jing",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bakti kepada Orang Tua",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bakti kepada Negara",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Makna Kebaktian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Xiao Jing",
+                "bakti",
+                "xiao"
+            ],
+            "semester": "Genap",
+            "title": "Xiao Jing"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Isi Kitab Lun Yu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Moral Lun Yu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dialog Nabi Kongzi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Lun Yu dalam Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Lun Yu",
+                "sabda",
+                "ajaran"
+            ],
+            "semester": "Genap",
+            "title": "Lun Yu"
+        }
+    ],
+    "isbn": "978-623-194-913-3"
 }

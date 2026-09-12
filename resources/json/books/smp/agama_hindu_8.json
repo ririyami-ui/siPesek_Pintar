@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-hindu-8",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Kitab Suci Weda (Sruti dan Smerti)",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Sraddha dan Penerapan Bhakti",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Susila (Panca Yama Brata dan Panca Niyama Brata)",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Upacara dan Upakara Yadnya",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Perkembangan Agama Hindu di Indonesia",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-908-9"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-8",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Dharma Gita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jenis-jenis Dharma Gita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kidung dan Nyanyian Suci",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Fungsi Dharma Gita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Dharma Gita",
+                "kidung",
+                "nyanyian suci"
+            ],
+            "semester": "Ganjil",
+            "title": "Dharma Gita"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Yoga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jenis-jenis Yoga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manfaat Yoga",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Praktik Yoga Dasar",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "yoga",
+                "meditasi",
+                "konsentrasi"
+            ],
+            "semester": "Ganjil",
+            "title": "Yoga"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Guru Swadyaya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Guru Rupaka",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Guru Pengajian",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Guru Wisesa",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "guru",
+                "Catur Guru",
+                "teladan"
+            ],
+            "semester": "Ganjil",
+            "title": "Catur Guru"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Brahman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Atman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karmaphala",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Moksha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Sradha",
+                "Brahman",
+                "Atman"
+            ],
+            "semester": "Genap",
+            "title": "Panca Sradha"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Yajna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Macam-macam Yajna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tujuan Yajna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pelaksanaan Yajna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "yajna",
+                "korban suci",
+                "keikhlasan"
+            ],
+            "semester": "Genap",
+            "title": "Yajna"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Lingkungan dalam Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Hindu tentang Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pelestarian Lingkungan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ekosistem dan Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "lingkungan",
+                "alam",
+                "pelestarian"
+            ],
+            "semester": "Genap",
+            "title": "Lingkungan Hidup"
+        }
+    ],
+    "isbn": "978-623-194-908-9"
 }

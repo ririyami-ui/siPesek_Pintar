@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-hindu-7",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Weda sebagai Sumber Ajaran Hindu",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Tuhan dan Ciptaan-Nya",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Manusia dan Perilaku dalam Hindu",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Yadnya dalam Kehidupan",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Hari Suci dan Tempat Ibadah Hindu",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-907-2"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-7",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Veda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Bagian-bagian Veda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Isi Pokok Veda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Veda sebagai Sumber Hukum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Veda",
+                "Sruti",
+                "Smerti"
+            ],
+            "semester": "Ganjil",
+            "title": "Veda"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Pratyaksha Pramana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Anumana Pramana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Sabda Pramana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Cara Memperoleh Pengetahuan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "pramana",
+                "pengetahuan",
+                "pembuktian"
+            ],
+            "semester": "Ganjil",
+            "title": "Tri Pramana"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Maitri Karuna",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mudita",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Upeksha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Penerapan dalam Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "paramita",
+                "cinta kasih",
+                "kebajikan"
+            ],
+            "semester": "Ganjil",
+            "title": "Catur Paramita"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Dewa Yadnya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pitra Yadnya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rsi Yadnya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manusa Yadnya",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "yadnya",
+                "persembahan",
+                "korban suci"
+            ],
+            "semester": "Genap",
+            "title": "Panca Yadnya"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Parahyangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pawongan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Palemahan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Harmoni Alam dan Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Tri Hita Karana",
+                "harmoni",
+                "keseimbangan"
+            ],
+            "semester": "Genap",
+            "title": "Tri Hita Karana"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Pura",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Jenis-jenis Pura",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Arsitektur Pura",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Keindahan Pura",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "pura",
+                "tempat suci",
+                "arsitektur"
+            ],
+            "semester": "Genap",
+            "title": "Pura dan Keindahan"
+        }
+    ],
+    "isbn": "978-623-194-907-2"
 }

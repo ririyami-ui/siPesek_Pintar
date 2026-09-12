@@ -1,90 +1,110 @@
-{
-  "publisher": "Kemendikbudristek",
-  "bookId": "sd-pai-1",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Aku Sayang Al-Qur'an",
-      "sub_topics": [
-        {
-          "name": "Mengenal Al-Qur'an",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Membaca Basmalah",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Surat Al-Fatihah",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Surat An-Nas dan Al-Falaq",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        }
-      ],
-      "key_terms": [
-        "Al-Qur'an",
-        "basmalah",
-        "surat"
-      ],
-      "pages": "1-32"
-    },
-    {
-      "no": 2,
-      "title": "Mengenal Rukun Iman",
-      "sub_topics": [
-        {
-          "name": "Iman kepada Allah",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Iman kepada Malaikat",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Iman kepada Kitab",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Iman kepada Rasul",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        }
-      ],
-      "key_terms": [
-        "iman",
-        "rukun",
-        "Allah",
-        "malaikat"
-      ],
-      "pages": "33-64"
-    },
-    {
-      "no": 3,
-      "title": "Aku Melakukan Basmalah dan Hamdalah",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Mengenal Rukun Islam",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Nabi dan Rasul Panutanku",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-611-X"
+﻿{
+    "publisher":  "Kemendikbudristek",
+    "bookId":  "sd-pai-1",
+    "chapters":  [
+                     {
+                         "no":  1,
+                         "pages":  "1-32",
+                         "sub_topics":  [
+                                            "Mengenal Al-Qur\u0027an",
+                                            "Membaca Basmalah",
+                                            "Surat Al-Fatihah",
+                                            "Surat An-Nas dan Al-Falaq"
+                                        ],
+                         "key_terms":  [
+                                           "Al-Qur\u0027an",
+                                           "basmalah",
+                                           "surat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Aku Cinta Al-Qur\u0027an"
+                     },
+                     {
+                         "no":  2,
+                         "pages":  "33-64",
+                         "sub_topics":  [
+                                            "Iman kepada Allah",
+                                            "Iman kepada Malaikat",
+                                            "Iman kepada Kitab",
+                                            "Iman kepada Rasul"
+                                        ],
+                         "key_terms":  [
+                                           "iman",
+                                           "rukun",
+                                           "Allah",
+                                           "malaikat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Rukun Iman"
+                     },
+                     {
+                         "no":  3,
+                         "pages":  "65-96",
+                         "sub_topics":  [
+                                            "Tata Cara Wudhu",
+                                            "Bersuci",
+                                            "Shalat Wajib",
+                                            "Gerakan Shalat"
+                                        ],
+                         "key_terms":  [
+                                           "bersuci",
+                                           "wudhu",
+                                           "shalat"
+                                       ],
+                         "semester":  "Ganjil",
+                         "title":  "Bersuci dan Shalat"
+                     },
+                     {
+                         "no":  4,
+                         "pages":  "97-128",
+                         "sub_topics":  [
+                                            "Jujur",
+                                            "Disiplin",
+                                            "Tanggung Jawab",
+                                            "Santun dan Hormat"
+                                        ],
+                         "key_terms":  [
+                                           "akhlak",
+                                           "jujur",
+                                           "disiplin"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Akhlak Terpuji"
+                     },
+                     {
+                         "no":  5,
+                         "pages":  "129-160",
+                         "sub_topics":  [
+                                            "Nabi Adam",
+                                            "Nabi Nuh",
+                                            "Nabi Ibrahim",
+                                            "Nabi Muhammad"
+                                        ],
+                         "key_terms":  [
+                                           "nabi",
+                                           "kisah",
+                                           "rasul"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Kisah Nabi"
+                     },
+                     {
+                         "no":  6,
+                         "pages":  "161-192",
+                         "sub_topics":  [
+                                            "Kebersihan Sebagian dari Iman",
+                                            "Adab Makan",
+                                            "Adab Minum",
+                                            "Adab Buang Air"
+                                        ],
+                         "key_terms":  [
+                                           "bersih",
+                                           "sehat",
+                                           "adab"
+                                       ],
+                         "semester":  "Genap",
+                         "title":  "Hidup Bersih dan Sehat"
+                     }
+                 ],
+    "isbn":  "978-623-194-611-X"
 }

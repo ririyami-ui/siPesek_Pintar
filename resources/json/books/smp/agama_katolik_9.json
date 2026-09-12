@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-katolik-9",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Manusia sebagai Pribadi yang Berelasi",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Yesus Kristus yang Diimani Gereja",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Gereja sebagai Persekutuan yang Terbuka",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Peran Gereja dalam Kehidupan Bermasyarakat",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Panggilan dan Misi Hidup Kristiani",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-906-5"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-katolik-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Hubungan Iman dan Akal Budi",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mencari Kebenaran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Iman yang Rasional",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dialog Iman dan Ilmu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "iman",
+                "akal budi",
+                "kebenaran"
+            ],
+            "semester": "Ganjil",
+            "title": "Iman dan Akal Budi"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembentukan Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hati Nurani dan Keputusan Moral",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Melatih Hati Nurani",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "hati nurani",
+                "moral",
+                "keputusan"
+            ],
+            "semester": "Ganjil",
+            "title": "Hati Nurani"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Suara Hati dan Kebenaran",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mendengarkan Suara Hati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Suara Hati dan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Seturut Suara Hati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "suara hati",
+                "kebenaran",
+                "bimbingan"
+            ],
+            "semester": "Ganjil",
+            "title": "Suara Hati"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Tuhan Pencipta",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Karya Penciptaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pemeliharaan Tuhan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keagungan Ciptaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "penciptaan",
+                "Tuhan",
+                "alam"
+            ],
+            "semester": "Genap",
+            "title": "Tuhan dan Karya-Nya"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Martabat Manusia",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Manusia dan Harapan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Optimisme Kristen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menghadapi Tantangan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "manusia",
+                "harapan",
+                "martabat"
+            ],
+            "semester": "Genap",
+            "title": "Manusia dan Harapan"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Visi Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kerajaan Allah dan Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Peran Umat Muda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Membangun Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "masa depan",
+                "visi",
+                "peran muda"
+            ],
+            "semester": "Genap",
+            "title": "Masa Depan"
+        }
+    ],
+    "isbn": "978-623-194-906-5"
 }

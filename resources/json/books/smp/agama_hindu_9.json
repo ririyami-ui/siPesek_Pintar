@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-hindu-9",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Weda sebagai Wahyu dan Sumber Hukum Hindu",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Sraddha dan Bhakti dalam Teologi Hindu Modern",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Susila (Catur Purusa Artha)",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Filsafat Hindu (Darsana)",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Eksistensi Agama Hindu Era Global",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-909-6"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-hindu-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Pengertian Upaveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ayurveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Dhanurveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Gandharvaveda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Upaveda",
+                "Ayurveda",
+                "Dhanurveda"
+            ],
+            "semester": "Ganjil",
+            "title": "Upaveda"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Siksha",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Vyakarana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nirukta",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Chanda",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Wedangga",
+                "Siksha",
+                "Vyakarana"
+            ],
+            "semester": "Ganjil",
+            "title": "Wedangga"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Aliran Filsafat Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Darshana",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Konsep Ketuhanan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Filsafat dan Kehidupan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "filsafat",
+                "Darshana",
+                "ketuhanan"
+            ],
+            "semester": "Ganjil",
+            "title": "Filsafat Hindu"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Kepemimpinan dalam Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ciri Pemimpin Bijak",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Contoh Pemimpin Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai Kepemimpinan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "kepemimpinan",
+                "pemimpin",
+                "bijaksana"
+            ],
+            "semester": "Genap",
+            "title": "Kepemimpinan Hindu"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Seni dalam Agama Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Seni Tari dan Musik",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Seni Ukir dan Patung",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Religi dan Kreativitas",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "seni",
+                "religi",
+                "budaya"
+            ],
+            "semester": "Genap",
+            "title": "Seni Religi"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Etika Hindu",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Ajaran Susila",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Catur Warna dan Catur Asrama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Beretika",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "etika",
+                "susila",
+                "dharma"
+            ],
+            "semester": "Genap",
+            "title": "Etika Hindu"
+        }
+    ],
+    "isbn": "978-623-194-909-6"
 }

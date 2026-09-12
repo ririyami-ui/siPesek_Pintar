@@ -1,37 +1,205 @@
 {
-  "publisher": "Kemendikbudristek",
-  "bookId": "smp-agama-kristen-9",
-  "chapters": [
-    {
-      "no": 1,
-      "title": "Allah Karya Keselamatan dalam Perjanjian Baru",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 2,
-      "title": "Yesus Kristus sebagai Kepala Gereja",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 3,
-      "title": "Hidup dalam Kebebasan yang Bertanggung Jawab",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 4,
-      "title": "Gereja dalam Masyarakat Majemuk",
-      "sub_topics": [],
-      "key_terms": []
-    },
-    {
-      "no": 5,
-      "title": "Keluarga sebagai Komunitas Iman",
-      "sub_topics": [],
-      "key_terms": []
-    }
-  ],
-  "isbn": "978-623-194-903-4"
+    "publisher": "Kemendikbudristek",
+    "bookId": "smp-agama-kristen-9",
+    "chapters": [
+        {
+            "no": 1,
+            "pages": "1-30",
+            "sub_topics": [
+                {
+                    "name": "Allah Sumber Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Rencana Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Keselamatan dalam Yesus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup dalam Keselamatan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "keselamatan",
+                "penyelamat",
+                "tebusan"
+            ],
+            "semester": "Ganjil",
+            "title": "Allah Penyelamat"
+        },
+        {
+            "no": 2,
+            "pages": "31-58",
+            "sub_topics": [
+                {
+                    "name": "Hidup Baru dalam Kristus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pertobatan Sejati",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Pembaruan Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Identitas Baru",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "hidup baru",
+                "pertobatan",
+                "pembaruan"
+            ],
+            "semester": "Ganjil",
+            "title": "Hidup Baru"
+        },
+        {
+            "no": 3,
+            "pages": "59-88",
+            "sub_topics": [
+                {
+                    "name": "Konsep Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Nilai-nilai Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menjadi Warga Kerajaan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Misi Kerajaan Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "Kerajaan Allah",
+                "misi",
+                "warga"
+            ],
+            "semester": "Ganjil",
+            "title": "Kerajaan Allah"
+        },
+        {
+            "no": 4,
+            "pages": "89-118",
+            "sub_topics": [
+                {
+                    "name": "Panggilan Khusus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Panggilan Umum",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Mengenal Panggilan Hidup",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Komitmen Panggilan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "panggilan",
+                "komitmen",
+                "vokasi"
+            ],
+            "semester": "Genap",
+            "title": "Panggilan Kristen"
+        },
+        {
+            "no": 5,
+            "pages": "119-148",
+            "sub_topics": [
+                {
+                    "name": "Tanggung Jawab kepada Allah",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab kepada Sesama",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Tanggung Jawab terhadap Alam",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Hidup Bertanggung Jawab",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "tanggung jawab",
+                "pengelolaan",
+                "stewardship"
+            ],
+            "semester": "Genap",
+            "title": "Tanggung Jawab"
+        },
+        {
+            "no": 6,
+            "pages": "149-176",
+            "sub_topics": [
+                {
+                    "name": "Harapan Kristen",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Masa Depan dalam Kristus",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Menyongsong Masa Depan",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                },
+                {
+                    "name": "Kemenangan Iman",
+                    "bloom_level": "LOTS",
+                    "suggested_jp": 1
+                }
+            ],
+            "key_terms": [
+                "masa depan",
+                "harapan",
+                "kemenangan"
+            ],
+            "semester": "Genap",
+            "title": "Masa Depan"
+        }
+    ],
+    "isbn": "978-623-194-903-4"
 }

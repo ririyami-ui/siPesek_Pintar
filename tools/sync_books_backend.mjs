@@ -15,6 +15,7 @@ const idx = JSON.parse(fs.readFileSync(INDEX, 'utf8').replace(/^\uFEFF/, ''));
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
 function stripBab(t) { return String(t).replace(/^(bab|unit|chapter)\s*\d*\s*:\s*/i, '').trim(); }
+function isAgama(mapel) { return /pai|agama budi pekerti|agama/i.test(mapel); }
 function dice(a, b) {
   const A = new Set(norm(a).split(' ').filter(w => w.length > 2));
   const B = new Set(norm(b).split(' ').filter(w => w.length > 2));
@@ -28,6 +29,10 @@ let updated = 0, skipped = 0, unchanged = 0;
 for (const entry of idx) {
   const bookPath = path.join(BOOKS_ROOT, entry.path);
   if (!fs.existsSync(bookPath)) { skipped++; continue; }
+
+  // Mapel agama memakai aturan CP sendiri (KEPKA BKPDM 020/2026, bukan SK BSKAP
+  // 046/H/KR/2025). Peta bab intel tidak dijamin cocok -> jangan disinkronkan.
+  if (isAgama(entry.mapel)) { skipped++; continue; }
 
   const tbs = intel.textbooks[entry.jenjang]?.[entry.kelas];
   const intelSubj = tbs && tbs[entry.mapel] ? entry.mapel : null;
