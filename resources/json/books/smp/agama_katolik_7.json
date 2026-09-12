@@ -1,205 +1,37 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-katolik-7",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Siapa Aku sebagai Pribadi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Bakat dan Minat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertumbuhan Fisik dan Spiritual",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Harga Diri",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "pribadi",
-                "bakat",
-                "harga diri"
-            ],
-            "semester": "Ganjil",
-            "title": "Pribadi Peserta Didik"
-        },
-        {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Keluarga sebagai Komunitas Cinta",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peran Orang Tua dan Anak",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai-nilai Keluarga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keluarga Gereja Rumah Tangga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "keluarga",
-                "cinta",
-                "komunitas"
-            ],
-            "semester": "Ganjil",
-            "title": "Keluarga"
-        },
-        {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Hidup dalam Masyarakat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sikap Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keadilan dan Solidaritas",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Partisipasi Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "masyarakat",
-                "solidaritas",
-                "keadilan"
-            ],
-            "semester": "Ganjil",
-            "title": "Masyarakat"
-        },
-        {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Gereja sebagai Umat Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sakramen dalam Gereja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tugas dan Panggilan Umat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Persekutuan Umat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "gereja",
-                "umat Allah",
-                "sakramen"
-            ],
-            "semester": "Genap",
-            "title": "Gereja"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Pokok-pokok Iman Katolik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Credo dan Pengakuan Iman",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penghayatan Iman",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertumbuhan Iman",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "iman",
-                "credo",
-                "katolik"
-            ],
-            "semester": "Genap",
-            "title": "Iman Katolik"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Doa sebagai Napas Hidup",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Macam-macam Doa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Doa Pribadi dan Bersama",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Doa Bapa Kami",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "doa",
-                "meditasi",
-                "kontemplasi"
-            ],
-            "semester": "Genap",
-            "title": "Doa"
-        }
-    ],
-    "isbn": "978-623-194-904-1"
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-katolik-7",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Manusia sebagai Citra Allah",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Yesus Kristus Sang Juru Selamat",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Gereja sebagai Sakramen Keselamatan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Sakramen-Sakramen dalam Gereja",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Hidup Mengikuti Yesus Kristus",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-904-1"
 }

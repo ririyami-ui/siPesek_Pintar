@@ -1,205 +1,37 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-buddha-9",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Buddha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dhamma",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sangha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Perlindungan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Tri Ratna",
-                "Buddha",
-                "Dhamma"
-            ],
-            "semester": "Ganjil",
-            "title": "Tri Ratna"
-        },
-        {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Kandungan Dhammapada",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Syair-syair Penting",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ajaran Moral dalam Dhammapada",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Relevansi Dhammapada",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Dhammapada",
-                "syair",
-                "sabda Buddha"
-            ],
-            "semester": "Ganjil",
-            "title": "Dhammapada"
-        },
-        {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Masuknya Buddha ke Indonesia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kerajaan Buddha di Indonesia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Candi Borobudur",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perkembangan Buddha Masa Kini",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "sejarah",
-                "Indonesia",
-                "Borobudur"
-            ],
-            "semester": "Ganjil",
-            "title": "Sejarah Buddhis Indonesia"
-        },
-        {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Kepemimpinan dalam Buddhisme",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ciri Pemimpin Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Raja Asoka",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teladan Pemimpin",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "kepemimpinan",
-                "Asoka",
-                "pemimpin"
-            ],
-            "semester": "Genap",
-            "title": "Kepemimpinan Buddhis"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Ajaran Sosial Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kedermawanan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelayanan Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Masyarakat Harmonis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "sosial",
-                "dana",
-                "pelayanan"
-            ],
-            "semester": "Genap",
-            "title": "Sosial Buddhis"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Peradaban Buddhis Kuno",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Warisan Budaya Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pendidikan Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Buddhisme dan Dunia Modern",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "peradaban",
-                "budaya",
-                "warisan"
-            ],
-            "semester": "Genap",
-            "title": "Peradaban Buddhis"
-        }
-    ],
-    "isbn": "978-623-194-912-6"
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-buddha-9",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Sutta dan Vinaya sebagai Sumber Ajaran",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Tilakhana (Tiga Corak Universal)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Bodhisattva dan Bumi Paramita",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Meditasi dan Penerapan dalam Kehidupan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Buddhisme di Indonesia dan Dunia",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-912-6"
 }

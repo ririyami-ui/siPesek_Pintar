@@ -1,176 +1,159 @@
 {
-    "bookId": "smp-ipa-9",
-    "isbn": "978-602-244-386-5",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "IPA SMP Kelas IX",
-    "chapters": [
+  "bookId": "smp-ipa-9",
+  "isbn": "978-602-244-386-5",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPA SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Pertumbuhan dan Perkembangan",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Pertumbuhan dan Perkembangan",
-            "pages": "1-28",
-            "sub_topics": [
-                {
-                    "name": "Pertumbuhan dan Perkembangan Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Siklus Hidup Hewan (Metamorfosis)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertumbuhan dan Perkembangan Tumbuhan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pubertas",
-                "Embrio",
-                "Kecambah",
-                "Metamorfosis Sempurna"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk memvisualisasikan siklus hidup katak atau kupu-kupu.",
-            "semester": "Ganjil"
+          "name": "Pertumbuhan dan Perkembangan Manusia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Sistem Koordinasi, Reproduksi, dan Homeostasis",
-            "pages": "29-70",
-            "sub_topics": [
-                {
-                    "name": "Sistem Saraf dan Alat Indra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sistem Hormon",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sistem Reproduksi Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Homeostasis (Keseimbangan Tubuh)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Neuron",
-                "Sinapsis",
-                "Estrogen",
-                "Testosteron",
-                "Hipotalamus"
-            ],
-            "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi sistem saraf pusat dan saraf tepi.",
-            "semester": "Genap"
+          "name": "Siklus Hidup Hewan (Metamorfosis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Tekanan",
-            "pages": "71-100",
-            "sub_topics": [
-                {
-                    "name": "Tekanan Zat Padat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tekanan Zat Cair (Hidrostatis)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hukum Pascal dan Archimedes",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tekanan Gas (Atmosfer)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pascal",
-                "Archimedes",
-                "Barometer",
-                "Hukum Boyle"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk latihan soal gaya apung dan tekanan hidrostatis.",
-            "semester": "Ganjil"
-        },
-        {
-            "no": 4,
-            "title": "Listrik, Magnet, dan Sumber Energi Terbarukan",
-            "pages": "101-150",
-            "sub_topics": [
-                {
-                    "name": "Listrik Statis dan Dinamis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Rangkaian Listrik (Seri & Paralel)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kemagnetan dan Induksi Elektromagnetik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknologi Ramah Lingkungan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Muatan Listrik",
-                "Ohm",
-                "Voltase",
-                "Feromagnetik",
-                "Panel Surya"
-            ],
-            "visual_hints": "Tampilkan tabel perbandingan kelebihan\/kekurangan rangkaian Seri dan Paralel.",
-            "semester": "Genap"
-        },
-        {
-            "no": 5,
-            "title": "Pewarisan Sifat dan Bioteknologi",
-            "pages": "151-180",
-            "sub_topics": [
-                {
-                    "name": "Materi Genetik (DNA & RNA)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hukum Mendel (Monohibrid & Dihibrid)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penerapan Bioteknologi Konvensional dan Modern",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Genotipe",
-                "Fenotipe",
-                "Dominan",
-                "Resesif",
-                "Fermentasi"
-            ],
-            "visual_hints": "Gunakan Tabel Excel untuk mendemonstrasikan Diagram Punnett pada persilangan genetika.",
-            "semester": "Ganjil"
+          "name": "Pertumbuhan dan Perkembangan Tumbuhan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Pubertas",
+        "Embrio",
+        "Kecambah",
+        "Metamorfosis Sempurna"
+      ],
+      "pages": "1-28",
+      "visual_hints": "Gunakan Mermaid Flowchart untuk memvisualisasikan siklus hidup katak atau kupu-kupu."
+    },
+    {
+      "no": 2,
+      "title": "Sistem Koordinasi dan Homeostasis Manusia",
+      "sub_topics": [
+        {
+          "name": "Sistem Saraf dan Alat Indra",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Hormon",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Sistem Reproduksi Manusia",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Homeostasis (Keseimbangan Tubuh)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Neuron",
+        "Sinapsis",
+        "Estrogen",
+        "Testosteron",
+        "Hipotalamus"
+      ],
+      "pages": "29-70",
+      "visual_hints": "Gunakan Mermaid Mindmap untuk klasifikasi sistem saraf pusat dan saraf tepi."
+    },
+    {
+      "no": 3,
+      "title": "Tekanan",
+      "sub_topics": [
+        {
+          "name": "Tekanan Zat Padat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Tekanan Zat Cair (Hidrostatis)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Hukum Pascal dan Archimedes",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Tekanan Gas (Atmosfer)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Pascal",
+        "Archimedes",
+        "Barometer",
+        "Hukum Boyle"
+      ],
+      "pages": "71-100",
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk latihan soal gaya apung dan tekanan hidrostatis."
+    },
+    {
+      "no": 4,
+      "title": "Listrik, Magnet, dan Energi Alternatif",
+      "sub_topics": [
+        {
+          "name": "Listrik Statis dan Dinamis",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Rangkaian Listrik (Seri & Paralel)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kemagnetan dan Induksi Elektromagnetik",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Teknologi Ramah Lingkungan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Muatan Listrik",
+        "Ohm",
+        "Voltase",
+        "Feromagnetik",
+        "Panel Surya"
+      ],
+      "pages": "101-150",
+      "visual_hints": "Tampilkan tabel perbandingan kelebihan/kekurangan rangkaian Seri dan Paralel."
+    },
+    {
+      "no": 5,
+      "title": "Reaksi Kimia dan Dinamikanya",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Pewarisan Sifat dan Bioteknologi",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "Isu-Isu Lingkungan",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

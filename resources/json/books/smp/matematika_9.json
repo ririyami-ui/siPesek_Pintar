@@ -1,144 +1,78 @@
 {
-    "bookId": "smp-mat-9",
-    "isbn": "978-602-244-516-6",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "Matematika SMP Kelas IX",
-    "chapters": [
+  "bookId": "smp-mat-9",
+  "isbn": "978-602-244-516-6",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Matematika SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bilangan Berpangkat dan Bentuk Akar",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Relasi, Fungsi, dan Persamaan Linear",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Fungsi Linear dan Non-Linear",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Transformasi Geometri",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Sistem Persamaan Linear Dua Variabel (SPLDV)",
-            "pages": "1-35",
-            "sub_topics": [
-                {
-                    "name": "Metode Grafik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Metode Substitusi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Metode Eliminasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penerapan SPLDV dalam Kehidupan Sehari-hari",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Variabel",
-                "Koefisien",
-                "Titik Potong",
-                "Sistem Persamaan"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan algoritma langkah-langkah metode eliminasi.",
-            "semester": "Ganjil"
+          "name": "Translasi (Pergeseran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Persamaan dan Fungsi Kuadrat",
-            "pages": "37-80",
-            "sub_topics": [
-                {
-                    "name": "Akar-akar Persamaan Kuadrat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Diskriminan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karakteristik Grafik Fungsi Kuadrat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menyusun Persamaan Kuadrat Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Parabola",
-                "Simetri",
-                "Titik Puncak",
-                "Diskriminan",
-                "Pemfaktoran"
-            ],
-            "visual_hints": "Gunakan LaTeX untuk penulisan rumus ABC secara mendetail.",
-            "semester": "Genap"
+          "name": "Refleksi (Pencerminan)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Transformasi Geometri",
-            "pages": "81-120",
-            "sub_topics": [
-                {
-                    "name": "Translasi (Pergeseran)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Refleksi (Pencerminan)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Rotasi (Perputaran)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dilatasi (Perkalian)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Vektor",
-                "Sumbu Simetri",
-                "Titik Pusat",
-                "Faktor Skala"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk menghitung koordinat titik baru hasil transformasi.",
-            "semester": "Ganjil"
+          "name": "Rotasi (Perputaran)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "title": "Statistik dan Peluang",
-            "pages": "121-160",
-            "sub_topics": [
-                {
-                    "name": "Penyajian Data (Histogram, Poligon)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ukuran Pemusatan (Mean, Median, Modus)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peluang Empirik dan Teoretik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Rata-rata",
-                "Titik Sampel",
-                "Ruang Sampel",
-                "Distribusi"
-            ],
-            "visual_hints": "WAJIB: Gunakan Spreadsheet Renderer untuk tabel frekuensi dan perhitungan statistik.",
-            "semester": "Genap"
+          "name": "Dilatasi (Perkalian)",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Vektor",
+        "Sumbu Simetri",
+        "Titik Pusat",
+        "Faktor Skala"
+      ],
+      "pages": "81-120",
+      "visual_hints": "Gunakan Spreadsheet Renderer untuk menghitung koordinat titik baru hasil transformasi."
+    },
+    {
+      "no": 5,
+      "title": "Kesebangunan dan Kekongruenan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Bangun Ruang Sisi Lengkung",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "Data, Statistika, dan Peluang",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

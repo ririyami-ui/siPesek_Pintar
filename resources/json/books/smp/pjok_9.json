@@ -1,151 +1,80 @@
 {
-    "bookId": "smp-pjok-9",
-    "publisher": "Kemendikbudristek",
-    "chapters": [
+  "bookId": "smp-pjok-9",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Permainan Invasi Sepak Bola",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Permainan Net Bola Voli",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Bela Diri Taekwondo",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Permainan Bola Besar",
-            "pages": "1-40",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Sepak Bola Lanjutan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pola Penyerangan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pola Pertahanan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Penyerangan",
-                "Pertahanan",
-                "Formasi",
-                "Taknik"
-            ]
+          "name": "Pencak Silat Kompetisi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Permainan Bola Kecil",
-            "pages": "41-80",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Baseball",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sofbol Lanjutan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Strategi Permainan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Baseball",
-                "Sofbol",
-                "Strategi",
-                "Base"
-            ]
+          "name": "Teknik Bantingan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Atletik",
-            "pages": "81-110",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Lari Jarak Menengah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Lompat Jangkit",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Lempar Cakram",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Lari Jarak Menengah",
-                "Lompat Jangkit",
-                "Lempar Cakram",
-                "Awalan"
-            ]
-        },
-        {
-            "no": 4,
-            "title": "Bela Diri",
-            "pages": "111-140",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Pencak Silat Kompetisi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknik Bantingan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertandingan Silat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Kompetisi",
-                "Bantingan",
-                "Pertandingan",
-                "Wasit"
-            ]
-        },
-        {
-            "no": 5,
-            "title": "Kebugaran Jasmani",
-            "pages": "141-170",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Kebugaran Terkait Kesehatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kebugaran Terkait Keterampilan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Latihan Interval",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Kebugaran",
-                "Kesehatan",
-                "Keterampilan",
-                "Interval"
-            ]
+          "name": "Pertandingan Silat",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Kompetisi",
+        "Bantingan",
+        "Pertandingan",
+        "Wasit"
+      ],
+      "pages": "111-140"
+    },
+    {
+      "no": 4,
+      "title": "Aktivitas Senam Lantai",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Kebugaran Jasmani",
+      "sub_topics": [
+        {
+          "name": "Kebugaran Terkait Kesehatan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Kebugaran Terkait Keterampilan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Latihan Interval",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Kebugaran",
+        "Kesehatan",
+        "Keterampilan",
+        "Interval"
+      ],
+      "pages": "141-170"
+    }
+  ]
 }

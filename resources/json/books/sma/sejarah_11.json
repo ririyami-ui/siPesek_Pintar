@@ -1,205 +1,43 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sma-sej-11",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-34",
-            "sub_topics": [
-                {
-                    "name": "Lahirnya Pergerakan Nasional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Organisasi Pergerakan Awal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sumpah Pemuda",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tokoh Pergerakan Nasional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "pergerakan",
-                "nasionalisme",
-                "Budi Utomo"
-            ],
-            "semester": "Ganjil",
-            "title": "Pergerakan Nasional"
-        },
-        {
-            "no": 2,
-            "pages": "35-66",
-            "sub_topics": [
-                {
-                    "name": "Kedatangan Jepang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pemerintahan Militer Jepang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dampak Pendudukan Jepang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perlawanan terhadap Jepang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Jepang",
-                "pendudukan",
-                "romusha"
-            ],
-            "semester": "Ganjil",
-            "title": "Pendudukan Jepang"
-        },
-        {
-            "no": 3,
-            "pages": "67-98",
-            "sub_topics": [
-                {
-                    "name": "Peristiwa Rengasdengklok",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Proklamasi Kemerdekaan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Proklamasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Reaksi Dunia atas Proklamasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "proklamasi",
-                "kemerdekaan",
-                "Soekarno"
-            ],
-            "semester": "Ganjil",
-            "title": "Proklamasi"
-        },
-        {
-            "no": 4,
-            "pages": "99-130",
-            "sub_topics": [
-                {
-                    "name": "Perjuangan Mempertahankan Kemerdekaan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertempuran Surabaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perjanjian Linggarjati",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pengakuan Kedaulatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "revolusi",
-                "diplomasi",
-                "kedaulatan"
-            ],
-            "semester": "Genap",
-            "title": "Revolusi"
-        },
-        {
-            "no": 5,
-            "pages": "131-162",
-            "sub_topics": [
-                {
-                    "name": "Demokrasi Liberal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kabinet dan Parlemen",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pemilu 1955",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kegagalan Demokrasi Liberal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "demokrasi",
-                "liberal",
-                "parlemen"
-            ],
-            "semester": "Genap",
-            "title": "Demokrasi Liberal"
-        },
-        {
-            "no": 6,
-            "pages": "163-194",
-            "sub_topics": [
-                {
-                    "name": "Lahirnya Demokrasi Terpimpin",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kebijakan Demokrasi Terpimpin",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Konfrontasi dan Konflik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Akhir Demokrasi Terpimpin",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "terpimpin",
-                "Dekrit Presiden",
-                "Nasakom"
-            ],
-            "semester": "Genap",
-            "title": "Demokrasi Terpimpin"
-        }
-    ],
-    "isbn": "978-623-194-917-1"
+  "publisher": "Kemendikbudristek",
+  "bookId": "sma-sej-11",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Kolonialisme dan Perlawanan Bangsa Indonesia (Strategi Perang & Tokoh Perjuangan)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Kebangkitan Nasional (Organisasi Pergerakan & Sumpah Pemuda)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Dampak Pendudukan Jepang di Indonesia (Sosial, Ekonomi, & Politik)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Proklamasi Kemerdekaan Indonesia (Peristiwa Rengasdengklok & Perumusan Teks)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Perjuangan Diplomasi dan Fisik Mempertahankan Kemerdekaan (1945-1949)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Peran Tokoh-Tokoh Proklamator dan Pejuang Daerah",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-917-1"
 }

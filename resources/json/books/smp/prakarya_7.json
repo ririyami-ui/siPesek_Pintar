@@ -1,122 +1,80 @@
 {
-    "bookId": "smp-prakarya-7",
-    "publisher": "Kemendikbudristek",
-    "chapters": [
+  "bookId": "smp-prakarya-7",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Kerajinan Serat",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Konstruksi Jembatan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Budidaya Tanaman Sayuran",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Kerajinan Bahan Alam",
-            "pages": "1-45",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Serat Alam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tanah Liat dan Keramik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Bambu dan Rotan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Kerajinan",
-                "Bahan Alam",
-                "Serat",
-                "Keramik"
-            ]
+          "name": "Jenis Tanaman Sayuran",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Rekayasa Teknologi Konstruksi",
-            "pages": "46-85",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Konstruksi Miniatur",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Alat dan Bahan Bangunan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keamanan Kerja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Rekayasa",
-                "Konstruksi",
-                "Miniatur",
-                "Bangunan"
-            ]
+          "name": "Teknik Penanaman",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Budidaya Tanaman Sayuran",
-            "pages": "86-125",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Jenis Tanaman Sayuran",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknik Penanaman",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perawatan dan Panen",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Budidaya",
-                "Sayuran",
-                "Hidroponik",
-                "Media Tanam"
-            ]
-        },
-        {
-            "no": 4,
-            "title": "Pengolahan Bahan Pangan Buah",
-            "pages": "126-170",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Teknik Pengolahan Buah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membuat Manisan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Membuat Jus dan Sirup",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pengolahan",
-                "Buah",
-                "Manisan",
-                "Sirup"
-            ]
+          "name": "Perawatan dan Panen",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Budidaya",
+        "Sayuran",
+        "Hidroponik",
+        "Media Tanam"
+      ],
+      "pages": "86-125"
+    },
+    {
+      "no": 4,
+      "title": "Pengolahan Bahan Pangan Buah",
+      "sub_topics": [
+        {
+          "name": "Teknik Pengolahan Buah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membuat Manisan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Membuat Jus dan Sirup",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Pengolahan",
+        "Buah",
+        "Manisan",
+        "Sirup"
+      ],
+      "pages": "126-170"
+    },
+    {
+      "no": 5,
+      "title": "Pengolahan Hasil Samping Sayuran",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

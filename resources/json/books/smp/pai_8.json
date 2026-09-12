@@ -1,182 +1,59 @@
 {
-    "bookId": "smp-pai-8",
-    "publisher": "Kemendikbudristek",
-    "chapters": [
+  "bookId": "smp-pai-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Inspirasi Al-Qur'an: Melestarikan Alam",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Meyakini Kitab-Kitab Allah",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Meyakini Kitab-Kitab Allah",
-            "pages": "1-34",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Iman kepada Kitab Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kitab-Kitab Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Fungsi Beriman kepada Kitab Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Kitab Allah",
-                "Taurat",
-                "Zabur",
-                "Injil",
-                "Al-Qur'an"
-            ]
+          "name": "Pengertian Iman kepada Kitab Allah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Toleransi dan Menghindari Kekerasan",
-            "pages": "35-68",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Konsep Toleransi dalam Islam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menghindari Kekerasan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kerukunan Antarumat Beragama",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Toleransi",
-                "Tasamuh",
-                "Rahmatan Lil Alamin",
-                "Ukhuwah"
-            ]
+          "name": "Kitab-Kitab Allah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Makanan dan Minuman Halal",
-            "pages": "69-100",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Kriteria Makanan Halal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makanan Haram dalam Islam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Manfaat Makanan Halal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Halal",
-                "Haram",
-                "Tayyib",
-                "Makanan"
-            ]
-        },
-        {
-            "no": 4,
-            "title": "Ibadah Puasa",
-            "pages": "101-132",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Puasa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Macam-macam Puasa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hikmah Puasa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Puasa",
-                "Syahru Ramadan",
-                "Sahur",
-                "Taqwa"
-            ]
-        },
-        {
-            "no": 5,
-            "title": "Sejarah Peradaban Islam Masa Daulah Umayyah",
-            "pages": "133-166",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Berdirinya Daulah Umayyah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Khalifah-Khalifah Umayyah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kemajuan Peradaban Islam",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Daulah Umayyah",
-                "Khalifah",
-                "Damaskus",
-                "Peradaban Islam"
-            ]
-        },
-        {
-            "no": 6,
-            "title": "Meneladani Sifat Mulia Rasul",
-            "pages": "167-200",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Sifat-Sifat Rasul",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Rasul Ulul Azmi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Meneladani Akhlak Rasul",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Rasul",
-                "Siddiq",
-                "Amanah",
-                "Tablig",
-                "Fatanah"
-            ]
+          "name": "Fungsi Beriman kepada Kitab Allah",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Kitab Allah",
+        "Taurat",
+        "Zabur",
+        "Injil",
+        "Al-Qur'an"
+      ],
+      "pages": "1-34"
+    },
+    {
+      "no": 3,
+      "title": "Menjadi Pribadi Berintegritas dengan Amanah dan Jujur",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Ibadah Shalat Gerhana dan Jenazah",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Masa Keemasan Bani Abbasiyah di Baghdad",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

@@ -1,205 +1,55 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sd-ing-2",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "My Classroom",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "School Objects",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teachers and Friends",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "School Rules",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "school",
-                "classroom",
-                "teacher"
-            ],
-            "semester": "Ganjil",
-            "title": "My School"
-        },
-        {
-            "no": 2,
-            "pages": "31-60",
-            "sub_topics": [
-                {
-                    "name": "Parts of the House",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "My Bedroom",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Living Room",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kitchen and Bathroom",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "house",
-                "room",
-                "home"
-            ],
-            "semester": "Ganjil",
-            "title": "My House"
-        },
-        {
-            "no": 3,
-            "pages": "61-90",
-            "sub_topics": [
-                {
-                    "name": "Telling Time",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "O'clock and Half Past",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Daily Schedule",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "What Time Is It?",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "time",
-                "clock",
-                "o'clock"
-            ],
-            "semester": "Ganjil",
-            "title": "Time"
-        },
-        {
-            "no": 4,
-            "pages": "91-120",
-            "sub_topics": [
-                {
-                    "name": "Days of the Week",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Months of the Year",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Today, Yesterday, Tomorrow",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "My Week Schedule",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "days",
-                "week",
-                "months"
-            ],
-            "semester": "Genap",
-            "title": "Days"
-        },
-        {
-            "no": 5,
-            "pages": "121-150",
-            "sub_topics": [
-                {
-                    "name": "Food and Drinks",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Healthy Food",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Breakfast, Lunch, Dinner",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "My Favorite Food",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "food",
-                "drink",
-                "healthy"
-            ],
-            "semester": "Genap",
-            "title": "Food"
-        },
-        {
-            "no": 6,
-            "pages": "151-180",
-            "sub_topics": [
-                {
-                    "name": "Toys Names",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "My Favorite Toy",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Playing with Friends",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sharing Toys",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "toys",
-                "play",
-                "ball"
-            ],
-            "semester": "Genap",
-            "title": "Toys"
-        }
-    ],
-    "isbn": "978-623-194-822-8"
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-ing-2",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Do You Like Apple? (Fruits)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "My Father Likes Watermelon",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Where is My Pen? (Preposition)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "How Many Books? (Numbers)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "My Classroom",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "He is My Brother (Family)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "My Hobby",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 8,
+      "title": "Clean and Healthy Environment",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-822-8"
 }

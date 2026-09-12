@@ -1,148 +1,150 @@
 {
-    "bookId": "smp-ing-7",
-    "isbn": "978-602-244-885-3",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "English for Nusantara SMP Class VII",
-    "chapters": [
+  "bookId": "smp-ing-7",
+  "isbn": "978-602-244-885-3",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "English for Nusantara SMP Class VII",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "About Me",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "About Me",
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Introducing Myself",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hobbies and Interests",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Physical Appearances",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Daily Activities",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Introduction",
-                "Pronouns",
-                "Personality",
-                "Simple Present Tense"
-            ],
-            "visual_hints": "Use Mermaid Mindmap to categorize personal information and descriptive adjectives.",
-            "semester": "Ganjil"
+          "name": "Introducing Myself",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Culinary and Me",
-            "pages": "31-65",
-            "sub_topics": [
-                {
-                    "name": "Favorite Food and Drinks",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Texture and Taste",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Cooking Tools and Actions",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Procedure Text: Making a Snack",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ingredients",
-                "Utensils",
-                "Imperative Verbs",
-                "Sequence Markers"
-            ],
-            "visual_hints": "Use Mermaid Flowchart to visualize the steps of a simple recipe.",
-            "semester": "Genap"
+          "name": "Hobbies and Interests",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Home Sweet Home",
-            "pages": "67-100",
-            "sub_topics": [
-                {
-                    "name": "Rooms in the House",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Furniture and Household Items",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Cleanliness and Chores",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Describing Your Room",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Prepositions of Place",
-                "Living Room",
-                "Cleaning",
-                "Furniture"
-            ],
-            "visual_hints": "Use Mermaid Mindmap to label items found in different rooms of a house.",
-            "semester": "Ganjil"
+          "name": "Physical Appearances",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "title": "My School Activities",
-            "pages": "101-135",
-            "sub_topics": [
-                {
-                    "name": "School Subjects",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Class Schedule",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Online Learning Tips",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Extracurricular Activities",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Schedule",
-                "Assignment",
-                "Study Habits",
-                "Subject"
-            ],
-            "visual_hints": "Use Spreadsheet Renderer to display a sample school timetable.",
-            "semester": "Genap"
+          "name": "Daily Activities",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Introduction",
+        "Pronouns",
+        "Personality",
+        "Simple Present Tense"
+      ],
+      "pages": "1-30",
+      "visual_hints": "Use Mermaid Mindmap to categorize personal information and descriptive adjectives."
+    },
+    {
+      "no": 2,
+      "title": "Culinary and Me",
+      "sub_topics": [
+        {
+          "name": "Favorite Food and Drinks",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Texture and Taste",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Cooking Tools and Actions",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Procedure Text: Making a Snack",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Ingredients",
+        "Utensils",
+        "Imperative Verbs",
+        "Sequence Markers"
+      ],
+      "pages": "31-65",
+      "visual_hints": "Use Mermaid Flowchart to visualize the steps of a simple recipe."
+    },
+    {
+      "no": 3,
+      "title": "Home Sweet Home",
+      "sub_topics": [
+        {
+          "name": "Rooms in the House",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Furniture and Household Items",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Cleanliness and Chores",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Describing Your Room",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Prepositions of Place",
+        "Living Room",
+        "Cleaning",
+        "Furniture"
+      ],
+      "pages": "67-100",
+      "visual_hints": "Use Mermaid Mindmap to label items found in different rooms of a house."
+    },
+    {
+      "no": 4,
+      "title": "My School Activities",
+      "sub_topics": [
+        {
+          "name": "School Subjects",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Class Schedule",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Online Learning Tips",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        },
+        {
+          "name": "Extracurricular Activities",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
+        }
+      ],
+      "key_terms": [
+        "Schedule",
+        "Assignment",
+        "Study Habits",
+        "Subject"
+      ],
+      "pages": "101-135",
+      "visual_hints": "Use Spreadsheet Renderer to display a sample school timetable."
+    },
+    {
+      "no": 5,
+      "title": "This is My School",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

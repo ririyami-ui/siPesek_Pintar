@@ -1,142 +1,63 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-seni-musik-7",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-seni-musik-7",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Unsur-Unsur Musik",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Alat Musik dan Ensambel",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Bernyanyi dan Teknik Vokal",
+      "sub_topics": [
         {
-            "no": 1,
-            "title": "Bernyanyi Solo dan Vokal Grup",
-            "pages": "1-36",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Teknik Vokal untuk Solo",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teknik Vokal untuk Grup",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pembagian Suara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dinamika dan Ekspresi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Vokal",
-                "Nada",
-                "Timbre",
-                "Harmoni"
-            ]
+          "name": "Teknik Vokal untuk Solo",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "title": "Bermain Ansambel Musik",
-            "pages": "37-72",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Jenis Ansambel Musik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Alat Musik Ansambel",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Partitur Ansambel Sederhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Praktik Bermain Ansambel",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ansambel",
-                "Partitur",
-                "Dirigen",
-                "Akompanimen"
-            ]
+          "name": "Teknik Vokal untuk Grup",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "title": "Karya Musik Nusantara",
-            "pages": "73-108",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Lagu Daerah Nusantara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Alat Musik Tradisional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tangga Nada dan Laras",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai Budaya dalam Musik",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Nusantara",
-                "Laras",
-                "Gamelan",
-                "Etnis"
-            ]
+          "name": "Pembagian Suara",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "title": "Karya Musik Mancanegara",
-            "pages": "109-140",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Musik Klasik Barat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Musik Pop dan Jazz",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Alat Musik Mancanegara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Apresiasi Musik Global",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Mancanegara",
-                "Klasik",
-                "Modern",
-                "Global"
-            ]
+          "name": "Dinamika dan Ekspresi",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ]
+      ],
+      "key_terms": [
+        "Vokal",
+        "Nada",
+        "Timbre",
+        "Harmoni"
+      ],
+      "pages": "1-36"
+    },
+    {
+      "no": 4,
+      "title": "Musik Nusantara",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Kreativitas Musik Sederhana",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

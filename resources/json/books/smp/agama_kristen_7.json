@@ -1,205 +1,63 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-kristen-7",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-kristen-7",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Manusia sebagai Citra Allah",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Karya Keselamatan Allah dalam Yesus Kristus",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Hidup dalam Roh Kudus",
+      "sub_topics": [
         {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Citra Allah dalam Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Martabat Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hubungan Manusia dengan Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tanggung Jawab Manusia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "gambar Allah",
-                "martabat",
-                "tanggung jawab"
-            ],
-            "semester": "Ganjil",
-            "title": "Manusia dan Gambar Allah"
+          "name": "Pribadi Roh Kudus",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Asal-usul Dosa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Akibat Dosa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keselamatan dalam Kristus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Anugerah Keselamatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "dosa",
-                "keselamatan",
-                "anugerah"
-            ],
-            "semester": "Ganjil",
-            "title": "Dosa dan Keselamatan"
+          "name": "Karya Roh Kudus",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Pribadi Yesus Kristus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karya Yesus Kristus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teladan Hidup Yesus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Keselamatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Yesus",
-                "Mesias",
-                "penebusan"
-            ],
-            "semester": "Ganjil",
-            "title": "Yesus Kristus"
+          "name": "Karunia Roh Kudus",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Pribadi Roh Kudus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karya Roh Kudus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karunia Roh Kudus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Buah Roh",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Roh Kudus",
-                "karunia",
-                "buah Roh"
-            ],
-            "semester": "Genap",
-            "title": "Roh Kudus"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Gereja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tugas Panggilan Gereja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Persekutuan Umat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelayanan Gereja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "gereja",
-                "persekutuan",
-                "pelayanan"
-            ],
-            "semester": "Genap",
-            "title": "Gereja"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Hidup Kristen Sehari-hari",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Doa dan Ibadah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keluarga Kristen",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kesaksian Hidup",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "kehidupan Kristen",
-                "doa",
-                "kesaksian"
-            ],
-            "semester": "Genap",
-            "title": "Kehidupan Kristen"
+          "name": "Buah Roh",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ],
-    "isbn": "978-623-194-901-0"
+      ],
+      "key_terms": [
+        "Roh Kudus",
+        "karunia",
+        "buah Roh"
+      ],
+      "pages": "89-118"
+    },
+    {
+      "no": 4,
+      "title": "Gereja sebagai Persekutuan Orang Percaya",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Keluarga sebagai Komunitas Dasar",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-901-0"
 }

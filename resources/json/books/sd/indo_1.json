@@ -1,109 +1,55 @@
-﻿{
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "sd-indo-1",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "pages":  "1-32",
-                         "sub_topics":  [
-                                            "Mengenal Huruf",
-                                            "Membaca Suku Kata",
-                                            "Membaca Kata Sederhana",
-                                            "Menulis Huruf"
-                                        ],
-                         "key_terms":  [
-                                           "membaca",
-                                           "menulis",
-                                           "huruf"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Aku Suka Membaca"
-                     },
-                     {
-                         "no":  2,
-                         "pages":  "33-64",
-                         "sub_topics":  [
-                                            "Mengenal Anggota Keluarga",
-                                            "Menulis Nama Anggota Keluarga",
-                                            "Bercerita tentang Keluarga",
-                                            "Menyimak Cerita"
-                                        ],
-                         "key_terms":  [
-                                           "keluarga",
-                                           "bercerita",
-                                           "menyimak"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Keluargaku"
-                     },
-                     {
-                         "no":  3,
-                         "pages":  "65-96",
-                         "sub_topics":  [
-                                            "Mengenal Lingkungan Sekolah",
-                                            "Tata Tertib Sekolah",
-                                            "Bertanya dan Menjawab",
-                                            "Belajar di Rumah dan Sekolah"
-                                        ],
-                         "key_terms":  [
-                                           "sekolah",
-                                           "tata tertib",
-                                           "bertanya"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Lingkungan Sekolah"
-                     },
-                     {
-                         "no":  4,
-                         "pages":  "97-128",
-                         "sub_topics":  [
-                                            "Mengenal Binatang",
-                                            "Ciri-Ciri Binatang",
-                                            "Mendeskripsikan Binatang",
-                                            "Membaca Cerita Binatang"
-                                        ],
-                         "key_terms":  [
-                                           "binatang",
-                                           "deskripsi",
-                                           "cerita"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Binatang di Sekitarku"
-                     },
-                     {
-                         "no":  5,
-                         "pages":  "129-160",
-                         "sub_topics":  [
-                                            "Kata-Kata Baru",
-                                            "Menyusun Kalimat Sederhana",
-                                            "Membaca Cerita Pendek",
-                                            "Menulis Kalimat"
-                                        ],
-                         "key_terms":  [
-                                           "kalimat",
-                                           "kata",
-                                           "cerita"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Bermain dan Belajar"
-                     },
-                     {
-                         "no":  6,
-                         "pages":  "161-192",
-                         "sub_topics":  [
-                                            "Mengenal Tanaman",
-                                            "Merawat Tanaman",
-                                            "Manfaat Tanaman",
-                                            "Membaca Puisi Sederhana"
-                                        ],
-                         "key_terms":  [
-                                           "tanaman",
-                                           "merawat",
-                                           "puisi"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Tanaman di Sekitarku"
-                     }
-                 ],
-    "isbn":  "978-623-194-111-X"
+{
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-indo-1",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Bunyi Apa?",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Ayo Bermain!",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Awas Kuman!",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Aku Bisa!",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Teman Baru",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Berbeda Itu Tak Apa",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "Aku Ingin",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 8,
+      "title": "Di Sekitar Rumah",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-111-X"
 }

@@ -1,205 +1,37 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-buddha-8",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Anicca",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dukkha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Anatta",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Implikasi Tilakhana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Tilakhana",
-                "anicca",
-                "anatta"
-            ],
-            "semester": "Ganjil",
-            "title": "Tilakhana"
-        },
-        {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Hukum Sebab Akibat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dua Belas Nidana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Proses Terjadinya Dukkha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pemutusan Samsara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "paticcasamuppada",
-                "nidana",
-                "sebab akibat"
-            ],
-            "semester": "Ganjil",
-            "title": "Paticcasamuppada"
-        },
-        {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Metta Karuna",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Mudita",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Upekkha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penerapan dalam Kehidupan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Brahmavihara",
-                "cinta kasih",
-                "belas kasih"
-            ],
-            "semester": "Ganjil",
-            "title": "Brahmavihara"
-        },
-        {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Pancasila Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Larangan dan Penerapan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Silabuddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sila dalam Kehidupan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pancasila",
-                "sila",
-                "etika Buddhis"
-            ],
-            "semester": "Genap",
-            "title": "Pancasila Buddhis"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Vihara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Cetiya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Candi Buddhis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Tempat Ibadah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "vihara",
-                "candi",
-                "tempat ibadah"
-            ],
-            "semester": "Genap",
-            "title": "Tempat Ibadah"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Hari Raya Waisak",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hari Raya Asadha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hari Raya Kathina",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Perayaan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "hari raya",
-                "Waisak",
-                "Asadha"
-            ],
-            "semester": "Genap",
-            "title": "Hari Raya Buddhis"
-        }
-    ],
-    "isbn": "978-623-194-911-9"
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-buddha-8",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Riwayat Hidup Buddha dan Pengajaran Awal",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Karma, Punarbhava, dan Samsara",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Jalan Mulia Berunsur Delapan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Meditasi Samatha dan Vipassana",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Kepemimpinan dan Etika Buddhis",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-911-9"
 }

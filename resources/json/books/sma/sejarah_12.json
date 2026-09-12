@@ -1,205 +1,43 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sma-sej-12",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-34",
-            "sub_topics": [
-                {
-                    "name": "Lahirnya Orde Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pembangunan Orde Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dampak Positif dan Negatif",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keruntuhan Orde Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Orde Baru",
-                "pembangunan",
-                "reformasi"
-            ],
-            "semester": "Ganjil",
-            "title": "Orde Baru"
-        },
-        {
-            "no": 2,
-            "pages": "35-66",
-            "sub_topics": [
-                {
-                    "name": "Gerakan Reformasi 1998",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perubahan Politik Pasca Reformasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Amandemen UUD 1945",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perkembangan Demokrasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "reformasi",
-                "demokrasi",
-                "amandemen"
-            ],
-            "semester": "Ganjil",
-            "title": "Reformasi"
-        },
-        {
-            "no": 3,
-            "pages": "67-98",
-            "sub_topics": [
-                {
-                    "name": "Politik Luar Negeri Indonesia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "ASEAN",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perserikatan Bangsa-Bangsa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peran Indonesia di Dunia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "internasional",
-                "ASEAN",
-                "PBB"
-            ],
-            "semester": "Ganjil",
-            "title": "Hubungan Internasional"
-        },
-        {
-            "no": 4,
-            "pages": "99-130",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Globalisasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dampak Globalisasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Globalisasi dan Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Indonesia di Era Global",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "globalisasi",
-                "modernisasi",
-                "budaya global"
-            ],
-            "semester": "Genap",
-            "title": "Globalisasi"
-        },
-        {
-            "no": 5,
-            "pages": "131-162",
-            "sub_topics": [
-                {
-                    "name": "Peristiwa Kontemporer Dunia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peristiwa Kontemporer Indonesia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Isu-isu Global Masa Kini",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sejarah Abad 21",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "kontemporer",
-                "terkini",
-                "global"
-            ],
-            "semester": "Genap",
-            "title": "Sejarah Kontemporer"
-        },
-        {
-            "no": 6,
-            "pages": "163-194",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Historiografi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Historiografi Tradisional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Historiografi Kolonial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Historiografi Modern",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "historiografi",
-                "penulisan sejarah",
-                "metodologi"
-            ],
-            "semester": "Genap",
-            "title": "Historiografi"
-        }
-    ],
-    "isbn": "978-623-194-918-8"
+  "publisher": "Kemendikbudristek",
+  "bookId": "sma-sej-12",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Perjuangan Menghadapi Ancaman Disintegrasi Bangsa (Pemberontakan PKI Madiun, DI/TII, PRRI/Permesta, G30S/PKI)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Indonesia Masa Demokrasi Liberal dan Terpimpin (Sistem Politik & Kebijakan Ekonomi)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Kehidupan Politik dan Ekonomi Masa Orde Baru (Stabilitas & Pembangunan Nasional)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Indonesia Masa Reformasi (Latar Belakang & Perubahan Sistem Ketatanegaraan)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Perkembangan Iptek di Indonesia dalam Arus Globalisasi",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Peran Aktif Indonesia dalam Perdamaian Dunia (KAA, Gerakan Non-Blok, & Misi Garuda)",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-918-8"
 }

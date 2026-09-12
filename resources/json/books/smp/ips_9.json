@@ -1,149 +1,32 @@
 {
-    "bookId": "smp-ips-9",
-    "isbn": "978-602-244-309-4",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "IPS SMP Kelas IX",
-    "chapters": [
-        {
-            "no": 1,
-            "title": "Perubahan Sosial Budaya dan Globalisasi",
-            "pages": "1-45",
-            "sub_topics": [
-                {
-                    "name": "Bentuk-bentuk Perubahan Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Dampak Perubahan Sosial Budaya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Globalisasi: Tantangan dan Peluang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menyikapi Dampak Globalisasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Modernisasi",
-                "Globalisasi",
-                "Akulturasi",
-                "Gaya Hidup Digital"
-            ],
-            "visual_hints": "Gunakan Mermaid Mindmap untuk mengklasifikasikan dampak positif dan negatif globalisasi di berbagai bidang.",
-            "semester": "Ganjil"
-        },
-        {
-            "no": 2,
-            "title": "Pengembangan Ekonomi Kreatif dan Kerjasama Internasional",
-            "pages": "47-90",
-            "sub_topics": [
-                {
-                    "name": "Potensi Ekonomi Kreatif",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pusat-pusat Keunggulan Ekonomi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pasar Bebas dan Kerjasama Internasional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perdagangan Luar Negeri",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ekspor",
-                "Impor",
-                "Proteksi",
-                "Dumping",
-                "MEA"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk membandingkan neraca perdagangan antarnegara.",
-            "semester": "Genap"
-        },
-        {
-            "no": 3,
-            "title": "Ketergantungan Antarruang dan Pengaruhnya terhadap Kesejahteraan",
-            "pages": "91-135",
-            "sub_topics": [
-                {
-                    "name": "Migrasi Penduduk",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Urbanisasi dan Dampaknya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perubahan Ruang dan Interaksi Antarruang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ketahanan Pangan dan Energi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Migrasi",
-                "Remitansi",
-                "Interaksi Spasial",
-                "Ketahanan Pangan"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan alur perpindahan penduduk dan pengaruhnya bagi desa-kota.",
-            "semester": "Ganjil"
-        },
-        {
-            "no": 4,
-            "title": "Indonesia dari Masa Kemerdekaan hingga Masa Reformasi",
-            "pages": "137-180",
-            "sub_topics": [
-                {
-                    "name": "Masa Demokrasi Parlementer",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Masa Orde Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Masa Reformasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Capaian Pembangunan Nasional",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Supersemar",
-                "Otonomi Daerah",
-                "Demokratisasi",
-                "Pembangunan Berkelanjutan"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk memetakan transisi kekuasaan dan kebijakan strategis setiap era pemerintahan.",
-            "semester": "Genap"
-        }
-    ]
+  "bookId": "smp-ips-9",
+  "isbn": "978-602-244-309-4",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "IPS SMP Kelas IX",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Manusia dan Perubahan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Perkembangan Ekonomi Digital",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Tantangan Pembangunan Indonesia",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Kerja Sama Dunia",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

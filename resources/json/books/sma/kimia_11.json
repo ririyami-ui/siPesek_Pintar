@@ -1,151 +1,44 @@
 {
-    "bookId": "sma-kim-11",
-    "isbn": "978-602-244-378-0",
-    "publisher": "Pusat Perbukuan Kemendikbudristek",
-    "title": "Kimia SMA Kelas XI",
-    "chapters": [
-        {
-            "no": 1,
-            "title": "Termokimia dan Laju Reaksi",
-            "pages": "1-40",
-            "sub_topics": [
-                {
-                    "name": "Perubahan Entalpi (Eksoterm vs Endoterm)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perhitungan Hukum Hess dan Energi Ikatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Faktor-faktor yang Mempengaruhi Laju Reaksi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Teori Tumbukan dan Energi Aktivasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Entalpi",
-                "Eksoterm",
-                "Katalis",
-                "Laju Reaksi",
-                "Orde Reaksi"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk mendiagramkan siklus energi Hukum Hess.",
-            "semester": "Ganjil"
-        },
-        {
-            "no": 2,
-            "title": "Kesetimbangan Kimia",
-            "pages": "41-80",
-            "sub_topics": [
-                {
-                    "name": "Konsep Kesetimbangan Dinamis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tetapan Kesetimbangan (Kc dan Kp)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Faktor yang Mempengaruhi Kesetimbangan (Azas Le Chatelier)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hubungan Kc dengan Derajat Disosiasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Reversibel",
-                "Irreversibel",
-                "Kesetimbangan",
-                "Pergeseran"
-            ],
-            "visual_hints": "Gunakan Mermaid Flowchart untuk menjelaskan pengaruh perubahan suhu, tekanan, dan konsentrasi terhadap posisi kesetimbangan (Azas Le Chatelier).",
-            "semester": "Genap"
-        },
-        {
-            "no": 3,
-            "title": "Larutan Asam-Basa",
-            "pages": "81-130",
-            "sub_topics": [
-                {
-                    "name": "Teori Asam-Basa (Arrhenius, Brønsted-Lowry, Lewis)",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kekuatan Asam Basa dan Ka\/Kb",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "pH dan pOH",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hidrolisis Garam dan Larutan Penyangga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Indikator",
-                "Titrasi",
-                "Sangga",
-                "Amfoter",
-                "Derajat Keasaman"
-            ],
-            "visual_hints": "Wajib gunakan LaTeX untuk perhitungan pH larutan asam kuat dan basa lemah.",
-            "semester": "Ganjil"
-        },
-        {
-            "no": 4,
-            "title": "Kelarutan dan Hasil Kali Kelarutan",
-            "pages": "131-170",
-            "sub_topics": [
-                {
-                    "name": "Konsep Ksp",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hubungan Kelarutan dengan Ksp",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pengaruh Ion Senama terhadap Kelarutan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Reaksi Pengendapan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ksp",
-                "Pelarutan",
-                "Ion Senama",
-                "Endapan",
-                "Solubilitas"
-            ],
-            "visual_hints": "Gunakan Spreadsheet Renderer untuk menghitung nilai Ksp berdasarkan data percobaan.",
-            "semester": "Genap"
-        }
-    ]
+  "bookId": "sma-kim-11",
+  "isbn": "978-602-244-378-0",
+  "publisher": "Pusat Perbukuan Kemendikbudristek",
+  "title": "Kimia SMA Kelas XI",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Kimia Karbon (Hidrokarbon: Alkan, Alkena, Alkuna)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Minyak Bumi (Proses Pembentukan, Fraksinasi, & Dampak Pembakaran)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Termokimia (Entalpi, Reaksi Eksoterm & Endoterm)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Laju Reaksi (Teori Tumbukan & Faktor yang Mempengaruhi)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Kesetimbangan Kimia (Tetapan Kesetimbangan & Pergeseran)",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Asam-Basa (pH, Indikator, & Titrasi Asam Basa)",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

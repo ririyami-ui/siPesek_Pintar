@@ -1,205 +1,79 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "sd-ing-4",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-32",
-            "sub_topics": [
-                {
-                    "name": "Daily Routines",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Present Simple Tense",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Adverbs of Frequency",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "My Daily Schedule",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "daily",
-                "routine",
-                "always"
-            ],
-            "semester": "Ganjil",
-            "title": "Daily Activities"
-        },
-        {
-            "no": 2,
-            "pages": "33-64",
-            "sub_topics": [
-                {
-                    "name": "Physical Appearance",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Personality Traits",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Describing Friends",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Describing Family",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "describe",
-                "appearance",
-                "personality"
-            ],
-            "semester": "Ganjil",
-            "title": "Describing People"
-        },
-        {
-            "no": 3,
-            "pages": "65-96",
-            "sub_topics": [
-                {
-                    "name": "Describing Objects",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Size and Shape",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Color and Material",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "This and That",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "object",
-                "size",
-                "shape"
-            ],
-            "semester": "Ganjil",
-            "title": "Describing Things"
-        },
-        {
-            "no": 4,
-            "pages": "97-128",
-            "sub_topics": [
-                {
-                    "name": "Simple Past Tense",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Regular Verbs",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Irregular Verbs",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Telling Past Events",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "past",
-                "yesterday",
-                "verb"
-            ],
-            "semester": "Genap",
-            "title": "Simple Past"
-        },
-        {
-            "no": 5,
-            "pages": "129-158",
-            "sub_topics": [
-                {
-                    "name": "Comparative Adjectives",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Superlative Adjectives",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Comparing Things",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Comparing People",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "comparative",
-                "than",
-                "superlative"
-            ],
-            "semester": "Genap",
-            "title": "Comparatives"
-        },
-        {
-            "no": 6,
-            "pages": "159-188",
-            "sub_topics": [
-                {
-                    "name": "Asking and Giving Directions",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Prepositions of Place",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Maps and Locations",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Finding Places",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "direction",
-                "between",
-                "next to"
-            ],
-            "semester": "Genap",
-            "title": "Directions"
-        }
-    ],
-    "isbn": "978-623-194-824-2"
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-ing-4",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "What are you doing",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "There are sixty seven English books",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "My living room is beside the kitchen",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Cici Cooks in The Kitchen",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Where is My Pencil?",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "The Stove is in The Kitchen",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "I Can Make Fried Egg in The Kitchen",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 8,
+      "title": "Be on time",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 9,
+      "title": "How Much Does It Cost?",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 10,
+      "title": "The Elephant is the Biggest",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 11,
+      "title": "How Do You Go to School?",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 12,
+      "title": "My Favorite Hobbies",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-824-2"
 }

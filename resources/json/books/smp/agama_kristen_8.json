@@ -1,205 +1,37 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-kristen-8",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Allah Bapa",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Allah Putra",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Allah Roh Kudus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Misteri Tritunggal",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Tritunggal",
-                "Allah Bapa",
-                "Allah Putra"
-            ],
-            "semester": "Ganjil",
-            "title": "Allah Tritunggal"
-        },
-        {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Perjanjian Lama",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perjanjian Baru",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Inspirasi Alkitab",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tafsir Alkitab",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Alkitab",
-                "firman",
-                "kitab suci"
-            ],
-            "semester": "Ganjil",
-            "title": "Alkitab"
-        },
-        {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Iman Sejati",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Iman dan Perbuatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kasih sebagai Dasar",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Buah Iman",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "iman",
-                "perbuatan",
-                "kasih"
-            ],
-            "semester": "Ganjil",
-            "title": "Iman dan Perbuatan"
-        },
-        {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Keluarga sebagai Lembaga Allah",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peran Anggota Keluarga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pendidikan Iman dalam Keluarga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keluarga Bahagia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "keluarga",
-                "orang tua",
-                "anak"
-            ],
-            "semester": "Genap",
-            "title": "Keluarga Kristen"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Etika dan Moral Kristen",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai-nilai Kristiani",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pengambilan Keputusan Etis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hidup Berdampak",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "etika",
-                "moral",
-                "nilai"
-            ],
-            "semester": "Genap",
-            "title": "Etika Kristen"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Panggilan Melayani",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Karunia dan Bakat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelayanan di Gereja",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pelayanan di Masyarakat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "pelayanan",
-                "panggilan",
-                "karunia"
-            ],
-            "semester": "Genap",
-            "title": "Pelayanan"
-        }
-    ],
-    "isbn": "978-623-194-902-7"
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-kristen-8",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Peran Allah dalam Sejarah Manusia",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Yesus Kristus sebagai Teladan Hidup",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Roh Kudus yang Membaharui",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Gereja dan Masyarakat",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Keluarga sebagai Gereja Mini",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-902-7"
 }

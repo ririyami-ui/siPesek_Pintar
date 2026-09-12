@@ -1,109 +1,55 @@
-﻿{
-    "publisher":  "Kemendikbudristek",
-    "bookId":  "sd-indo-5",
-    "chapters":  [
-                     {
-                         "no":  1,
-                         "pages":  "1-38",
-                         "sub_topics":  [
-                                            "Organ Pernapasan",
-                                            "Organ Pencernaan",
-                                            "Gangguan Organ Tubuh",
-                                            "Membaca Teks Eksplanasi"
-                                        ],
-                         "key_terms":  [
-                                           "organ tubuh",
-                                           "pernapasan",
-                                           "eksplanasi"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Organ Tubuh Manusia"
-                     },
-                     {
-                         "no":  2,
-                         "pages":  "39-76",
-                         "sub_topics":  [
-                                            "Peristiwa Penting",
-                                            "Tokoh Bersejarah",
-                                            "Membaca Biografi",
-                                            "Menulis Teks Biografi"
-                                        ],
-                         "key_terms":  [
-                                           "peristiwa",
-                                           "tokoh",
-                                           "biografi"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Peristiwa dalam Kehidupan"
-                     },
-                     {
-                         "no":  3,
-                         "pages":  "77-114",
-                         "sub_topics":  [
-                                            "Penemuan Sains",
-                                            "Teknologi Modern",
-                                            "Dampak Teknologi",
-                                            "Menulis Teks Argumentasi"
-                                        ],
-                         "key_terms":  [
-                                           "sains",
-                                           "teknologi",
-                                           "argumentasi"
-                                       ],
-                         "semester":  "Ganjil",
-                         "title":  "Sains dan Teknologi"
-                     },
-                     {
-                         "no":  4,
-                         "pages":  "115-150",
-                         "sub_topics":  [
-                                            "Bhinneka Tunggal Ika",
-                                            "Gotong Royong",
-                                            "Membaca Teks Proklamasi",
-                                            "Menulis Pidato"
-                                        ],
-                         "key_terms":  [
-                                           "persatuan",
-                                           "bhinneka",
-                                           "pidato"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Persatuan dan Kesatuan"
-                     },
-                     {
-                         "no":  5,
-                         "pages":  "151-186",
-                         "sub_topics":  [
-                                            "Sumber Daya Alam",
-                                            "Pelestarian SDA",
-                                            "Membaca Artikel",
-                                            "Menulis Artikel"
-                                        ],
-                         "key_terms":  [
-                                           "sumber daya alam",
-                                           "artikel",
-                                           "pelestarian"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Pelestarian Sumber Daya Alam"
-                     },
-                     {
-                         "no":  6,
-                         "pages":  "187-224",
-                         "sub_topics":  [
-                                            "Puisi",
-                                            "Pantun",
-                                            "Cerpen",
-                                            "Menulis Karya Sastra"
-                                        ],
-                         "key_terms":  [
-                                           "puisi",
-                                           "pantun",
-                                           "cerpen"
-                                       ],
-                         "semester":  "Genap",
-                         "title":  "Sastra Anak"
-                     }
-                 ],
-    "isbn":  "978-623-194-151-X"
+{
+  "publisher": "Kemendikbudristek",
+  "bookId": "sd-indo-5",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Aku yang Unik",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Buku Jendela Dunia",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Ekspresi Diri melalui Hobi",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Belajar Berwirausaha",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Menjadi Warga Dunia",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 6,
+      "title": "Cinta Indonesia",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 7,
+      "title": "Sayangi Bumi",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 8,
+      "title": "Bergerak Bersama",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-151-X"
 }

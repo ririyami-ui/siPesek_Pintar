@@ -1,205 +1,63 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-buddha-7",
-    "chapters": [
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-buddha-7",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Riwayat Hidup Buddha Gautama",
+      "sub_topics": [
         {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Kehidupan Pangeran Siddhartha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pertapaan dan Pencerahan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ajaran Buddha di India",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Wafatnya Buddha",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Buddha",
-                "Siddhartha",
-                "pencerahan"
-            ],
-            "semester": "Ganjil",
-            "title": "Riwayat Buddha"
+          "name": "Kehidupan Pangeran Siddhartha",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Tipitaka",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Vinaya Pitaka",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Sutta Pitaka",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Abhidhamma Pitaka",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Tipitaka",
-                "Vinaya",
-                "Sutta"
-            ],
-            "semester": "Ganjil",
-            "title": "Tipitaka"
+          "name": "Pertapaan dan Pencerahan",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Kebenaran Mulia Pertama",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kebenaran Mulia Kedua",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kebenaran Mulia Ketiga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kebenaran Mulia Keempat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ariya Sacca",
-                "dukkha",
-                "nibbana"
-            ],
-            "semester": "Ganjil",
-            "title": "Catur Ariya Sacca"
+          "name": "Ajaran Buddha di India",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         },
         {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Jalan Mulia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pandangan Benar dan Pikiran Benar",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kata Benar dan Perbuatan Benar",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Konsentrasi Benar",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Astangika Marga",
-                "jalan tengah",
-                "kesadaran"
-            ],
-            "semester": "Genap",
-            "title": "Astangika Marga"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Hukum Karma",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Punarbhava",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hubungan Karma dan Kelahiran Kembali",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pembebasan dari Samsara",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "karma",
-                "punarbhava",
-                "samsara"
-            ],
-            "semester": "Genap",
-            "title": "Karma dan Punarbhava"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Pengertian Meditasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Samatha Bhavana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Vipassana Bhavana",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Manfaat Meditasi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "meditasi",
-                "bhavana",
-                "sati"
-            ],
-            "semester": "Genap",
-            "title": "Meditasi"
+          "name": "Wafatnya Buddha",
+          "bloom_level": "LOTS",
+          "suggested_jp": 1
         }
-    ],
-    "isbn": "978-623-194-910-2"
+      ],
+      "key_terms": [
+        "Buddha",
+        "Siddhartha",
+        "pencerahan"
+      ],
+      "pages": "1-30"
+    },
+    {
+      "no": 2,
+      "title": "Ajaran Buddha: Cinta Kasih dan Kebijaksanaan",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Hukum Karma dan Kelahiran Kembali",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Meditasi dan Pengembangan Batin",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Hari Raya dan Tradisi Buddhis",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-910-2"
 }

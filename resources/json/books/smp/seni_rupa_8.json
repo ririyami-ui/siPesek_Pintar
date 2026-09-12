@@ -1,122 +1,36 @@
 {
-    "bookId": "smp-seni-rupa-8",
-    "publisher": "Kemendikbudristek",
-    "chapters": [
-        {
-            "no": 1,
-            "title": "Menggambar",
-            "pages": "1-30",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Teknik Menggambar",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Komposisi dan Proporsi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Menggambar Bentuk",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Menggambar",
-                "Komposisi",
-                "Proporsi",
-                "Perspektif"
-            ]
-        },
-        {
-            "no": 2,
-            "title": "Mendesain",
-            "pages": "31-60",
-            "semester": "Ganjil",
-            "sub_topics": [
-                {
-                    "name": "Prinsip Desain",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Desain Grafis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Desain Produk",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Desain",
-                "Grafis",
-                "Tipografi",
-                "Layout"
-            ]
-        },
-        {
-            "no": 3,
-            "title": "Apresiasi",
-            "pages": "61-80",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Apresiasi Karya Seni",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Kritik Seni",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Nilai Estetis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Apresiasi",
-                "Kritik",
-                "Estetika",
-                "Seni Rupa"
-            ]
-        },
-        {
-            "no": 4,
-            "title": "Pameran",
-            "pages": "81-100",
-            "semester": "Genap",
-            "sub_topics": [
-                {
-                    "name": "Perencanaan Pameran",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Penataan Karya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Evaluasi Pameran",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Pameran",
-                "Kurator",
-                "Galeri",
-                "Eksposisi"
-            ]
-        }
-    ]
+  "bookId": "smp-seni-rupa-8",
+  "publisher": "Kemendikbudristek",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Unsur, Prinsip, dan Komposisi Seni Rupa",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Teknik Menggambar dan Melukis",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Seni Grafis dan Desain Komunikasi Visual",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Seni Rupa Daerah dan Kontemporer",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Apresiasi dan Kritik Karya Seni Rupa",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ]
 }

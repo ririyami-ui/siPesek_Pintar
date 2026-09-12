@@ -1,205 +1,37 @@
 {
-    "publisher": "Kemendikbudristek",
-    "bookId": "smp-agama-khonghucu-9",
-    "chapters": [
-        {
-            "no": 1,
-            "pages": "1-30",
-            "sub_topics": [
-                {
-                    "name": "Asal-usul Ru Jia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Perkembangan Ru Jia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tokoh-tokoh Ru Jia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Pengaruh Ru Jia di Asia",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "Ru Jia",
-                "Konfusianisme",
-                "sejarah"
-            ],
-            "semester": "Ganjil",
-            "title": "Sejarah Ru Jia"
-        },
-        {
-            "no": 2,
-            "pages": "31-58",
-            "sub_topics": [
-                {
-                    "name": "Tata Cara Sembahyang",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Persembahyangan Harian",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Persembahyangan Khusus",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Makna Peribadatan",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "peribadatan",
-                "sembahyang",
-                "liturgi"
-            ],
-            "semester": "Ganjil",
-            "title": "Peribadatan"
-        },
-        {
-            "no": 3,
-            "pages": "59-88",
-            "sub_topics": [
-                {
-                    "name": "Tahun Baru Imlek",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Cap Go Meh",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Ceng Beng",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hari Raya Lainnya",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "hari raya",
-                "Imlek",
-                "tradisi"
-            ],
-            "semester": "Ganjil",
-            "title": "Hari Raya Khonghucu"
-        },
-        {
-            "no": 4,
-            "pages": "89-118",
-            "sub_topics": [
-                {
-                    "name": "Etika dalam Masyarakat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Hubungan Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Lima Hubungan Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Keselarasan Sosial",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "etika",
-                "sosial",
-                "Wu Lun"
-            ],
-            "semester": "Genap",
-            "title": "Etika Sosial"
-        },
-        {
-            "no": 5,
-            "pages": "119-148",
-            "sub_topics": [
-                {
-                    "name": "Tanggung Jawab Pribadi",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tanggung Jawab Keluarga",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tanggung Jawab Bermasyarakat",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Tanggung Jawab Moral",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "tanggung jawab",
-                "kewajiban",
-                "moral"
-            ],
-            "semester": "Genap",
-            "title": "Tanggung Jawab"
-        },
-        {
-            "no": 6,
-            "pages": "149-176",
-            "sub_topics": [
-                {
-                    "name": "Masyarakat Harmonis",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Peran Individu",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Musyawarah dan Gotong Royong",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                },
-                {
-                    "name": "Masyarakat Sejahtera",
-                    "bloom_level": "LOTS",
-                    "suggested_jp": 1
-                }
-            ],
-            "key_terms": [
-                "masyarakat",
-                "harmoni",
-                "gotong royong"
-            ],
-            "semester": "Genap",
-            "title": "Masyarakat"
-        }
-    ],
-    "isbn": "978-623-194-915-7"
+  "publisher": "Kemendikbudristek",
+  "bookId": "smp-agama-khonghucu-9",
+  "chapters": [
+    {
+      "no": 1,
+      "title": "Zhong Yong (Jalan Tengah) dan Ajaran Dasar",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 2,
+      "title": "Tian, Ming, dan Konsep Takdir",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 3,
+      "title": "Junzi (Manusia Unggul) dan Kebajikan Universal",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 4,
+      "title": "Peribadatan dan Tradisi Keagamaan Khonghucu",
+      "sub_topics": [],
+      "key_terms": []
+    },
+    {
+      "no": 5,
+      "title": "Kontribusi Ajaran Khonghucu bagi Bangsa",
+      "sub_topics": [],
+      "key_terms": []
+    }
+  ],
+  "isbn": "978-623-194-915-7"
 }
