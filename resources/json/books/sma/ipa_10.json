@@ -1,0 +1,64 @@
+{
+ "bookId": "sma-ipa-10",
+ "isbn": "978-623-118-461-0",
+ "publisher": "Pusat Kurikulum dan Perbukuan",
+ "title": "Ilmu Pengetahuan Alam untuk SMA/MA Kelas X (Edisi Revisi)",
+ "chapters": [
+  {
+   "no": 1,
+   "title": "Bab 1: Pengukuran dalam Kerja Ilmiah",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 2,
+   "title": "Bab 2: Virus dan Peranannya",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 3,
+   "title": "Bab 3: Kimia Hijau dalam Pembangunan Berkelanjutan",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 4,
+   "title": "Bab 4: Hukum Dasar Kimia di Sekitar Kita",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 5,
+   "title": "Bab 5: Struktur Atom dan Sistem Periodik",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 6,
+   "title": "Bab 6: Energi Terbarukan",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 7,
+   "title": "Bab 7: Keanekaragaman Hayati",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 8,
+   "title": "Bab 8: Pemanasan Global",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  }
+ ]
+}

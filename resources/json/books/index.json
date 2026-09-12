@@ -1246,5 +1246,21 @@
         "kelas":  "12",
         "title":  "Sejarah Kelas XII (Kurikulum Merdeka)",
         "path":  "sma/sejarah_12.json"
+    },
+    {
+        "id":  "sma-ipa-10",
+        "jenjang":  "SMA",
+        "mapel":  "IPA",
+        "kelas":  "10",
+        "title":  "Ilmu Pengetahuan Alam untuk SMA/MA Kelas X (Edisi Revisi)",
+        "path":  "sma/ipa_10.json"
+    },
+    {
+        "id":  "sma-ips-10",
+        "jenjang":  "SMA",
+        "mapel":  "IPS",
+        "kelas":  "10",
+        "title":  "Ilmu Pengetahuan Sosial untuk SMA/MA Kelas X (Edisi Revisi)",
+        "path":  "sma/ips_10.json"
     }
 ]

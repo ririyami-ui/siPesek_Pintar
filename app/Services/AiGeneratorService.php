@@ -33,6 +33,22 @@ class AiGeneratorService extends GeminiService
             $index = json_decode($this->stripBom($indexContent), true);
             if (!$index) return null;
 
+            // Fase E (SMA kelas 10) memakai buku resmi payung IPA/IPS (SK BSKAP 046/H/KR/2025)
+            if ($level === 'SMA' && (string) $gradeLevel === '10') {
+                $umbrellaBook = [
+                    'Fisika' => 'IPA',
+                    'Kimia' => 'IPA',
+                    'Biologi' => 'IPA',
+                    'Ekonomi' => 'IPS',
+                    'Sosiologi' => 'IPS',
+                    'Geografi' => 'IPS',
+                    'Sejarah' => 'IPS',
+                ];
+                if (isset($umbrellaBook[$subjectKey])) {
+                    $subjectKey = $umbrellaBook[$subjectKey];
+                }
+            }
+
             // 1. Cari buku yang pas (Jenjang + Mapel + Kelas)
             $bookInfo = collect($index)->filter(function($b) use ($level, $gradeLevel, $subjectKey) {
                 return strtoupper($b['jenjang']) === strtoupper($level) && 

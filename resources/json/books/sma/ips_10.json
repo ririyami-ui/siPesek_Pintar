@@ -1,0 +1,36 @@
+{
+ "bookId": "sma-ips-10",
+ "isbn": "978-623-118-469-6",
+ "publisher": "Pusat Kurikulum dan Perbukuan",
+ "title": "Ilmu Pengetahuan Sosial untuk SMA/MA Kelas X (Edisi Revisi)",
+ "chapters": [
+  {
+   "no": 1,
+   "title": "Bab 1: Sejarah Indonesia: Manusia, Ruang, dan Waktu",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 2,
+   "title": "Bab 2: Sosiologi: Individu dan Masyarakat",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 3,
+   "title": "Bab 3: Ekonomi: Kelangkaan dan Biaya Peluang",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  },
+  {
+   "no": 4,
+   "title": "Bab 4: Geografi: Pengantar Ilmu Geografi",
+   "pages": "",
+   "sub_topics": [],
+   "key_terms": []
+  }
+ ]
+}
