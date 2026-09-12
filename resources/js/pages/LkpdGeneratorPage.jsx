@@ -8,9 +8,11 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
+import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import { saveAs } from 'file-saver';
 import { asBlob } from 'html-docx-js-typescript';
+import { mml2omml } from 'mathml2omml';
 import { useSettings } from '../utils/SettingsContext';
 import {
     Sparkles,
@@ -238,6 +240,36 @@ const LkpdGeneratorPage = () => {
             return;
         }
 
+        // Convert rendered KaTeX math into native Word equations (OMML), same as Handout.
+        const katexElements = [...content.querySelectorAll('.katex')];
+        const ommlList = katexElements.map(el => {
+            try {
+                const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+                const latex = annotation ? annotation.textContent : null;
+                if (!latex) return null;
+                const display = !!el.closest('.katex-display');
+                const mathml = katex.renderToString(latex, {
+                    output: 'mathml',
+                    throwOnError: false,
+                    displayMode: display,
+                });
+                const omml = mml2omml(mathml);
+                if (!omml || !omml.includes('oMath')) return null;
+                return display
+                    ? `<m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">${omml}</m:oMathPara>`
+                    : omml;
+            } catch (e) {
+                console.warn('OMML conversion failed, keeping KaTeX HTML:', e);
+                return null;
+            }
+        });
+
+        katexElements.forEach((el, i) => {
+            if (!ommlList[i]) return;
+            const ph = document.createComment(`__OMML_${i}__`);
+            el.parentNode.replaceChild(ph, el);
+        });
+
         const contentHtml = content.innerHTML;
 
         const htmlString = `
@@ -261,8 +293,17 @@ const LkpdGeneratorPage = () => {
             </html>
         `;
 
+        let finalHtml = htmlString;
+        if (ommlList.length > 0) {
+            for (let i = 0; i < ommlList.length; i++) {
+                if (ommlList[i]) {
+                    finalHtml = finalHtml.split(`__OMML_${i}__`).join(ommlList[i]);
+                }
+            }
+        }
+
         try {
-            const converted = await asBlob(htmlString);
+            const converted = await asBlob(finalHtml);
             const fileName = `LKPD-${selectedRPP?.gradeLevel || 'Kelas'}-${selectedClass || 'General'}.docx`;
             saveAs(converted, fileName);
             toast.success("LKPD sedang didownload (.docx)");

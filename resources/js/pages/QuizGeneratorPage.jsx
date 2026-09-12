@@ -20,7 +20,9 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeRaw from 'rehype-raw';
 import rehypeKatex from 'rehype-katex';
+import katex from 'katex';
 import 'katex/dist/katex.min.css';
+import { mml2omml } from 'mathml2omml';
 import html2canvas from 'html2canvas';
 import Modal from '../components/Modal';
 import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
@@ -652,6 +654,30 @@ const QuizGeneratorPage = () => {
 
 
 
+    // Convert $...$ and $$...$$ LaTeX fragments in a text string into Word OMML equations.
+    const latexToOmml = (text) => {
+        if (!text || typeof text !== 'string') return text || '';
+        return text.replace(/\$\$([\s\S]+?)\$\$|\$([^$\n]+?)\$/g, (match, displayLatex, inlineLatex) => {
+            const latex = (displayLatex || inlineLatex || '').trim();
+            if (!latex) return match;
+            try {
+                const mathml = katex.renderToString(latex, {
+                    output: 'mathml',
+                    throwOnError: false,
+                    displayMode: !!displayLatex,
+                });
+                const omml = mml2omml(mathml);
+                if (!omml || !omml.includes('oMath')) return match;
+                return displayLatex
+                    ? `<m:oMathPara xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math">${omml}</m:oMathPara>`
+                    : omml;
+            } catch (e) {
+                console.warn('LaTeX conversion failed, keeping raw text:', e);
+                return match;
+            }
+        });
+    };
+
     const exportWord = async () => {
         if (!quizResult) return;
 
@@ -668,19 +694,19 @@ const QuizGeneratorPage = () => {
             // CONSOLIDATED STIMULUS & QUESTION (SINGLE PARAGRAPH)
             let combinedText = '';
             if (q.stimulus) {
-                combinedText += `${q.stimulus.replace(/\n/g, '<br/>')}<br/><br/>`;
+                combinedText += `${latexToOmml(q.stimulus).replace(/\n/g, '<br/>')}<br/><br/>`;
             }
             if (q.image_hint) {
-                combinedText += `<div style="background-color: #f0f7ff; color: #1e40af; border: 1px dashed #34d399; padding: 10px; margin-bottom: 10px; text-align: center; font-style: italic;">${q.image_hint}</div>`;
+                combinedText += `<div style="background-color: #f0f7ff; color: #1e40af; border: 1px dashed #34d399; padding: 10px; margin-bottom: 10px; text-align: center; font-style: italic;">${latexToOmml(q.image_hint)}</div>`;
             }
-            combinedText += q.question;
+            combinedText += latexToOmml(q.question);
 
             html += `<p><strong>${idx + 1}.</strong> ${combinedText}</p>`;
 
             if (q.type === 'pg' || q.type === 'pg_complex') {
                 html += '<ul>';
                 q.options.forEach((opt, oIdx) => {
-                    html += `<li>${String.fromCharCode(65 + oIdx)}. ${opt}</li>`;
+                    html += `<li>${String.fromCharCode(65 + oIdx)}. ${latexToOmml(opt)}</li>`;
                 });
                 html += '</ul>';
             } else if (q.type === 'pg_matrix') {
@@ -688,12 +714,12 @@ const QuizGeneratorPage = () => {
                 html += '<tr style="background-color: #f3f4f6;">';
                 html += '<th style="border: 1px solid #000; padding: 5px;">Pernyataan</th>';
                 q.columns.forEach(col => {
-                    html += `<th style="border: 1px solid #000; padding: 5px; text-align: center;">${col}</th>`;
+                    html += `<th style="border: 1px solid #000; padding: 5px; text-align: center;">${latexToOmml(col)}</th>`;
                 });
                 html += '</tr>';
                 q.rows.forEach(row => {
                     html += '<tr>';
-                    html += `<td style="border: 1px solid #000; padding: 5px;">${row}</td>`;
+                    html += `<td style="border: 1px solid #000; padding: 5px;">${latexToOmml(row)}</td>`;
                     q.columns.forEach(() => {
                         html += '<td style="border: 1px solid #000; padding: 5px; text-align: center;">[ ]</td>';
                     });
@@ -703,14 +729,14 @@ const QuizGeneratorPage = () => {
             } else if (q.type === 'matching') {
                 html += `<table style="width:100%; border:none;"><tr>`;
                 html += `<td style="vertical-align:top; width:45%;">`;
-                q.left_side.forEach((l, i) => html += `<p>${i + 1}. ${l}</p>`);
+                q.left_side.forEach((l, i) => html += `<p>${i + 1}. ${latexToOmml(l)}</p>`);
                 html += `</td><td style="width:10%;"></td><td style="vertical-align:top; width:45%;">`;
-                q.right_side.forEach((r, i) => html += `<p>${String.fromCharCode(65 + i)}. ${r}</p>`);
+                q.right_side.forEach((r, i) => html += `<p>${String.fromCharCode(65 + i)}. ${latexToOmml(r)}</p>`);
                 html += `</td></tr></table>`;
             } else if (q.type === 'true_false') {
                 html += `<table border="1" style="border-collapse:collapse; width:100%;"><tr><th>Pernyataan</th><th>Benar</th><th>Salah</th></tr>`;
                 q.statements.forEach(s => {
-                    html += `<tr><td>${s.text}</td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr>`;
+                    html += `<tr><td>${latexToOmml(s.text)}</td><td style="text-align:center;"></td><td style="text-align:center;"></td></tr>`;
                 });
                 html += `</table>`;
             } else if (q.type === 'short_answer') {
@@ -718,7 +744,7 @@ const QuizGeneratorPage = () => {
             } else if (q.type === 'sequencing' && q.items) {
                 html += `<ul style="list-style-type: decimal;">`;
                 q.items.forEach(item => {
-                    html += `<li style="margin-bottom: 5px;">${item}</li>`;
+                    html += `<li style="margin-bottom: 5px;">${latexToOmml(item)}</li>`;
                 });
                 html += `</ul>`;
             }
@@ -727,7 +753,7 @@ const QuizGeneratorPage = () => {
 
         html += `<br/><br/><hr/><h3>Kunci Jawaban</h3>`;
         quizResult.questions.forEach((q, idx) => {
-            html += `<p><strong>${idx + 1}.</strong> ${formatAnswer(q)} (${q.type})</p>`;
+            html += `<p><strong>${idx + 1}.</strong> ${latexToOmml(formatAnswer(q))} (${q.type})</p>`;
         });
 
         try {
@@ -1019,27 +1045,27 @@ const QuizGeneratorPage = () => {
                                 ${(() => {
                     let html = '';
                     if (q.stimulus && q.stimulus.trim() !== '' && !q.stimulus.includes('Lihat stimulus')) {
-                        html += `<div style="margin-bottom:10px; font-style:italic;">${q.stimulus}</div>`;
+                        html += `<div style="margin-bottom:10px; font-style:italic;">${latexToOmml(q.stimulus)}</div>`;
                     }
                     if (q.image_hint) {
-                        html += `<div style="margin-bottom:10px; text-align:center; border:1px dashed #666; padding:10px; background:#f9f9f9;">${q.image_hint}</div>`;
+                        html += `<div style="margin-bottom:10px; text-align:center; border:1px dashed #666; padding:10px; background:#f9f9f9;">${latexToOmml(q.image_hint)}</div>`;
                     }
-                    html += `<div style="margin-bottom:10px;"><strong>${q.question}</strong></div>`;
+                    html += `<div style="margin-bottom:10px;"><strong>${latexToOmml(q.question)}</strong></div>`;
                     if ((q.type === 'pg' || q.type === 'pg_complex') && q.options && q.options.length > 0) {
                         html += '<div><strong>OPSI JAWABAN:</strong><br/>';
-                        q.options.forEach((opt, oIdx) => { html += `${String.fromCharCode(65 + oIdx)}. ${opt}<br/>`; });
+                        q.options.forEach((opt, oIdx) => { html += `${String.fromCharCode(65 + oIdx)}. ${latexToOmml(opt)}<br/>`; });
                         html += '</div>';
                     }
                     if (q.type === 'matching' && q.left_side && q.right_side) {
                         html += '<div style="margin-top:10px;"><strong>KOLOM KIRI:</strong><br/>';
-                        q.left_side.forEach((l, i) => html += `${i + 1}. ${l}<br/>`);
+                        q.left_side.forEach((l, i) => html += `${i + 1}. ${latexToOmml(l)}<br/>`);
                         html += '<br/><strong>KOLOM KANAN:</strong><br/>';
-                        q.right_side.forEach((r, i) => html += `${String.fromCharCode(65 + i)}. ${r}<br/>`);
+                        q.right_side.forEach((r, i) => html += `${String.fromCharCode(65 + i)}. ${latexToOmml(r)}<br/>`);
                         html += '</div>';
                     }
                     if (q.type === 'true_false' && q.statements && q.statements.length > 0) {
                         html += '<div style="margin-top:10px;"><strong>PERNYATAAN:</strong><br/>';
-                        q.statements.forEach((s, i) => html += `${i + 1}. ${s.text}<br/>`);
+                        q.statements.forEach((s, i) => html += `${i + 1}. ${latexToOmml(s.text)}<br/>`);
                         html += '</div>';
                     }
                     return html;
@@ -1047,7 +1073,7 @@ const QuizGeneratorPage = () => {
                             </td>
                         </tr>
                         <tr class="bg-gray"><td align="center"><strong>Kunci</strong></td></tr>
-                        <tr><td align="center"><strong>${formatAnswer(q)}</strong></td></tr>
+                        <tr><td align="center"><strong>${latexToOmml(formatAnswer(q))}</strong></td></tr>
                     </table>
                 </div>
             `;
@@ -1194,10 +1220,10 @@ const QuizGeneratorPage = () => {
                             ${quizResult.questions.map((q, idx) => `
                             <tr>
                                 <td align="center">${idx + 1}</td>
-                                <td>${q.competency || '-'}</td>
-                                <td>${q.pedagogical_materi || topic || '-'}</td>
+                                <td>${latexToOmml(q.competency) || '-'}</td>
+                                <td>${latexToOmml(q.pedagogical_materi) || topic || '-'}</td>
                                 <td align="center">${gradeLevel || '-'}/${quizResult?.context_semester || activeSemester || '-'}</td>
-                                <td>${q.indicator || '-'}</td>
+                                <td>${latexToOmml(q.indicator) || '-'}</td>
                                 <td align="center">${q.cognitive_level || 'L1/L2/L3'}</td>
                                 <td align="center">${q.type.toUpperCase().replace('_', ' ')}</td>
                                 <td align="center">${idx + 1}</td>
