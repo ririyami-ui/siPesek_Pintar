@@ -488,7 +488,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan"
             ],
             "materi_inti": [
@@ -498,7 +498,7 @@
               },
               {
                 "materi": "Aneka Garis",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Garis yang Menunjukkan Gerakan",
@@ -510,7 +510,7 @@
               },
               {
                 "materi": "Warna",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               }
             ],
             "cp_snippet": "Mengenali dan menyebutkan unsur-unsur rupa dalam benda-benda di sekitar/karya seni rupa. Merefleksikan dan mengapresiasi karya diri sendiri."
@@ -518,7 +518,7 @@
           "genap": {
             "elemen": [
               "Berpikir dan Bekerja Artistik",
-              "Mengekspresikan",
+              "Menciptakan",
               "Berdampak"
             ],
             "materi_inti": [
@@ -528,7 +528,7 @@
               },
               {
                 "materi": "Tekstur dan Pola",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Wajah dan Perasaan",
@@ -945,7 +945,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan",
+              "Menciptakan",
               "Berpikir dan Bekerja Artistik"
             ],
             "materi_inti": [
@@ -955,7 +955,7 @@
               },
               {
                 "materi": "Gambar dari Bentuk Dasar",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Mencampur Warna",
@@ -970,14 +970,14 @@
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan",
               "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Kerajinan dari Clay/Plastisin",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Kolase Sederhana",
@@ -1429,7 +1429,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan"
+              "Menciptakan"
             ],
             "materi_inti": [
               {
@@ -1438,20 +1438,20 @@
               },
               {
                 "materi": "Ragam Hias Dekoratif (Motif Hewan/Tumbuhan)",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               }
             ],
             "cp_snippet": "Membuat gambar cerita sederhana; membuat ragam hias."
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan",
+              "Menciptakan",
               "Merefleksikan"
             ],
             "materi_inti": [
               {
                 "materi": "Membuat Karya 3D (Bahan Alam/Buatan)",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Pameran Kelas (Apresiasi Karya)",
@@ -1923,7 +1923,7 @@
           "ganjil": {
             "elemen": [
               "Mengalami",
-              "Mengekspresikan"
+              "Menciptakan"
             ],
             "materi_inti": [
               {
@@ -1932,7 +1932,7 @@
               },
               {
                 "materi": "Daur Ulang Sampah Plastik (Kriya)",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Bereksperimen dengan Tekstur",
@@ -2380,32 +2380,33 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan"
             ],
             "materi_inti": [
               {
                 "materi": "Mengenal Perspektif",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Menggambar Ilustrasi Suasana",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               }
             ],
             "cp_snippet": "Menggambar dengan perspektif."
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Membuat Patung Sederhana",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Pameran Akhir Tahun",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Membuat karya patung; menyelenggarakan pameran."
@@ -2800,32 +2801,33 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan"
             ],
             "materi_inti": [
               {
                 "materi": "Menggambar Warna",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Seni Cetak Sederhana",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               }
             ],
             "cp_snippet": "Membuat karya seni cetak."
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Karya Dekoratif",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Pameran Kelas",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Membuat karya dekoratif and berpartisipasi dalam pameran."
@@ -6565,43 +6567,42 @@
         "Informatika": {
           "ganjil": {
             "elemen": [
-              "Teknologi Informasi dan Komunikasi",
-              "Sistem Komputer",
-              "Jaringan Komputer dan Internet"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Integrasi Aplikasi Perkantoran (Mail Merge, Object Linking & Embedding)",
-                "elemen": "Teknologi Informasi dan Komunikasi"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Sistem Komputer (Hardware, Software, & Brainware Interaksi)",
-                "elemen": "Sistem Komputer"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Jaringan Lokal dan Internet (Konsep IP Address & Keamanan Data)",
-                "elemen": "Jaringan Komputer dan Internet"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu memanfaatkan tools perkantoran secara terintegrasi; memahami mekanisme kerja sistem komputer; serta menjelaskan konsep jaringan internet."
           },
           "genap": {
             "elemen": [
-              "Analisis Data",
-              "Algoritma dan Pemrograman"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Analisis Data (Eksplorasi Data Sederhana Menggunakan Python/Spreadsheet)",
-                "elemen": "Analisis Data"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Algoritma dan Pemrograman (Struktur Kontrol, Variabel, & Tipe Data)",
-                "elemen": "Algoritma dan Pemrograman"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Dampak Sosial Informatika (HAKI, Etika Digital, & Karir IT)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu mengolah data menjadi informasi; merancang algoritma sederhana; serta menyadari dampak sosial dari penggunaan teknologi informasi."
@@ -6652,32 +6653,34 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Mengekspresikan"
+              "Mengalami",
+              "Berpikir dan Bekerja Artistik"
             ],
             "materi_inti": [
               {
                 "materi": "Penggunaan Alat dan Bahan",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berpikir dan Bekerja Artistik"
               },
               {
                 "materi": "Unsur dan Prinsip Seni Rupa",
-                "elemen": "Mengekspresikan"
+                "elemen": "Mengalami"
               }
             ],
             "cp_snippet": "Bereksperimen dengan alat dan bahan seni rupa."
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Berkarya Seni Rupa Dua Dimensi",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Publikasi Karya Seni",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Membuat karya seni rupa dua dimensi."
@@ -6744,7 +6747,7 @@
           "genap": {
             "elemen": [
               "Analisis Data dan Peluang",
-              "Kalkulus"
+              "Aljabar dan Fungsi"
             ],
             "materi_inti": [
               {
@@ -6753,11 +6756,11 @@
               },
               {
                 "materi": "Limit Fungsi Aljabar (Metode Substitusi, Pemfaktoran, & Perkalian Sekawan)",
-                "elemen": "Kalkulus"
+                "elemen": "Aljabar dan Fungsi"
               },
               {
                 "materi": "Turunan Fungsi Aljabar (Sifat-sifat & Aplikasi Turunan)",
-                "elemen": "Kalkulus"
+                "elemen": "Aljabar dan Fungsi"
               }
             ],
             "cp_snippet": "Peserta didik dapat menggunakan limit fungsi aljabar dan turunan fungsi aljabar (polinom) dalam menyelesaikan masalah. Mereka dapat melakukan analisis data lanjut (regresi linear dan korelasi) serta memahami konsep kalkulus secara mendasar."
@@ -7259,8 +7262,7 @@
           "ganjil": {
             "elemen": [
               "Berpikir Komputasional",
-              "Teknologi Informasi dan Komunikasi",
-              "Jaringan Komputer dan Internet"
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
@@ -7269,29 +7271,29 @@
               },
               {
                 "materi": "Topologi Jaringan dan Konfigurasi Router/Switch",
-                "elemen": "Jaringan Komputer dan Internet"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Keamanan Informasi (Enkripsi, Digital Signature, & Sertifikat Digital)",
-                "elemen": "Teknologi Informasi dan Komunikasi"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu menerapkan strategi algoritmik (pencarian, pengurutan, optimasi) untuk solusi masalah. Mereka memahami topologi jaringan dan keamanan informasi (enkripsi, digital signature) dalam ekosistem digital."
           },
           "genap": {
             "elemen": [
-              "Analisis Data",
-              "Algoritma dan Pemrograman",
-              "Dampak Sosial Informatika"
+              "Berpikir Komputasional",
+              "Literasi Digital",
+              "Algoritma dan Pemrograman"
             ],
             "materi_inti": [
               {
                 "materi": "Literasi Digital (Verifikasi Berita & Etika di Media Sosial)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Pengembangan Proyek Informatika (Analisis Kebutuhan & Desain Solusi)",
-                "elemen": "Analisis Data"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Praktek Lintas Bidang (Kolaborasi dalam Membangun Produk IT Sederhana)",
@@ -7346,32 +7348,33 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Mengekspresikan"
+              "Menciptakan",
+              "Berdampak"
             ],
             "materi_inti": [
               {
                 "materi": "Karya Seni Rupa 3D",
-                "elemen": "Mengekspresikan"
+                "elemen": "Menciptakan"
               },
               {
                 "materi": "Pameran Seni Rupa",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berdampak"
               }
             ],
             "cp_snippet": "Membuat karya seni rupa tiga dimensi."
           },
           "genap": {
             "elemen": [
-              "Apresiasi"
+              "Merefleksikan"
             ],
             "materi_inti": [
               {
                 "materi": "Kritik Seni",
-                "elemen": "Apresiasi"
+                "elemen": "Merefleksikan"
               },
               {
                 "materi": "Analisis Karya Seni",
-                "elemen": "Apresiasi"
+                "elemen": "Merefleksikan"
               }
             ],
             "cp_snippet": "Menyusun kritik seni rupa."
@@ -7409,7 +7412,7 @@
           "ganjil": {
             "elemen": [
               "Geometri",
-              "Kalkulus"
+              "Aljabar dan Fungsi"
             ],
             "materi_inti": [
               {
@@ -7418,11 +7421,11 @@
               },
               {
                 "materi": "Integral Tentu dan Tak Tentu (Konsep, Sifat, & Teknik Pengintegralan)",
-                "elemen": "Kalkulus"
+                "elemen": "Aljabar dan Fungsi"
               },
               {
                 "materi": "Aplikasi Integral (Luas Daerah & Volume Benda Putar)",
-                "elemen": "Kalkulus"
+                "elemen": "Aljabar dan Fungsi"
               }
             ],
             "cp_snippet": "Peserta didik dapat menyelesaikan masalah terkait jarak dalam ruang (antar titik, titik ke garis, dan titik ke bidang). Mereka dapat menggunakan integral tentu dan tak tentu untuk menentukan luas daerah dan volume benda putar dengan teliti."
@@ -7939,42 +7942,42 @@
         "Informatika": {
           "ganjil": {
             "elemen": [
-              "Rekayasa Perangkat Lunak",
-              "Praktek Lintas Bidang"
+              "Berpikir Komputasional",
+              "Algoritma dan Pemrograman"
             ],
             "materi_inti": [
               {
                 "materi": "Siklus Hidup Pengembangan Perangkat Lunak (SDLC: Analisis, Desain, Coding, Testing)",
-                "elemen": "Rekayasa Perangkat Lunak"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Pengembangan Aplikasi Sederhana (Web/Mobile) Berorientasi Objek",
-                "elemen": "Rekayasa Perangkat Lunak"
+                "elemen": "Algoritma dan Pemrograman"
               },
               {
                 "materi": "Manajemen Proyek IT dan Kolaborasi Tim Menggunakan Version Control",
-                "elemen": "Praktek Lintas Bidang"
+                "elemen": "Algoritma dan Pemrograman"
               }
             ],
             "cp_snippet": "Peserta didik mampu menganalisis siklus hidup pengembangan perangkat lunak (SDLC) dan membangun aplikasi fungsional. Mereka mengelola proyek teknologi secara profesional melalui kolaborasi tim menggunakan version control."
           },
           "genap": {
             "elemen": [
-              "Dampak Sosial Informatika",
-              "Praktek Lintas Bidang"
+              "Berpikir Komputasional",
+              "Literasi Digital"
             ],
             "materi_inti": [
               {
                 "materi": "Hukum dan Etika Cyber (UU ITE, Privasi Data, & Hak Kekayaan Intelektual)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Literasi Digital"
               },
               {
                 "materi": "Masa Depan Teknologi (AI, IoT, Cloud Computing, & Big Data)",
-                "elemen": "Dampak Sosial Informatika"
+                "elemen": "Berpikir Komputasional"
               },
               {
                 "materi": "Persiapan Karir di Bidang Informatika dan Portofolio Digital",
-                "elemen": "Praktek Lintas Bidang"
+                "elemen": "Literasi Digital"
               }
             ],
             "cp_snippet": "Peserta didik mampu menyikapi aspek legal informatika (UU ITE) dan memahami tren teknologi masa depan (AI, IoT). Mereka merencanakan karir di industri kreatif digital dan menyusun portofolio digital yang kompetitif."
@@ -8025,32 +8028,34 @@
         "Seni Rupa": {
           "ganjil": {
             "elemen": [
-              "Apresiasi"
+              "Berdampak",
+              "Merefleksikan"
             ],
             "materi_inti": [
               {
                 "materi": "Manajemen Pameran Seni Rupa",
-                "elemen": "Apresiasi"
+                "elemen": "Berdampak"
               },
               {
                 "materi": "Evaluasi Karya Seni",
-                "elemen": "Apresiasi"
+                "elemen": "Merefleksikan"
               }
             ],
             "cp_snippet": "Merancang dan melaksanakan pameran seni rupa."
           },
           "genap": {
             "elemen": [
-              "Mengekspresikan"
+              "Merefleksikan",
+              "Berpikir dan Bekerja Artistik"
             ],
             "materi_inti": [
               {
                 "materi": "Portofolio Seni Rupa",
-                "elemen": "Mengekspresikan"
+                "elemen": "Merefleksikan"
               },
               {
                 "materi": "Proyek Seni Kolaboratif",
-                "elemen": "Mengekspresikan"
+                "elemen": "Berpikir dan Bekerja Artistik"
               }
             ],
             "cp_snippet": "Menyusun portofolio seni rupa."
