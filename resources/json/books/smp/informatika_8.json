@@ -59,25 +59,15 @@
           "bloom_level": "LOTS",
           "suggested_jp": 1
         },
-        {
-          "name": "Sistem Operasi dan Manajemen Memori",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+{
+            "name": "Sistem Operasi dan Manajemen Memori",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         },
         {
-          "name": "Jaringan Lokal (LAN) dan Internet",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Enkripsi Data Sederhana",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Sistem Komputer (Komponen Dalam Komputer, Pengalamatan Memori, Sistem Operasi)",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+            "name": "Sistem Komputer (Komponen Dalam Komputer, Pengalamatan Memori, Sistem Operasi)",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -94,10 +84,20 @@
       "no": 4,
       "title": "Jaringan Komputer dan Internet",
       "sub_topics": [
+{
+            "name": "Jaringan Komputer dan Internet (Keamanan Data Cloud, Enkripsi Sederhana)",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
+        },
         {
-          "name": "Jaringan Komputer dan Internet (Keamanan Data Cloud, Enkripsi Sederhana)",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+            "name": "Jaringan Lokal (LAN) dan Internet",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
+        },
+        {
+            "name": "Enkripsi Data Sederhana",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         }
       ],
       "key_terms": []

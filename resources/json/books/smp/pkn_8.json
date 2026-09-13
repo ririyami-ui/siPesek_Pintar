@@ -47,25 +47,20 @@
       "no": 2,
       "title": "Bentuk dan Kedaulatan Negara",
       "sub_topics": [
-        {
-          "name": "Negara Kesatuan Republik Indonesia",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+{
+            "name": "Negara Kesatuan Republik Indonesia",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         },
         {
-          "name": "Kedaulatan Rakyat dan Demokrasi Pancasila",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+            "name": "Kedaulatan Rakyat dan Demokrasi Pancasila",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         },
         {
-          "name": "Sistem Pemerintahan di Indonesia",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Lembaga-lembaga Negara",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+            "name": "Lembaga-lembaga Negara",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         }
       ],
       "key_terms": [
@@ -83,10 +78,15 @@
       "no": 3,
       "title": "Tata Negara dan Pemerintahan",
       "sub_topics": [
+{
+            "name": "Tata Urutan Peraturan Perundang-undangan di Indonesia",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
+        },
         {
-          "name": "Tata Urutan Peraturan Perundang-undangan di Indonesia",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
+            "name": "Sistem Pemerintahan di Indonesia",
+            "bloom_level": "LOTS",
+            "suggested_jp": 1
         }
       ],
       "key_terms": []
