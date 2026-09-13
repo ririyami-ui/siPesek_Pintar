@@ -1,6 +1,6 @@
 // Forced refresh: 2026-01-26 14:05
 import React from 'react';
-const { useState, useEffect, useCallback, useRef } = React;
+const { useState, useEffect, useCallback, useRef, useMemo } = React;
 import { useSettings } from '../utils/SettingsContext';
 import { generateATP } from '../utils/gemini';
 import { BookOpen, Calendar, List, Clock, Save, ChevronDown, Check, Trash, Upload, Download, FileSpreadsheet, Plus, Zap, RefreshCw, MapPin, Loader2, Workflow, Lock, Unlock } from 'lucide-react';
@@ -15,6 +15,7 @@ import autoTable from 'jspdf-autotable';
 import { Printer, FileText } from 'lucide-react';
 import { asBlob } from 'html-docx-js-typescript';
 import BSKAP_DATA from '../utils/bskap_2025_intel.json';
+import { buildCpRows } from '../utils/cpPrint';
 
 // Utility for Month Mapping
 const MONTH_MAP = {
@@ -243,6 +244,7 @@ const ProgramMengajarPage = () => {
     // Tabs configuration
     const tabs = [
         { id: 'pekan-efektif', label: 'Pekan Efektif', icon: <Clock size={18} /> },
+        { id: 'cp', label: 'Capaian Pembelajaran', icon: <FileText size={18} /> },
         { id: 'atp', label: 'Alur Tujuan (ATP)', icon: <Workflow size={18} /> },
         { id: 'prota', label: 'Program Tahunan', icon: <List size={18} /> },
         { id: 'promes', label: 'Program Semester', icon: <Calendar size={18} /> },
@@ -465,6 +467,18 @@ const ProgramMengajarPage = () => {
                                     schedules={schedules}
                                     sharedEfektifData={sharedEfektifData} // Pass shared data
                                     subjects={subjects}
+                                />
+                            )}
+                            {activeTab === 'cp' && (
+                                <CpView
+                                    key={`cp_${selectedGrade}_${selectedSubject}_${activeSemester}_${academicYear}`}
+                                    grade={selectedGrade}
+                                    subject={selectedSubject}
+                                    semester={activeSemester}
+                                    year={academicYear}
+                                    userProfile={userProfile}
+                                    signingLocation={signingLocation}
+                                    schedules={schedules}
                                 />
                             )}
                             {activeTab === 'pekan-efektif' && (
@@ -2978,6 +2992,178 @@ const PromesView = ({ grade, subject, semester, year, schedules, activeTab, user
                     {loading ? 'Menyimpan...' : 'Simpan Promes'}
                 </button>
             </div>
+        </div>
+    );
+};
+
+
+const CpView = ({ grade, subject, semester, year, userProfile, signingLocation, schedules }) => {
+    const result = useMemo(() => buildCpRows(grade, subject, semester), [grade, subject, semester]);
+    const teacher = getTeacherFromSchedules(schedules, grade, subject);
+    const semesterLabel = String(semester || '').charAt(0).toUpperCase() + String(semester || '').slice(1);
+    const cpReady = result.ok && result.rows.length > 0;
+
+    const handleExportWord = async () => {
+        const rows = result.rows.map(row => `
+            <tr>
+                <td style="text-align:center">${row.no}</td>
+                <td>${row.elemen}</td>
+                <td style="text-align:justify">${row.cp}</td>
+                <td style="text-align:justify">${row.tps.map((tp, i) => `${row.no}.${i + 1}. ${tp}`).join('<br/><br/>')}</td>
+                <td style="text-align:justify">${row.tps.map((tp, i) => `${row.no}.${i + 1}. ${tp}`).join('<br/><br/>')}</td>
+            </tr>
+        `).join('');
+
+        const html = `
+            <div style="font-family: Arial, sans-serif;">
+                <h2 style="text-align: center;">CAPAIAN PEMBELAJARAN (CP) DAN TUJUAN PEMBELAJARAN (TP)</h2>
+                <h3 style="text-align: center;">KELAS ${grade} - SEMESTER ${semesterLabel}</h3>
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Satuan Pendidikan:</strong> ${userProfile?.school_name || userProfile?.school || '-'}</p>
+                    <p><strong>Mata Pelajaran:</strong> ${subject}</p>
+                    <p><strong>Tahun Ajaran:</strong> ${year}</p>
+                </div>
+                ${result.intro ? `<div style="margin-bottom: 20px; font-size: 10pt; border: 1px solid #ccc; padding: 10px; background-color: #fafafa;">${result.intro}</div>` : ''}
+                <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #f0f0f0;">
+                            <th style="width: 4%;">No</th>
+                            <th style="width: 15%;">Elemen</th>
+                            <th style="width: 30%;">Capaian Pembelajaran (CP)</th>
+                            <th style="width: 30%;">Tujuan Pembelajaran (TP)</th>
+                            <th style="width: 30%;">Alur Tujuan Pembelajaran (ATP)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+
+                <table border="0" cellpadding="10" cellspacing="0" style="width: 100%; margin-top: 50px;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; vertical-align: top;">
+                            Mengetahui,<br>Kepala Sekolah<br><br><br>
+                            <strong>${userProfile?.principalName || userProfile?.principal_name || '................'}</strong><br>
+                            NIP. ${userProfile?.principalNip || userProfile?.principal_nip || '.......'}
+                        </td>
+                        <td style="width: 50%; text-align: center; vertical-align: top;">
+                            ${signingLocation}, ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}<br>Guru Mata Pelajaran<br><br><br>
+                            <strong>${teacher.name || '................'}</strong><br>
+                            NIP. ${teacher.nip || '.......'}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        `;
+        await exportToDocx(html, `CP-${subject}-${grade}.docx`, { orientation: 'landscape' });
+    };
+
+    return (
+        <div className="space-y-6 animate-fade-in">
+            <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl border border-emerald-100 dark:border-emerald-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="text-center md:text-left">
+                    <h3 className="text-lg md:text-xl font-bold text-emerald-800 dark:text-emerald-100">Capaian Pembelajaran (CP) & Tujuan Pembelajaran (TP)</h3>
+                    <p className="text-xs md:text-sm text-emerald-600 dark:text-emerald-300 max-w-2xl mt-1">
+                        CP resmi diurai otomatis menjadi tujuan pembelajaran operasional dan kode alurnya (ATP) sebagai dasar penyusunan perangkat ajar.
+                    </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    <button
+                        onClick={handleExportWord}
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-semibold"
+                    >
+                        <FileText size={16} />
+                        Word
+                    </button>
+                    <button
+                        onClick={() => window.print()}
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/60 transition text-sm font-semibold"
+                    >
+                        <Printer size={16} />
+                        Cetak
+                    </button>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 text-xs">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="text-gray-400 font-semibold uppercase tracking-wide">Mapel</div>
+                    <div className="font-bold text-gray-800 dark:text-gray-100 mt-0.5 break-words">{subject || '-'}</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="text-gray-400 font-semibold uppercase tracking-wide">Kelas / Fase</div>
+                    <div className="font-bold text-gray-800 dark:text-gray-100 mt-0.5">{grade || '-'}</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="text-gray-400 font-semibold uppercase tracking-wide">Semester</div>
+                    <div className="font-bold text-gray-800 dark:text-gray-100 mt-0.5">{semesterLabel || '-'}</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="text-gray-400 font-semibold uppercase tracking-wide">Tahun Ajaran</div>
+                    <div className="font-bold text-gray-800 dark:text-gray-100 mt-0.5">{year || '-'}</div>
+                </div>
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <div className="text-gray-400 font-semibold uppercase tracking-wide">Elemen / TP</div>
+                    <div className="font-bold text-gray-800 dark:text-gray-100 mt-0.5">{cpReady ? `${result.rows.length} / ${result.rows.reduce((a, r) => a + r.tps.length, 0)}` : '0 / 0'}</div>
+                </div>
+            </div>
+
+            {result.intro ? (
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm text-sm text-gray-700 dark:text-gray-300">
+                    <span className="font-bold text-emerald-700 dark:text-emerald-300">Capaian Umum / Main CP: </span>
+                    {result.intro}
+                </div>
+            ) : null}
+
+            {cpReady ? (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm text-left">
+                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th className="px-4 py-3 w-12 text-center">No</th>
+                                    <th className="px-4 py-3 w-[13%]">Elemen</th>
+                                    <th className="px-4 py-3 w-[30%]">Capaian Pembelajaran (CP)</th>
+                                    <th className="px-4 py-3">Tujuan Pembelajaran (TP)</th>
+                                    <th className="px-4 py-3">Alur Tujuan Pembelajaran (ATP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {result.rows.map((row) => (
+                                    <tr key={row.no} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 align-top">
+                                        <td className="px-4 py-3 text-center font-medium">{row.no}</td>
+                                        <td className="px-4 py-3">{row.elemen}</td>
+                                        <td className="px-4 py-3 text-justify text-xs leading-relaxed">{row.cp}</td>
+                                        <td className="px-4 py-3">
+                                            {row.tps.map((tp, ti) => (
+                                                <div key={ti} className="mb-2 last:mb-0">
+                                                    <span className="font-bold text-emerald-700 dark:text-emerald-400">{row.no}.{ti + 1}.</span>
+                                                    <span className="ml-1 text-xs leading-relaxed">{tp}</span>
+                                                </div>
+                                            ))}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {row.tps.map((tp, ti) => (
+                                                <div key={ti} className="mb-2 last:mb-0">
+                                                    <span className="font-bold text-amber-700 dark:text-amber-400">{row.no}.{ti + 1}.</span>
+                                                    <span className="ml-1 text-xs leading-relaxed">{tp}</span>
+                                                </div>
+                                            ))}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-gray-400 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <BookOpen size={40} className="mb-3 opacity-20" />
+                    <p className="text-sm">CP untuk <strong>{subject}</strong> kelas <strong>{grade}</strong> belum tersedia di data BSKAP 2025.</p>
+                </div>
+            )}
+
+            <SignatureSection userProfile={userProfile} signingLocation={signingLocation} teacherName={teacher.name} teacherNip={teacher.nip} />
         </div>
     );
 };
