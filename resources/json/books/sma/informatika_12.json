@@ -1,219 +1,60 @@
 {
-  "bookId": "sma-informatika-12",
-  "isbn": "",
-  "publisher": "Pusat Perbukuan Kemendikbudristek",
-  "title": "Informatika SMA Kelas XII",
+  "bookId": "sma-inf-12",
+  "isbn": "978-602-427-948-6",
+  "publisher": "Pusat Kurikulum dan Perbukuan",
+  "title": "Informatika untuk SMA/MA Kelas XII",
   "chapters": [
     {
       "no": 1,
-      "title": "Rekayasa Perangkat Lunak",
+      "title": "Bab 1: Siklus Analisis Data",
       "pages": "",
       "sub_topics": [
         {
-          "name": "Konsep Rekayasa",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Konsep Perangkat",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Konsep Lunak",
+          "name": "Siklus Hidup Pengembangan Perangkat Lunak (SDLC: Analisis, Desain, Coding, Testing)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
       ],
-      "key_terms": [],
-      "visual_hints": "",
-      "semester": "Ganjil"
+      "key_terms": []
     },
     {
       "no": 2,
-      "title": "Praktek Lintas Bidang",
+      "title": "Bab 2: Sistem IoT Sederhana",
       "pages": "",
-      "sub_topics": [
-        {
-          "name": "Konsep Praktek",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Konsep Lintas",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Konsep Bidang",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        }
-      ],
-      "key_terms": [],
-      "visual_hints": "",
-      "semester": "Ganjil"
+      "sub_topics": [],
+      "key_terms": []
     },
     {
       "no": 3,
-      "title": "Dampak Sosial Informatika",
+      "title": "Bab 3: Cyber Security Dasar",
       "pages": "",
-      "sub_topics": [
-        {
-          "name": "Pada akhir fase D, peserta didik mampu memahami ketersediaan data dan informasi lewat aplikasi media sosial, memahami keterbukaan informasi, memilih informasi yang bersifat publik atau privat, menerapkan etika dan menjaga keamanan dirinya dalam masyarakat digital",
-          "bloom_level": "MOTS",
-          "suggested_jp": 2
-        },
-        {
-          "name": "Placeholder 2",
-          "bloom_level": "MOTS",
-          "suggested_jp": 2
-        },
-        {
-          "name": "Placeholder 3",
-          "bloom_level": "MOTS",
-          "suggested_jp": 2
-        },
-        {
-          "name": "Placeholder 4",
-          "bloom_level": "MOTS",
-          "suggested_jp": 2
-        }
-      ],
-      "key_terms": [],
-      "visual_hints": "",
-      "semester": "Genap"
+      "sub_topics": [],
+      "key_terms": []
     },
     {
       "no": 4,
-      "title": "Praktek Lintas Bidang",
+      "title": "Bab 4: Etika dan Hukum Digital",
       "pages": "",
       "sub_topics": [
         {
-          "name": "Konsep Praktek",
+          "name": "Hukum dan Etika Cyber (UU ITE, Privasi Data, & Hak Kekayaan Intelektual)",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         },
         {
-          "name": "Konsep Lintas",
-          "bloom_level": "LOTS",
-          "suggested_jp": 1
-        },
-        {
-          "name": "Konsep Bidang",
+          "name": "Persiapan Karir di Bidang Informatika dan Portofolio Digital",
           "bloom_level": "LOTS",
           "suggested_jp": 1
         }
       ],
-      "key_terms": [],
-      "visual_hints": "",
-      "semester": "Genap"
-    }
-  ],
-  "atp": [
-    {
-      "chapter_no": 1,
-      "materi": "Konsep Rekayasa",
-      "tp": "Konsep Rekayasa",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
+      "key_terms": []
     },
     {
-      "chapter_no": 1,
-      "materi": "Konsep Perangkat",
-      "tp": "Konsep Perangkat",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 1,
-      "materi": "Konsep Lunak",
-      "tp": "Konsep Lunak",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 2,
-      "materi": "Konsep Praktek",
-      "tp": "Konsep Praktek",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 2,
-      "materi": "Konsep Lintas",
-      "tp": "Konsep Lintas",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 2,
-      "materi": "Konsep Bidang",
-      "tp": "Konsep Bidang",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 3,
-      "materi": "Rekam Jejak Digital",
-      "tp": "Rekam Jejak Digital",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 3,
-      "materi": "Etika Bermedia Digital",
-      "tp": "Etika Bermedia Digital",
-      "jp": 2,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 3,
-      "materi": "Cyberbullying dan Keamanan",
-      "tp": "Cyberbullying dan Keamanan",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 3,
-      "materi": "Kewargaan Digital",
-      "tp": "Kewargaan Digital",
-      "jp": 2,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 4,
-      "materi": "Konsep Praktek",
-      "tp": "Konsep Praktek",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 4,
-      "materi": "Konsep Lintas",
-      "tp": "Konsep Lintas",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
-    },
-    {
-      "chapter_no": 4,
-      "materi": "Konsep Bidang",
-      "tp": "Konsep Bidang",
-      "jp": 1,
-      "kesulitan": "LOTS",
-      "profilLulusan": null
+      "no": 5,
+      "title": "Bab 5: Proyek Inovasi IT",
+      "pages": "",
+      "sub_topics": [],
+      "key_terms": []
     }
   ]
 }

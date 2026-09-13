@@ -1262,5 +1262,29 @@
         "kelas":  "10",
         "title":  "Ilmu Pengetahuan Sosial untuk SMA/MA Kelas X (Edisi Revisi)",
         "path":  "sma/ips_10.json"
+    },
+    {
+        "id":  "sma-inf-10",
+        "jenjang":  "SMA",
+        "mapel":  "Informatika",
+        "kelas":  "10",
+        "title":  "Informatika untuk SMA/MA/SMK/MAK Kelas X (Edisi Revisi)",
+        "path":  "sma/informatika_10.json"
+    },
+    {
+        "id":  "sma-inf-11",
+        "jenjang":  "SMA",
+        "mapel":  "Informatika",
+        "kelas":  "11",
+        "title":  "Informatika untuk SMA/MA Kelas XI (Edisi Revisi)",
+        "path":  "sma/informatika_11.json"
+    },
+    {
+        "id":  "sma-inf-12",
+        "jenjang":  "SMA",
+        "mapel":  "Informatika",
+        "kelas":  "12",
+        "title":  "Informatika untuk SMA/MA Kelas XII",
+        "path":  "sma/informatika_12.json"
     }
 ]
