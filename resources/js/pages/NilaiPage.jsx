@@ -47,7 +47,7 @@ export default function NilaiPage() {
   const [isFetchingEditData, setIsFetchingEditData] = useState(false);
   const [isSavingGrades, setIsSavingGrades] = useState(false);
 
-  const assessmentTypes = ["Harian", "Ulangan", "Tengah Semester", "Akhir Semester", "Praktik", "Sikap"];
+  const assessmentTypes = ["Ulangan Harian", "Harian", "Ulangan", "Tengah Semester", "Akhir Semester", "Praktik", "Sikap"];
 
   // const classesCollectionRef = collection(db, 'classes');
   // const subjectsCollectionRef = collection(db, 'subjects');

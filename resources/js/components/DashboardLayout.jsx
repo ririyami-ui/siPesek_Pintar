@@ -83,6 +83,7 @@ const NAV_CATEGORIES = [
       { name: 'Absensi Terlewat', icon: <History size={20} />, path: '/absensi-terlewat' },
       { name: 'Jurnal Mengajar', icon: <FileText size={20} />, path: '/jurnal' },
       { name: 'Monitoring Nilai', icon: <GraduationCap size={20} />, path: '/monitoring-nilai' },
+      { name: 'Analisis Ulangan Harian', icon: <ClipboardCheck size={20} />, path: '/analisis-ulangan-harian' },
     ]
   },
   {
@@ -147,6 +148,7 @@ const TEACHER_NAV_CATEGORIES = [
       { name: 'Jurnal Mengajar', icon: <FileText size={20} />, path: '/jurnal' },
       { name: 'Input Nilai', icon: <GraduationCap size={20} />, path: '/nilai' },
       { name: 'Penilaian KKTP', icon: <ClipboardCheck size={20} />, path: '/penilaian-kktp' },
+      { name: 'Analisis Ulangan Harian', icon: <ClipboardCheck size={20} />, path: '/analisis-ulangan-harian' },
       { name: 'Penugasan Siswa', icon: <ListTodo size={20} />, path: '/penugasan' },
     ]
   },

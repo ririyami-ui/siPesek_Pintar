@@ -23,6 +23,7 @@ class Grade extends Model
         'topic',
         'notes',
         'kktp_assessment_id',
+        'ulangan_harian_item_id',
     ];
 
     protected $casts = [

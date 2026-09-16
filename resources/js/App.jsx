@@ -16,6 +16,7 @@ import AsistenGuruPage from './pages/AsistenGuruPage.jsx';
 import EarlyWarningPage from './pages/EarlyWarningPage.jsx';
 import PelanggaranPage from './pages/PelanggaranPage.jsx';
 import AnalisisKelasPage from './pages/AnalisisKelasPage.jsx';
+import AnalisisUlanganHarianPage from './pages/AnalisisUlanganHarianPage.jsx';
 import LeaderboardPage from './pages/LeaderboardPage.jsx';
 import ProgramMengajarPage from './pages/ProgramMengajarPage.jsx';
 import LessonPlanPage from './pages/LessonPlanPage.jsx';
@@ -293,6 +294,7 @@ function App() {
           <Route path="/master-data" element={<MasterDataPage />} />
           <Route path="/about" element={<AboutPage installPrompt={installPrompt} onInstall={handleInstall} isPwaInstalled={isPwaInstalled} />} />
           <Route path="/analisis-kelas" element={<AnalisisKelasPage />} />
+          <Route path="/analisis-ulangan-harian" element={<AnalisisUlanganHarianPage />} />
           <Route path="/sistem-peringatan" element={<EarlyWarningPage />} />
           <Route path="/radar-perwalian" element={<EarlyWarningPage />} />
           <Route path="/asisten-guru" element={<AsistenGuruPage />} />

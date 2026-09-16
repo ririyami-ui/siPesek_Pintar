@@ -132,8 +132,8 @@ export const generateDetailedAttendanceRecapPDF = (data, dates, schoolName, star
   doc.setFontSize(10);
   doc.text(`Kelas: ${selectedClass}`, 14, 40);
   doc.text(`Periode: ${fmtDate(startDate)} s.d ${fmtDate(endDate)}`, 14, 46);
-  doc.text(`Tahun Pelajaran: ${userProfile?.academicYear || '-'}`, pageWidth - 14, 40, { align: "right" });
-  doc.text(`Semester: ${userProfile?.activeSemester || '-'}`, pageWidth - 14, 46, { align: "right" });
+  doc.text(`Tahun Pelajaran: ${academicYear || userProfile?.academicYear || '-'}`, pageWidth - 14, 40, { align: "right" });
+  doc.text(`Semester: ${activeSemester || userProfile?.activeSemester || '-'}`, pageWidth - 14, 46, { align: "right" });
 
   // Columns Construction
   const tableColumn = [
@@ -768,6 +768,440 @@ export const generateViolationRecapPDF = (data, schoolName, startDate, endDate, 
 
   // Save the PDF
   doc.save(`Rekap_Pelanggaran_${selectedClass}_${startDate}_${endDate}.pdf`);
+};
+
+/**
+ * Generates a PDF report for Ulangan Harian analysis.
+ * @param {Object} uhItem - Ulangan Harian item data.
+ * @param {Object} analisisResult - Result from analisisButir.js::analisisUlanganHarian.
+ * @param {Array} rekomendasiAI - Result from gemini.js::generateUlanganHarianRecommendation.
+ * @param {Object} userProfile - User profile data.
+ */
+export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, userProfile = {}, academicYear = '', activeSemester = '') => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+  let yPos = 20;
+
+  const uh = uhItem || {};
+  const analisis = analisisResult || {};
+
+  const items = (analisis.items || analisis.item_meta || []).map((it, i) => ({
+    no: it.no ?? i + 1,
+    tipe: it.tipe || it.type || 'PG',
+    elemen: it.elemen || it.element || '-',
+    materi: it.materi || it.materi_pokok || '-',
+    skor_maks: Number(it.skor_maks || 0),
+    bobot: Number(it.bobot || 1),
+    kesukaran: it.kesukaran || { p: 0, kategori: '-' },
+    dayaPembeda: it.dayaPembeda || { d: 0, kategori: '-' },
+    validitas: it.validitas || { r: 0, kategori: '-' },
+    rerata: Number(it.rerata || 0),
+    dayaSerap: Number(it.dayaSerap ?? 0),
+  }));
+
+  const scores = analisis.scores || uh.scores || {};
+  const studentIds = Object.keys(scores || {});
+  const skorAkhir = analisis.skorAkhir || {};
+  const rombel = analisis.kelas || {};
+  const st = rombel.statistik || {};
+  const distribusi = analisis.distribusi || [];
+
+  const namaMap = {};
+  const absenMap = {};
+  (analisis.rekomendasi || []).forEach(r => {
+    if (r && r.student_id != null && r.student_name) namaMap[String(r.student_id)] = r.student_name;
+    if (r && r.student_id != null && r.no_absen != null && r.no_absen !== '') absenMap[String(r.student_id)] = r.no_absen;
+  });
+  (userProfile?.students || []).forEach(s => {
+    if (s && s.id != null && s.name) namaMap[String(s.id)] = s.name;
+    if (s && s.id != null && s.absen != null && s.absen !== '') absenMap[String(s.id)] = s.absen;
+  });
+  const namaSiswa = (sid) => namaMap[String(sid)] || `Siswa ${sid}`;
+  const noAbsen = (sid, fb) => absenMap[String(sid)] ?? fb;
+
+  const belumTuntas = (analisis.rekomendasi || []).filter(r => r.tindakan === 'Remedial');
+  const tuntasList = (analisis.rekomendasi || []).filter(r => r.tindakan === 'Pengayaan');
+
+  const kktpVal = Number(uh.kktp_score || rombel.kktp || 70);
+  const targetKlasikal = Number(uh.target_klasikal || 80);
+  const perTuntas = {
+    tuntas: tuntasList.length,
+    belum: belumTuntas.length,
+    total: (analisis.rekomendasi || []).length || rombel.nSiswa || 0,
+  };
+  perTuntas.persen = perTuntas.total ? Number(((perTuntas.tuntas / perTuntas.total) * 100).toFixed(2)) : 0;
+  const kelasTuntas = perTuntas.persen >= targetKlasikal;
+
+  const butirGagal = [...new Set((analisis.rekomendasi || []).flatMap(r => (r.butirGagal || []).map(b => Number(b.no ?? b))))]
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+
+  const schoolName = userProfile?.school || userProfile?.nama_sekolah || userProfile?.school_name || uh.school || '-';
+  const city = getCity(userProfile);
+  const dateStr = fmtDate(new Date());
+
+  // --- helpers ---
+  const checkSpace = (need) => {
+    if (yPos + (need || 8) > pageHeight - 20) {
+      doc.addPage();
+      yPos = 25;
+    }
+  };
+  const drawTitle = (text) => {
+    checkSpace(12);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(String(text), 14, yPos);
+    yPos += 7;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+  };
+  const drawSubTitle = (text) => {
+    checkSpace(10);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(String(text), 14, yPos);
+    yPos += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+  };
+  const drawText = (text, opts = {}) => {
+    if (text === null || text === undefined || text === '') return;
+    checkSpace(6);
+    if (opts.bold) doc.setFont('helvetica', 'bold');
+    const lines = doc.splitTextToSize(String(text), pageWidth - 28);
+    doc.text(lines, 14, yPos);
+    yPos += lines.length * 4.5 + 1.5;
+    doc.setFont('helvetica', 'normal');
+  };
+  const drawIdentitas = (rows) => {
+    checkSpace(rows.length * 7);
+    rows.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.text(String(label), 14, yPos);
+      doc.setFont('helvetica', 'normal');
+      const valLines = doc.splitTextToSize(String(value ?? ''), pageWidth - 14 - 60);
+      doc.text(valLines, 60, yPos);
+      yPos += valLines.length * 4.5 + 1.5;
+    });
+    yPos += 4;
+  };
+  const tableOpts = (heads, body, colStyles) => ({
+    head: heads,
+    body,
+    startY: yPos,
+    margin: { left: 14, right: 14 },
+    theme: 'grid',
+    styles: { fontSize: 8, cellPadding: 2, halign: 'center', valign: 'middle', overflow: 'linebreak', minCellWidth: 0 },
+    headStyles: { fillColor: [50, 50, 50], textColor: [255, 255, 255], fontStyle: 'bold' },
+    columnStyles: colStyles || {},
+    pageBreak: 'auto',
+  });
+
+  // --- KOP & IDENTITAS + DAFTAR SKOR SISWA ---
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('ANALISIS ULANGAN HARIAN', pageWidth / 2, 20, { align: 'center' });
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
+  doc.text(String(schoolName).toUpperCase(), pageWidth / 2, 28, { align: 'center' });
+  doc.setLineWidth(0.5);
+  doc.line(14, 33, pageWidth - 14, 33);
+  doc.setLineWidth(0.1);
+  doc.line(14, 34.5, pageWidth - 14, 34.5);
+  yPos = 42;
+
+  drawIdentitas([
+    ['Nama Sekolah', schoolName],
+    ['Mata Pelajaran', uh.subject_name || '-'],
+    ['Kelas / Semester', `${uh.class_name || '-'} / ${userProfile?.activeSemester || uh.semester || '-'}`],
+    ['Tahun Pelajaran', academicYear || '-'],
+    ['Pokok Bahasan', uh.rpp_topic || '-'],
+    ['Tanggal Pelaksanaan', fmtDate(uh.date)],
+    ['KKTP / KKM', uh.kktp_score || rombel.kktp || '70'],
+    ['Jumlah Siswa', analisis.kelas?.nSiswa || studentIds.length || rombel.nSiswa || '0'],
+    ['Jumlah Butir Soal', items.length || rombel.nButir || '0'],
+  ]);
+
+  drawTitle('DAFTAR SKOR SISWA PER BUTIR SOAL');
+  const skorBodyRows = studentIds.map((sid, idx) => {
+    const totalSkor = items.reduce((s, it) => s + Number(scores[sid]?.[it.no] || 0), 0);
+    const akhir = Number(skorAkhir[sid] || 0);
+    const tuntas = kktpVal > 0 ? akhir >= kktpVal : true;
+    return [noAbsen(sid, idx + 1), namaSiswa(sid), ...items.map(it => Number(scores[sid]?.[it.no] || 0)), totalSkor, akhir, tuntas ? 'Tuntas' : 'Belum'];
+  });
+  doc.autoTable({
+    ...tableOpts(
+      [['No. Absen', 'Nama Siswa', ...items.map(it => `B${it.no}`), 'Jml Skor', 'Skor Akhir', 'Ketuntasan KKTP']],
+      skorBodyRows,
+      {
+        0: { cellWidth: 14 },
+        1: { cellWidth: 45, halign: 'left' },
+        [items.length + 2]: { cellWidth: 15 },
+        [items.length + 3]: { cellWidth: 18 },
+        [items.length + 4]: { cellWidth: 22 },
+      },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 8;
+
+  // --- HASIL ANALISIS ---
+  checkSpace(16);
+  drawTitle('HASIL ANALISIS');
+  drawSubTitle('1. Ketentuan Belajar');
+  drawText('a. Klasikal');
+  drawText(`- Seorang siswa dinyatakan telah tuntas belajar apabila ia telah mencapai skor minimal ${kktpVal}% atau nilai ${kktpVal} (daya serap perorangan).`);
+  drawText(`- Suatu kelas dinyatakan telah tuntas belajar bila di kelas tersebut telah terdapat minimal ${targetKlasikal}% siswa yang telah mencapai daya serap ${kktpVal}% (daya serap klasikal).`);
+  drawText(`b. Kesimpulan : ${kelasTuntas ? 'Tuntas' : 'Belum Tuntas'} (${perTuntas.persen}% siswa tuntas)`, { bold: true });
+
+  drawSubTitle('2. Rekapitulasi Hasil & Statistik');
+  const recapRows = [
+    ['Jumlah Peserta', analisis.kelas?.nSiswa || studentIds.length || '0'],
+    ['Jumlah Butir Soal', items.length || rombel.nButir || '0'],
+    ['Rerata Skor Akhir', st.rerata ?? rombel.rerataAkhir ?? 0],
+    ['Nilai Terendah', st.min ?? 0],
+    ['Nilai Tertinggi', st.max ?? 0],
+    ['Median', st.median ?? 0],
+    ['Modus', st.modusList && st.modusList.length ? st.modusList.join(', ') : 'Tidak ada'],
+    ['Standar Deviasi', st.standarDeviasi ?? 0],
+    ['Daya Serap', `${rombel.dayaSerap ?? 0}%`],
+    ['Reliabilitas (Alpha)', `${rombel.alphaReliabilitas?.alpha ?? 0} (${rombel.alphaReliabilitas?.kategori ?? '-'})`],
+    ['Jumlah Siswa Tuntas', perTuntas.tuntas],
+    ['Jumlah Siswa Belum Tuntas', perTuntas.belum],
+    ['Persentase Ketuntasan', `${perTuntas.persen}%`],
+  ];
+  doc.autoTable({
+    ...tableOpts(
+      [['Keterangan', 'Nilai']],
+      recapRows.map(([a, b]) => [a, b]),
+      { 0: { cellWidth: 100, halign: 'left' }, 1: { cellWidth: 40 } },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 8;
+  if (st.n) {
+    drawText('Statistik skor akhir seluruh peserta: mean = jumlah skor / banyak peserta, median = nilai tengah data terurut, modus = nilai yang paling sering muncul, standar deviasi = akar kuadrat dari rata-rata kuadrat selisih tiap skor terhadap mean.');
+  }
+
+  if (distribusi.length) {
+    drawSubTitle('Distribusi Skor Akhir Siswa');
+    doc.autoTable({
+      ...tableOpts(
+        [['Interval', 'Jumlah Siswa']],
+        distribusi.map(d => [d.interval || d.label || '-', d.count ?? d.nSiswa ?? 0]),
+        { 0: { cellWidth: 100 }, 1: { cellWidth: 40 } },
+      ),
+    });
+    yPos = doc.autoTable.previous.finalY + 8;
+  }
+
+  // --- ANALISIS BUTIR SOAL ---
+  checkSpace(16);
+  drawTitle('ANALISIS BUTIR SOAL');
+  doc.autoTable({
+    ...tableOpts(
+      [['No', 'Tipe', 'Elemen', 'Materi', 'Kesukaran', 'Daya Beda', 'Validitas', 'Daya Serap (%)']],
+      items.map(it => [
+        it.no, it.tipe, it.elemen, it.materi,
+        `${it.kesukaran.p} (${it.kesukaran.kategori})`,
+        `${it.dayaPembeda.d} (${it.dayaPembeda.kategori})`,
+        `${it.validitas.r} (${it.validitas.kategori})`,
+        it.dayaSerap,
+      ]),
+      {
+        0: { cellWidth: 12 },
+        1: { cellWidth: 15 },
+        2: { cellWidth: 28, halign: 'left' },
+        3: { cellWidth: 45, halign: 'left' },
+        4: { cellWidth: 28 },
+        5: { cellWidth: 27 },
+        6: { cellWidth: 28 },
+        7: { cellWidth: 25 },
+      },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 8;
+
+  drawSubTitle('Soal yang Tidak Dikuasai Kelas');
+  if (rombel.butirLemah && rombel.butirLemah.length) {
+    drawText(`Berikut butir soal yang daya serapnya di bawah KKTP (${rombel.kktpKelas || 70}%) sehingga perlu dijelaskan ulang & menjadi dasar program perbaikan klasikal:`);
+    drawText(rombel.butirLemah.map(b =>
+      `No.${b.no} (Daya serap ${b.dayaSerap}%)${b.materi ? ` - ${b.elemen && b.elemen !== b.materi ? b.elemen + ' - ' : ''}${b.materi}` : ''}`
+    ).join(';  '));
+  } else {
+    drawText('Semua butir dikuasai kelas (daya serap >= KKTP).');
+  }
+
+  // --- REKOMENDASI & PROGRAM PERBAIKAN (REMEDIAL) ---
+  checkSpace(16);
+  drawTitle('REKOMENDASI & PROGRAM PERBAIKAN (REMEDIAL)');
+  drawText('Berdasarkan hasil analisis ulangan harian ini, siswa yang belum mencapai ketuntasan (KKTP) perlu mengikuti program perbaikan (remedial). Siswa yang sudah tuntas mengikuti program pengayaan.');
+
+  drawSubTitle('A. Siswa Perlu Perbaikan (Remedial)');
+  if (belumTuntas.length) {
+    doc.autoTable({
+      ...tableOpts(
+        [['No', 'Nama Siswa', 'Skor Akhir', 'Butir Gagal']],
+        belumTuntas.map((r, i) => [
+          i + 1,
+          r.student_name || namaSiswa(r.student_id),
+          r.skorAkhir ?? r.skor ?? 0,
+          (r.butirGagal || []).map(b => `No.${b.no ?? b}`).join(', ') || '-',
+        ]),
+        { 0: { cellWidth: 15 }, 1: { cellWidth: 80, halign: 'left' }, 2: { cellWidth: 25 }, 3: { cellWidth: 40, halign: 'left' } },
+      ),
+    });
+    yPos = doc.autoTable.previous.finalY + 8;
+  } else {
+    drawText('Tidak ada siswa yang perlu remedial pada ulangan ini.');
+  }
+
+  drawSubTitle('C. Daftar Nilai Setelah Perbaikan (Remedial)');
+  const nilaiRemidiRows = belumTuntas.length
+    ? belumTuntas.map((r, i) => [
+        i + 1,
+        r.student_name || namaSiswa(r.student_id),
+        r.skorAkhir ?? r.skor ?? 0,
+        (r.butirGagal || []).map(b => `No.${b.no ?? b}`).join(', ') || '-',
+        uh.remidi_scores?.[String(r.student_id)] ?? '',
+      ])
+    : [['-', 'Tidak ada peserta remedial', '-', '-', '']];
+  doc.autoTable({
+    ...tableOpts(
+      [['No', 'Nama Siswa', 'Nilai Awal', 'Butir Gagal', 'Nilai Setelah Perbaikan']],
+      nilaiRemidiRows,
+      {
+        0: { cellWidth: 12 },
+        1: { cellWidth: 55, halign: 'left' },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 42, halign: 'left' },
+        4: { cellWidth: 30, halign: 'left' },
+      },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 8;
+  drawText('Nilai setelah perbaikan diisi pada kolom yang masih kosong (blanko dapat dicetak dan diisi manual).');
+
+  drawSubTitle('D. Siswa Mengikuti Pengayaan');
+  if (tuntasList.length) {
+    drawText(`Sebanyak ${tuntasList.length} siswa sudah mencapai ketuntasan dan diarahkan mengikuti program pengayaan: ${tuntasList.map(r => r.student_name || namaSiswa(r.student_id)).join(', ')}.`);
+  }
+
+  // --- SOAL PERBAIKAN ---
+  checkSpace(16);
+  drawTitle('SOAL PERBAIKAN');
+  drawIdentitas([
+    ['Nama Sekolah', schoolName],
+    ['Mata Pelajaran', uh.subject_name || '-'],
+    ['Kelas / Semester', `${uh.class_name || '-'} / ${activeSemester || uh.semester || '-'}`],
+    ['Tahun Pelajaran', academicYear || '-'],
+    ['Pokok Bahasan', uh.rpp_topic || '-'],
+    ['Tanggal Perbaikan', '......................................................'],
+  ]);
+  if (butirGagal.length) {
+    drawText(`Soal-soal yang perlu diperbaiki kembali adalah butir nomor : ${butirGagal.join(', ')}.`);
+  } else {
+    drawText('Seluruh butir telah tuntas; tidak ada soal yang perlu diulang.');
+  }
+  drawSubTitle('Lembar Jawab Perbaikan');
+  doc.autoTable({
+    ...tableOpts(
+      [['No', 'Butir', 'Jawaban Perbaikan']],
+      (butirGagal.length ? butirGagal : [1]).map((no, i) => [i + 1, no, '']),
+      { 0: { cellWidth: 25 }, 1: { cellWidth: 30 }, 2: { cellWidth: 90, halign: 'left' } },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 8;
+
+  // --- PROGRAM PENGAYAAN ---
+  checkSpace(16);
+  drawTitle('PROGRAM PENGAYAAN');
+  drawIdentitas([
+    ['Mata Pelajaran', uh.subject_name || '-'],
+    ['Pokok Bahasan', uh.rpp_topic || '-'],
+    ['Satuan Pendidikan', schoolName],
+    ['Kelas / Semester', `${uh.class_name || '-'} / ${activeSemester || uh.semester || '-'}`],
+    ['Tahun Pelajaran', academicYear || '-'],
+  ]);
+  drawText('1. Tujuan :', { bold: true });
+  drawText('Memberikan pengalaman belajar tambahan bagi siswa yang telah tuntas agar kemampuannya lebih berkembang (enrichment).');
+  drawText('2. Sasaran Kegiatan :', { bold: true });
+  drawText(tuntasList.length
+    ? `Siswa yang telah mencapai ketuntasan, yaitu : ${tuntasList.map(r => r.student_name || namaSiswa(r.student_id)).join(', ')}.`
+    : 'Tidak ada siswa yang mengikuti pengayaan pada ulangan ini.');
+  drawText('3. Uraian Kegiatan :', { bold: true });
+  drawText('Siswa mengerjakan soal-soal pengayaan (lebih mendalam) terkait materi yang sudah dikuasai, dilanjutkan bimbingan mandiri dan presentasi singkat.');
+  drawText('4. Sumber Materi :', { bold: true });
+  drawText('Buku teks, LKS, dan sumber belajar digital sesuai kurikulum yang berlaku.');
+  drawText('5. Metode :', { bold: true });
+  drawText('Pembelajaran mandiri terarah, diskusi kelompok kecil, dan pemberian umpan balik.');
+  drawText('Soal-soal pengayaan sebagai berikut :');
+  drawText('(lampirkan butir-butir soal pengayaan sesuai kebutuhan)');
+
+  // --- DAFTAR NILAI PESERTA PENGAYAAN + DAFTAR HADIR + TANDA TANGAN ---
+  checkSpace(16);
+  drawTitle('DAFTAR NILAI PESERTA PENGAYAAN');
+  const nilaiRows = tuntasList.length
+    ? tuntasList.map((r, i) => [i + 1, r.student_name || namaSiswa(r.student_id), r.skorAkhir ?? r.skor ?? 0, 'Pengayaan'])
+    : [['-', 'Tidak ada peserta', '-', '-']];
+  doc.autoTable({
+    ...tableOpts(
+      [['No', 'Nama Siswa', 'Nilai', 'Keterangan']],
+      nilaiRows,
+      { 0: { cellWidth: 15 }, 1: { cellWidth: 85, halign: 'left' }, 2: { cellWidth: 22 }, 3: { cellWidth: 30 } },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 10;
+
+  drawTitle('DAFTAR HADIR ULANGAN HARIAN');
+  drawText(`Hari / Tanggal Pelaksanaan : ${fmtDate(uh.date)}`, { bold: true });
+  const attendanceMap = uh.attendanceMap || {};
+  const absenRows = studentIds.map((sid, i) => {
+    const status = String(attendanceMap[String(sid)] || 'hadir').toLowerCase();
+    const isHadir = status === 'hadir';
+    const isSakit = status === 'sakit';
+    const isIzin = status === 'izin';
+    const isAlpa = status === 'alpa' || status === 'alfa';
+    const ket = status && !['hadir', 'sakit', 'izin', 'alpa', 'alfa'].includes(status) ? status : '';
+    return [noAbsen(sid, i + 1), namaSiswa(sid), isHadir ? 'V' : '', isSakit ? 'V' : '', isIzin ? 'V' : '', isAlpa ? 'V' : '', ket];
+  });
+  doc.autoTable({
+    ...tableOpts(
+      [['No', 'Nama Siswa', 'Hadir', 'S', 'I', 'A', 'Keterangan']],
+      absenRows,
+      {
+        0: { cellWidth: 12 },
+        1: { cellWidth: 55, halign: 'left' },
+        2: { cellWidth: 12 },
+        3: { cellWidth: 12 },
+        4: { cellWidth: 12 },
+        5: { cellWidth: 12 },
+        6: { cellWidth: 38, halign: 'left' },
+      },
+    ),
+  });
+  yPos = doc.autoTable.previous.finalY + 20;
+
+  // TANDA TANGAN
+  checkSpace(48);
+  const tsY = yPos;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`${city}, ${dateStr}`, pageWidth - 60, tsY);
+  doc.text('Guru Mata Pelajaran,', pageWidth - 60, tsY + 7);
+  doc.setFont('helvetica', 'bold');
+  doc.text(userProfile?.name || '............................', pageWidth - 60, tsY + 28);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`NIP. ${userProfile?.nip || '............................'}`, pageWidth - 60, tsY + 35);
+
+  doc.text('Mengetahui,', 14, tsY);
+  doc.text('Kepala Sekolah', 14, tsY + 7);
+  doc.setFont('helvetica', 'bold');
+  doc.text(userProfile?.principalName || '............................', 14, tsY + 28);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`NIP. ${userProfile?.principalNip || '............................'}`, 14, tsY + 35);
+
+  doc.save(`Laporan_Ulangan_Harian_${(uhItem.rpp_topic || 'Topik').replace(/\s+/g, '_')}_${fmtDate(uhItem.date).replace(/\s+/g, '_')}.pdf`);
 };
 
 // Helper to add auto-paging text with basic Markdown support (Bold, Headers & Bullets)
