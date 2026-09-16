@@ -47,6 +47,11 @@ api.interceptors.response.use(
             console.error('Access Forbidden: User does not have required permissions');
         }
         
+        if (error.response && error.response.data && error.response.data.message) {
+            // Forward backend error message so UI checks (e.g. "429", "API_KEY_INVALID") still work
+            error.message = error.response.data.message;
+        }
+        
         return Promise.reject(error);
     }
 );

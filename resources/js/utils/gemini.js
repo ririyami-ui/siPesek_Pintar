@@ -1,4 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import BSKAP_DATA from './bskap_2025_intel.json';
 import CP_FULL from './bskap_full_cp.json';
 import api from '../lib/axios';
@@ -51,25 +50,11 @@ const shuffleArray = (array) => {
 
 
 /**
- * Gets the current Gemini API Key from localStorage or environment variables.
- * @returns {string} The API Key.
- */
-const getApiKey = () => {
-  const cachedKey = localStorage.getItem('GEMINI_API_KEY');
-  return cachedKey || import.meta.env.VITE_GEMINI_API_KEY;
-};
-
-/**
- * Initializes or re-initializes the Generative AI model with the latest API key.
- * @returns {Object} The initialized model.
+ * Initializes or re-initializes the proxy model backed by the server-side Gemini proxy.
+ * The server resolves the per-user API key and calls Google, so no key is exposed/blocked client-side.
+ * @returns {Object} A model-like object exposing generateContent().
  */
 export const getModel = (modelName, isJson = false) => {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error("API_KEY_MISSING");
-  }
-  const genAI = new GoogleGenerativeAI(apiKey);
-  
   // Model priority:
   // 1. Parameter modelName (passed from specific call)
   // 2. localStorage GEMINI_MODEL (synced from User Profile in SettingsContext)
@@ -77,20 +62,23 @@ export const getModel = (modelName, isJson = false) => {
   const profileModel = localStorage.getItem('GEMINI_MODEL');
   const selectedModel = modelName || profileModel || "gemini-3.1-flash-lite-preview";
 
-  const generationConfig = {
-    maxOutputTokens: 8192,
-    temperature: 0.7,
+  return {
+    generateContent: async (prompt) => {
+      const response = await api.post('/ai/proxy', {
+        model: selectedModel,
+        prompt,
+        isJson,
+        maxTokens: 8192,
+        temperature: 0.7,
+        systemInstruction: SIPINTAR_BRAIN,
+      });
+      return {
+        response: {
+          text: () => response.data.text,
+        },
+      };
+    },
   };
-
-  if (isJson) {
-    generationConfig.responseMimeType = "application/json";
-  }
-
-  return genAI.getGenerativeModel({
-    model: selectedModel,
-    systemInstruction: SIPINTAR_BRAIN,
-    generationConfig
-  });
 };
 
 /**
@@ -187,10 +175,10 @@ export const handleGeminiError = (error, context) => {
   if (errorMsg.includes("503")) {
     return "Server AI sedang sibuk (overloaded). Silakan coba lagi dalam beberapa detik.";
   }
-  if (errorMsg.includes("API_KEY_INVALID") || errorMsg.includes("invalid api key")) {
+  if (errorMsg.includes("API_KEY_INVALID") || errorMsg.includes("invalid api key") || errorMsg.includes("API key not valid")) {
     return "API Key Gemini tidak valid. Silakan periksa kembali di menu Master Data.";
   }
-  if (errorMsg === "API_KEY_MISSING") {
+  if (errorMsg === "API_KEY_MISSING" || errorMsg.toLowerCase().includes("not configured")) {
     return "API Key Gemini belum diatur. Silakan atur di menu Master Data.";
   }
   return "Maaf, terjadi kendala saat menghubungkan ke AI. Silakan coba beberapa saat lagi.";
@@ -585,7 +573,7 @@ export async function analyzeJournalsForStudentWarnings(journals, students, mode
     return acc;
   }, {});
 
-  const modelForWarnings = getModel(modelName);
+  const modelForWarnings = getModel(modelName, true);
 
   const journalTexts = journals.map(j => `
     --- JURNAL BARU ---
@@ -955,7 +943,7 @@ export async function generateAdvancedQuiz({ topic, context, gradeLevel, subject
 export async function generateQuizFromImage({ imageBase64, topic, gradeLevel, subject, count, modelName, onProgress = () => { } }) {
   try {
     onProgress({ stage: 'preparing', message: 'Menganalisis gambar...', percentage: 20 });
-    const model = getModel(modelName);
+    const model = getModel(modelName, true);
 
     const prompt = `
       Anda adalah "Ahli Visual Pendidikan" yang bekerja berdasarkan repositori **BSKAP_DATA**.
@@ -1045,6 +1033,80 @@ export async function generateStudentAnalysis(prompt, modelName) {
     return text;
   } catch (error) {
     return handleGeminiError(error, "generateStudentAnalysis");
+  }
+}
+
+/**
+ * Generates remedial/enrichment recommendations for students based on Ulangan Harian analysis.
+ * @param {Object} analisisResult - Result from analisisButir.js::analisisUlanganHarian.
+ * @param {Object} rombelData - { kktp: number, students: [{ id:string, name:string }] }.
+ * @param {string} modelName - The AI model name.
+ * @returns {Promise<Array<{student_id:string, student_name:string, rekomendasi:string}>>} JSON array of recommendations.
+ */
+export async function generateUlanganHarianRecommendation(analisisResult, rombelData, modelName) {
+  const rekomendasiList = analisisResult?.rekomendasi || [];
+  try {
+    const model = getModel(modelName, true);
+    const cpFullVerbatim = CP_FULL; // Use CP_FULL directly as it's a global import.
+
+    const studentRekomendasi = rekomendasiList.map(s => {
+      const student = rombelData?.students?.find(rs => rs.id === s.student_id);
+      const studentName = student ? student.name : `Siswa ID ${s.student_id}`;
+      let detail = `Siswa ${studentName} (${s.status}, Skor Akhir: ${s.skorAkhir}). `;
+
+      if (s.tindakan === 'Remedial') {
+        detail += `Membutuhkan perbaikan pada materi: ${(s.butirGagal || []).map(bg => `${bg.elemen} (${bg.materi})`).join('; ')}.`;
+      } else {
+        detail += `Dapat diberikan pengayaan pada materi terkait.`;
+      }
+      return detail;
+    }).join('\n');
+
+    const prompt = `
+      Anda adalah "Mesin Intelijen Kurikulum Nasional" yang bekerja berdasarkan repositori data resmi **BSKAP_DATA**. DILARANG memberikan informasi yang bertentangan atau di luar cakupan data JSON tersebut.
+      
+      **OFFICIAL KNOWLEDGE ENGINE (BSKAP_DATA):**
+      - Regulasi Dasar: ${BSKAP_DATA?.standards?.regulation || ''}
+      - Filosofi Operasional: ${BSKAP_DATA?.standards?.philosophy?.name || ''}
+      
+      **Tugas Anda:**
+      1.  Berdasarkan data analisis Ulangan Harian dan status ketuntasan siswa berikut, buatkan rekomendasi **spesifik dan personal** untuk setiap siswa.
+      2.  Rekomendasi harus berupa narasi singkat (1-2 kalimat) yang langsung menyoroti tindakan **Remedial** atau **Pengayaan**.
+      3.  Untuk siswa yang perlu **Remedial**, rekomendasi **WAJIB** merujuk pada **elemen dan materi CP** yang mereka gagal kuasai (dari butirGagal).
+      4.  Untuk siswa yang perlu **Pengayaan**, berikan ide aktivitas singkat yang relevan dengan materi ulangan harian.
+      
+      **Data Analisis Ulangan Harian:**
+      ${studentRekomendasi}
+      
+      **FORMAT OUTPUT (JSON Array of Objects):**
+      [
+        { "student_id": "...", "student_name": "...", "rekomendasi": "Narasi rekomendasi remedial/pengayaan singkat." },
+        ...
+      ]
+    `;
+
+    const result = await retryWithBackoff(() => model.generateContent(prompt));
+    const response = await result.response;
+    const text = response.text();
+    const parsed = extractJSON(text);
+
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+
+    return rekomendasiList.map(s => ({
+      student_id: s.student_id,
+      student_name: s.student_name,
+      rekomendasi: s.tindakan === 'Remedial' ? `Perlu bimbingan remedial pada materi yang belum tuntas.` : `Diberikan pengayaan materi lanjutan.`
+    }));
+
+  } catch (error) {
+    console.error("Error generating Ulangan Harian recommendation:", error);
+    return rekomendasiList.map(s => ({
+      student_id: s.student_id,
+      student_name: s.student_name,
+      rekomendasi: s.tindakan === 'Remedial' ? `Perlu bimbingan remedial pada materi yang belum tuntas.` : `Diberikan pengayaan materi lanjutan.`
+    }));
   }
 }
 
@@ -2244,7 +2306,7 @@ export async function generateATP(data) {
   onProgress({ stage: 'drafting', message: 'Mulai menyusun kerangka Alur Tujuan Pembelajaran (ATP)...', percentage: 40 });
 
   try {
-    const model = getModel(modelName);
+    const model = getModel(modelName, true);
     const result = await retryWithBackoff(() => model.generateContent(prompt));
     const response = await result.response;
 

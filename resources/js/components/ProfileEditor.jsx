@@ -4,7 +4,6 @@ import { useSettings } from '../utils/SettingsContext';
 import StyledInput from './StyledInput';
 import StyledSelect from './StyledSelect';
 import StyledButton from './StyledButton';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import api from '../lib/axios';
 import { HelpCircle } from 'lucide-react';
 
@@ -216,11 +215,18 @@ export default function ProfileEditor() {
     setTestingKey(true);
 
     try {
-      const genAI = new GoogleGenerativeAI(keyToTest);
-      const model = genAI.getGenerativeModel({ model: formData.gemini_model });
-      const result = await model.generateContent("test");
-      await result.response;
-      toast.success('Koneksi berhasil! API Key Anda valid.');
+      const response = await api.post('/ai/proxy', {
+        model: formData.gemini_model,
+        prompt: "test",
+        apiKeyOverride: keyToTest,
+        maxTokens: 256,
+        temperature: 0.2,
+      });
+      if (!response.data || typeof response.data.text !== 'string') {
+        toast.error('Gagal tes koneksi: respons tidak valid.');
+      } else {
+        toast.success('Koneksi berhasil! API Key Anda valid.');
+      }
     } catch (err) {
       console.error("Test connection failed:", err);
       if (err.message.includes("429") || err.message.toLowerCase().includes("quota")) {
@@ -522,18 +528,20 @@ export default function ProfileEditor() {
               value={formData.gemini_model}
               onChange={(e) => handleInputChange('gemini_model', e.target.value)}
             >
+              <option value="gemini-3.8-flash">🚀 Gemini 3.8 Flash (Terbaru, Paling Cerdas)</option>
+              <option value="gemini-3.7-flash">🔥 Gemini 3.7 Flash (Cerdas, Hemat Token)</option>
               <option value="gemini-3.6-flash">🚀 Gemini 3.6 Flash (Terbaru, Hemat Token)</option>
               <option value="gemini-3.5-flash">✨ Gemini 3.5 Flash (Stabil, Paling Cerdas 2026)</option>
               <option value="gemini-3.5-flash-lite">⚡ Gemini 3.5 Flash-Lite (Ringan & Cepat)</option>
               <option value="gemini-3.1-flash-lite">⚡ Gemini 3.1 Flash-Lite (Ringan & Cepat)</option>
               <option value="gemini-3-flash-preview">🧪 Gemini 3 Flash Preview (Eksperimental)</option>
 
-              {!['gemini-3.6-flash','gemini-3.5-flash','gemini-3.5-flash-lite','gemini-3.1-flash-lite','gemini-3-flash-preview'].includes(formData.gemini_model) && (
+              {!['gemini-3.8-flash','gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash','gemini-3.5-flash-lite','gemini-3.1-flash-lite','gemini-3-flash-preview'].includes(formData.gemini_model) && (
                   <option value={formData.gemini_model}>{formData.gemini_model} (Aktif)</option>
                 )}
             </StyledSelect>
             <p className="text-[10px] text-gray-400 mt-1 italic">
-              *Model akan digunakan untuk semua fitur AI di aplikasi. ✨ Paling direkomendasikan: Gemini 3.5 Flash (stable, frontier performance).
+              *Model akan digunakan untuk semua fitur AI di aplikasi. ✨ Paling direkomendasikan: Gemini 3.8 Flash (stable, frontier performance).
             </p>
           </div>
         </div>

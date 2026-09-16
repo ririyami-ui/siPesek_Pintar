@@ -82,10 +82,15 @@ class GeminiService
      * Unified core method to call Gemini API with robust retry logic
      * Supports both simple strings and structured content (history/parts)
      */
-    public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7, ?string $systemInstruction = null): ?string
+    public function callGeminiApi($promptOrContents, string $modelOverride = null, int $maxTokens = 4096, float $temperature = 0.7, ?string $systemInstruction = null, bool $isJson = false, string $apiKeyOverride = ''): ?string
     {
         // Resolve settings here instead of constructor to ensure auth() is ready
         $this->resolveSettings();
+
+        // Override API key when testing a key that is not yet saved
+        if ($apiKeyOverride !== '') {
+            $this->apiKey = $apiKeyOverride;
+        }
 
         $retries = 3;
         $delay = 1000; // 1 second initial delay
@@ -106,12 +111,27 @@ class GeminiService
                 // Pastikan format model benar (models/nama-model)
                 $modelPath = str_starts_with($finalModel, 'models/') ? $finalModel : "models/{$finalModel}";
 
+                // Gemini 3.8 Flash tidak menerima temperature/top_p/top_k (deprecated sampling params)
+                // dan wajib memakai thinkingConfig (thinkingLevel). Model lain tetap pakai temperature.
+                $isGemini3_8Flash = str_starts_with($finalModel, 'gemini-3.8-flash');
+
+                $genConfig = [
+                    'maxOutputTokens' => $maxTokens,
+                ];
+
+                if ($isGemini3_8Flash) {
+                    $genConfig['thinkingConfig'] = ['thinkingLevel' => 'MEDIUM'];
+                } else {
+                    $genConfig['temperature'] = $temperature;
+                }
+
+                if ($isJson) {
+                    $genConfig['responseMimeType'] = 'application/json';
+                }
+
                 $payload = [
                     'contents' => $contents,
-                    'generationConfig' => [
-                        'temperature' => $temperature,
-                        'maxOutputTokens' => $maxTokens,
-                    ]
+                    'generationConfig' => $genConfig,
                 ];
 
                 if ($systemInstruction) {

@@ -146,8 +146,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/grades/materials', [App\Http\Controllers\GradeController::class, 'getMaterials']);
     Route::get('/grades/summary/{student_id}', [App\Http\Controllers\GradeController::class, 'getSummary']);
     Route::apiResource('grades', App\Http\Controllers\GradeController::class);
-    Route::apiResource('kktp-assessments', App\Http\Controllers\KktpAssessmentController::class);
-    Route::apiResource('teaching-programs', App\Http\Controllers\TeachingProgramController::class);
+Route::apiResource('kktp-assessments', App\Http\Controllers\KktpAssessmentController::class);
+Route::apiResource('ulangan-harian', App\Http\Controllers\UlanganHarianController::class);
+Route::post('/ulangan-harian/{assessment}/sync-grades', [App\Http\Controllers\UlanganHarianController::class, 'syncToGrades']);
+Route::apiResource('teaching-programs', App\Http\Controllers\TeachingProgramController::class);
     Route::apiResource('student-tasks', App\Http\Controllers\StudentTaskController::class);
     Route::apiResource('student-notes', App\Http\Controllers\StudentNoteController::class);
     Route::post('/infraction-types/bulk', [App\Http\Controllers\InfractionTypeController::class, 'bulkStore']);
@@ -156,6 +158,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // AI Services
     Route::group(['prefix' => 'ai'], function () {
+        Route::post('/proxy', [App\Http\Controllers\GeminiProxyController::class, 'proxy']);
         Route::post('/analyze-journal', [GeminiController::class, 'analyzeJournal']);
         Route::post('/auto-fill-journal', [GeminiController::class, 'autoFillJournal']);
         Route::post('/generate-lesson-plan', [App\Http\Controllers\AiFeaturesController::class, 'generateRpp']);
