@@ -19,6 +19,7 @@ import { getRegionFromSubject } from '../utils/carakan';
 import { saveAs } from 'file-saver';
 import { asBlob } from 'html-docx-js-typescript';
 import Modal from '../components/Modal';
+import VisualizationRenderer from '../components/quiz/VisualizationRenderer';
 
 // Lazy load external visual renderers (same pattern as LessonPlanPage)
 const ExternalMermaidRenderer = lazy(() => import('../components/quiz/renderers/MermaidRenderer'));
@@ -414,6 +415,7 @@ const HandoutGeneratorPage = () => {
             const response = await api.post('/ai/generate-handout', {
                 subject: subjectName,
                 gradeLevel: selectedGrade,
+                semester: activeSemester,
                 materi: effectiveMateri,
                 kd: sourceType === 'atp' ? (selectedAtpItem.tp || selectedAtpItem.kd) : selectedRPP?.kd,
                 elemen: sourceType === 'atp' ? selectedAtpItem.elemen : selectedRPP?.elemen,
@@ -1081,6 +1083,19 @@ const HandoutGeneratorPage = () => {
                                                 );
                                                 const lang = (className || '').replace('language-', '').trim();
                                                 const codeContent = String(children).replace(/\n$/, '');
+                                                // ── VISUALIZATION (VisualizationRenderer) ──
+                                                if (lang === 'visualization') {
+                                                    try {
+                                                        const config = JSON.parse(codeContent);
+                                                        return (
+                                                            <div className="my-4 no-print">
+                                                                <VisualizationRenderer visualization={config} />
+                                                            </div>
+                                                        );
+                                                    } catch (e) {
+                                                        return <code className={className} {...props}>{children}</code>;
+                                                    }
+                                                }
                                                 // ── MERMAID ──
                                                 if (lang === 'mermaid') return <MermaidRenderer>{children}</MermaidRenderer>;
                                                 // ── SCRATCH ──

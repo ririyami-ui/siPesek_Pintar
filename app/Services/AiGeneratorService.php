@@ -353,17 +353,54 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
 
         $prompt = $this->buildHandoutPrompt($data);
 
-        // INJEKSI DATA BUKU UNTUK BAHAN AJAR
+        // GROUNDING CAPAIAN PEMBELAJARAN
+        $semesterKey = $this->getSemesterKey($data['semester'] ?? 'Ganjil');
+        $bskapSubject = $this->bskapIntel['subjects'][$level][$data['gradeLevel']][$subjectKey] ?? [];
+        $cpSnippet = $bskapSubject[$semesterKey]['cp_snippet'] ?? '';
+        if ($cpSnippet) {
+            $prompt .= "\n\n**CAPAIAN PEMBELAJARAN (LANDASAN KURIKULUM):**\n{$cpSnippet}\n";
+            $prompt .= "Gunakan CP di atas sebagai panduan otoritatif agar materi handout tetap pada jalur kurikulum nasional.\n";
+        }
+
+        // INJEKSI DATA BUKU (selalu jika ada, termasuk all_chapters sebagai kerangka)
         $bookData = $this->getRelevantBookContent($level, $data['gradeLevel'], $subjectKey, $data['materi'] ?? $data['topic'] ?? '');
-        if ($bookData && $bookData['chapter']) {
-            $bookPrompt = "\n\n**KONTEN MATERI UTAMA (DARI BUKU TEKS KURIKULUM):**\n";
+        if ($bookData) {
+            $bookPrompt = "\n\n**REFERENSI BUKU TEKS KURIKULUM:**\n";
             $bookPrompt .= "Judul Buku: {$bookData['book_title']}\n";
-            $bookPrompt .= "Bab: {$bookData['chapter']['title']}\n";
-            $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
-            $bookPrompt .= "Detail Sub-topik: {$subTopicNames}\n";
-            $bookPrompt .= "Key Terms/Glosarium: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
-            $bookPrompt .= "Visual Hints: " . ($bookData['chapter']['visual_hints'] ?? 'Gunakan tipe visual interaktif sesuai mata pelajaran: function untuk Matematika, scratch untuk Informatika, chemistry untuk IPA') . "\n";
-            $bookPrompt .= "INSTRUKSI: Gunakan sub-topik sebagai kerangka modul. Visual Hints menentukan tipe visualisasi. Key terms wajib muncul di glosarium.\n";
+            $bookPrompt .= "Penerbit: {$bookData['publisher']}\n";
+            if (!empty($bookData['isbn'])) $bookPrompt .= "ISBN: {$bookData['isbn']}\n";
+
+            // Struktur seluruh bab (kerangka umum)
+            if (!empty($bookData['all_chapters'])) {
+                $bookPrompt .= "\nStruktur Bab Buku:\n";
+                foreach ($bookData['all_chapters'] as $ch) {
+                    $subTopicNames = implode(", ", array_column($ch['sub_topics'] ?? [], 'name'));
+                    $bookPrompt .= "- Bab {$ch['no']}: {$ch['title']}" . ($subTopicNames ? " (Sub-topik: {$subTopicNames})" : '') . "\n";
+                }
+            }
+
+            // Detail bab aktif (fokus bahan ajar)
+            if (!empty($bookData['chapter'])) {
+                $chapter = $bookData['chapter'];
+                $bookPrompt .= "\n**BAB UTAMA (FOKUS BAHAN AJAR INI):** Bab {$chapter['no']}: {$chapter['title']}\n";
+                $subTopics = $chapter['sub_topics'] ?? [];
+                if (!empty($subTopics)) {
+                    $bookPrompt .= "Sub-topik UTAMA (WAJIB dijadikan heading ### dan dijelaskan mendalam masing-masing):\n";
+                    foreach ($subTopics as $st) {
+                        $bloom = $st['bloom_level'] ?? '';
+                        $jp = $st['suggested_jp'] ?? '';
+                        $bookPrompt .= "- {$st['name']}" . ($bloom ? " (Level Bloom: {$bloom})" : '') . ($jp ? " (~{$jp} JP)" : '') . "\n";
+                    }
+                }
+                $keyTerms = $chapter['key_terms'] ?? [];
+                if (!empty($keyTerms)) {
+                    $bookPrompt .= "Istilah Kunci (WAJIB muncul di bagian KAMUS MINI / GLOSARIUM): " . implode(", ", $keyTerms) . "\n";
+                }
+                $visualHints = $chapter['visual_hints'] ?? '';
+                if ($visualHints) $bookPrompt .= "Petunjuk Visual: {$visualHints}\n";
+            }
+
+            $bookPrompt .= "\nINSTRUKSI: Susun bahan ajar dengan KERANGKA SUB-TOPIK di atas. Jelaskan SETIAP sub-topik secara mendalam (minimal 2-3 paragraf per sub-topik). Gunakan istilah kunci di glosarium. Visual harus mengikuti petunjuk visual di atas.\n";
             $prompt .= $bookPrompt;
         }
 
@@ -1694,10 +1731,29 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
 
         // Dapatkan visual hint dari JSON
         $visualHint = $this->getVisualHintForSubject($subject, $materi);
-        $mermaidType = $visualHint ? $this->getVisualMermaidType($visualHint['visual_type'] ?? 'graph_td') : 'graph TD';
         $visualDesc = $visualHint['description'] ?? 'Buat diagram Mermaid yang sesuai dengan konten materi.';
         $visualExample = $visualHint['example'] ?? '';
         $visualTopicHint = $visualDesc;
+
+        // Visual type detection: pisahkan mermaid-compatible vs non-mermaid (function/geometry/scratch)
+        $visualType = $visualHint['visual_type'] ?? 'graph_td';
+        $mermaidCompatTypes = ['mindmap', 'graph_td', 'graph_lr', 'flowchart_td', 'flowchart_lr', 'venn'];
+        $isMermaidVisual = in_array($visualType, $mermaidCompatTypes);
+        if ($isMermaidVisual) {
+            $mermaidType = $this->getVisualMermaidType($visualType);
+            $visualBlockInstruction = "Tipe Mermaid yang harus digunakan: `{$mermaidType}`";
+            $materialVisualHint = "tambahkan diagram Mermaid yang relevan (`{$mermaidType}`)";
+        } else {
+            $mermaidType = null;
+            $visualBlockInstruction = "Gunakan blok kode ` ```visualization ` dengan type: \"{$visualType}\" dan konfigurasi JSON sesuai contoh di atas. JANGAN pakai Mermaid untuk visualisasi ini.";
+            $materialVisualHint = "tambahkan blok ` ```visualization ` yang sesuai dengan type \"{$visualType}\"";
+        }
+
+        // Format rumus hanya untuk mapel eksak; mapel lain larang rumus
+        $isMathSubject = preg_match('/matematika|ipa|fisika|kimia/i', $subject);
+        $mathInstruction = $isMathSubject
+            ? "**FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**\n        - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**\n        - Inline math: Gunakan `\$...\$` (contoh: \$a^2 + b^2 = c^2\$)\n        - Display math (rumus baru di baris sendiri): Gunakan `\$\$...\$\$` (contoh: \$\$\\int_{a}^{b} f(x) dx\$\$)\n        - Contoh penulisan benar: `\$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}\$`\n        - Contoh penulisan SALAH: `\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}` (tanpa `\$`)"
+            : "**PENTING: Format Konten Non-Matematika**\n        - **DILARANG** menyertakan rumus matematika, persamaan angka, atau perhitungan numerik kecuali materi intinya memang membutuhkan.\n        - Fokus penulisan: penjelasan konseptual, narasi, contoh kehidupan nyata, dan analisis kualitatif.";
 
         $bskapData = $this->bskapIntel ?? [];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
@@ -1734,12 +1790,7 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
 
         **STRUKTUR MODUL (WAJIB IKUTI FORMAT INI):**
 
-        **FORMAT RUMUS/PERSAMAAN MATEMATIKA (SANGAT PENTING):**
-        - Untuk rumus matematika, **WAJIB gunakan sintaks LaTeX/KaTeX**
-        - Inline math: Gunakan `\$...\$` (contoh: \$a^2 + b^2 = c^2\$)
-        - Display math (rumus baru di baris sendiri): Gunakan `\$\$...\$\$` (contoh: \$\$\\int_{a}^{b} f(x) dx\$\$)
-        - Contoh penulisan benar: `\$\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}\$`
-        - Contoh penulisan SALAH: `\\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}` (tanpa `\$`)
+        {$mathInstruction}
 
         ---
 
@@ -1760,9 +1811,9 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
 
         ---
 
-        ## 🗺️ PETA KONSEP (MIND MAP)
+        ## 🗺️ PETA KONSEP (VISUAL INTERAKTIF)
         *(WAJIB: {$visualDesc}
-        Tipe Mermaid yang harus digunakan: `{$mermaidType}`
+        {$visualBlockInstruction}
         {$visualExample}
         - Pastikan node berisi kata kunci spesifik dari materi, BUKAN template umum)*
 
@@ -1777,7 +1828,7 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         *(Bagian ini harus menjadi bagian TERPANJANG. Jangan hanya poin-poin. Jelaskan konsep selengkap-lengkapnya layaknya Anda mengajar di depan kelas dengan bahasa yang mengalir).*
 
         ### 1. [Sub-Bab 1]
-        (WAJIB: {$visualTopicHint}. Jika sub-bab berisi proses, hubungan, data terstruktur, atau langkah - tambahkan diagram Mermaid yang relevan (`{$mermaidType}`) sesuai konten. Jangan buat diagram jika kontennya naratif/deskripsi saja.)
+        (WAJIB: {$visualTopicHint}. Jika sub-bab berisi proses, hubungan, data terstruktur, atau langkah - {$materialVisualHint} sesuai konten. Jangan buat diagram/visualisasi jika kontennya naratif/deskripsi saja.)
 
         ### 2. [Sub-Bab 2]
 
