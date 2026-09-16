@@ -108,6 +108,7 @@ class AiGeneratorService extends GeminiService
                 'book_id' => $book['bookId'] ?? $bookInfo['id'] ?? null,
                 'isbn' => $book['isbn'] ?? null,
                 'chapter' => $relevantChapter ? [
+                    'no' => $relevantChapter['no'] ?? null,
                     'title' => $relevantChapter['title'],
                     'sub_topics' => $enrichSubTopics($relevantChapter['sub_topics'] ?? []),
                     'key_terms' => $relevantChapter['key_terms'] ?? [],
@@ -115,6 +116,7 @@ class AiGeneratorService extends GeminiService
                     'visual_hints' => $relevantChapter['visual_hints'] ?? ''
                 ] : null,
                 'all_chapters' => $chapters->map(fn($c) => [
+                    'no' => $c['no'] ?? null,
                     'title' => $c['title'],
                     'sub_topics' => $enrichSubTopics($c['sub_topics'] ?? []),
                     'key_terms' => $c['key_terms'] ?? []
@@ -373,16 +375,16 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             // Struktur seluruh bab (kerangka umum)
             if (!empty($bookData['all_chapters'])) {
                 $bookPrompt .= "\nStruktur Bab Buku:\n";
-                foreach ($bookData['all_chapters'] as $ch) {
+                foreach ($bookData['all_chapters'] as $chIdx => $ch) {
                     $subTopicNames = implode(", ", array_column($ch['sub_topics'] ?? [], 'name'));
-                    $bookPrompt .= "- Bab {$ch['no']}: {$ch['title']}" . ($subTopicNames ? " (Sub-topik: {$subTopicNames})" : '') . "\n";
+                    $bookPrompt .= "- Bab " . ($chIdx + 1) . ": {$ch['title']}" . ($subTopicNames ? " (Sub-topik: {$subTopicNames})" : '') . "\n";
                 }
             }
 
             // Detail bab aktif (fokus bahan ajar)
             if (!empty($bookData['chapter'])) {
                 $chapter = $bookData['chapter'];
-                $bookPrompt .= "\n**BAB UTAMA (FOKUS BAHAN AJAR INI):** Bab {$chapter['no']}: {$chapter['title']}\n";
+                $bookPrompt .= "\n**BAB UTAMA (FOKUS BAHAN AJAR INI):** " . ($chapter['no'] !== null ? "Bab {$chapter['no']}: " : "") . "{$chapter['title']}\n";
                 $subTopics = $chapter['sub_topics'] ?? [];
                 if (!empty($subTopics)) {
                     $bookPrompt .= "Sub-topik UTAMA (WAJIB dijadikan heading ### dan dijelaskan mendalam masing-masing):\n";
