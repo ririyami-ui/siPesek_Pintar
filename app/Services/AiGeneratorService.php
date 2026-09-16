@@ -79,13 +79,69 @@ class AiGeneratorService extends GeminiService
                 }
             }
 
-            // 4. Cari bab yang paling relevan dengan topik
+            // 4. Cari bab yang paling relevan dengan topik (token/substring scoring, pola backfill_subtopics.cjs)
             $relevantChapter = null;
             if ($topic) {
-                $relevantChapter = $chapters->filter(function($ch) use ($topic) {
-                    return stripos($ch['title'], $topic) !== false || 
-                           (isset($ch['sub_topics']) && stripos(json_encode($ch['sub_topics']), $topic) !== false);
-                })->first();
+                $normFn = function ($s) {
+                    $s = strtolower(trim((string) $s));
+                    $s = preg_replace('/[^a-z0-9 ]/', ' ', $s);
+                    return preg_replace('/\s+/', ' ', trim($s));
+                };
+                $tokensFn = function ($s) use ($normFn) {
+                    return array_values(array_filter(explode(' ', $normFn($s)), fn($w) => strlen($w) > 2));
+                };
+
+                $scoreChapter = function ($ch) use ($topic, $normFn, $tokensFn) {
+                    $topicNorm = $normFn($topic);
+                    $topicTokens = $tokensFn($topic);
+                    $titleNorm = $normFn($ch['title'] ?? '');
+                    $titleTokens = $tokensFn($ch['title'] ?? '');
+                    $score = 0.0;
+
+                    // Substring penuh title / sub_topics
+                    if ($titleNorm && $topicNorm && strpos($titleNorm, $topicNorm) !== false) $score += 1.0;
+                    $subjectsNorm = $normFn(implode(' ', array_map(fn($s) => is_string($s) ? $s : ($s['name'] ?? ''), $ch['sub_topics'] ?? [])));
+                    if ($subjectsNorm && $topicNorm && strpos($subjectsNorm, $topicNorm) !== false) $score += 1.0;
+
+                    // Substring tanpa-spasi (mis. "Antarmuka" vs "antar muka", "Antarmuka Pengguna (GUI)" vs "antar muka komputer")
+                    $topicNoSpace = str_replace(' ', '', $topicNorm);
+                    $titleNoSpace = str_replace(' ', '', $titleNorm);
+                    $subjectsNoSpace = str_replace(' ', '', $subjectsNorm);
+                    if (strlen($topicNoSpace) >= 4 && $titleNoSpace && strpos($titleNoSpace, $topicNoSpace) !== false) $score += 1.0;
+                    if (strlen($topicNoSpace) >= 4 && $subjectsNoSpace && strpos($subjectsNoSpace, $topicNoSpace) !== false) $score += 1.0;
+                    if (strlen($titleNoSpace) >= 4 && $topicNoSpace && strpos($topicNoSpace, $titleNoSpace) !== false) $score += 1.0;
+                    if (strlen($subjectsNoSpace) >= 4 && $topicNoSpace && strpos($topicNoSpace, $subjectsNoSpace) !== false) $score += 1.0;
+
+                    // Token overlap vs judul bab (pola backfill: >=0.3 -> +0.3, >=0.5 -> +0.4)
+                    $hits = count(array_intersect($topicTokens, $titleTokens));
+                    $ratio = count($topicTokens) ? $hits / count($topicTokens) : 0;
+                    if ($ratio >= 0.5) $score += 0.4;
+                    elseif ($ratio >= 0.3) $score += 0.3;
+                    elseif ($ratio >= 0.15) $score += 0.15;
+
+                    // Token overlap vs sub_topics
+                    $subTokens = [];
+                    foreach (($ch['sub_topics'] ?? []) as $s) {
+                        $subTokens = array_merge($subTokens, $tokensFn(is_string($s) ? $s : ($s['name'] ?? '')));
+                    }
+                    $hits2 = count(array_intersect($topicTokens, array_unique($subTokens)));
+                    $ratio2 = count($topicTokens) ? $hits2 / count($topicTokens) : 0;
+                    if ($ratio2 >= 0.5) $score += 0.4;
+                    elseif ($ratio2 >= 0.3) $score += 0.3;
+                    elseif ($ratio2 >= 0.15) $score += 0.15;
+
+                    return $score;
+                };
+
+                $bestScore = 0.0;
+                foreach ($chapters as $ch) {
+                    $score = $scoreChapter($ch);
+                    if ($score > $bestScore) {
+                        $bestScore = $score;
+                        $relevantChapter = $ch;
+                    }
+                }
+                if ($bestScore < 0.15) $relevantChapter = null;
             }
 
             // 5. Enrich sub_topics dengan bloom_level & suggested_jp
@@ -102,19 +158,58 @@ class AiGeneratorService extends GeminiService
             };
 
             // Jika tidak ada bab yang pas, ambil info buku saja untuk referensi
-            return [
-                'book_title' => $book['title'] ?? $bookInfo['title'],
-                'publisher' => $book['publisher'] ?? 'Kemendikbudristek',
-                'book_id' => $book['bookId'] ?? $bookInfo['id'] ?? null,
-                'isbn' => $book['isbn'] ?? null,
-                'chapter' => $relevantChapter ? [
+            $chapterArr = $relevantChapter ? [
                     'no' => $relevantChapter['no'] ?? null,
                     'title' => $relevantChapter['title'],
                     'sub_topics' => $enrichSubTopics($relevantChapter['sub_topics'] ?? []),
                     'key_terms' => $relevantChapter['key_terms'] ?? [],
                     'pages' => $relevantChapter['pages'] ?? '',
                     'visual_hints' => $relevantChapter['visual_hints'] ?? ''
-                ] : null,
+                ] : null;
+
+            // Sub-topik aktif yang HANYA relevan dengan topik yang diminta (fokus bahan ajar)
+            $focusedSubTopics = null;
+            $normFn2 = function ($s) {
+                $s = strtolower(trim((string) $s));
+                $s = preg_replace('/[^a-z0-9 ]/', ' ', $s);
+                return preg_replace('/\s+/', ' ', trim($s));
+            };
+            $tokensFn2 = function ($s) use ($normFn2) {
+                return array_values(array_filter(explode(' ', $normFn2($s)), fn($w) => strlen($w) > 2));
+            };
+            if ($chapterArr && $topic) {
+                $topicNorm = $normFn2($topic);
+                $topicNoSpace = str_replace(' ', '', $topicNorm);
+                $topicTokens = $tokensFn2($topic);
+                $matched = array_values(array_filter($relevantChapter['sub_topics'] ?? [], function ($s) use ($topicNorm, $topicNoSpace, $topicTokens, $normFn2, $tokensFn2) {
+                    $name = is_string($s) ? $s : ($s['name'] ?? '');
+                    if (!$name) return false;
+                    $nameNorm = $normFn2($name);
+                    $nameNoSpace = str_replace(' ', '', $nameNorm);
+                    // substring persis (mis. "Antarmuka Pengguna (GUI)" vs "Antarmuka Pengguna")
+                    if ($topicNorm && $nameNorm && strpos($nameNorm, $topicNorm) !== false) return true;
+                    if ($topicNorm && $nameNorm && strpos($topicNorm, $nameNorm) !== false) return true;
+                    // substring tanpa-spasi (mis. "antar muka" -> "antarmuka")
+                    if (strlen($topicNoSpace) >= 4 && $nameNoSpace && strpos($nameNoSpace, $topicNoSpace) !== false) return true;
+                    if (strlen($nameNoSpace) >= 4 && $topicNoSpace && strpos($topicNoSpace, $nameNoSpace) !== false) return true;
+                    // overlap token >= 40%
+                    $nameTokens = $tokensFn2($name);
+                    $hits = count(array_intersect($topicTokens, $nameTokens));
+                    $denom = max(count($topicTokens), 1);
+                    return $hits / $denom >= 0.4;
+                }));
+                if (count($matched) > 0) {
+                    $focusedSubTopics = $enrichSubTopics($matched);
+                }
+            }
+
+            return [
+                'book_title' => $book['title'] ?? $bookInfo['title'],
+                'publisher' => $book['publisher'] ?? 'Kemendikbudristek',
+                'book_id' => $book['bookId'] ?? $bookInfo['id'] ?? null,
+                'isbn' => $book['isbn'] ?? null,
+                'chapter' => $chapterArr,
+                'focused_sub_topics' => $focusedSubTopics,
                 'all_chapters' => $chapters->map(fn($c) => [
                     'no' => $c['no'] ?? null,
                     'title' => $c['title'],
@@ -311,11 +406,12 @@ class AiGeneratorService extends GeminiService
             $bookPrompt .= "- Buku: {$bookData['book_title']}\n";
             if ($bookData['chapter']) {
                 $bookPrompt .= "- Bab: {$bookData['chapter']['title']}\n";
-                $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+                $focusedSubs = $bookData['focused_sub_topics'] ?? null;
+                $subTopicNames = implode(", ", array_column($focusedSubs ?: ($bookData['chapter']['sub_topics'] ?? []), 'name'));
 
-$bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
+$bookPrompt .= "- Materi Spesifik (fokus, sesuai topik yang diminta): {$subTopicNames}\n";
             }
-            $bookPrompt .= "\nWAJIB: Gunakan data materi di atas untuk menyusun konten RPP agar akurat sesuai buku pemerintah.";
+            $bookPrompt .= "\nWAJIB: Gunakan data materi di atas untuk menyusun konten RPP agar akurat sesuai buku pemerintah. FOKUSKAN hanya pada materi \"" . ($data['materi'] ?? $data['topic'] ?? '') . "\" yang diminta; jangan melebar ke materi lain dalam bab.";
             $prompt .= $bookPrompt;
         }
 
@@ -335,10 +431,11 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
         if ($bookData && $bookData['chapter']) {
             $bookPrompt = "\n\n**SUMBER MATERI SOAL (BUKU TEKS):**\n";
             $bookPrompt .= "Bab: {$bookData['chapter']['title']}\n";
-            $subTopicNames = implode(", ", array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
-            $bookPrompt .= "Cakupan Materi: {$subTopicNames}\n";
+            $focusedSubs = $bookData['focused_sub_topics'] ?? null;
+            $subTopicNames = implode(", ", array_column($focusedSubs ?: ($bookData['chapter']['sub_topics'] ?? []), 'name'));
+            $bookPrompt .= "Cakupan Materi (khusus pada topik yang diminta, jangan melebar): {$subTopicNames}\n";
             $bookPrompt .= "Istilah Penting: " . implode(", ", $bookData['chapter']['key_terms'] ?? []) . "\n";
-            $bookPrompt .= "\nINSTRUKSI: Buat soal yang benar-benar menguji pemahaman materi di atas.";
+            $bookPrompt .= "\nINSTRUKSI: Buat soal yang benar-benar menguji pemahaman materi \"" . ($data['topic'] ?? '') . "\" di atas. JANGAN membuat soal di luar materi yang diminta.";
             $prompt .= $bookPrompt;
         }
 
@@ -372,9 +469,9 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             $bookPrompt .= "Penerbit: {$bookData['publisher']}\n";
             if (!empty($bookData['isbn'])) $bookPrompt .= "ISBN: {$bookData['isbn']}\n";
 
-            // Struktur seluruh bab (kerangka umum)
-            if (!empty($bookData['all_chapters'])) {
-                $bookPrompt .= "\nStruktur Bab Buku:\n";
+            // Struktur seluruh bab hanya sebagai fallback bila bab fokus tak terdeteksi
+            if (empty($bookData['chapter']) && !empty($bookData['all_chapters'])) {
+                $bookPrompt .= "\nStruktur Bab Buku (referensi, hanya untuk konteks kurikulum; JANGAN bahas bab di luar materi yang diminta):\n";
                 foreach ($bookData['all_chapters'] as $chIdx => $ch) {
                     $subTopicNames = implode(", ", array_column($ch['sub_topics'] ?? [], 'name'));
                     $bookPrompt .= "- Bab " . ($chIdx + 1) . ": {$ch['title']}" . ($subTopicNames ? " (Sub-topik: {$subTopicNames})" : '') . "\n";
@@ -385,7 +482,8 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
             if (!empty($bookData['chapter'])) {
                 $chapter = $bookData['chapter'];
                 $bookPrompt .= "\n**BAB UTAMA (FOKUS BAHAN AJAR INI):** " . ($chapter['no'] !== null ? "Bab {$chapter['no']}: " : "") . "{$chapter['title']}\n";
-                $subTopics = $chapter['sub_topics'] ?? [];
+                // Sub-topik fokus: hanya yang relevan dengan materi yang diminta
+                $subTopics = ($bookData['focused_sub_topics'] ?? null) ?: ($chapter['sub_topics'] ?? []);
                 if (!empty($subTopics)) {
                     $bookPrompt .= "Sub-topik UTAMA (WAJIB dijadikan heading ### dan dijelaskan mendalam masing-masing):\n";
                     foreach ($subTopics as $st) {
@@ -402,7 +500,7 @@ $bookPrompt .= "- Materi Spesifik: {$subTopicNames}\n";
                 if ($visualHints) $bookPrompt .= "Petunjuk Visual: {$visualHints}\n";
             }
 
-            $bookPrompt .= "\nINSTRUKSI: Susun bahan ajar dengan KERANGKA SUB-TOPIK di atas. Jelaskan SETIAP sub-topik secara mendalam (minimal 2-3 paragraf per sub-topik). Gunakan istilah kunci di glosarium. Visual harus mengikuti petunjuk visual di atas.\n";
+            $bookPrompt .= "\nINSTRUKSI FOKUS: Susun bahan ajar HANYA untuk materi \"" . ($data['materi'] ?? $data['topic'] ?? '') . "\" yang diminta. Kerangka sub-topik di atas adalah ACUAN, tetapi JANGAN melebar ke sub-topik lain dari bab ini yang tidak relevan dengan materi yang diminta (misalnya jangan bahas Manajemen File dan Folder jika materi inti adalah Antarmuka Pengguna). Jelaskan SETIAP sub-topik fokus secara mendalam (minimal 2-3 paragraf per sub-topik). Bila sub-topik acuan tidak menyebut sesuatu yang diminta, kembangkan dari CP. Gunakan istilah kunci di glosarium. Visual harus mengikuti petunjuk visual di atas.\n";
             $prompt .= $bookPrompt;
         }
 
@@ -1536,7 +1634,8 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         $bookData = $this->getRelevantBookContent($level, $gradeLevel, $subjectKey, $materi);
         $bookTitle = $bookData['book_title'] ?? $subject;
         $bookVisualHints = $bookData['chapter']['visual_hints'] ?? 'Pilih tipe visual paling sesuai';
-        $bookSubTopics = implode(', ', array_column($bookData['chapter']['sub_topics'] ?? [], 'name'));
+        $focusedSubs = $bookData['focused_sub_topics'] ?? null;
+        $bookSubTopics = implode(', ', array_column($focusedSubs ?: ($bookData['chapter']['sub_topics'] ?? []), 'name'));
 
         $prompt = "
         TUGAS: Lanjutkan penyusunan MODUL AJAR untuk materi \"{$materi}\" (Mapel: {$subject}, Kelas: {$gradeLevel}).
@@ -1733,12 +1832,33 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
 
         // Dapatkan visual hint dari JSON
         $visualHint = $this->getVisualHintForSubject($subject, $materi);
-        $visualDesc = $visualHint['description'] ?? 'Buat diagram Mermaid yang sesuai dengan konten materi.';
+        $visualDesc = $visualHint['description'] ?? 'Buat visualisasi yang sesuai dengan konten materi.';
         $visualExample = $visualHint['example'] ?? '';
         $visualTopicHint = $visualDesc;
 
-        // Visual type detection: pisahkan mermaid-compatible vs non-mermaid (function/geometry/scratch)
-        $visualType = $visualHint['visual_type'] ?? 'graph_td';
+        // AUTO-DETECT tipe visual dari kata kunci materi (mengalahkan hint generik)
+        $autoVisualMap = [
+            'map' => ['peta', 'lokasi', 'wilayah', 'geograf', 'benua', 'pesisir', 'relief'],
+            'scratch' => ['scratch', 'pemrograman', 'algoritma', 'blok kode', 'koding'],
+            'function' => ['fungsi', 'grafik fungsi', 'limit', 'trigonometri', 'parabola'],
+            'geometry' => ['geometri', 'pythagoras', 'segitiga', 'bangun datar', 'bangun ruang', 'lingkaran', 'persegi'],
+            'chart' => ['statistika', 'diagram', 'persentase', 'grafik batang', 'rata-rata', 'modus', 'median'],
+            'chemistry' => ['senyawa', 'reaksi kimia', 'molekul', 'larutan', 'rumus kimia', 'atom'],
+            'music' => ['not balok', 'melodi', 'tangga nada', 'lagu', 'nada'],
+        ];
+        $autoType = null;
+        $materiLower = mb_strtolower($materi);
+        foreach ($autoVisualMap as $type => $keywords) {
+            foreach ($keywords as $kw) {
+                if (mb_strpos($materiLower, mb_strtolower($kw)) !== false) {
+                    $autoType = $type;
+                    break 2;
+                }
+            }
+        }
+
+        // Visual type final: prioritas auto-detect, lalu hint per mapel, lalu default
+        $visualType = $autoType ?? ($visualHint['visual_type'] ?? 'graph_td');
         $mermaidCompatTypes = ['mindmap', 'graph_td', 'graph_lr', 'flowchart_td', 'flowchart_lr', 'venn'];
         $isMermaidVisual = in_array($visualType, $mermaidCompatTypes);
         if ($isMermaidVisual) {
@@ -1750,6 +1870,25 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
             $visualBlockInstruction = "Gunakan blok kode ` ```visualization ` dengan type: \"{$visualType}\" dan konfigurasi JSON sesuai contoh di atas. JANGAN pakai Mermaid untuk visualisasi ini.";
             $materialVisualHint = "tambahkan blok ` ```visualization ` yang sesuai dengan type \"{$visualType}\"";
         }
+
+        // Panduan visual interaktif (pola dari buildWorksheetPrompt) — wajib dibungkus ```visualization
+        $visualFormatGuide = "
+        **PILIH TIPE VISUAL BERDASARKAN ISI MATERI**:
+        - **Peta/lokasi/wilayah/geografi** -> 'map':{\"type\":\"map\",\"config\":{\"center\":[lat,lng],\"zoom\":8,\"markers\":[{\"position\":[lat,lng],\"popup\":\"Nama\"}]}}
+        - **Pemrograman/algoritma/scratch** -> 'scratch':{\"type\":\"scratch\",\"config\":{\"code\":\"when flag clicked\\nmove (10) steps\"}}
+        - **Fungsi/limit/trigonometri (grafik)** -> 'function':{\"type\":\"function\",\"config\":{\"expression\":\"x^2\",\"xRange\":[-5,5],\"yRange\":[-5,10]}}
+        - **Geometri/bangun (segitiga, kubus, lingkaran)** -> 'geometry':{\"type\":\"geometry\",\"config\":{\"elements\":[{\"type\":\"point\",\"coords\":[0,0],\"id\":\"A\"},{\"type\":\"point\",\"coords\":[4,0],\"id\":\"B\"},{\"type\":\"polygon\",\"parents\":[\"A\",\"B\"]}]}}
+        - **Statistika/data/persentase** -> 'chart':{\"type\":\"chart\",\"config\":{\"type\":\"bar\",\"data\":[{\"x\":\"A\",\"y\":10}]}}
+        - **Senyawa/reaksi kimia** -> 'chemistry':{\"type\":\"chemistry\",\"config\":{\"smiles\":\"CCO\"}}
+        - **Hubungan/alur/proses/klasifikasi** -> 'mermaid':{\"type\":\"mermaid\",\"config\":{\"diagram\":\"graph TD\\nA-->B\"}}
+        - **Ide/konsep bercabang** -> 'mindmap':{\"type\":\"mindmap\",\"config\":{\"nodes\":[{\"id\":\"1\",\"label\":\"Konsep\"}],\"edges\":[]}}
+        **KRUSIAL**: JANGAN buat visualisasi yang tidak sesuai materi. JANGAN gunakan data contoh fiktif untuk chart/map.
+        **FORMAT WAJIB VISUALISASI**: Setiap blok visualisasi WAJIB dibungkus dalam code block:
+        ```visualization
+        {\"type\":\"...\",\"config\":{...}}
+        ```
+        JANGAN keluarkan JSON mentah tanpa bungkus ```visualization, dan JANGAN bungkus JSON di ```mermaid.
+        ";
 
         // Format rumus hanya untuk mapel eksak; mapel lain larang rumus
         $isMathSubject = preg_match('/matematika|ipa|fisika|kimia/i', $subject);
@@ -1794,6 +1933,9 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
 
         {$mathInstruction}
 
+        **VISUALISASI INTERAKTIF (WAJIB MINIMAL 1 BLOK):** Setiap Bahan Ajar (Handout) WAJIB memuat minimal 1 blok visualisasi yang relevan dengan materi (peta, grafik fungsi, bangun geometri, scratch, diagram alur, dsb).
+        {$visualFormatGuide}
+
         ---
 
         # 📘 MODUL BELAJAR: [JUDUL MATERI DI SINI]
@@ -1814,10 +1956,11 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         ---
 
         ## 🗺️ PETA KONSEP (VISUAL INTERAKTIF)
-        *(WAJIB: {$visualDesc}
+        *(WAJIB: Buat visual interaktif relevan dengan materi. {$visualDesc}
         {$visualBlockInstruction}
+        - Contoh blok yang benar ada di deskripsi di atas.
         {$visualExample}
-        - Pastikan node berisi kata kunci spesifik dari materi, BUKAN template umum)*
+        - Pastikan visual berisi kata kunci spesifik dari materi, BUKAN template umum)*
 
         ---
 
