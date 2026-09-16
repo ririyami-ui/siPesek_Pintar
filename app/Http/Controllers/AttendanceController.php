@@ -76,7 +76,15 @@ class AttendanceController extends Controller
 
                 // [KEGIATAN] Guru non-wali hanya melihat mapel yang diampu,
                 // ditambah absen kegiatan (subject_id NULL) pada kelas yang diampu.
-                $query->where(function ($q) use ($subjectIds, $classIdsGuru, $request) {
+                // [PRE-FILL] include_all_subjects=1: izinkan melihat semua mapel
+                // pada KELAS YANG DIAMPU saja (untuk carry-over jam berikutnya),
+                // tanpa melebar ke kelas lain.
+                $includeAllSubjects = $request->boolean('include_all_subjects');
+                $query->where(function ($q) use ($subjectIds, $classIdsGuru, $request, $includeAllSubjects) {
+                    if ($includeAllSubjects && !empty($classIdsGuru)) {
+                        $q->whereIn('class_id', $classIdsGuru);
+                        return;
+                    }
                     $hasAny = false;
                     if (!empty($subjectIds)) {
                         $q->whereIn('subject_id', $subjectIds);

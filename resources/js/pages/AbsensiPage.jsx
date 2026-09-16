@@ -219,6 +219,8 @@ const AbsensiPage = () => {
                 date: targetDate,
                 class_id: foundActiveSchedule.classId,
                 // We don't filter by subject_id here so we can see other sessions' attendance
+                // untuk pre-fill "absensi jam berikutnya mengikuti jam pertama" satu kelas
+                include_all_subjects: 1,
               }
             });
             const allDayAttendance = attendanceRes.data.data || [];
