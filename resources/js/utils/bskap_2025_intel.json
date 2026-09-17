@@ -378,7 +378,7 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -387,7 +387,7 @@
             "materi_inti": [
               {
                 "materi": "Aku Cinta Al-Qur'an (Huruf Hijaiyah)",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Mengenal Rukun Iman",
@@ -403,14 +403,14 @@
               },
               {
                 "materi": "Nabi dan Rasul Panutanku",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               }
             ],
             "cp_snippet": "Al-Qur'an Hadis Membaca dan membedakan huruf hijaiah berharakat, huruf hijaiah bersambung; menghafal Surah al-Fatihah, beberapa surah pendek Al-Qur'an, dan hadis tentang kebersihan. Akidah Menjelaskan dan meyakini rukun iman, iman kepada Allah Swt. , beberapa asmaulhusna, dan iman kepada malaikat"
           },
           "genap": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akhlak",
               "Fikih",
               "Sejarah Peradaban Islam"
@@ -418,7 +418,7 @@
             "materi_inti": [
               {
                 "materi": "Al-Qur'an Pedoman Hidupku (Surah Al-Fatihah, Al-Ikhlas)",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Kasih Sayang terhadap Sesama",
@@ -434,7 +434,7 @@
               },
               {
                 "materi": "Nabi Adam a.s. Manusia Pertama",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               }
             ],
             "cp_snippet": "Al-Qur'an Hadis Membaca dan membedakan huruf hijaiah berharakat, huruf hijaiah bersambung; menghafal Surah al-Fatihah, beberapa surah pendek Al-Qur'an, dan hadis tentang kebersihan. Akidah Menjelaskan dan meyakini rukun iman, iman kepada Allah Swt. , beberapa asmaulhusna, dan iman kepada malaikat"
@@ -840,7 +840,7 @@
           "ganjil": {
             "elemen": [
               "Sejarah Peradaban Islam",
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak"
             ],
@@ -851,7 +851,7 @@
               },
               {
                 "materi": "Asyik Bisa Membaca Al-Qur'an",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Allah Maha Pencipta",
@@ -867,7 +867,7 @@
           "genap": {
             "elemen": [
               "Akhlak",
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Fikih",
               "Sejarah Peradaban Islam"
@@ -879,7 +879,7 @@
               },
               {
                 "materi": "Asyiknya Belajar Al-Qur'an",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Ibadah Salat",
@@ -1329,7 +1329,7 @@
           "ganjil": {
             "elemen": [
               "Sejarah Peradaban Islam",
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak"
             ],
@@ -1340,7 +1340,7 @@
               },
               {
                 "materi": "Senangnya Belajar Surah Al-Alaq",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Meyakini Allah Maha Esa dan Pemberi",
@@ -1356,7 +1356,7 @@
           "genap": {
             "elemen": [
               "Fikih",
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Sejarah Peradaban Islam",
               "Akhlak"
             ],
@@ -1367,7 +1367,7 @@
               },
               {
                 "materi": "Hati Tenteram dengan Zikir",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Kisah Keteladanan Nabi Yusuf a.s. dan Nabi Syu'aib a.s.",
@@ -1812,7 +1812,7 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -1821,7 +1821,7 @@
             "materi_inti": [
               {
                 "materi": "Mari Mengaji Surat Al-Hujurat",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Asmaul Husna (Al-Malik, Al-Aziz, Al-Quddus, As-Salam, Al-Mukmin)",
@@ -1829,7 +1829,7 @@
               },
               {
                 "materi": "Indahnya Saling Menghargai",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Menyambut Usia Baligh",
@@ -1840,7 +1840,7 @@
           },
           "genap": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -1853,7 +1853,7 @@
               },
               {
                 "materi": "Mari Mengaji Surat At-Tin",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Beriman kepada Rasul Allah",
@@ -2282,7 +2282,7 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -2291,7 +2291,7 @@
             "materi_inti": [
               {
                 "materi": "Indahnya Saling Menghormati (Surat Al-Kafirun)",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Hari Akhir (Kiamat)",
@@ -2306,7 +2306,7 @@
           },
           "genap": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -2723,7 +2723,7 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -2732,7 +2732,7 @@
             "materi_inti": [
               {
                 "materi": "Surat Ad-Duha",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Beriman kepada Qada dan Qadar",
@@ -2743,7 +2743,7 @@
           },
           "genap": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak",
               "Fikih",
@@ -3194,14 +3194,14 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak"
             ],
             "materi_inti": [
               {
                 "materi": "Pedoman Hidup Al-Qur'an dan Sunnah",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Meneladani Nama dan Sifat Allah",
@@ -4181,14 +4181,14 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak"
             ],
             "materi_inti": [
               {
                 "materi": "Melestarikan Alam Menjaga Kehidupan",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Meyakini Kitab-Kitab Allah",
@@ -5158,14 +5158,14 @@
         "Pendidikan Agama Islam": {
           "ganjil": {
             "elemen": [
-              "Al-Qur'an dan Hadis",
+              "Al-Qur'an Hadis",
               "Akidah",
               "Akhlak"
             ],
             "materi_inti": [
               {
                 "materi": "Semangat Menuntut Ilmu (Q.S. Al-Mujadilah)",
-                "elemen": "Al-Qur'an dan Hadis"
+                "elemen": "Al-Qur'an Hadis"
               },
               {
                 "materi": "Iman kepada Hari Akhir",
