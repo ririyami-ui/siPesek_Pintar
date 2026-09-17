@@ -337,16 +337,35 @@ const ScheduleCalendar = () => {
             const hDate = moment(holiday.date || holiday.start_date);
             const hEnd = moment(holiday.end_date || holiday.date);
 
-            events.push({
-                id: `holiday-${holiday.id}`,
-                title: holiday.title,
-                start: hDate.startOf('day').toDate(),
-                end: hEnd.endOf('day').toDate(),
-                allDay: true,
-                isHoliday: true,
-                category: holiday.category,
-                resource: holiday
-            });
+            // [DARURAT PARSIAL] Emergency with time window → render per-day timed blocks (not all-day)
+            if (holiday.is_emergency && holiday.start_time && holiday.end_time) {
+                let day = hDate.clone().startOf('day');
+                const lastDay = hEnd.clone().startOf('day');
+                while (day.isSameOrBefore(lastDay)) {
+                    events.push({
+                        id: `holiday-${holiday.id}-${day.format('YYYY-MM-DD')}`,
+                        title: holiday.title,
+                        start: day.clone().add(moment.duration(holiday.start_time)).toDate(),
+                        end: day.clone().add(moment.duration(holiday.end_time)).toDate(),
+                        allDay: false,
+                        isHoliday: true,
+                        category: holiday.category,
+                        resource: holiday
+                    });
+                    day.add(1, 'day');
+                }
+            } else {
+                events.push({
+                    id: `holiday-${holiday.id}`,
+                    title: holiday.title,
+                    start: hDate.startOf('day').toDate(),
+                    end: hEnd.endOf('day').toDate(),
+                    allDay: true,
+                    isHoliday: true,
+                    category: holiday.category,
+                    resource: holiday
+                });
+            }
         });
 
         schedules.forEach(schedule => {

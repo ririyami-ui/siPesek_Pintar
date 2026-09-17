@@ -131,13 +131,22 @@ class ScheduleController extends Controller
                 $status = 'assignment';
             }
 
-            // [OVERRIDE] If there is a School Agenda (non-holiday), suspend normal activity logic
+            // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
             if ($agenda) {
-                $status = 'agenda';
-            }
+                // [DARURAT PARSIAL] Emergency time-bounded block:
+                // suspend ONLY schedules overlapping the emergency window (start_time - end_time)
+                if ($agenda->is_emergency && $agenda->start_time && $agenda->end_time) {
+                    $emergencyStart = Carbon::parse($agenda->start_time)->format('H:i');
+                    $emergencyEnd = Carbon::parse($agenda->end_time)->format('H:i');
 
-            // Emergency holiday: do NOT override — keep original status but mark if blocked by emergency window
-            // The actual block detection is done in StudentDashboardController::getRealtimeLearning
+                    // Overlap exists if: schedule start < emergency end AND schedule end > emergency start
+                    if ($startTime < $emergencyEnd && $endTime > $emergencyStart) {
+                        $status = 'agenda';
+                    }
+                } else {
+                    $status = 'agenda';
+                }
+            }
 
             $s->status = $status;
             return $s;

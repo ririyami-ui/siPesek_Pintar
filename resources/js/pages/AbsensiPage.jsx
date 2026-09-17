@@ -57,27 +57,42 @@ const AbsensiPage = () => {
           });
           if (holiday) {
             if (holiday.is_holiday) {
-              // Libur: blokir absensi
-              setActiveSchedule({ isHoliday: true });
-              setStudents([]);
-              setAttendance({});
+              // [DARURAT PARSIAL] Emergency with time window: block ONLY when now is inside the window.
+              const isEmergencyPartial = holiday.is_emergency && holiday.start_time && holiday.end_time;
+              const emergencyToday = moment(targetDate).isSame(moment(), 'day');
+              const nowTime = moment().format('HH:mm');
+              const inEmergencyWindow = isEmergencyPartial && emergencyToday
+                && nowTime >= String(holiday.start_time).slice(0, 5)
+                && nowTime <= String(holiday.end_time).slice(0, 5);
+
+              if (!isEmergencyPartial || !emergencyToday || inEmergencyWindow) {
+                // Libur (penuh / darurat aktif): blokir absensi
+                setActiveSchedule({ isHoliday: true });
+                setStudents([]);
+                setAttendance({});
+                setIsKegiatanMode(false);
+                setKegiatanInfo(null);
+                setSelectedKegiatanClass(null);
+                return;
+              }
+              // Darurat parsial di luar window → lanjut ke jadwal normal
               setIsKegiatanMode(false);
               setKegiatanInfo(null);
               setSelectedKegiatanClass(null);
+            } else {
+              // Agenda kegiatan (mis. P5): mode Absen Pagi Kegiatan tanpa mapel
+              setActiveSchedule(null);
+              setIsKegiatanMode(true);
+              setKegiatanInfo({
+                id: holiday.id,
+                name: holiday.name || holiday.title || 'Kegiatan',
+                start_time: holiday.start_time,
+                end_time: holiday.end_time,
+              });
+              setSelectedKegiatanClass(null);
+              await loadKegiatanClasses();
               return;
             }
-            // Agenda kegiatan (mis. P5): mode Absen Pagi Kegiatan tanpa mapel
-            setIsKegiatanMode(true);
-            setKegiatanInfo({
-              id: holiday.id,
-              name: holiday.name || holiday.title || 'Kegiatan',
-              start_time: holiday.start_time,
-              end_time: holiday.end_time,
-            });
-            setActiveSchedule(null);
-            setSelectedKegiatanClass(null);
-            await loadKegiatanClasses();
-            return;
           }
           setIsKegiatanMode(false);
           setKegiatanInfo(null);

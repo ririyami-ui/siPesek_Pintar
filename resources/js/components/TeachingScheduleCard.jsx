@@ -335,6 +335,14 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
   // Helper to determine if holiday blocks routine schedule
   const isBlockingHoliday = (h) => {
     if (!h) return false;
+
+    // [DARURAT PARSIAL] Emergency time-bounded block:
+    // only block schedules when "now" is inside the emergency window (start_time - end_time)
+    if (h.is_emergency && h.start_time && h.end_time) {
+      const nowTime = moment().format('HH:mm');
+      return nowTime >= String(h.start_time).slice(0, 5) && nowTime <= String(h.end_time).slice(0, 5);
+    }
+
     const name = (h.name || h.title || '').toLowerCase();
     
 

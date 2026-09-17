@@ -358,10 +358,27 @@ class AttendanceController extends Controller
                 }
             }
         } elseif ($holiday && !auth()->user()->isAdmin()) {
-            // Libur: tetap blokir non-admin
-            return response()->json([
-                'message' => "Absensi tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name})."
-            ], 422);
+            // [DARURAT PARSIAL] Emergency time-bounded block for non-admin:
+            // block attendance ONLY inside the emergency window; outside it, normal attendance proceeds.
+            if ($holiday->is_emergency && $holiday->start_time && $holiday->end_time) {
+                $isToday = \Carbon\Carbon::parse($date)->isToday();
+                if ($isToday && !$request->boolean('skip_time_check')) {
+                    $now = now();
+                    $start = \Carbon\Carbon::parse($holiday->start_time);
+                    $end = \Carbon\Carbon::parse($holiday->end_time);
+                    if ($now->gte($start) && $now->lte($end)) {
+                        return response()->json([
+                            'message' => "Absensi tidak aktif: sedang berlangsung agenda darurat ({$holiday->name}) "
+                                . "jam {$start->format('H:i')} - {$end->format('H:i')}."
+                        ], 422);
+                    }
+                }
+            } else {
+                // Libur penuh: tetap blokir non-admin
+                return response()->json([
+                    'message' => "Absensi tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name})."
+                ], 422);
+            }
         }
 
         DB::beginTransaction();

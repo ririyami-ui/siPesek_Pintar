@@ -79,6 +79,11 @@ class DashboardController extends Controller
                 $isBlocking = false;
             }
 
+            // [DARURAT PARSIAL] Emergency block is time-bounded — never empty the whole day's monitoring
+            if ($agenda->is_emergency === true) {
+                $isBlocking = false;
+            }
+
             if ($isBlocking) {
                 // Return empty data for schedules but keep stats
                 $monitoringData = collect(); 
@@ -257,9 +262,24 @@ class DashboardController extends Controller
 
             // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
             if ($agenda) {
-                $status = $agenda->is_holiday ? 'libur' : 'agenda';
-                $needsAttention = false; // Never flag as 'alfa'/'belum absen' on holidays
-                $hasTakenAttendance = false; // Keep UI state un-colored
+                // [DARURAT PARSIAL] Emergency time-bounded block:
+                // suspend ONLY schedules overlapping the emergency window (start_time - end_time)
+                if ($agenda->is_emergency && $agenda->start_time && $agenda->end_time) {
+                    $emergencyStart = Carbon::parse($agenda->start_time)->format('H:i');
+                    $emergencyEnd = Carbon::parse($agenda->end_time)->format('H:i');
+
+                    // Overlap exists if: schedule start < emergency end AND schedule end > emergency start
+                    if ($startTime < $emergencyEnd && $endTime > $emergencyStart) {
+                        $status = 'libur';
+                        $needsAttention = false;
+                        $hasTakenAttendance = false;
+                    }
+                } else {
+                    // Libur/Kegiatan seharian: suspend everything
+                    $status = $agenda->is_holiday ? 'libur' : 'agenda';
+                    $needsAttention = false; // Never flag as 'alfa'/'belum absen' on holidays
+                    $hasTakenAttendance = false; // Keep UI state un-colored
+                }
             }
 
             // [NEW] Get Suggested Topic from PROMES
