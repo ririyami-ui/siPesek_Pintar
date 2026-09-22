@@ -42,8 +42,7 @@ export default function DashboardPage() {
   const { 
     activeSemester, 
     academicYear, 
-    userProfile,
-    monitoringData
+    userProfile
   } = useSettings();
   const [activeSchedule, setActiveSchedule] = useState(null);
 

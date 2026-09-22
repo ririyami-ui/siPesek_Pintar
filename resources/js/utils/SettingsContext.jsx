@@ -3,8 +3,10 @@ import api from '../lib/axios';
 import moment from 'moment';
 
 const SettingsContext = createContext();
+const MonitoringContext = createContext();
 
 export const useSettings = () => useContext(SettingsContext);
+export const useMonitoring = () => useContext(MonitoringContext);
 
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState({
@@ -16,9 +18,9 @@ export const SettingsProvider = ({ children }) => {
         loadingSettings: true,
         smartAudioEnabled: localStorage.getItem('smartAudioEnabled') !== 'false',
         audioLanguage: localStorage.getItem('audioLanguage') || 'id-ID', // Default to Indonesian
-        isAudioUnlocked: false, // Must be re-unlocked every session due to browser policy
-        monitoringData: JSON.parse(localStorage.getItem('monitoring_data_cache') || 'null')
+        isAudioUnlocked: false // Must be re-unlocked every session due to browser policy
     });
+    const [monitoringData, setMonitoringData] = useState(JSON.parse(localStorage.getItem('monitoring_data_cache') || 'null'));
 
     // Audio Assistant Refs (Singleton)
     const audioContextRef = useRef(null);
@@ -235,8 +237,12 @@ export const SettingsProvider = ({ children }) => {
                 }
             });
             if (res.data) {
-                setSettings(prev => ({ ...prev, monitoringData: res.data }));
-                localStorage.setItem('monitoring_data_cache', JSON.stringify(res.data));
+                setMonitoringData(res.data);
+                try {
+                    localStorage.setItem('monitoring_data_cache', JSON.stringify(res.data));
+                } catch (e) {
+                    console.error('Monitoring cache save failed', e);
+                }
             }
         } catch (e) {
             console.error('Audio Assistant: Fetch failed', e);
@@ -267,18 +273,18 @@ export const SettingsProvider = ({ children }) => {
 
     // Reactive fetch: Trigger as soon as userProfile is loaded
     useEffect(() => {
-        if (settings.userProfile?.role?.toLowerCase() === 'admin' && !settings.monitoringData) {
+        if (settings.userProfile?.role?.toLowerCase() === 'admin' && !monitoringData) {
             console.log('Audio Assistant: Profile detected, triggering initial fetch.');
             fetchMonitoringData(settings.userProfile);
         }
-    }, [settings.userProfile]);
+    }, [settings.userProfile, monitoringData]);
 
 
     // Ref to keep track of monitoring data without restarting the interval
-    const monitoringDataRef = useRef(settings.monitoringData);
+    const monitoringDataRef = useRef(monitoringData);
     useEffect(() => {
-        monitoringDataRef.current = settings.monitoringData;
-    }, [settings.monitoringData]);
+        monitoringDataRef.current = monitoringData;
+    }, [monitoringData]);
 
     // 1-Second Audio Loop (Web Worker to avoid Throttling)
     useEffect(() => {
@@ -520,5 +526,13 @@ export const SettingsProvider = ({ children }) => {
         refreshProfile: fetchProfile,
     }), [settings]);
 
-    return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
+    const monitoringValue = React.useMemo(() => ({ monitoringData }), [monitoringData]);
+
+    return (
+        <SettingsContext.Provider value={value}>
+            <MonitoringContext.Provider value={monitoringValue}>
+                {children}
+            </MonitoringContext.Provider>
+        </SettingsContext.Provider>
+    );
 };

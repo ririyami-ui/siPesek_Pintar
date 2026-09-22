@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('library:notify-due-tomorrow')->dailyAt('07:00');
         $schedule->command('reminders:send')->everyMinute();
         $schedule->command('db:backup')->dailyAt('02:00')->withoutOverlapping();
+        $schedule->command('tokens:prune-stale')->dailyAt('02:30')->withoutOverlapping();
+        $schedule->command('data:prune')->dailyAt('03:00')->withoutOverlapping();
         $schedule->command('reports:send-parent --type=weekly')->weeklyOn(0, '19:00');
         $schedule->command('reports:send-parent --type=monthly')->monthlyOn(1, '07:00');
         $schedule->command('substitution:detect')

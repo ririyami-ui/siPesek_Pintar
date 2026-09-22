@@ -442,10 +442,11 @@ const createSystemInstruction = (userProfile, liveContext = null) => {
  */
 export async function generateChatResponse(history, newMessage, userProfile, modelName, imageData = null, liveContext = null) {
   try {
+    const sanitizedHistory = history.map(({ image, ...rest }) => rest);
     // Send to backend instead of direct Google SDK call
     const response = await api.post('/ai/chat', {
       message: newMessage,
-      history: history.slice(0, -1), // History excluding the latest message which is sent separately
+      history: sanitizedHistory.slice(0, -1), // History excluding the latest message which is sent separately
       context: {
         liveContext,
       },

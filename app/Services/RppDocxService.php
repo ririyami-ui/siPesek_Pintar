@@ -2,17 +2,15 @@
 
 /**
  * RppDocxService - Generate DOCX from RPP HTML content with native Word equations (OMML)
- * 
+ *
  * Flow:
  *   HTML (KaTeX spans) → MathML → OMML (Office Math) → docx library → Binary DOCX
- * 
- * @package App\Services
  */
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use App\Models\LessonPlan;
+use Illuminate\Support\Facades\Log;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
 
 class RppDocxService
@@ -27,8 +25,8 @@ class RppDocxService
     /**
      * Generate DOCX from RPP HTML content.
      *
-     * @param string $htmlContent HTML content containing KaTeX rendered spans
-     * @param array $metadata Subject, grade, topic for filename
+     * @param  string  $htmlContent  HTML content containing KaTeX rendered spans
+     * @param  array  $metadata  Subject, grade, topic for filename
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function generateDocx(string $htmlContent, array $metadata = [])
@@ -37,28 +35,28 @@ class RppDocxService
         $subjectName = $metadata['subject'] ?? 'RPP';
         $gradeLevel = $metadata['gradeLevel'] ?? 'X';
         $topic = $metadata['topic'] ?? 'Materi';
-        
+
         $safeSubject = preg_replace('/[\/\\\\?%*:|"<>]/', '-', $subjectName);
         $safeTopic = preg_replace('/[\/\\\\?%*:|"<>]/', '-', substr($topic, 0, 30));
         $safeGrade = strval($gradeLevel);
         $fileName = "RPP_{$safeSubject}_{$safeGrade}_{$safeTopic}.docx";
-        
+
         // Write temp HTML file for Node.js
         $tempDir = storage_path('app/temp-rpp');
-        if (!is_dir($tempDir)) {
+        if (! is_dir($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
-        
-        $htmlFile = $tempDir . '/' . uniqid('rpp_') . '.html';
-        $outputFile = $tempDir . '/' . uniqid('output_') . '.docx';
-        
+
+        $htmlFile = $tempDir.'/'.uniqid('rpp_').'.html';
+        $outputFile = $tempDir.'/'.uniqid('output_').'.docx';
+
         // RPP content is stored/generated as Markdown; convert to HTML before wrapping
         $htmlContent = $this->markdownToHtml($htmlContent);
-        
+
         // Wrap HTML in full document with styling
         $fullHtml = $this->wrapHtml($htmlContent, $metadata);
         file_put_contents($htmlFile, $fullHtml);
-        
+
         // Execute Node.js converter
         $nodePath = env('NODE_PATH', 'node');
         $command = sprintf(
@@ -68,21 +66,23 @@ class RppDocxService
             escapeshellarg($htmlFile),
             escapeshellarg($outputFile)
         );
-        
-        Log::info("RppDocxService: Executing command: " . $command);
-        
-        $output = shell_exec($command);
-        Log::info("RppDocxService: Node output: " . $output);
-        
-        // Check if output file was created
-        if (!file_exists($outputFile)) {
-            Log::error("RppDocxService: DOCX file was not created. Node output: " . $output);
-            throw new \Exception("Gagal membuat file DOCX. Pastikan Node.js terinstall. Error: " . $output);
+
+        Log::info('RppDocxService: Executing command: '.$command);
+
+        try {
+            $output = shell_exec($command);
+            Log::info('RppDocxService: Node output: '.$output);
+
+            // Check if output file was created
+            if (! file_exists($outputFile)) {
+                Log::error('RppDocxService: DOCX file was not created. Node output: '.$output);
+                throw new \Exception('Gagal membuat file DOCX. Pastikan Node.js terinstall. Error: '.$output);
+            }
+        } finally {
+            // Clean up temp HTML even on error
+            @unlink($htmlFile);
         }
-        
-        // Clean up temp HTML
-        @unlink($htmlFile);
-        
+
         return response()->download($outputFile, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         ])->deleteFileAfterSend(true);
@@ -91,7 +91,6 @@ class RppDocxService
     /**
      * Generate DOCX from saved LessonPlan model.
      *
-     * @param LessonPlan $lessonPlan
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function generateFromModel(LessonPlan $lessonPlan)
@@ -108,7 +107,8 @@ class RppDocxService
      */
     private function markdownToHtml(string $markdown): string
     {
-        $converter = new GithubFlavoredMarkdownConverter();
+        $converter = new GithubFlavoredMarkdownConverter;
+
         return (string) $converter->convert($markdown);
     }
 

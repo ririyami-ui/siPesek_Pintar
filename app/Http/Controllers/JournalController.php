@@ -14,7 +14,7 @@ class JournalController extends Controller
     {
         $query = Journal::with(['class', 'subject', 'schedule', 'teacher']);
 
-        if (!auth()->user()->isAdmin()) {
+        if (! auth()->user()->isAdmin()) {
             $query->where('user_id', auth()->id());
         }
 
@@ -36,7 +36,7 @@ class JournalController extends Controller
         if ($request->has('semester') && $request->has('academic_year')) {
             $years = explode('/', $request->academic_year);
             $year1 = $years[0] ?? date('Y');
-            $year2 = $years[1] ?? (int)$year1 + 1;
+            $year2 = $years[1] ?? (int) $year1 + 1;
 
             if ($request->semester === 'Ganjil') {
                 $query->whereBetween('date', ["{$year1}-07-01", "{$year1}-12-31"]);
@@ -49,22 +49,23 @@ class JournalController extends Controller
 
         // Batch load attendance summary (sakit/izin/alpa) — replaces N+1 loop
         if ($journals->isNotEmpty()) {
-            $keys = $journals->map(fn($j) => "{$j->class_id}-{$j->subject_id}-{$j->date}")->unique()->values();
+            $keys = $journals->map(fn ($j) => "{$j->class_id}-{$j->subject_id}-{$j->date}")->unique()->values();
 
             $attendanceRecords = \App\Models\Attendance::with('student')
+                ->select(['id', 'class_id', 'subject_id', 'date', 'status', 'student_id'])
                 ->whereIn('status', ['sakit', 'izin', 'alpa', 'hadir'])
                 ->where(function ($q) use ($keys) {
                     foreach ($keys as $key) {
                         [$cid, $sid, $d] = explode('-', $key, 3);
                         $q->orWhere(function ($sub) use ($cid, $sid, $d) {
                             $sub->where('class_id', $cid)
-                                 ->where('subject_id', $sid)
-                                 ->where('date', $d);
+                                ->where('subject_id', $sid)
+                                ->where('date', $d);
                         });
                     }
                 })
                 ->get()
-                ->groupBy(fn($att) => "{$att->class_id}-{$att->subject_id}-{$att->date}");
+                ->groupBy(fn ($att) => "{$att->class_id}-{$att->subject_id}-{$att->date}");
 
             $journals->each(function ($journal) use ($attendanceRecords) {
                 $key = "{$journal->class_id}-{$journal->subject_id}-{$journal->date}";
@@ -80,6 +81,7 @@ class JournalController extends Controller
                             'izin' => 'Izin',
                             'alpa' => 'Alpa',
                         ][$att->status] ?? $att->status;
+
                         return [
                             'student_id' => $att->student_id,
                             'name' => $att->student?->name ?? '-',
@@ -115,11 +117,11 @@ class JournalController extends Controller
 
         // [SECURITY] Ensure non-admin teachers can only create journals for classes they teach
         $user = auth()->user();
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
-            if (!$teacher) {
+            if (! $teacher) {
                 return response()->json([
-                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.'
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.',
                 ], 403);
             }
 
@@ -129,14 +131,14 @@ class JournalController extends Controller
                 ->where('subject_id', $validated['subject_id'])
                 ->exists();
 
-            if (!$isAssigned) {
+            if (! $isAssigned) {
                 return response()->json([
-                    'message' => 'Anda tidak memiliki akses untuk mengisi jurnal untuk kelas/mata pelajaran ini.'
+                    'message' => 'Anda tidak memiliki akses untuk mengisi jurnal untuk kelas/mata pelajaran ini.',
                 ], 403);
             }
         }
 
-        if (!auth()->user()->isAdmin() || !isset($validated['user_id'])) {
+        if (! auth()->user()->isAdmin() || ! isset($validated['user_id'])) {
             $validated['user_id'] = auth()->id();
         }
 
@@ -145,18 +147,18 @@ class JournalController extends Controller
         $validated['date'] = $date;
 
         // [FEATURE] Prevent journal entry on School Agenda / Holidays
-        $holiday = \App\Models\Holiday::where(function($q) use ($date) {
+        $holiday = \App\Models\Holiday::where(function ($q) use ($date) {
             $q->where('date', $date)
-              ->orWhere(function($sub) use ($date) {
-                  $sub->where('start_date', '<=', $date)
-                      ->where('end_date', '>=', $date);
-              });
+                ->orWhere(function ($sub) use ($date) {
+                    $sub->where('start_date', '<=', $date)
+                        ->where('end_date', '>=', $date);
+                });
         })->first();
 
-        if ($holiday && !auth()->user()->isAdmin()) {
+        if ($holiday && ! auth()->user()->isAdmin()) {
             // Check if it's a blocking holiday (exclude minor ones if needed, but per user request, assume all agendas)
             return response()->json([
-                'message' => "Jurnal tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name}). Anda tidak perlu mengisi jurnal mengajar rutin."
+                'message' => "Jurnal tidak aktif: Hari ini adalah agenda sekolah ({$holiday->name}). Anda tidak perlu mengisi jurnal mengajar rutin.",
             ], 422);
         }
 
@@ -170,7 +172,7 @@ class JournalController extends Controller
      */
     public function show(Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+        if (! auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -182,7 +184,7 @@ class JournalController extends Controller
      */
     public function update(Request $request, Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+        if (! auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -212,7 +214,7 @@ class JournalController extends Controller
      */
     public function destroy(Journal $journal)
     {
-        if (!auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
+        if (! auth()->user()->isAdmin() && $journal->user_id !== auth()->id()) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

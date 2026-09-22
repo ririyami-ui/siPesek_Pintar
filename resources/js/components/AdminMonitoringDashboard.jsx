@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Activity, Clock, User, BookOpen, CheckCircle2, AlertCircle, PlayCircle, Loader2, School, BellRing, Zap, Volume2, Wifi, WifiOff } from 'lucide-react';
-import { useSettings } from '../utils/SettingsContext';
+import { useSettings, useMonitoring } from '../utils/SettingsContext';
 import moment from 'moment';
 import api from '../lib/axios';
 
@@ -14,12 +14,12 @@ const AdminMonitoringDashboard = ({ holiday }) => {
     const [onlineLoading, setOnlineLoading] = useState(true);
     const { 
         userProfile, 
-        monitoringData,
         refreshMonitoringData,
         smartAudioEnabled: isAudioEnabled,
         isAudioUnlocked,
         testAudio
     } = useSettings();
+    const { monitoringData } = useMonitoring();
     const [currentTime, setCurrentTime] = useState(moment());
     const syncIdsRef = useRef(new Set());
 

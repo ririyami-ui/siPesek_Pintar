@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../lib/axios';
+
+const STORAGE_KEY = 'smart-school-chat-history';
+const MAX_HISTORY = 50;
 
 const ChatContext = createContext();
 
@@ -12,10 +15,11 @@ export const ChatProvider = ({ children }) => {
 
   // Load chat history from localStorage on mount (optional, to maintain session)
   useEffect(() => {
-    const savedChat = localStorage.getItem('smart-school-chat-history');
+    const savedChat = localStorage.getItem(STORAGE_KEY);
     if (savedChat) {
       try {
-        setChatHistory(JSON.parse(savedChat));
+        const parsed = JSON.parse(savedChat);
+        setChatHistory(Array.isArray(parsed) ? parsed.slice(-MAX_HISTORY) : []);
       } catch (e) {
         console.error("Failed to parse chat history", e);
       }
@@ -25,20 +29,34 @@ export const ChatProvider = ({ children }) => {
   // Save chat history to localStorage when it changes
   useEffect(() => {
     if (chatHistory.length > 0) {
-      localStorage.setItem('smart-school-chat-history', JSON.stringify(chatHistory));
+      try {
+        const persisted = chatHistory.slice(-MAX_HISTORY).map((message) => {
+          if (!message || typeof message !== 'object' || !('image' in message)) {
+            return message;
+          }
+          const { image, ...rest } = message;
+          return rest;
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(persisted));
+      } catch (e) {
+        console.error("Failed to save chat history", e);
+      }
     }
   }, [chatHistory]);
 
-  const addMessageToHistory = (message) => {
-    setChatHistory(prev => [...prev, message]);
-  };
+  const addMessageToHistory = useCallback((message) => {
+    setChatHistory(prev => {
+      const next = [...prev, message];
+      return next.length > MAX_HISTORY ? next.slice(-MAX_HISTORY) : next;
+    });
+  }, []);
 
-  const clearChat = () => {
+  const clearChat = useCallback(() => {
     setChatHistory([]);
-    localStorage.removeItem('smart-school-chat-history');
-  };
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     chatHistory,
     setChatHistory,
     loadingHistory,
@@ -46,7 +64,7 @@ export const ChatProvider = ({ children }) => {
     isThinking,
     setIsThinking,
     clearChat,
-  };
+  }), [chatHistory, setChatHistory, loadingHistory, addMessageToHistory, isThinking, setIsThinking, clearChat]);
 
   return (
     <ChatContext.Provider value={value}>
