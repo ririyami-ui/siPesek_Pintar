@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UlanganHarianItem;
 use App\Models\Grade;
+use App\Models\UlanganHarianItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,21 +16,34 @@ class UlanganHarianController extends Controller
      */
     public function index(Request $request)
     {
-        $query = UlanganHarianItem::query()->with(['rpp', 'schoolClass', 'subject'])
+        $query = UlanganHarianItem::query()
+            ->select([
+                'id', 'user_id', 'rpp_id', 'rpp_topic', 'class_id', 'class_name',
+                'subject_id', 'subject_name', 'date', 'item_meta', 'scores',
+                'remidi_scores', 'kktp_score', 'target_klasikal', 'semester',
+                'academic_year', 'created_at', 'updated_at', 'deleted_at',
+            ])
+            ->with(['rpp:id,topic', 'schoolClass:id,code,level,rombel', 'subject:id,name'])
             ->orderBy('date', 'desc');
 
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
 
-        if ($request->has('rpp_id')) {
+        if ($request->filled('rpp_id')) {
             $query->where('rpp_id', $request->rpp_id);
         }
-        if ($request->has('class_id')) {
+        if ($request->filled('class_id')) {
             $query->where('class_id', $request->class_id);
         }
-        if ($request->has('subject_id')) {
+        if ($request->filled('subject_id')) {
             $query->where('subject_id', $request->subject_id);
+        }
+        if ($request->filled('semester')) {
+            $query->where('semester', $request->semester);
+        }
+        if ($request->filled('academic_year')) {
+            $query->where('academic_year', $request->academic_year);
         }
 
         return response()->json($query->paginate(20));
@@ -58,7 +71,32 @@ class UlanganHarianController extends Controller
             'academic_year' => 'required',
             'kktp_score' => 'nullable|numeric',
             'target_klasikal' => 'nullable|numeric|min:0|max:100',
-          ]);
+        ]);
+
+        // [SECURITY] Hanya guru (atau admin) yang boleh menyimpan ulangan harian & nilainya.
+        $user = Auth::user();
+        if (! $user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (! $teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.',
+                ], 403);
+            }
+
+            // Cek guru mengajar kelas/mapel ini (pola JournalController).
+            if ($request->filled('class_id') && $request->filled('subject_id')) {
+                $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                    ->where('class_id', $request->class_id)
+                    ->where('subject_id', $request->subject_id)
+                    ->exists();
+
+                if (! $isAssigned) {
+                    return response()->json([
+                        'message' => 'Anda tidak memiliki akses untuk menginput nilai di kelas/mata pelajaran ini.',
+                    ], 403);
+                }
+            }
+        }
 
         try {
             DB::beginTransaction();
@@ -86,11 +124,13 @@ class UlanganHarianController extends Controller
             }
 
             DB::commit();
+
             return response()->json(['message' => 'Ulangan harian berhasil disimpan', 'data' => $assessment], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("Error saving Ulangan Harian: " . $e->getMessage());
+            Log::error('Error saving Ulangan Harian: '.$e->getMessage());
+
             return response()->json(['error' => 'Gagal menyimpan ulangan harian'], 500);
         }
     }
@@ -100,62 +140,84 @@ class UlanganHarianController extends Controller
      * Mengikuti pola KktpAssessmentController::syncToGrades â€” updateOrCreate dengan
      * kunci unik (user/student/class/subject/date/topic/type/semester/academic_year).
      */
-    protected function syncToGrades(UlanganHarianItem $assessment, $type)
+    public function syncToGrades(UlanganHarianItem $assessment, $type = null)
     {
+        $requestType = request()->input('assessment_type', $type);
+        $type = $requestType ?: 'Ulangan Harian';
+
+        // [SECURITY] Non-admin hanya boleh menyinkronkan nilai untuk ulangan miliknya sendiri.
+        $user = Auth::user();
+        if (! $user->isAdmin() && $assessment->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Anda tidak memiliki akses untuk menyinkronkan nilai ulangan ini.',
+            ], 403);
+        }
+
         $items = $assessment->item_meta; // [{ no, tipe, elemen, materi, skor_maks, bobot }]
         $scores = $assessment->scores; // { studentId: { no: skor } }
         $remidi = $assessment->remidi_scores ?? []; // { studentId: nilai 0-100 setelah perbaikan }
 
-        // Hitung skor akhir per siswa: sum(skor Ã— bobot) / sum(skor_maks Ã— bobot) Ã— 100
+        // Hitung skor akhir per siswa: sum(skor × bobot) / sum(skor_maks × bobot) × 100
         $totBobotXMax = 0;
         foreach ($items as $item) {
-            $totBobotXMax += (float)($item['bobot'] ?? 1) * (float)($item['skor_maks'] ?? 1);
+            $totBobotXMax += (float) ($item['bobot'] ?? 1) * (float) ($item['skor_maks'] ?? 1);
         }
 
         foreach ($scores as $studentId => $studentScores) {
             $weightedSum = 0;
             foreach ($items as $item) {
                 $no = $item['no'];
-                $skor = min((float)($studentScores[$no] ?? 0), (float)($item['skor_maks'] ?? 1));
-                $weightedSum += $skor * (float)($item['bobot'] ?? 1);
+                $skor = min((float) ($studentScores[$no] ?? 0), (float) ($item['skor_maks'] ?? 1));
+                $weightedSum += $skor * (float) ($item['bobot'] ?? 1);
             }
             $finalScore = $totBobotXMax > 0 ? round(($weightedSum / $totBobotXMax) * 100, 2) : 0;
 
             // Jika ada nilai remidi (perbaikan), gunakan nilai akhir setelah perbaikan
-            if (isset($remidi[$studentId]) && is_numeric($remidi[$studentId]) && (float)$remidi[$studentId] > 0) {
-                $finalScore = round((float)$remidi[$studentId], 2);
+            if (isset($remidi[$studentId]) && is_numeric($remidi[$studentId]) && (float) $remidi[$studentId] >= 0) {
+                $finalScore = round((float) $remidi[$studentId], 2);
             }
 
-            if ($finalScore > 0) {
-                Grade::updateOrCreate(
-                    [
-                        'user_id' => Auth::id(),
-                        'student_id' => $studentId,
-                        'class_id' => $assessment->class_id,
-                        'subject_id' => $assessment->subject_id,
-                        'date' => $assessment->date,
-                        'type' => $type,
-                        'topic' => $assessment->rpp_topic,
-                        'semester' => $assessment->semester,
-                        'academic_year' => $assessment->academic_year,
-                        'ulangan_harian_item_id' => $assessment->id
-                    ],
-                    [
-                        'score' => $finalScore,
-                        'notes' => 'Generated from Analisis Ulangan Harian'
-                    ]
-                );
-            }
+            Grade::updateOrCreate(
+                [
+                    'user_id' => Auth::id(),
+                    'student_id' => $studentId,
+                    'class_id' => $assessment->class_id,
+                    'subject_id' => $assessment->subject_id,
+                    'date' => $assessment->date,
+                    'type' => $type,
+                    'topic' => $assessment->rpp_topic,
+                    'semester' => $assessment->semester,
+                    'academic_year' => $assessment->academic_year,
+                    'ulangan_harian_item_id' => $assessment->id,
+                ],
+                [
+                    'score' => $finalScore,
+                    'notes' => 'Generated from Analisis Ulangan Harian',
+                ]
+            );
+        }
+
+        // Kirim notifikasi push ke siswa/walimurid (mengikuti pola GradeController::storeBatch)
+        $subjectName = $assessment->subject?->name ?? 'Pelajaran';
+        $topic = $assessment->rpp_topic ?? 'Ulangan Harian';
+        foreach ($scores as $studentId => $studentScores) {
+            \App\Services\PushNotificationService::sendToStudentParent(
+                $studentId,
+                'Penilaian Baru',
+                "Informasi: Nilai materi {$topic} pada mata pelajaran {$subjectName} ananda baru saja dicatat.",
+                '/siswa/nilai'
+            );
         }
     }
 
     public function show($id)
     {
         $query = UlanganHarianItem::query()->with(['rpp', 'schoolClass', 'subject']);
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
         $assessment = $query->findOrFail($id);
+
         return response()->json($assessment);
     }
 
@@ -165,7 +227,7 @@ class UlanganHarianController extends Controller
     public function update(Request $request, $id)
     {
         $query = UlanganHarianItem::query();
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
         $assessment = $query->findOrFail($id);
@@ -212,11 +274,13 @@ class UlanganHarianController extends Controller
             $this->syncToGrades($assessment, $request->input('assessment_type', 'Ulangan Harian'));
 
             DB::commit();
+
             return response()->json(['message' => 'Ulangan harian berhasil diperbarui', 'data' => $assessment]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("Error updating Ulangan Harian: " . $e->getMessage());
+            Log::error('Error updating Ulangan Harian: '.$e->getMessage());
+
             return response()->json(['error' => 'Gagal memperbarui ulangan harian'], 500);
         }
     }
@@ -224,11 +288,12 @@ class UlanganHarianController extends Controller
     public function destroy($id)
     {
         $query = UlanganHarianItem::query();
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             $query->where('user_id', Auth::id());
         }
         $assessment = $query->findOrFail($id);
         $assessment->delete(); // Cascades null to grades
+
         return response()->json(['message' => 'Ulangan harian dihapus']);
     }
 }

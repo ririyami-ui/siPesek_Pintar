@@ -1,8 +1,29 @@
 import {
     Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType,
     Table, TableRow, TableCell, WidthType, BorderStyle, VerticalAlign,
-    TableBorders, HeightRule, PageNumber, TableLayoutType,
+    TableBorders, HeightRule, PageNumber, TableLayoutType, ImageRun,
 } from 'docx';
+
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    ArcElement,
+    BarController,
+    LineController,
+    DoughnutController,
+} from 'chart.js';
+
+import { rtabel05 } from './analisisButir';
+
+// Daftarkan skala/element/controller Chart.js yang dipakai (pola sama ChartRenderer.jsx)
+ChartJS.register(
+    CategoryScale, LinearScale, PointElement, LineElement, BarElement, ArcElement,
+    BarController, LineController, DoughnutController,
+);
 
 // --- Konstanta Format Kop Utama (mengikuti template "02_ANALISIS ULANGAN HARIAN ... - KOSONG.xlsx") ---
 const LINE = { line: 280, lineRule: 'auto' };
@@ -152,6 +173,119 @@ const dataCell = (text, { center = true, bold = false } = {}) =>
     });
 
 /* =====================================================================
+ * Chart → PNG → ImageRun (docx v9 tak punya chart native).
+ * Bukan halusinasi: render via Chart.js di canvas browser, lalu disisipkan
+ * sbg gambar ke dokumen. Helper mengembalikan null bila di luar browser.
+ * ===================================================================== */
+const chartImageRun = (u8, width, height) =>
+    new Paragraph({
+        alignment: AlignmentType.CENTER,
+        spacing: { before: 120, after: 120 },
+        children: [new ImageRun({ type: 'png', data: u8, transformation: { width, height } })],
+    });
+
+async function renderChartToPng(config, width, height) {
+    if (typeof document === 'undefined' || typeof ChartJS === 'undefined') return null;
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    let chart;
+    try {
+        chart = new ChartJS(ctx, config);
+        await chart.render();
+        const dataUrl = canvas.toDataURL('image/png');
+        if (!dataUrl || !dataUrl.startsWith('data:image/png')) return null;
+        const base64 = dataUrl.split(',')[1] || '';
+        const bin = atob(base64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        return bytes;
+    } catch (err) {
+        console.warn('Gagal render chart ke PNG:', err);
+        return null;
+    } finally {
+        try { if (chart) chart.destroy(); } catch (e) { /* noop */ }
+        try { canvas.remove(); } catch (e) { /* noop */ }
+    }
+}
+
+const chartBaseOptions = {
+    animation: false,
+    responsive: false,
+    plugins: { legend: { position: 'top' } },
+    scales: { y: { beginAtZero: true } },
+};
+
+const chartDistribusi = (distribusi) =>
+    renderChartToPng({
+        type: 'bar',
+        data: {
+            labels: distribusi.map(d => d.interval || d.label || '-'),
+            datasets: [{
+                label: 'Jumlah Siswa',
+                data: distribusi.map(d => d.count ?? d.nSiswa ?? 0),
+                backgroundColor: 'rgba(54, 162, 235, 0.75)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            }],
+        },
+        options: {
+            ...chartBaseOptions,
+            plugins: { ...chartBaseOptions.plugins, title: { display: true, text: 'Distribusi Skor Akhir Siswa' } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
+        },
+    }, 620, 320);
+
+const chartDayaSerap = (items, kktp) =>
+    renderChartToPng({
+        type: 'bar',
+        data: {
+            labels: items.map(it => `B${it.no}`),
+            datasets: [
+                {
+                    label: 'Daya Serap (%)',
+                    data: items.map(it => Math.round(num0(it.dayaSerap) * 100) / 100),
+                    backgroundColor: 'rgba(75, 192, 192, 0.75)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                },
+                {
+                    type: 'line',
+                    label: `KKTP ${kktp}%`,
+                    data: items.map(() => kktp),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                },
+            ],
+        },
+        options: {
+            ...chartBaseOptions,
+            plugins: { ...chartBaseOptions.plugins, title: { display: true, text: 'Daya Serap per Butir Soal' } },
+            scales: { y: { min: 0, max: 100, beginAtZero: true, ticks: { callback: v => `${v}%` } } },
+        },
+    }, 620, 320);
+
+const chartKetuntasan = (perTuntas) =>
+    renderChartToPng({
+        type: 'doughnut',
+        data: {
+            labels: ['Siswa Tuntas', 'Siswa Belum Tuntas'],
+            datasets: [{
+                data: [perTuntas.tuntas, perTuntas.belum],
+                backgroundColor: ['rgba(34, 197, 94, 0.85)', 'rgba(239, 68, 68, 0.85)'],
+                borderWidth: 0,
+            }],
+        },
+        options: {
+            ...chartBaseOptions,
+            plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Ketuntasan Siswa' } },
+        },
+    }, 420, 420);
+
+/* =====================================================================
  * Helpers Analisis Butir (sama keluarga analisisButir.js)
  * ===================================================================== */
 function rerata(arr) {
@@ -177,12 +311,36 @@ function dayapembeda(skorButir, skorTotalArr, skorMaks) {
 }
 
 function validitas(itemScores, totalScores, tipe, skorMaksLihat) {
-    const r = korelasi(itemScores, totalScores);
     const n = itemScores.length;
+    const skorMaks = Number(skorMaksLihat || 0);
+    let r = 0;
+    if ((tipe || '').toUpperCase() === 'PG' && skorMaks <= 1) {
+        const binary = itemScores.map(s => (Number(s) > 0 ? 1 : 0));
+        const mp = [], mq = [];
+        binary.forEach((b, i) => (b === 1 ? mp : mq).push(Number(totalScores[i]) || 0));
+        if (mp.length > 0 && mq.length > 0) {
+            const sTotal = stdDevArr(totalScores);
+            if (sTotal > 0) {
+                const rpb = ((rerata(mp) - rerata(mq)) / sTotal) *
+                    Math.sqrt((mp.length * mq.length) / (n * n));
+                r = rpb;
+            }
+        }
+    } else {
+        const totalScoresMinusItem = totalScores.map((t, i) => (Number(t) || 0) - (Number(itemScores[i]) || 0));
+        r = korelasi(itemScores, totalScoresMinusItem);
+    }
     const df = Math.max(1, n - 2);
-    const rtabel = Number(Math.min(0.444, Number(1.96 / Math.sqrt(df)).toFixed(2)));
+    const rtabel = rtabel05(df);
     const kategori = Math.abs(r) >= rtabel ? 'Valid' : 'Tidak Valid';
     return { r: Number(Math.abs(r).toFixed(2)), kategori, rtabel };
+}
+
+function stdDevArr(arr) {
+    const m = rerata(arr);
+    if (!arr || !arr.length) return 0;
+    const v = arr.reduce((s, x) => s + (Number(x) - m) ** 2, 0) / arr.length;
+    return Math.sqrt(v);
 }
 
 function korelasi(xs, ys) {
@@ -367,6 +525,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
         const kktp = Number(uh.kktp_score || rombel.kktp || 70);
         const tuntas = kktp > 0 ? akhir >= kktp : true;
         return new TableRow({
+            cantSplit: true,
             children: [
                 dataCell(noAbsen(sid, idx + 1)),
                 dataCell(namaSiswa(sid), { center: false }),
@@ -381,7 +540,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const itemColW = Math.max(420, Math.floor((PAGE_W - 500 - 2000 - 700 - 800 - 900) / Math.max(items.length, 1)));
     const skorWidths = [500, 2000, ...items.map(() => itemColW), 700, 800, 900];
     children.push(makeTable([
-        new TableRow({ children: headRowCells, tableHeader: true }),
+        new TableRow({ cantSplit: true, children: headRowCells, tableHeader: true }),
         ...bodyRows,
     ], skorWidths));
 
@@ -390,6 +549,12 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const targetKlasikal = Number(uh.target_klasikal || 80);
     const perTuntas = belumTuntasCount(analisis, st);
     const kktpVal = Number(uh.kktp_score || rombel.kktp || 70);
+
+    const [distChartPng, dsChartPng, ketChartPng] = await Promise.all([
+        chartDistribusi(distribusi),
+        chartDayaSerap(items, kktpVal),
+        chartKetuntasan(perTuntas),
+    ]);
 
     children.push(sectionTitle('HASIL ANALISIS'));
     children.push(subTitle('1. Ketentuan Belajar'));
@@ -417,12 +582,18 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
         ['Persentase Ketuntasan', `${num0(perTuntas.persen)}%`]],
     ));
     if (st.n) {
-        children.push(bodyText('Statistik dihitung dari skor akhir seluruh peserta (data tunggal): mean = Σx/n, median = nilai tengah data terurut, modus = nilai paling sering muncul, standar deviasi = √(Σ(xi−mean)²/n).'));
+        children.push(bodyText('Catatan penjelasan istilah statistik beserta rumusnya (agar mudah dipahami):'));
+        children.push(bodyText('Rerata (mean) = Σx/n, yaitu jumlah seluruh nilai (Σx) dibagi banyaknya peserta (n) → nilai rata-rata kelas. Semakin tinggi, semakin baik penguasaan materi kelas secara umum.'));
+        children.push(bodyText('Median = nilai tengah setelah semua nilai diurutkan dari terkecil ke terbesar. Berguna kalau ada nilai yang sangat tinggi/rendah agar gambaran kelas tidak miring.'));
+        children.push(bodyText('Modus = nilai yang paling sering muncul. Jika tercantum "Tidak ada", berarti tidak ada nilai yang berulang.'));
+        children.push(bodyText('Standar deviasi (SD) = √(Σ(xi−mean)²/n), dengan xi = nilai tiap siswa dan mean = rerata → ukuran sebaran nilai: rata-rata jarak nilai siswa terhadap rerata. Semakin kecil SD, nilai seluruh siswa makin seragam/mendekati rerata (kelas homogen); semakin besar SD, makin timpang antara siswa bernilai tinggi dan rendah (kelas heterogen), sehingga perlu perhatian khusus bagi siswa yang tertinggal.'));
+        children.push(bodyText('Reliabilitas (Alpha) = α = k/(k−1) × (1 − Σσ²butir/σ²total), dengan k = jumlah butir, σ²butir = varians skor tiap butir, σ²total = varians skor total → tingkat konsistensi antar-butir soal. Semakin mendekati 1, soal makin konsisten mengukur kemampuan yang sama. Pedoman: α ≥ 0.70 artinya soal konsisten/andal; α 0.50–0.69 perlu dikaji sebagian butirnya; α < 0.50 tidak konsisten sehingga perlu direvisi. Butir yang "Tidak Valid" pada tabel analisis butir biasanya menjadi penyebab alpha rendah.'));
     }
+    if (ketChartPng) children.push(chartImageRun(ketChartPng, 420, 420));
 
     // Distribusi
     if (distribusi.length) {
-        children.push(subTitle('Distribusi Skor Akhir Siswa'));
+        children.push(subTitle('3. Distribusi Skor Akhir Siswa'));
         const distRows = [
             new TableRow({
                 tableHeader: true,
@@ -433,6 +604,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
             })),
         ];
         children.push(makeTable(distRows, [5600, PAGE_W - 5600]));
+        if (distChartPng) children.push(chartImageRun(distChartPng, 620, 320));
     }
     children.push(new Paragraph({ children: [], spacing: { after: 40 } }));
 
@@ -441,6 +613,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const butirRows = [
         new TableRow({
             tableHeader: true,
+            cantSplit: true,
             children: [
                 headCell('No'), headCell('Tipe'), headCell('Elemen'), headCell('Materi'),
                 headCell('Kesukaran'), headCell('Daya Beda'), headCell('Validitas'),
@@ -448,6 +621,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
             ],
         }),
         ...items.map(it => new TableRow({
+            cantSplit: true,
             children: [
                 dataCell(it.no), dataCell(it.tipe), dataCell(it.elemen),
                 dataCell(it.materi, { center: false }),
@@ -459,6 +633,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
         })),
     ];
     children.push(makeTable(butirRows, [450, 700, 1900, 2400, 1350, 1250, 1256, 1600]));
+    if (dsChartPng) children.push(chartImageRun(dsChartPng, 620, 320));
 
     // Soal yang tidak dikuasai kelas (daya serap butir < KKTP) — dasar remidi klasikal
     children.push(subTitle('Soal yang Tidak Dikuasai Kelas'));
@@ -473,7 +648,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     children.push(new Paragraph({ children: [], spacing: { after: 60 } }));
 
     /* ============ 5. REKOMENDASI & PROGRAM PERBAIKAN (REMEDIAL) ============ */
-    children.push(sectionTitle('REKOMENDASI & PROGRAM PERBAIKAN (REMEDIAL)'));
+    children.push(sectionTitle('REKOMENDASI & PROGRAM PERBAIKAN'));
 
     const belumTuntas = (analisis.rekomendasi || []).filter(r => r.tindakan === 'Remedial');
     const tuntasList = (analisis.rekomendasi || []).filter(r => r.tindakan === 'Pengayaan');
@@ -504,6 +679,26 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     }
 
     // Blanko nilai setelah perbaikan (remidi) — sesuai pertanyaan "remidi diisi di mana"
+    children.push(subTitle('B. Siswa Tuntas (Pengayaan)'));
+    if (tuntasList.length) {
+        const pengRows = [
+            new TableRow({
+                tableHeader: true,
+                children: [headCell('No'), headCell('Nama Siswa'), headCell('Skor Akhir'), headCell('Tindakan')],
+            }),
+            ...tuntasList.map((s, i) => new TableRow({
+                children: [
+                    dataCell(String(s.no_absen ?? i + 1)),
+                    dataCell(s.student_name || '-', { center: false }),
+                    dataCell(Number(s.skorAkhir || 0).toFixed(2)),
+                    dataCell('Pengayaan', { center: false }),
+                ],
+            })),
+        ];
+        children.push(makeTable(pengRows, [500, 4500, 1300, PAGE_W - 500 - 4500 - 1300]));
+    } else {
+        children.push(bodyText('Tidak ada siswa yang tuntas pada ulangan ini.'));
+    }
     children.push(subTitle('C. Daftar Nilai Setelah Perbaikan (Remedial)'));
     const nilaiRemidiRows = [
         new TableRow({
@@ -525,6 +720,8 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     children.push(subTitle('D. Siswa Mengikuti Pengayaan'));
     if (tuntasList.length) {
         children.push(bodyText(`Sebanyak ${tuntasList.length} siswa sudah mencapai ketuntasan dan diarahkan mengikuti program pengayaan: ${tuntasList.map(r => r.student_name || namaSiswa(r.student_id)).join(', ')}.`));
+    } else {
+        children.push(bodyText('Tidak ada siswa yang mengikuti pengayaan pada ulangan ini.'));
     }
 
     /* ============ 6. SOAL PERBAIKAN ============ */
@@ -613,6 +810,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const absenRows = [
         new TableRow({
             tableHeader: true,
+            cantSplit: true,
             children: [headCell('No'), headCell('Nama Siswa'), headCell('Hadir'), headCell('S'), headCell('I'), headCell('A'), headCell('Keterangan')],
         }),
         ...studentIds.map((sid, i) => {
@@ -622,6 +820,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
             const isIzin = status === 'izin';
             const isAlpa = status === 'alpa' || status === 'alfa';
             return new TableRow({
+                cantSplit: true,
                 children: [
                     dataCell(noAbsen(sid, i + 1)),
                     dataCell(namaSiswa(sid), { center: false }),
@@ -642,6 +841,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const city = userProfile?.city || userProfile?.kota || '....................';
     const tTdRows = [
         new TableRow({
+            cantSplit: true,
             children: [
                 new TableCell({
                     borders: noBorders,

@@ -83,6 +83,29 @@ function pearson(xs, ys) {
   return (n * sxy - sx * sy) / denom;
 }
 
+/**
+ * Nilai kritis r (tabel distribusi r product-moment) pada taraf signifikansi
+ * 5% (dua arah) untuk df = 1..40 — nilai baku yang dipakai uji validitas butir.
+ * Untuk df > 40 memakai pendekatan normal 1.96/√df (mendekati tabel asli).
+ * @param {number} df derajat kebebasan (n-2)
+ * @returns {number}
+ */
+export function rtabel05(df) {
+  const table = {
+    1: 0.997, 2: 0.950, 3: 0.878, 4: 0.811, 5: 0.754,
+    6: 0.707, 7: 0.666, 8: 0.632, 9: 0.602, 10: 0.576,
+    11: 0.553, 12: 0.532, 13: 0.514, 14: 0.497, 15: 0.482,
+    16: 0.468, 17: 0.456, 18: 0.444, 19: 0.433, 20: 0.423,
+    21: 0.413, 22: 0.404, 23: 0.396, 24: 0.388, 25: 0.381,
+    26: 0.374, 27: 0.367, 28: 0.361, 29: 0.355, 30: 0.349,
+    31: 0.344, 32: 0.339, 33: 0.334, 34: 0.329, 35: 0.325,
+    36: 0.320, 37: 0.316, 38: 0.312, 39: 0.308, 40: 0.304,
+  };
+  const d = Math.max(1, Math.round(Number(df) || 1));
+  if (table[d]) return table[d];
+  return Number((1.96 / Math.sqrt(d)).toFixed(3));
+}
+
 function pointBiserial(itemBinary, totalScores) {
   const mp = [], mq = [];
   itemBinary.forEach((b, i) => (b === 1 ? mp : mq).push(totalScores[i]));
@@ -151,7 +174,7 @@ export function validitas(itemScores, totalScores, tipe, skorMaks) {
   }
   const n = itemScores.length;
   const df = Math.max(1, n - 2);
-  const rtabel = Number(Math.min(0.444, Number(1.96 / Math.sqrt(df)).toFixed(2)));
+  const rtabel = rtabel05(df);
   const kategori = Math.abs(r) >= rtabel ? 'Valid' : 'Tidak Valid';
   return { r: Number(Math.abs(r).toFixed(2)), kategori, rtabel };
 }

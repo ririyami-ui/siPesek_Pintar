@@ -24,6 +24,7 @@
 
 ### Cara regenerasi
 - `node tools/extract_cp_full.js` → regenerasi `resources/js/utils/bskap_full_cp.json` dari `bskap_clean.txt` (sumber dokumen resmi, header "TINGKAT LANJUT" sudah dipetakan ke key terpisah).
+  - ⚠️ HAZARD (verifikasi 2026-09-22): `bskap_clean.txt` untuk 6 mapel agama MASIH memuat teks SK BSKAP 046/2025, sedangkan data ter-commit sudah pakai KEPKA BKPDM 020/2026. Regenerasi akan MENURUNKAN 6 mapel agama (128 semester) ke teks SK 046. Jangan jalankan `extract_cp_full.js` tanpa menimpa bagian agama di `bskap_clean.txt` dengan teks KEPKA (sumber: isi ter-commit `bskap_full_cp.json` / PDF KEPKA). Mapel umum sudah sinkron 100%.
 - `storage/app/json/bskap_2025_verbatim.json` = fallback lama (11 mapel SMP), hanya dipakai bila `bskap_full_cp.json` tidak ada (lihat `AiGeneratorService::loadBskapData()`, app/Services/AiGeneratorService.php:157-188).
 
 ### Gap buku yang SUDAH diisi (2026-09-11, judul diverifikasi via SIBI/katalog resmi)
@@ -42,3 +43,10 @@
 ### Git state
 - Commit terakhir terkait: `5af3001` (Fase 3 backfill sub_topics), `3daec9b` (Buku SMA 10 payung IPA/IPS + umbrella resolve backend), `ee7a609` (CP 6 agama → KEPKA BKPDM 020/2026), `7068ceb` (gap buku SD/SMA diisi via `fill_gap_books.js`), `df3c033` (peta bab SMA → materi_inti), `cd818dc` (fallback CP_FULL Fase E → IPA/IPS), `b4d43d7` (peta bab & data IPAS SD), `6a5b4fb` (SMA Tingkat Lanjut), `09450fc` (peta bab SMP). Semua sudah di-push ke origin/main.
 - Artefak `vite.config.js.timestamp-*.mjs` (untracked) jangan di-commit.
+
+### WORK IN PROGRESS — Analisis Ulangan Harian (handoff 2026-09-22, BELUM di-commit)
+- Perbaikan selesai (sudah `vite build` sukses 2×, belum commit): `UlanganHarianController.php` (index() filter semester/tahun + select eksplisit; `syncToGrades` public + baca `request()->input('assessment_type')`; skor 0 selalu `updateOrCreate`, remidi ≥ 0), `analisisButir.js` (tabel `rtabel05()` df1-40, fallback `1.96/√df` df>40), `ulanganHarianDocx.js` (rapikan tata letak: `tableCell` undef dihapus→`headCell`/`dataCell` — sebelumnya CRASH bila ada siswa tuntas; sub-bab D diberi else; penomoran Distribusi `3.`; judul sect.5 → "REKOMENDASI & PROGRAM PERBAIKAN"; `cantSplit:true` di tabel skor/butir/absen/ttd), `gemini.js`/`pdfGenerator.js` (JSDoc `@deprecated` rekomendasi AI).
+- AGENTS.md: hazard regenerasi CP agama (baris setelah bullet Cara regenerasi) — jangan jalankan `extract_cp_full.js` tanpa menimpa agama `bskap_clean.txt` dgn KEPKA.
+- **Chart di Word (selesai 2026-09-23)**: 3 chart PNG disisipkan ke laporan Word — Distribusi skor akhir (bar), Daya serap per butir (bar + garis KKTP line), Tuntas vs belum (donut). Pendekatan terverifikasi: `docx@9.7.1` TIDAK punya chart native → render Chart.js (`Chart as ChartJS` + register BarController/LineController/DoughnutController/Category/Linear/Bar/Line/Arc) di canvas browser → `canvas.toDataURL` → `Uint8Array` → `ImageRun` (620×320 / 420×420). Helper di `ulanganHarianDocx.js`: `renderChartToPng` (guarded `typeof document === 'undefined'` → null), `chartDistribusi`, `chartDayaSerap`, `chartKetuntasan`, `chartImageRun`. Diverifikasi: vite build sukses + e2e (stub `document` via `@napi-rs/canvas`, 3 PNG ter-embed di `word/media`). Catatan: import `./analisisButir` tanpa ekstensi hanya di-resolve Vite → uji e2e harus via `vite.ssrLoadModule`.
+- **NEXT (belum dikerjakan):** — tidak ada; tunggu instruksi/commit.
+- Jangan commit dulu tanpa instruksi; jangan stage artefak scratch: `02_ANALISIS ULANGAN HARIAN 2 KELAS IX - KOSONG.xlsx`, `Salinan-Kepka-BKPDM-...pdf`, `inspect_excel.cjs`, `inspect_excel.js`. Commit `936c698` (performa) BELUM di-push.

@@ -774,7 +774,7 @@ export const generateViolationRecapPDF = (data, schoolName, startDate, endDate, 
  * Generates a PDF report for Ulangan Harian analysis.
  * @param {Object} uhItem - Ulangan Harian item data.
  * @param {Object} analisisResult - Result from analisisButir.js::analisisUlanganHarian.
- * @param {Array} rekomendasiAI - Result from gemini.js::generateUlanganHarianRecommendation.
+ * @param {Array} rekomendasiAI - Array rekomendasi per siswa (rekomendasiLokal).
  * @param {Object} userProfile - User profile data.
  */
 export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, userProfile = {}, academicYear = '', activeSemester = '') => {

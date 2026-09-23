@@ -413,6 +413,19 @@ const AnalisisUlanganHarianPage = () => {
     { header: 'N Butir Gagal', accessor: 'nButirGagal' },
   ];
 
+  // Ringkasan ketuntasan kelas (statistik murni dari tampilan analisis)
+  const rekomendasiLok = (analisisResult?.rekomendasi || []).filter(r => r && r.tindakan);
+  const tuntasCount = rekomendasiLok.filter(r => r.tindakan === 'Pengayaan').length;
+  const belumCount = rekomendasiLok.filter(r => r.tindakan === 'Remedial').length;
+  const totalSiswa = rekomendasiLok.length || analisisResult?.kelas?.nSiswa || 0;
+  const persenKetuntasan = totalSiswa ? Number(((tuntasCount / totalSiswa) * 100).toFixed(2)) : 0;
+  const butirLemahKelas = analisisResult?.kelas?.butirLemah || [];
+  // Ketuntasan klasikal: minimal X% siswa mencapai KKTP (target_klasikal, default 80)
+  const uhTerpilih = ulanganHarianList.find(uh => String(uh.id) === String(selectedUlanganHarian));
+  const kktpKelas = Number(uhTerpilih?.kktp_score || analisisResult?.kelas?.kktp || 70);
+  const targetKlasikal = Number(uhTerpilih?.target_klasikal || 80);
+  const tuntasKlasikal = persenKetuntasan >= targetKlasikal;
+
   return (
     <div className="p-3 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -591,24 +604,94 @@ const AnalisisUlanganHarianPage = () => {
             </table>
           </div>
 
-          {/* Rekomendasi Per Siswa (statistik murni) */}
-          {rekomendasiAI && rekomendasiAI.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border dark:border-gray-700">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white flex items-center gap-4">
-                <ClipboardCheck size={24} className="animate-pulse" />
-                <h3 className="text-lg font-black uppercase">Rekomendasi Per Siswa</h3>
-              </div>
-              <div className="p-6">
-                <div className="prose dark:prose-invert max-w-none prose-sm">
-                  {(Array.isArray(rekomendasiAI) ? rekomendasiAI : []).map((rec, idx) => (
-                    <div key={idx} className="mb-4">
-                      <p><span className="font-bold">{rec.student_name}:</span> {rec.rekomendasi}</p>
-                    </div>
-                  ))}
+          {/* Ringkasan Ketuntasan Kelas (dari analisis murni, bukan AI) */}
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden border dark:border-gray-700">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white flex items-center gap-4">
+              <ClipboardCheck size={24} />
+              <h3 className="text-lg font-black uppercase">Ringkasan Ketuntasan Kelas</h3>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-4 text-center">
+                  <p className="text-3xl font-black text-green-600 dark:text-green-400">{tuntasCount}</p>
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-300 mt-1">Siswa Tuntas</p>
+                </div>
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4 text-center">
+                  <p className="text-3xl font-black text-red-600 dark:text-red-400">{belumCount}</p>
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-300 mt-1">Siswa Belum Tuntas</p>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-4 text-center">
+                  <p className="text-3xl font-black text-blue-600 dark:text-blue-400">{persenKetuntasan}%</p>
+                  <p className="text-sm font-semibold text-gray-600 dark:text-gray-300 mt-1">Persentase Ketuntasan</p>
                 </div>
               </div>
+
+              <div className={`rounded-2xl p-4 mb-6 border ${tuntasKlasikal
+                  ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
+                  : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'}`}>
+                <div className="flex items-center gap-3">
+                  {tuntasKlasikal
+                    ? <TrendingUp className="text-emerald-600 dark:text-emerald-400 shrink-0" size={28} />
+                    : <TrendingDown className="text-amber-600 dark:text-amber-400 shrink-0" size={28} />}
+                  <div>
+                    <p className={`text-lg font-black ${tuntasKlasikal ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                      {tuntasKlasikal ? 'TUNTAS KLASIKAL' : 'BELUM TUNTAS KLASIKAL'}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {persenKetuntasan}% siswa tuntas dari target klasikal {targetKlasikal}% (KKTP {kktpKelas})
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {butirLemahKelas.length > 0 ? (
+                <div>
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                    Butir yang belum dikuasai kelas (daya serap &lt; KKTP {analisisResult?.kelas?.kktpKelas ?? 70}%):
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {butirLemahKelas.map(b => (
+                      <span key={b.no} className="text-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 rounded-lg px-3 py-1.5">
+                        No.{b.no} — {b.dayaSerap}%
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500 dark:text-gray-400">Semua butir dikuasai kelas (daya serap ≥ KKTP).</p>
+              )}
+
+              {rekomendasiLok.some(r => r.tindakan === 'Remedial') && (
+                <div className="mt-6">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                    Siswa yang Perlu Remedial ({rekomendasiLok.filter(r => r.tindakan === 'Remedial').length} siswa):
+                  </p>
+                  <div className="overflow-x-auto border rounded-xl dark:border-gray-700">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+                      <thead className="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nama Siswa</th>
+                          <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Skor Akhir</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Butir Gagal</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {rekomendasiLok.filter(r => r.tindakan === 'Remedial').map((r, i) => (
+                          <tr key={i}>
+                            <td className="px-3 py-2 font-medium whitespace-nowrap">{r.student_name}</td>
+                            <td className="px-3 py-2 text-center text-red-600 dark:text-red-400 font-semibold">{Number(r.skorAkhir || 0)}</td>
+                            <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
+                              {(r.butirGagal || []).map(b => `No.${b.no ?? b}`).join(', ') || '-'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
 

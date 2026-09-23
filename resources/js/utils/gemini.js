@@ -1039,10 +1039,7 @@ export async function generateStudentAnalysis(prompt, modelName) {
 
 /**
  * Generates remedial/enrichment recommendations for students based on Ulangan Harian analysis.
- * @param {Object} analisisResult - Result from analisisButir.js::analisisUlanganHarian.
- * @param {Object} rombelData - { kktp: number, students: [{ id:string, name:string }] }.
- * @param {string} modelName - The AI model name.
- * @returns {Promise<Array<{student_id:string, student_name:string, rekomendasi:string}>>} JSON array of recommendations.
+ * @deprecated Frontend kini menggunakan rekomendasiLokal() (statistik murni) untuk menghindari halusinasi.
  */
 export async function generateUlanganHarianRecommendation(analisisResult, rombelData, modelName) {
   const rekomendasiList = analisisResult?.rekomendasi || [];

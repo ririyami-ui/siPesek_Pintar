@@ -19,7 +19,10 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    // Origin dibatasi ke domain aplikasi (bukan wildcard) agar aman bersama Sanctum
+    // yang memakai cookie + withCredentials. Override via env CORS_ALLOWED_ORIGINS
+    // (dipisah koma) bila perlu beberapa domain.
+    'allowed_origins' => array_values(array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', config('app.url')))))),
 
     'allowed_origins_patterns' => [],
 
@@ -29,6 +32,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 
 ];

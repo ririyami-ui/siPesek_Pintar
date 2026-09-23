@@ -44,6 +44,29 @@ class KktpAssessmentController extends Controller
             'academic_year' => 'required',
         ]);
 
+        // [SECURITY] Hanya guru (atau admin) yang boleh menyimpan penilaian & nilainya.
+        $user = Auth::user();
+        if (! $user->isAdmin()) {
+            $teacher = \App\Models\Teacher::where('auth_user_id', $user->id)->first();
+            if (! $teacher) {
+                return response()->json([
+                    'message' => 'Data guru tidak ditemukan. Hubungi admin untuk verifikasi.',
+                ], 403);
+            }
+
+            // Cek guru mengajar kelas/mapel ini (pola JournalController).
+            $isAssigned = \App\Models\TeacherAssignment::where('teacher_id', $teacher->id)
+                ->where('class_id', $request->class_id)
+                ->where('subject_id', $request->subject_id)
+                ->exists();
+
+            if (! $isAssigned) {
+                return response()->json([
+                    'message' => 'Anda tidak memiliki akses untuk menginput nilai di kelas/mata pelajaran ini.',
+                ], 403);
+            }
+        }
+
         try {
             DB::beginTransaction();
 
@@ -80,6 +103,14 @@ class KktpAssessmentController extends Controller
 
     protected function syncToGrades(KktpAssessment $assessment, $type)
     {
+        // [SECURITY] Non-admin hanya boleh menyinkronkan nilai untuk penilaian miliknya sendiri.
+        $user = Auth::user();
+        if (! $user->isAdmin() && $assessment->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Anda tidak memiliki akses untuk menyinkronkan nilai penilaian ini.',
+            ], 403);
+        }
+
         // Calculate final scores based on KKTP type logic (simplified mirror of frontend)
         // ideally this logic should be shared or passed from frontend, but recalculating here is safer
         // For now, let's assume the frontend passes the calculated FINAL score for each student 
