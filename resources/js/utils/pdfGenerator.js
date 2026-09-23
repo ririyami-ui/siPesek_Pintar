@@ -833,6 +833,20 @@ export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, 
   perTuntas.persen = perTuntas.total ? Number(((perTuntas.tuntas / perTuntas.total) * 100).toFixed(2)) : 0;
   const kelasTuntas = perTuntas.persen >= targetKlasikal;
 
+  const remidiScores = uh.remidi_scores || {};
+  const skorTerakhirSiswa = (r) => {
+    const v = remidiScores[String(r.student_id)];
+    const after = v !== undefined && v !== null && v !== '' ? Number(v) : null;
+    return (after !== null && !Number.isNaN(after) && after >= 0) ? after : Number(r.skorAkhir ?? r.skor ?? 0);
+  };
+  const perTuntasRemidi = {
+    belum: (analisis.rekomendasi || []).filter(r => skorTerakhirSiswa(r) < kktpVal).length,
+    total: perTuntas.total,
+  };
+  perTuntasRemidi.tuntas = perTuntasRemidi.total ? perTuntasRemidi.total - perTuntasRemidi.belum : 0;
+  perTuntasRemidi.persen = perTuntasRemidi.total ? Number(((perTuntasRemidi.tuntas / perTuntasRemidi.total) * 100).toFixed(2)) : 0;
+  const kelasTuntasRemidi = perTuntasRemidi.persen >= targetKlasikal;
+
   const butirGagal = [...new Set((analisis.rekomendasi || []).flatMap(r => (r.butirGagal || []).map(b => Number(b.no ?? b))))]
     .filter(Boolean)
     .sort((a, b) => a - b);
@@ -954,6 +968,7 @@ export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, 
   drawText(`- Seorang siswa dinyatakan telah tuntas belajar apabila ia telah mencapai skor minimal ${kktpVal}% atau nilai ${kktpVal} (daya serap perorangan).`);
   drawText(`- Suatu kelas dinyatakan telah tuntas belajar bila di kelas tersebut telah terdapat minimal ${targetKlasikal}% siswa yang telah mencapai daya serap ${kktpVal}% (daya serap klasikal).`);
   drawText(`b. Kesimpulan : ${kelasTuntas ? 'Tuntas' : 'Belum Tuntas'} (${perTuntas.persen}% siswa tuntas)`, { bold: true });
+  drawText(`c. Kesimpulan setelah remidi : ${kelasTuntasRemidi ? 'Tuntas' : 'Belum Tuntas'} (${perTuntasRemidi.persen}% siswa tuntas setelah remidi)`, { bold: true });
 
   drawSubTitle('2. Rekapitulasi Hasil & Statistik');
   const recapRows = [

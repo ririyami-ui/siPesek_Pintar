@@ -400,6 +400,21 @@ function belumTuntasCount(analisis) {
     return { tuntas, belum, total, persen };
 }
 
+/** Hitung ketuntasan klasikal SETELAH remidi: skor siswa = nilai remidi (bila terisi ≥ 0) selain itu skor akhir. */
+function ketuntasanSetelahRemidi(analisis, remidiScores, kktp) {
+    const rekom = analisis?.rekomendasi || [];
+    const skorTerakhir = (r) => {
+        const v = remidiScores?.[String(r.student_id)];
+        const after = v !== undefined && v !== null && v !== '' ? Number(v) : null;
+        return (after !== null && !Number.isNaN(after) && after >= 0) ? after : Number(r.skorAkhir ?? r.skor ?? 0);
+    };
+    const tuntas = rekom.filter(r => skorTerakhir(r) >= kktp).length;
+    const belum = rekom.filter(r => skorTerakhir(r) < kktp).length;
+    const total = rekom.length || analisis?.kelas?.nSiswa || 0;
+    const persen = total ? Number(((tuntas / total) * 100).toFixed(2)) : 0;
+    return { tuntas, belum, total, persen };
+}
+
 /* =====================================================================
  * Pembangun Dokumen Word — 8 Bagian (mengikuti template KOSONG.xlsx)
  * ===================================================================== */
@@ -564,6 +579,9 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     const tuntasPersen = perTuntas.persen;
     const kelasTuntas = tuntasPersen >= targetKlasikal;
     children.push(bodyText(`b. Kesimpulan : ${kelasTuntas ? 'Tuntas' : 'Belum Tuntas'} (${tuntasPersen}% siswa tuntas)`));
+    const perTuntasRemidi = ketuntasanSetelahRemidi(analisis, uh.remidi_scores, kktpVal);
+    const kelasTuntasRemidi = perTuntasRemidi.persen >= targetKlasikal;
+    children.push(bodyText(`c. Kesimpulan setelah remidi : ${kelasTuntasRemidi ? 'Tuntas' : 'Belum Tuntas'} (${perTuntasRemidi.persen}% siswa tuntas setelah remidi)`));
 
     children.push(subTitle('2. Rekapitulasi Hasil & Statistik'));
     children.push(identitasGrid([

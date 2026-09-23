@@ -425,6 +425,17 @@ const AnalisisUlanganHarianPage = () => {
   const kktpKelas = Number(uhTerpilih?.kktp_score || analisisResult?.kelas?.kktp || 70);
   const targetKlasikal = Number(uhTerpilih?.target_klasikal || 80);
   const tuntasKlasikal = persenKetuntasan >= targetKlasikal;
+  // Ketuntasan setelah remidi: skor terakhir siswa = nilai remidi (bila ada & ≥ 0), selain itu skor akhir
+  const remidiScores = uhTerpilih?.remidi_scores || {};
+  const skorTerakhirSiswa = (r) => {
+    const v = remidiScores[String(r.student_id)];
+    const after = v !== undefined && v !== null && v !== '' ? Number(v) : null;
+    return (after !== null && !Number.isNaN(after) && after >= 0) ? after : Number(r.skorAkhir || 0);
+  };
+  const rekomLengkap = rekomendasiLok.map(r => ({ ...r, skorSetelahRemidi: skorTerakhirSiswa(r) }));
+  const tuntasSetelahRemidi = rekomLengkap.filter(r => r.skorSetelahRemidi >= kktpKelas).length;
+  const persenKetuntasanAfterRemidi = totalSiswa ? Number(((tuntasSetelahRemidi / totalSiswa) * 100).toFixed(2)) : 0;
+  const tuntasKlasikalAfterRemidi = persenKetuntasanAfterRemidi >= targetKlasikal;
 
   return (
     <div className="p-3 sm:p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
@@ -644,6 +655,24 @@ const AnalisisUlanganHarianPage = () => {
                 </div>
               </div>
 
+              <div className={`rounded-2xl p-4 mb-6 border ${tuntasKlasikalAfterRemidi
+                  ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800'
+                  : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800'}`}>
+                <div className="flex items-center gap-3">
+                  {tuntasKlasikalAfterRemidi
+                    ? <TrendingUp className="text-emerald-600 dark:text-emerald-400 shrink-0" size={28} />
+                    : <TrendingDown className="text-amber-600 dark:text-amber-400 shrink-0" size={28} />}
+                  <div>
+                    <p className={`text-lg font-black ${tuntasKlasikalAfterRemidi ? 'text-emerald-700 dark:text-emerald-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                      {tuntasKlasikalAfterRemidi ? 'TUNTAS KLASIKAL (SETELAH REMIDI)' : 'BELUM TUNTAS KLASIKAL (SETELAH REMIDI)'}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {persenKetuntasanAfterRemidi}% siswa tuntas setelah remidi dari target klasikal {targetKlasikal}% (KKTP {kktpKelas})
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {butirLemahKelas.length > 0 ? (
                 <div>
                   <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
@@ -672,19 +701,29 @@ const AnalisisUlanganHarianPage = () => {
                         <tr>
                           <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Nama Siswa</th>
                           <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Skor Akhir</th>
+                          <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Skor Setelah Remidi</th>
                           <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Butir Gagal</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {rekomendasiLok.filter(r => r.tindakan === 'Remedial').map((r, i) => (
+                        {rekomendasiLok.filter(r => r.tindakan === 'Remedial').map((r, i) => {
+                          const vRemidi = remidiScores[String(r.student_id)];
+                          const adaRemidi = vRemidi !== undefined && vRemidi !== null && vRemidi !== '';
+                          return (
                           <tr key={i}>
                             <td className="px-3 py-2 font-medium whitespace-nowrap">{r.student_name}</td>
                             <td className="px-3 py-2 text-center text-red-600 dark:text-red-400 font-semibold">{Number(r.skorAkhir || 0)}</td>
+                            <td className={`px-3 py-2 text-center font-semibold ${adaRemidi
+                              ? (Number(vRemidi) >= kktpKelas ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400')
+                              : 'text-gray-400'}`}>
+                              {adaRemidi ? Number(vRemidi) : '-'}
+                            </td>
                             <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
                               {(r.butirGagal || []).map(b => `No.${b.no ?? b}`).join(', ') || '-'}
                             </td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
