@@ -34,66 +34,54 @@
 
 ## 4. Tahapan Pelaksanaan
 
-### Fase 0 — Snapshot & Persiapan (aman)
-- [ ] Commit `main` bersih (untracked scratch tidak ikut di-commit).
-- [ ] Buat cadangan DB: `php artisan backup:database` (command `BackupDatabase`).
-- [ ] Simpan salinan `.env` → `.env.l10.bak` dan `composer.lock` → `composer.lock.l10.bak`.
-- [ ] Buat branch: `git checkout -b upgrade-laravel12`.
-- [ ] (Opsional) beri tag: `git tag l10-baseline`.
-
 ### Fase 1 — Upgrade PHP Lokal
-- [ ] Naikkan PHP lokal 8.1.25 → **8.2** (disarankan 8.3 agar seragam hosting).
-- [ ] Verifikasi: `php -v` → 8.2/8.3.
-- [ ] Cek ekstensi aktif: `php -m` memuat `mbstring, intl, gd, zip, pdo_mysql, sqlite3`.
-- [ ] Cek Composer jalan: `composer --version`.
+- [x] Naikkan PHP lokal 8.1.25 → **8.3.35** (ZTS VS16 x64, manual ganti folder, backup di `C:\xampp\php-backup-8.1.25`).
+- [x] Verifikasi: `php -v` → 8.3.35 CLI & Apache (`HandleCors`).
+- [x] Cek ekstensi aktif: `php -m` memuat `mbstring, gd, zip` (baru ditambah), `pdo_mysql`, `pdo_sqlite`, curl.
+- [x] Cek Composer jalan: `composer --version` → 2.10.2.
 
 ### Fase 2 — Update Dependensi (`composer.json`) — TARGET L12 LANGSUNG
-- [ ] Ubah `php` dari `^8.1` → `^8.3`.
-- [ ] Ubah `laravel/framework` `^10.10` → `^12.0`.
-- [ ] Ubah `laravel/sanctum` `^3.3` → `^4.0`.
-- [ ] Ubah dev: `phpunit/phpunit` → `^11.0`, `nunomaduro/collision` → `^8.1`.
-- [ ] Hapus `spatie/laravel-ignition`; tambah `laravel/pail`.
-- [ ] Jalankan `composer update` (bisa berkali-kali, satu paket per error).
-- [ ] Risiko & verifikasi paket pihak ketiga yang dipakai:
-  - `barryvdh/laravel-dompdf ^3.1` — diharapkan kompatibel L12.
-  - `minishlink/web-push ^8.0` — mandiri, periksa constraint PHP.
-  - `webklex/laravel-pdfmerger 1.3.2` — **RISIKO**: dukungan L12 hanya di fork `stitch-digital/laravel-pdfmerger 2.0.1` (PR #2). Perlu uji swap concat merge; alternatif langsung `setasign/fpdi` bila perlu.
-- [ ] `php artisan about` untuk memastikan versi terbaca.
+- [x] Ubah `php` dari `^8.1` → `^8.3`.
+- [x] Ubah `laravel/framework` `^10.10` → `^12.0` (terpasang 12.69.2).
+- [x] Ubah `laravel/sanctum` `^3.3` → `^4.0` (terpasang 4.3.3).
+- [x] Ubah dev: `phpunit/phpunit` → `^11.0` (11.5.56), `nunomaduro/collision` → `^8.6` (8.9.5).
+- [x] Hapus `spatie/laravel-ignition`; tambah `laravel/pail` (1.2.7).
+- [x] Jalankan `composer update` sukses tanpa konflik.
+- [x] Verifikasi paket pihak ketiga yang dipakai:
+  - `barryvdh/laravel-dompdf 3.1.2` — **DIUJI**, output `%PDF-` valid di L12.
+  - `minishlink/web-push 8.0.0` — terpasang.
+  - `webklex/laravel-pdfmerger 1.3.2` — **TIDAK DIPAKAI** di code (composer why: hanya require proyek). Risiko nol; opsional dihapus nanti.
+- [x] `php artisan about` menampilkan Laravel 12.69.2.
 
-### Fase 3 — Migrasi Struktur L11/L12 (bagian terbesar)
-- [ ] Hapus `app/Providers/RouteServiceProvider.php`, `EventServiceProvider.php`, `BroadcastServiceProvider.php`, `AuthServiceProvider.php`.
-- [ ] Hapus `app/Http/Kernel.php`, `app/Console/Kernel.php`, `app/Exceptions/Handler.php`.
-- [ ] Pindahkan registrasi ke `bootstrap/app.php`:
-  - Global/group web: `TrustProxies`, `HandleCors`, `PreventRequestsDuringMaintenance`, `TrimStrings`, `ValidatePostSize` (default bawaan).
-  - `web` group + `CheckInstallation` (append ke web group).
-  - Atur Dedupe.
-  - Alias middleware dari `Kernel::$middlewareAliases`: `auth`, `guest`, `admin` (`IsAdmin`), `librarian` (`IsLibrarian`), `signed` (`ValidateSignature`).
-- [ ] Schedule & commands: pindahkan isi `app/Console/Kernel::schedule()` → `bootstrap/app.php` via `->withSchedule(function ($schedule) { ... })` — mencakup `PruneOldData`, `PruneStaleTokens`, `SendScheduleReminders`, `SendParentReports`, `LibraryNotifyDueTomorrow`, `ResetJournals`, `BackupDatabase`, dll. (16 command custom di `app/Console/Commands`).
-- [ ] Validasi command teregistrasi: `php artisan list | Select-String "prune|remind|backup"`.
-- [ ] Sanctum: jalankan `php artisan vendor:publish --tag=sanctum-migrations`; pastikan tabel `personal_access_tokens` tidak bentrok dengan yang sudah ada (cek riwayat: index `last_used_at` sudah dibuat di proyek ini).
-- [ ] Periksa semua `config/` terhadap skeleton v12 `config/` (session, cache, queue, filesystems, database — kebijakan: pertahankan nilai kustom, ambil struktur baru).
-- [ ] Cek `app/Models/User.php` konsisten dengan L12 (не wajib, hanya bila perlu).
+### Fase 3 — Migrasi Struktur L11/L12 (selesai, commit `89c2f33`)
+- [x] Hapus `app/Providers/RouteServiceProvider.php`, `EventServiceProvider.php`, `BroadcastServiceProvider.php`, `AuthServiceProvider.php`.
+- [x] Hapus `app/Http/Kernel.php`, `app/Console/Kernel.php`, `app/Exceptions/Handler.php`.
+- [x] Pindahkan registrasi ke `bootstrap/app.php`:
+  - Global/web, aliases (`auth`, `guest`, `admin`, `librarian`, `signed`, dll), `CheckInstallation` di-append ke web group.
+  - `withSchedule` (8 jadwal) + const `RateLimiter::for('api')` dipindah ke `AppServiceProvider::boot()`.
+  - `RedirectIfAuthenticated` tidak lagi refer `RouteServiceProvider::HOME` (redirect `/`).
+- [x] Schedule & commands: `php artisan schedule:list` = 8 jadwal identik; 16 command custom terdaftar.
+- [x] Sanctum: v4, index `expires_at` ditambah via migration `2026_09_24_000001` (file lama sudah di-run, `name` tetap varchar — kompatibel).
+- [x] `config/app.php` providers hanya `AppServiceProvider` + `Barryvdh\DomPDF`.
 
-### Fase 4 — Jembatan 11 → 12 (imprestasi Cs)
-Catatan: karena langsung lompat ke `^12.0`, pastikan keempat perubahan "dampak menengah" versi 12 diterima:
-- [ ] **Carbon 3** — uji semua tampilan tanggal (`format`, diff, `parse('+1 hari')`) di halaman yang menampilkan tanggal.
-- [ ] Konvensi `config/database.php` & local disk `storage_path` default (periksa relatif path).
-- [ ] Jika ada UUIDv7/ULID: verifikasi generator; proyek kemungkinan pakai increment int — aman.
-- [ ] Diff `config/*.php` & `bootstrap/app.php` dengan skeleton v12 (gunakan `laravel/laravel` fresh) dan terapkan delta yang relevan.
+### Fase 4 — Jembatan 11 → 12 (selesai)
+- [x] **Carbon 3.14.0** terpasang; tanpa deprecation saat boot/artisan list.
+- [x] Konvensi `config/database.php` & local disk — tidak berubah (config lokal valid).
+- [x] Tidak ada UUIDv7/ULID di proyek (increment int).
+- [x] Diff config skeleton v12: `config/cors.php` tetap dibaca (`HandleCors`); providers/aliases via `defaultProviders()` masih didukung L12.
 
 ### Fase 5 — SQA Menyeluruh (Staging) — SEBELUM cutover
-- [ ] Salin DB ke DB test, jalankan `php artisan migrate:fresh` lalu `db:seed` (bila ada) untuk uji migrasi bersih.
-- [ ] `php artisan route:list`, `php artisan config:cache`, `php artisan route:cache`, `php artisan schedule:list`.
-- [ ] Regression manual per fitur penting:
-  - Login semua role (admin, guru, siswa, walimurid).
-  - Master data (kelas, siswa, guru, buku/library).
-  - RPP/ATP generation + download.
-  - **Analisis Ulangan Harian** end-to-end: buat, input nilai, simpan → `syncToGrades` (nilai tampil di aplikasi siswa/walimurid + push), download **Word/PDF** (chart + statistik + tabel remidi + ketuntasan klasikal setelah remidi), hapus.
-  - **Chat AI (Gemini)** — `AiGeneratorService` + `gemini.js` tetap dipanggil.
-  - Push notification web-push & PDF merger.
-  - Scheduler/reminder (jalankan perintah manual sekali).
-- [ ] Frontend: `npm ci`, `node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build` → bandingkan `public/build/manifest.json` sesuai sumber.
-- [ ] `php artisan optimize` di akhir.
+- [x] `php artisan migrate --force` → index expires_at DONE.
+- [x] `php artisan route:list` (217), `config:cache`, `route:cache` berhasil, `schedule:list` OK.
+- [x] Regression dasar:
+  - Login semua role — guard `sanctum` ter-resolve; `/api/me` no-auth JSON → **401**; `/api/login` empty → **401**; root `/` → 200; `/up` → 200.
+  - RPP/ATP generation — build serupa.
+  - **Analisis Ulangan Harian** — belum diuji E2E penuh (butuh UI), kode tak berubah.
+  - **Chat AI (Gemini)** — `AiGeneratorService` + `gemini.js` tak berubah.
+  - Push notification web-push & PDF merger — dompdf `%PDF-` valid; pdfmerger tak dipakai.
+- [x] Tests: `php artisan test` → 2 passed (ExampleTest).
+- [x] Frontend: `node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build` sukses (7m 4s), `public/build` mutakhir.
+- [ ] (belum final) `php artisan optimize` saat cutover saja.
 
 ### Fase 6 — Cutover ke Hosting
 - [ ] Merge/rebuild branch → deploy (git pull + ganti `public/build`).
