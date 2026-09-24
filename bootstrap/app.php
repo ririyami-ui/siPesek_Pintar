@@ -1,55 +1,58 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+use App\Http\Middleware\CheckInstallation;
+use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsLibrarian;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\ValidateSignature;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
 
-$app = new Illuminate\Foundation\Application(
-    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
-);
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withSchedule(function (Illuminate\Console\Scheduling\Schedule $schedule): void {
+        $schedule->command('library:notify-due-tomorrow')->dailyAt('07:00');
+        $schedule->command('reminders:send')->everyMinute();
+        $schedule->command('db:backup')->dailyAt('02:00')->withoutOverlapping();
+        $schedule->command('tokens:prune-stale')->dailyAt('02:30')->withoutOverlapping();
+        $schedule->command('data:prune')->dailyAt('03:00')->withoutOverlapping();
+        $schedule->command('reports:send-parent --type=weekly')->weeklyOn(0, '19:00');
+        $schedule->command('reports:send-parent --type=monthly')->monthlyOn(1, '07:00');
+        $schedule->command('substitution:detect')
+            ->twiceDaily(9, 13)
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/substitution-agent.log'));
+    })
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->appendToGroup('web', CheckInstallation::class);
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
-
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
-
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
-
-return $app;
+        $middleware->alias([
+            'auth' => Authenticate::class,
+            'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+            'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+            'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+            'can' => \Illuminate\Auth\Middleware\Authorize::class,
+            'guest' => RedirectIfAuthenticated::class,
+            'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+            'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+            'signed' => ValidateSignature::class,
+            'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+            'admin' => IsAdmin::class,
+            'librarian' => IsLibrarian::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontFlash([
+            'current_password',
+            'password',
+            'password_confirmation',
+        ]);
+    })->create();
