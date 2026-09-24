@@ -80,6 +80,8 @@
   - **Chat AI (Gemini)** — `AiGeneratorService` + `gemini.js` tak berubah.
   - Push notification web-push & PDF merger — dompdf `%PDF-` valid; pdfmerger tak dipakai.
 - [x] Tests: `php artisan test` → 2 passed (ExampleTest).
+- [x] E2E auth (user uji sementara, dihapus setelah): `POST /api/login` → `access_token` got; `GET /api/me` → user OK; `POST /api/logout` → 200; `GET /api/me` ulang → 401 (token invalid). Membuktikan Sanctum v4 createToken/login/logout berfungsi. Anomali logout-200 yang sempat diamati = perilaku normal (token di-delete, bukan 401).
+- [x] `php artisan optimize` (config/events/routes/views) sukses; after-clear verifikasi kembali (`/up` 200, `/api/login` empty 401).
 - [x] Frontend: `node --max-old-space-size=4096 ./node_modules/vite/bin/vite.js build` sukses (7m 4s), `public/build` mutakhir.
 - [ ] (belum final) `php artisan optimize` saat cutover saja.
 
