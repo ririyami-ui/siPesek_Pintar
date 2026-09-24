@@ -31,6 +31,11 @@ return Application::configure(basePath: dirname(__DIR__))
             ->appendOutputTo(storage_path('logs/substitution-agent.log'));
     })
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->validateCsrfTokens(except: [
+            'install',
+            'install/*',
+        ]);
+
         $middleware->appendToGroup('web', CheckInstallation::class);
 
         $middleware->alias([
