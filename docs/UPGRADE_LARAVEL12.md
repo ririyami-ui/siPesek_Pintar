@@ -86,10 +86,13 @@
 - [ ] (belum final) `php artisan optimize` saat cutover saja.
 
 ### Fase 6 — Cutover ke Hosting
-- [ ] Merge/rebuild branch → deploy (git pull + ganti `public/build`).
+- [x] Merge `upgrade-laravel12` → `main` fast-forward (lokal) + `git push origin main` → `origin/main = 6ac69c7`.
+- [x] Cabang `upgrade-laravel12` terkunci di `origin/upgrade-laravel12` (7 commit), siap dihapus bila dikehendaki.
+- [ ] Deploy di server: `git pull origin main` (pastikan PHP 8.3+ & Composer 2 di server, `.env` disesuaikan).
+- [ ] Ganti `public/build`: upload hasil `npm run build` lokal (folder ini `.gitignore`, 63 file JS — tidak ikut git).
 - [ ] `composer install --no-dev --optimize-autoloader`.
-- [ ] `php artisan migrate --force`, `config:cache`, `route:cache`.
-- [ ] `php artisan storage:link` (bila belum), cek `.env` versi baru (PHP 8.3).
+- [ ] `php artisan migrate --force`, `php artisan optimize` (config/route/event/view cache).
+- [ ] `php artisan storage:link` (bila belum), cek `.env` tak menandai file `_l10*`.
 - [ ] Uji smoke setelah go-live (login, satu analisis ulangan, satu ekspor Word/PDF).
 - [ ] **Rollback plan**: checkout tag `l10-baseline` + restore DB backup (snapshot Fase 0).
 
