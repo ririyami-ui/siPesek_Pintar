@@ -141,11 +141,11 @@ export default function StudentDashboard() {
                 {student?.name}
               </h1>
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-0.5">
-                <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
                   Kelas {student?.class}
                 </span>
-                <span className="text-[8px] text-slate-300 dark:text-slate-600">·</span>
-                <span className="text-[9px] font-medium text-slate-400">
+                <span className="text-[10px] text-slate-300 dark:text-slate-600">·</span>
+                <span className="text-[10px] font-medium text-slate-400">
                   {student?.gender === 'L' ? 'Laki-laki' : student?.gender === 'P' ? 'Perempuan' : '-'}
                 </span>
               </div>
@@ -156,7 +156,7 @@ export default function StudentDashboard() {
               <div className="text-sm font-mono font-black text-emerald-600 dark:text-emerald-400 leading-none">
                 {new Date(data?.server_time).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
               </div>
-              <div className="text-[7px] font-bold text-slate-400 uppercase tracking-[0.15em] mt-0.5">LIVE</div>
+              <div className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.15em] mt-0.5">LIVE</div>
             </div>
           </div>
 
@@ -247,12 +247,12 @@ export default function StudentDashboard() {
                 
                 <div className="mt-4 pt-4 border-t border-slate-50 dark:border-white/5 flex flex-wrap gap-4">
                     <div className="text-xs">
-                        <span className="text-slate-400 block mb-0.5 uppercase text-[9px] font-bold tracking-widest">Waktu</span>
+                        <span className="text-slate-400 block mb-0.5 uppercase text-[10px] font-bold tracking-widest">Waktu</span>
                         <span className="font-bold text-slate-700 dark:text-slate-300">{current.start_time} - {current.end_time}</span>
                     </div>
                     {current.planned_material && (
                         <div className="text-xs flex-1 min-w-[150px]">
-                            <span className="text-slate-400 block mb-0.5 uppercase text-[9px] font-bold tracking-widest">Materi</span>
+                            <span className="text-slate-400 block mb-0.5 uppercase text-[10px] font-bold tracking-widest">Materi</span>
                             <span className="font-bold text-emerald-600 dark:text-emerald-400 italic">"{current.planned_material}"</span>
                         </div>
                     )}
@@ -279,7 +279,7 @@ export default function StudentDashboard() {
                     <div key={idx} className={`p-4 flex items-center gap-4 ${s.status === 'ongoing' ? 'bg-emerald-50/50 dark:bg-emerald-950/20' : (s.status === 'completed' ? 'opacity-50' : '')} ${s.is_blocked ? 'bg-red-50/80 dark:bg-red-950/30' : ''}`}>
                         <div className="w-16 shrink-0 text-right">
                             <p className={`text-[11px] font-bold ${s.is_blocked ? 'text-red-500 dark:text-red-400 line-through' : 'text-slate-700 dark:text-slate-200'}`}>{s.start_time}</p>
-                            <p className={`text-[9px] ${s.is_blocked ? 'text-red-400 dark:text-red-500 line-through' : 'text-slate-400 font-medium'}`}>{s.end_time}</p>
+                            <p className={`text-[10px] ${s.is_blocked ? 'text-red-400 dark:text-red-500 line-through' : 'text-slate-400 font-medium'}`}>{s.end_time}</p>
                         </div>
                         <div className={`w-1 h-8 rounded-full ${s.is_blocked ? 'bg-red-400' : (s.status === 'ongoing' ? 'bg-emerald-500' : 'bg-slate-200 dark:bg-slate-700')}`} />
                         <div className="flex-1 min-w-0">
@@ -322,7 +322,7 @@ export default function StudentDashboard() {
                   </span>
                   <span className="truncate">{task.topic}</span>
                   {moment(task.date).startOf('day').isBefore(moment().startOf('day')) && (
-                    <span className="ml-auto shrink-0 text-[9px] font-black uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 px-1.5 py-0.5 rounded">Terlewat</span>
+                    <span className="ml-auto shrink-0 text-[10px] font-black uppercase tracking-wider bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 px-1.5 py-0.5 rounded">Terlewat</span>
                   )}
                 </div>
               ))}
@@ -357,13 +357,13 @@ export default function StudentDashboard() {
            <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-md rounded-xl p-3 border border-slate-100 dark:border-white/5 shadow-sm">
              <div className="flex items-center justify-between mb-2 px-1">
                <div className="flex items-center gap-1.5">
-                 <div className="p-1 rounded-lg bg-violet-100 dark:bg-violet-900/40">
-                   <TrendingUp size={12} className="text-violet-600 dark:text-violet-400" />
+                 <div className="p-1 rounded-lg bg-indigo-100 dark:bg-indigo-900/40">
+                   <TrendingUp size={12} className="text-indigo-600 dark:text-indigo-400" />
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Tren Perkembangan Nilai</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Tren Perkembangan Nilai</span>
                </div>
                {trend?.days?.length > 0 && (
-                 <span className="text-[8px] font-bold text-slate-400">
+                 <span className="text-[10px] font-bold text-slate-400">
                    {trend.days.length} hari terakhir
                  </span>
                )}
@@ -374,11 +374,11 @@ export default function StudentDashboard() {
                    data={{
                      labels: trend.days.map(d => moment(d, 'YYYY-MM-DD').format('DD MMM')),
                      datasets: [
-                       {
-                         label: 'Rata-rata',
-                         data: trend.overall,
-                         borderColor: '#8b5cf6',
-                         backgroundColor: 'rgba(139, 92, 246, 0.08)',
+{
+                          label: 'Rata-rata',
+                          data: trend.overall,
+                          borderColor: '#6366f1',
+                          backgroundColor: 'rgba(99, 102, 241, 0.08)',
                          fill: true,
                          tension: 0.35,
                          pointRadius: 3,
@@ -417,7 +417,7 @@ export default function StudentDashboard() {
                  <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
                    <div className="text-center">
                      <TrendingUp size={20} className="mx-auto mb-1 opacity-50" />
-                     <p className="text-[9px] font-medium text-slate-400">Belum ada data nilai</p>
+                     <p className="text-xs font-medium text-slate-400">Belum ada data nilai</p>
                    </div>
                  </div>
                )}
@@ -431,7 +431,7 @@ export default function StudentDashboard() {
                  <div className="p-1 rounded-lg bg-emerald-100 dark:bg-emerald-900/40">
                    <BookOpen size={12} className="text-emerald-600 dark:text-emerald-400" />
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Kehadiran</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Kehadiran</span>
                </div>
                <div className="flex items-center gap-3">
                  <div className="w-16 h-16 shrink-0">
@@ -462,24 +462,24 @@ export default function StudentDashboard() {
                    <p className="text-lg font-black text-slate-800 dark:text-white">
                      {summary.kehadiran_pct !== null ? `${summary.kehadiran_pct}%` : 'N/A'}
                    </p>
-                   <div className="mt-1 space-y-0.5">
-                     <div className="flex items-center gap-1 text-[8px]">
-                       <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                       <span className="text-slate-500 dark:text-slate-400">{summary.hadir} Hadir</span>
-                     </div>
-                     <div className="flex items-center gap-1 text-[8px]">
-                       <span className="w-1 h-1 rounded-full bg-amber-500" />
-                       <span className="text-slate-500 dark:text-slate-400">{summary.sakit} Sakit</span>
-                     </div>
-                     <div className="flex items-center gap-1 text-[8px]">
-                       <span className="w-1 h-1 rounded-full bg-blue-500" />
-                       <span className="text-slate-500 dark:text-slate-400">{summary.izin} Izin</span>
-                     </div>
-                     <div className="flex items-center gap-1 text-[8px]">
-                       <span className="w-1 h-1 rounded-full bg-red-500" />
-                       <span className="text-slate-500 dark:text-slate-400">{summary.alpa} Alpa</span>
-                     </div>
-                   </div>
+<div className="mt-1 space-y-0.5">
+                      <div className="flex items-center gap-1 text-[10px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span className="text-slate-500 dark:text-slate-400">{summary.hadir} Hadir</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        <span className="text-slate-500 dark:text-slate-400">{summary.sakit} Sakit</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                        <span className="text-slate-500 dark:text-slate-400">{summary.izin} Izin</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px]">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                        <span className="text-slate-500 dark:text-slate-400">{summary.alpa} Alpa</span>
+                      </div>
+                    </div>
                  </div>
                </div>
              </div>
@@ -490,7 +490,7 @@ export default function StudentDashboard() {
                  <div className="p-1 rounded-lg bg-blue-100 dark:bg-blue-900/40">
                    <Award size={12} className="text-blue-600 dark:text-blue-400" />
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Rata Nilai Per Mapel</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Rata Nilai Per Mapel</span>
                </div>
                <div className="flex items-center gap-3">
                  <div className="w-16 h-16 shrink-0">
@@ -516,10 +516,10 @@ export default function StudentDashboard() {
                      </div>
                    )}
                  </div>
-                 <div className="flex-1 min-w-0 grid grid-cols-2 gap-x-2 gap-y-0.5">
-                   {summary.by_subject?.map((s, i) => (
-                     <div key={i} className="flex items-center gap-1 text-[9px]">
-                       <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i % 8] }} />
+<div className="flex-1 min-w-0 grid grid-cols-2 gap-x-2 gap-y-0.5">
+                    {summary.by_subject?.map((s, i) => (
+                      <div key={i} className="flex items-center gap-1 text-[10px]">
+                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'][i % 8] }} />
                        <span className="text-slate-500 dark:text-slate-400 truncate">{s.subject_name}</span>
                        <span className="font-bold text-slate-700 dark:text-slate-200 ml-auto">{s.nilai_akhir}</span>
                      </div>
@@ -534,7 +534,7 @@ export default function StudentDashboard() {
                  <div className="p-1 rounded-lg bg-rose-100 dark:bg-rose-900/40">
                    <ShieldAlert size={12} className="text-rose-600 dark:text-rose-400" />
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Pelanggaran</span>
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pelanggaran</span>
                </div>
                <div className="flex items-center gap-3">
                  <div className="w-16 h-16 shrink-0">
@@ -554,9 +554,9 @@ export default function StudentDashboard() {
                    <p className="text-lg font-black text-slate-800 dark:text-white">
                      {summary.total_pelanggaran > 0 ? summary.total_pelanggaran : 0}
                    </p>
-                   <p className="text-[9px] text-slate-400 font-medium mt-1">
-                     {summary.total_kejadian} kejadian tercatat
-                   </p>
+<p className="text-[10px] text-slate-400 font-medium mt-1">
+                    {summary.total_kejadian} kejadian tercatat
+                  </p>
                  </div>
                </div>
              </div>
@@ -566,7 +566,7 @@ export default function StudentDashboard() {
 
       {/* Minimal Footer */}
       <div className="py-6 text-center">
-            <p className="text-[9px] font-bold text-slate-300 dark:text-slate-700 uppercase tracking-[0.3em]">
+            <p className="text-[10px] font-bold text-slate-300 dark:text-slate-700 uppercase tracking-[0.3em]">
                 Smart Monitoring System
             </p>
       </div>

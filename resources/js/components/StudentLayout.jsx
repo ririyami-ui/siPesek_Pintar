@@ -109,7 +109,7 @@ export default function StudentLayout({ user, onLogout, children }) {
             onClick={() => setMobileOpen(false)}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
-                ? 'bg-white text-emerald-700 shadow-md font-semibold'
+                ? 'bg-white text-emerald-600 shadow-md font-semibold'
                 : 'text-white/80 hover:bg-white/10 hover:text-white'
               }`
             }
@@ -119,9 +119,9 @@ export default function StudentLayout({ user, onLogout, children }) {
                 <item.icon size={18} className={isActive ? 'text-emerald-600' : ''} />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{item.label}</p>
-                  <p className={`text-xs truncate ${isActive ? 'text-emerald-500' : 'text-white/50'}`}>{item.desc}</p>
+                  <p className={`text-xs truncate ${isActive ? 'text-emerald-600' : 'text-white/50'}`}>{item.desc}</p>
                 </div>
-                {isActive && <ChevronRight size={14} className="text-emerald-500 shrink-0" />}
+                {isActive && <ChevronRight size={14} className="text-emerald-600 shrink-0" />}
               </>
             )}
           </NavLink>
@@ -210,7 +210,7 @@ export default function StudentLayout({ user, onLogout, children }) {
               to={item.path}
               end={item.path.endsWith('orangtua') || item.path.endsWith('siswa')}
               className={({ isActive }) =>
-                `relative flex flex-col items-center gap-1.5 py-3 px-1 transition-all duration-500 group ${isActive ? 'text-emerald-700 scale-110' : 'text-slate-400 hover:text-slate-600'
+                `relative flex flex-col items-center gap-1.5 py-3 px-1 transition-all duration-500 group ${isActive ? 'text-emerald-600 scale-110' : 'text-slate-400 hover:text-slate-600'
                 }`
               }
             >
