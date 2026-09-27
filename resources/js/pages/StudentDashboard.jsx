@@ -7,6 +7,7 @@ import {
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
 import moment from 'moment';
+import AnnouncementWidget from '../components/AnnouncementWidget';
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Filler } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
@@ -172,6 +173,9 @@ export default function StudentDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Pengumuman Sekolah */}
+      <AnnouncementWidget />
 
       {/* Holiday Banner */}
       {data?.holiday && (

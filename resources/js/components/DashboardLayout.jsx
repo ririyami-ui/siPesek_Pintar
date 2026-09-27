@@ -43,7 +43,8 @@ import {
   Scale,
   Library,
   BookMarked,
-  Smartphone
+  Smartphone,
+  Megaphone
 } from 'lucide-react';
 import useDarkMode from '../hooks/useDarkMode';
 
@@ -105,6 +106,7 @@ const NAV_CATEGORIES = [
       { name: 'Portofolio Guru', icon: <BookMarked size={20} />, path: '/portfolio' },
       { name: 'Kartu Kendali Tugas', icon: <ClipboardCheck size={20} />, path: '/kartu-kendali' },
       { name: 'Laporan Orang Tua', icon: <FileText size={20} />, path: '/monitoring-laporan-ortu' },
+      { name: 'Pengumuman Sekolah', icon: <Megaphone size={20} />, path: '/pengumuman' },
       { name: 'Instalasi Aplikasi', icon: <Smartphone size={20} />, path: '/instalasi-aplikasi' },
     ]
   },

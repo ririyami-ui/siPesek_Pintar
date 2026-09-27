@@ -47,6 +47,7 @@ import StudentSchedule from './pages/StudentSchedule.jsx';
 import StudentParentReports from './pages/StudentParentReports.jsx';
 import MonitoringLaporanOrtu from './pages/MonitoringLaporanOrtu.jsx';
 import AppInstallationsPage from './pages/AppInstallationsPage.jsx';
+import PengumumanPage from './pages/PengumumanPage.jsx';
 import { ChatProvider } from './utils/ChatContext.jsx';
 import { SettingsProvider } from './utils/SettingsContext.jsx';
 import InstallPwaCard from './components/InstallPwaCard.jsx';
@@ -315,6 +316,7 @@ function App() {
           <Route path="/kartu-kendali" element={<KartuKendaliPage />} />
           <Route path="/monitoring-laporan-ortu" element={<MonitoringLaporanOrtu />} />
           <Route path="/instalasi-aplikasi" element={<AppInstallationsPage />} />
+          <Route path="/pengumuman" element={<PengumumanPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </DashboardLayout>

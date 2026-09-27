@@ -209,6 +209,15 @@ Route::apiResource('teaching-programs', App\Http\Controllers\TeachingProgramCont
     Route::get('/parent-reports', [App\Http\Controllers\Api\ParentReportController::class, 'index']);
     Route::get('/parent-reports/{id}', [App\Http\Controllers\Api\ParentReportController::class, 'show']);
 
+    // Announcements (viewable by all authenticated roles)
+    Route::get('/announcements', [App\Http\Controllers\AnnouncementController::class, 'index']);
+
+    Route::middleware('admin')->group(function () {
+        Route::post('/announcements', [App\Http\Controllers\AnnouncementController::class, 'store']);
+        Route::put('/announcements/{announcement}', [App\Http\Controllers\AnnouncementController::class, 'update']);
+        Route::delete('/announcements/{announcement}', [App\Http\Controllers\AnnouncementController::class, 'destroy']);
+    });
+
     // Admin: Parent Reports management
     Route::middleware('admin')->group(function () {
         Route::get('/admin/parent-reports', [App\Http\Controllers\Api\ParentReportController::class, 'adminIndex']);
