@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\StudentDistributionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -346,23 +345,20 @@ class StudentController extends Controller
             ? User::find($student->auth_user_id)
             : User::where('username', $nisn)->where('role', 'student')->first();
 
-        // Generate random password instead of using NIS (security improvement)
-        $randomPassword = Str::random(12);
-
         if ($authUser) {
             // Update credentials if nisn/nis changed
             $authUser->update([
                 'name'     => $student->name,
                 'username' => $nisn,
-                'password' => Hash::make($randomPassword),
+                'password' => Hash::make($nis),
             ]);
         } else {
-            // Create a brand-new student user account with random password
+            // Create a brand-new student user account
             $authUser = User::create([
                 'name'     => $student->name,
                 'email'    => $nisn . '@siswa.sipesekpintar.id',
                 'username' => $nisn,
-                'password' => Hash::make($randomPassword),
+                'password' => Hash::make($nis),
                 'role'     => 'student',
                 'status'   => 'active',
             ]);
