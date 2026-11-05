@@ -863,20 +863,20 @@ export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, 
     }
   };
   const drawTitle = (text) => {
-    checkSpace(12);
+    checkSpace(16);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.text(String(text), 14, yPos);
-    yPos += 7;
+    yPos += 11;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
   };
   const drawSubTitle = (text) => {
-    checkSpace(10);
+    checkSpace(12);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(String(text), 14, yPos);
-    yPos += 6;
+    yPos += 8;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
   };
@@ -1024,14 +1024,14 @@ export const generateUlanganHarianPDF = (uhItem, analisisResult, rekomendasiAI, 
         it.dayaSerap,
       ]),
       {
-        0: { cellWidth: 12 },
-        1: { cellWidth: 15 },
-        2: { cellWidth: 28, halign: 'left' },
-        3: { cellWidth: 45, halign: 'left' },
-        4: { cellWidth: 28 },
-        5: { cellWidth: 27 },
-        6: { cellWidth: 28 },
-        7: { cellWidth: 25 },
+        0: { cellWidth: 10 },
+        1: { cellWidth: 13 },
+        2: { cellWidth: 24, halign: 'left' },
+        3: { cellWidth: 36, halign: 'left' },
+        4: { cellWidth: 24 },
+        5: { cellWidth: 24 },
+        6: { cellWidth: 24 },
+        7: { cellWidth: 20 },
       },
     ),
   });

@@ -5,9 +5,10 @@ import api from '../lib/axios';
 import { useSettings } from '../utils/SettingsContext';
 import StyledSelect from '../components/StyledSelect';
 import toast from 'react-hot-toast';
+import { generateKartuKendaliPdf } from '../utils/kartuKendaliPdf';
 
 const KartuKendaliPage = () => {
-  const { activeSemester, academicYear } = useSettings();
+  const { activeSemester, academicYear, userProfile, publicSettings } = useSettings();
 
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -113,7 +114,25 @@ const KartuKendaliPage = () => {
   }, [studentStats, searchQuery]);
 
   const handlePrint = () => {
-    window.print();
+    if (!selectedClass || tasks.length === 0) {
+      return toast.error("Pilih kelas dan pastikan ada tugas untuk dicetak.");
+    }
+
+    const schoolName = userProfile?.school_name || publicSettings?.school_name || "Sekolah";
+
+    generateKartuKendaliPdf(
+      filteredStudents,
+      tasks,
+      submissions,
+      selectedClass,
+      selectedSubject,
+      activeSemester,
+      academicYear,
+      userProfile,
+      schoolName,
+      selectedClassName,
+      selectedSubjectName
+    );
   };
 
   const selectedClassName = classes.find(c => String(c.id) === String(selectedClass))?.rombel || '';
@@ -290,106 +309,7 @@ const KartuKendaliPage = () => {
         </>
       )}
 
-      {/* PRINT VIEW */}
-      <div className="hidden print:block">
-        <style dangerouslySetInnerHTML={{ __html: `
-          @page { size: A4; margin: 1cm; }
-          @media print {
-            body { margin: 0 !important; padding: 0 !important; background: white !important; }
-            .print-area { width: 100%; color: black !important; }
-            .print-page { page-break-after: always; display: block; width: 100%; }
-            .print-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .print-card { 
-              border: 1.5px solid black; 
-              padding: 12px; 
-              height: 320px;
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-              position: relative;
-              background: white;
-            }
-            .watermark {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%) rotate(-30deg);
-              font-size: 32px;
-              font-weight: 900;
-              color: rgba(0, 0, 0, 0.03) !important;
-              z-index: 0;
-              white-space: nowrap;
-            }
-            body * { visibility: hidden; }
-            .print-area, .print-area * { visibility: visible; }
-          }
-        `}} />
-        <div className="print-area">
-          {(() => {
-            const debtorStudents = filteredStudents.filter(s => tasks.filter(t => !submissions[t.id]?.includes(String(s.id))).length > 0);
-            const chunks = [];
-            for (let i = 0; i < debtorStudents.length; i += 6) {
-              chunks.push(debtorStudents.slice(i, i + 6));
-            }
 
-            return chunks.map((chunk, pageIndex) => (
-              <div key={pageIndex} className="print-page">
-                <div className="print-grid">
-                  {chunk.map((student) => {
-                    const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(String(student.id)));
-                    return (
-                      <div key={student.id} className="print-card">
-                        <div className="watermark">SI PESEK PINTAR</div>
-                        <div className="relative z-10 flex flex-col h-full">
-                          <div className="flex justify-between items-start border-b-2 border-black pb-1 mb-2">
-                            <div>
-                              <h2 className="text-[11px] font-black uppercase">KARTU KENDALI TUGAS</h2>
-                              <p className="text-[10px] font-bold truncate max-w-[140px]">{student.name}</p>
-                              <p className="text-[8px] font-medium">
-                                {selectedSubjectName} | {selectedClassName} | {activeSemester}
-                              </p>
-                            </div>
-                            <div className="text-[10px] font-black border-2 border-black px-1.5 min-w-[24px] text-center">
-                              {student.absen || '-'}
-                            </div>
-                          </div>
-                          <div className="flex-1 overflow-hidden">
-                            <p className="text-[9px] font-black uppercase mb-1.5">DAFTAR TANGGUNGAN:</p>
-                            <div className="space-y-1.5">
-                              {pendingTasks.slice(0, 8).map((t, idx) => (
-                                <div key={t.id} className="text-[10px] flex items-start gap-2">
-                                  <div className="w-3.5 h-3.5 border border-black shrink-0 mt-0.5" />
-                                  <span className="truncate leading-tight">{idx + 1}. {t.title}</span>
-                                </div>
-                              ))}
-                              {pendingTasks.length > 8 && <p className="text-[8px] italic">+ {pendingTasks.length - 8} lainnya...</p>}
-                            </div>
-                          </div>
-                          <div className="mt-3 pt-2 border-t border-black">
-                            <div className="flex justify-between px-4 mb-2">
-                              <div className="text-center">
-                                <div className="w-16 h-[1px] bg-black mb-1 mx-auto"></div>
-                                <p className="text-[7px] font-black uppercase">GURU MAPEL</p>
-                              </div>
-                              <div className="text-center">
-                                <div className="w-16 h-[1px] bg-black mb-1 mx-auto"></div>
-                                <p className="text-[7px] font-black uppercase">ORTU / WALI</p>
-                              </div>
-                            </div>
-                            <p className="text-[7px] italic text-center text-gray-500">
-                              Bukti kendali pengumpulan tugas mandiri siswa.
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ));
-          })()}
-        </div>
-      </div>
       {/* Modal Input Nilai */}
       {activeStudent && createPortal(
         <TaskInputModal

@@ -30,7 +30,7 @@ const isVerbStart = (tok) => {
 
 function splitButirs(text) {
     const marks = [];
-    const re = /(\d+(?:\.\d+){0,2})\.(?=\s+[A-Z0-9(\u3400-\u9FFF])/g;
+    const re = /(\d+(?:\.\d+){0,2})\.(?=\s+[A-Z(\u3400-\u9FFF])/g;
     let m;
     while ((m = re.exec(text))) {
         if (!isButirNumber(m[1])) continue;

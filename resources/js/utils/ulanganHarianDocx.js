@@ -149,6 +149,43 @@ const bodyText = (text, { bold = false, italic = false } = {}) =>
         children: [new TextRun({ text: String(text ?? ''), bold, italics: italic, size: 20, font: 'Calibri' })],
     });
 
+/**
+ * Paragraf bullet rapi (hanging indent): tanda bullet "•" + teks rata kiri.
+ * level > 0 → indent lebih dalam (sub-bullet).
+ */
+const bulletItem = (text, { bold = false, level = 0 } = {}) =>
+    new Paragraph({
+        alignment: AlignmentType.LEFT,
+        spacing: { before: 20, after: 20, ...LINE },
+        indent: { left: 360 + (level * 360), hanging: 360 },
+        children: [
+            new TextRun({ text: '•  ', bold: true, size: 20, font: 'Calibri' }),
+            new TextRun({ text: String(text ?? '').trim(), bold, size: 20, font: 'Calibri' }),
+        ],
+    });
+
+/** Paragraf label tebal + isi normal ("Label : isi") dalam satu baris. */
+const labelText = (label, value, { bold = true } = {}) =>
+    new Paragraph({
+        spacing: { before: 30, after: 30, ...LINE },
+        indent: { left: 360, hanging: 360 },
+        children: [
+            new TextRun({ text: `${String(label ?? '')} : `, bold, size: 20, font: 'Calibri' }),
+            new TextRun({ text: String(value ?? ''), bold, size: 20, font: 'Calibri' }),
+        ],
+    });
+
+/** Paragraf dengan penjelasan istilah: nama istilah tebal, sisanya normal. */
+const explainText = (boldPart, rest) =>
+    new Paragraph({
+        spacing: { before: 30, after: 30, ...LINE },
+        indent: { left: 360, hanging: 360 },
+        children: [
+            new TextRun({ text: String(boldPart ?? ''), bold: true, size: 20, font: 'Calibri' }),
+            new TextRun({ text: String(rest ?? ''), size: 20, font: 'Calibri' }),
+        ],
+    });
+
 /** Kepala tabel: 1 sel tebal berisi konten (bisa multiline "A\nB"). */
 const headCell = (text) =>
     new TableCell({
@@ -573,15 +610,15 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
 
     children.push(sectionTitle('HASIL ANALISIS'));
     children.push(subTitle('1. Ketentuan Belajar'));
-    children.push(bodyText(`a. Klasikal`));
-    children.push(bodyText(`   - Seorang siswa dinyatakan telah tuntas belajar apabila ia telah mencapai skor minimal ${kktpVal}% atau nilai ${kktpVal} (daya serap perorangan).`));
-    children.push(bodyText(`   - Suatu kelas dinyatakan telah tuntas belajar bila di kelas tersebut telah terdapat minimal ${targetKlasikal}% siswa yang telah mencapai daya serap ${kktpVal}% (daya serap klasikal).`));
+    children.push(bodyText(`a. Klasikal`, { bold: true }));
+    children.push(bulletItem(`Seorang siswa dinyatakan telah tuntas belajar apabila ia telah mencapai skor minimal ${kktpVal}% atau nilai ${kktpVal} (daya serap perorangan).`));
+    children.push(bulletItem(`Suatu kelas dinyatakan telah tuntas belajar bila di kelas tersebut telah terdapat minimal ${targetKlasikal}% siswa yang telah mencapai daya serap ${kktpVal}% (daya serap klasikal).`));
     const tuntasPersen = perTuntas.persen;
     const kelasTuntas = tuntasPersen >= targetKlasikal;
-    children.push(bodyText(`b. Kesimpulan : ${kelasTuntas ? 'Tuntas' : 'Belum Tuntas'} (${tuntasPersen}% siswa tuntas)`));
+    children.push(labelText('b. Kesimpulan', `${kelasTuntas ? 'Tuntas' : 'Belum Tuntas'} (${tuntasPersen}% siswa tuntas)`));
     const perTuntasRemidi = ketuntasanSetelahRemidi(analisis, uh.remidi_scores, kktpVal);
     const kelasTuntasRemidi = perTuntasRemidi.persen >= targetKlasikal;
-    children.push(bodyText(`c. Kesimpulan setelah remidi : ${kelasTuntasRemidi ? 'Tuntas' : 'Belum Tuntas'} (${perTuntasRemidi.persen}% siswa tuntas setelah remidi)`));
+    children.push(labelText('c. Kesimpulan setelah remidi', `${kelasTuntasRemidi ? 'Tuntas' : 'Belum Tuntas'} (${perTuntasRemidi.persen}% siswa tuntas setelah remidi)`));
 
     children.push(subTitle('2. Rekapitulasi Hasil & Statistik'));
     children.push(identitasGrid([
@@ -601,11 +638,11 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     ));
     if (st.n) {
         children.push(bodyText('Catatan penjelasan istilah statistik beserta rumusnya (agar mudah dipahami):'));
-        children.push(bodyText('Rerata (mean) = Σx/n, yaitu jumlah seluruh nilai (Σx) dibagi banyaknya peserta (n) → nilai rata-rata kelas. Semakin tinggi, semakin baik penguasaan materi kelas secara umum.'));
-        children.push(bodyText('Median = nilai tengah setelah semua nilai diurutkan dari terkecil ke terbesar. Berguna kalau ada nilai yang sangat tinggi/rendah agar gambaran kelas tidak miring.'));
-        children.push(bodyText('Modus = nilai yang paling sering muncul. Jika tercantum "Tidak ada", berarti tidak ada nilai yang berulang.'));
-        children.push(bodyText('Standar deviasi (SD) = √(Σ(xi−mean)²/n), dengan xi = nilai tiap siswa dan mean = rerata → ukuran sebaran nilai: rata-rata jarak nilai siswa terhadap rerata. Semakin kecil SD, nilai seluruh siswa makin seragam/mendekati rerata (kelas homogen); semakin besar SD, makin timpang antara siswa bernilai tinggi dan rendah (kelas heterogen), sehingga perlu perhatian khusus bagi siswa yang tertinggal.'));
-        children.push(bodyText('Reliabilitas (Alpha) = α = k/(k−1) × (1 − Σσ²butir/σ²total), dengan k = jumlah butir, σ²butir = varians skor tiap butir, σ²total = varians skor total → tingkat konsistensi antar-butir soal. Semakin mendekati 1, soal makin konsisten mengukur kemampuan yang sama. Pedoman: α ≥ 0.70 artinya soal konsisten/andal; α 0.50–0.69 perlu dikaji sebagian butirnya; α < 0.50 tidak konsisten sehingga perlu direvisi. Butir yang "Tidak Valid" pada tabel analisis butir biasanya menjadi penyebab alpha rendah.'));
+        children.push(explainText('Rerata (mean) = Σx/n,', ' yaitu jumlah seluruh nilai (Σx) dibagi banyaknya peserta (n) → nilai rata-rata kelas. Semakin tinggi, semakin baik penguasaan materi kelas secara umum.'));
+        children.push(explainText('Median', ' = nilai tengah setelah semua nilai diurutkan dari terkecil ke terbesar. Berguna kalau ada nilai yang sangat tinggi/rendah agar gambaran kelas tidak miring.'));
+        children.push(explainText('Modus', ' = nilai yang paling sering muncul. Jika tercantum "Tidak ada", berarti tidak ada nilai yang berulang.'));
+        children.push(explainText('Standar deviasi (SD) = √(Σ(xi−mean)²/n),', ' dengan xi = nilai tiap siswa dan mean = rerata → ukuran sebaran nilai: rata-rata jarak nilai siswa terhadap rerata. Semakin kecil SD, nilai seluruh siswa makin seragam/mendekati rerata (kelas homogen); semakin besar SD, makin timpang antara siswa bernilai tinggi dan rendah (kelas heterogen), sehingga perlu perhatian khusus bagi siswa yang tertinggal.'));
+        children.push(explainText('Reliabilitas (Alpha) = α = k/(k−1) × (1 − Σσ²butir/σ²total),', ' dengan k = jumlah butir, σ²butir = varians skor tiap butir, σ²total = varians skor total → tingkat konsistensi antar-butir soal. Semakin mendekati 1, soal makin konsisten mengukur kemampuan yang sama. Pedoman: α ≥ 0.70 artinya soal konsisten/andal; α 0.50–0.69 perlu dikaji sebagian butirnya; α < 0.50 tidak konsisten sehingga perlu direvisi. Butir yang "Tidak Valid" pada tabel analisis butir biasanya menjadi penyebab alpha rendah.'));
     }
     if (ketChartPng) children.push(chartImageRun(ketChartPng, 420, 420));
 
@@ -797,7 +834,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     children.push(bodyText('Buku teks, LKS, dan sumber belajar digital sesuai kurikulum yang berlaku.'));
     children.push(bodyText('5. Metode :', { bold: true }));
     children.push(bodyText('Pembelajaran mandiri terarah, diskusi kelompok kecil, dan pemberian umpan balik.'));
-    children.push(bodyText('Soal-soal pengayaan sebagai berikut :'));
+    children.push(bodyText('Soal-soal pengayaan sebagai berikut :', { bold: true }));
     children.push(bodyText('(lampirkan butir-butir soal pengayaan sesuai kebutuhan)'));
 
     /* ============ 8. DAFTAR NILAI PESERTA PENGAYAAN + ABSEN / DAFTAR HADIR ============ */
@@ -823,7 +860,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     children.push(new Paragraph({ children: [], spacing: { after: 60 } }));
 
     children.push(sectionTitle('DAFTAR HADIR ULANGAN HARIAN'));
-    children.push(bodyText(`Hari / Tanggal Pelaksanaan : ${fmtDate(uh.date)}`));
+    children.push(bodyText(`Hari / Tanggal Pelaksanaan : ${fmtDate(uh.date)}`, { bold: true }));
     const attendanceMap = uh.attendanceMap || {};
     const absenRows = [
         new TableRow({

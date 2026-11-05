@@ -84,7 +84,7 @@ const HolidayWidget = () => {
                 <>
                     {nearestHoliday && (
                         <div className="mb-6 relative z-10">
-                            <p className="text-sm text-indigo-100 mb-1">Libur Terdekat:</p>
+                            <p className="text-sm text-indigo-100 mb-1">Agenda Terdekat:</p>
                             <h3 className="text-2xl font-bold leading-tight">{nearestHoliday.name || nearestHoliday.title}</h3>
                             <div className="flex items-center gap-2 mt-2">
                                 <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm">

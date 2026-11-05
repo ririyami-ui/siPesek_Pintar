@@ -83,6 +83,12 @@ const WelcomeScreen = () => {
                         Finalizing Environment
                     </p>
                 </div>
+
+                <div className="mt-2 opacity-70">
+                    <p className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.4em]">
+                        Powering by Smart Teaching Engine
+                    </p>
+                </div>
             </div>
 
             {/* Premium Footnote */}

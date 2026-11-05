@@ -79,6 +79,9 @@ export default function LoginPage() {
           <img src={(window.Laravel?.basePath || "") + "/Logo Smart Teaching Baru_.png"} alt="Logo" className="mb-4 h-24" />
           <h1 className="font-sans text-4xl font-bold text-blue-600 drop-shadow-lg">Si Pesek Pintar</h1>
           <p className="text-sm font-bold text-blue-400 opacity-80 mt-1 uppercase tracking-widest">Sistem Pengelolaan Sekolah Pintar</p>
+          <p className="text-[9px] font-bold text-gray-500 uppercase tracking-[0.4em] mt-2">
+              Powering by Smart Teaching Engine
+          </p>
           <p className="mt-2 text-lg text-gray-500 dark:text-gray-400">
             Masuk untuk melanjutkan
           </p>
