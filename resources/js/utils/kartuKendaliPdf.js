@@ -48,13 +48,23 @@ export const generateKartuKendaliPdf = (students, tasks, submissions, selectedCl
                 const cardStartX = currentX;
                 const cardStartY = currentY;
 
+                const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(String(s.id)));
+                
+                // Dynamic card height based on number of pending tasks
+                let dynamicCardHeight = cardHeight;
+                if (pendingTasks.length > 5) {
+                    // Increase height for more tasks (approximately 3mm per extra task beyond 5)
+                    const extraTasks = pendingTasks.length - 5;
+                    dynamicCardHeight += extraTasks * 3;
+                }
+
                 // Card border
-                doc.rect(cardStartX, cardStartY, cardWidth, cardHeight, 'S');
+                doc.rect(cardStartX, cardStartY, cardWidth, dynamicCardHeight, 'S');
 
                 // Watermark
                 doc.setFontSize(20);
                 doc.setTextColor(0, 0, 0, 0.03); // Very light grey
-                doc.text('SI PESEK PINTAR', cardStartX + cardWidth / 2, cardStartY + cardHeight / 2, { align: 'center', angle: -30 });
+                doc.text('SI PESEK PINTAR', cardStartX + cardWidth / 2, cardStartY + dynamicCardHeight / 2, { align: 'center', angle: -30 });
                 doc.setTextColor(0, 0, 0); // Reset text color
 
                 // Header
@@ -79,7 +89,6 @@ export const generateKartuKendaliPdf = (students, tasks, submissions, selectedCl
                 doc.setFont('helvetica', 'bold');
                 doc.text('DAFTAR TANGGUNGAN:', cardStartX + 2, cardStartY + 16);
 
-                const pendingTasks = tasks.filter(t => !submissions[t.id]?.includes(String(s.id)));
                 let taskY = cardStartY + 19;
                 pendingTasks.slice(0, 5).forEach((task, tIdx) => {
                     doc.rect(cardStartX + 3, taskY, 2.5, 2.5, 'S'); // Checkbox
@@ -93,7 +102,7 @@ export const generateKartuKendaliPdf = (students, tasks, submissions, selectedCl
                 }
 
                 // Tanda Tangan
-                const signatureY = cardStartY + cardHeight - 20;
+                const signatureY = cardStartY + dynamicCardHeight - 20;
                 doc.setFontSize(6);
                 doc.setFont('helvetica', 'normal');
                 doc.text('Guru Mapel:', cardStartX + 5, signatureY);
@@ -102,7 +111,7 @@ export const generateKartuKendaliPdf = (students, tasks, submissions, selectedCl
                 doc.line(cardStartX + cardWidth - 25, signatureY + 10, cardStartX + cardWidth - 5, signatureY + 10); // Ortu line
                 
                 doc.setFont('helvetica', 'italic');
-                doc.text('Bukti kendali pengumpulan tugas mandiri siswa.', cardStartX + cardWidth / 2, cardStartY + cardHeight - 3, { align: 'center' });
+                doc.text('Bukti kendali pengumpulan tugas mandiri siswa.', cardStartX + cardWidth / 2, cardStartY + dynamicCardHeight - 3, { align: 'center' });
 
                 currentX += cardWidth + margin; // Move to next card position
             });

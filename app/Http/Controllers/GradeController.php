@@ -332,11 +332,6 @@ class GradeController extends Controller
                 $query->where('topic', $topic);
             }
 
-            // Debug: log query SQL
-            $sql = $query->toSql();
-            $bindings = $query->getBindings();
-            Log::debug("destroyBatch SQL: $sql", ['bindings' => $bindings, 'request' => $request->all()]);
-
             $deleted = $query->delete();
 
             if ($deleted === 0) {

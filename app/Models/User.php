@@ -27,6 +27,7 @@ class User extends Authenticatable
         'nip',
         'status',
         'push_subscription',
+        'device_id',
     ];
 
     /**

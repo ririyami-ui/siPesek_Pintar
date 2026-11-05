@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\StudentDistributionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -91,7 +92,7 @@ class StudentController extends Controller
             'birth_place' => 'nullable|string',
             'birth_date' => 'nullable|date',
             'address' => 'nullable|string',
-            'absen' => 'nullable|string',
+            'absen' => 'nullable|numeric',
             'class_id' => 'required|exists:classes,id',
         ]);
 
@@ -171,7 +172,7 @@ class StudentController extends Controller
             'birth_place' => 'nullable|string',
             'birth_date' => 'nullable|date',
             'address' => 'nullable|string',
-            'absen' => 'nullable|string',
+            'absen' => 'nullable|numeric',
             'class_id' => 'required|exists:classes,id',
         ]);
 
@@ -345,20 +346,23 @@ class StudentController extends Controller
             ? User::find($student->auth_user_id)
             : User::where('username', $nisn)->where('role', 'student')->first();
 
+        // Generate random password instead of using NIS (security improvement)
+        $randomPassword = Str::random(12);
+
         if ($authUser) {
             // Update credentials if nisn/nis changed
             $authUser->update([
                 'name'     => $student->name,
                 'username' => $nisn,
-                'password' => Hash::make($nis),
+                'password' => Hash::make($randomPassword),
             ]);
         } else {
-            // Create a brand-new student user account
+            // Create a brand-new student user account with random password
             $authUser = User::create([
                 'name'     => $student->name,
                 'email'    => $nisn . '@siswa.sipesekpintar.id',
                 'username' => $nisn,
-                'password' => Hash::make($nis),
+                'password' => Hash::make($randomPassword),
                 'role'     => 'student',
                 'status'   => 'active',
             ]);
