@@ -441,6 +441,7 @@ $bookPrompt .= "- Materi Spesifik (fokus, sesuai topik yang diminta): {$subTopic
 
         // Mode image: gambar menjadi sumber utama, dikirim sebagai inlineData seperti pada chat()
         $imageData = $data['imageData'] ?? null;
+        $requestPayload = $prompt;
         if ($imageData) {
             $prompt .= "\n\n**GAMBAR REFERENSI (SUMBER UTAMA SOAL)**\nGunakan gambar yang dilampirkan sebagai sumber utama. Jika gambar berupa diagram/anatomi, soal wajib merujuk bagian tertentu; jika berupa teks/infografis, buat soal literasi informasi; jika berupa situasi, buat soal analisis situasi.";
 
@@ -450,19 +451,38 @@ $bookPrompt .= "- Materi Spesifik (fokus, sesuai topik yang diminta): {$subTopic
             }
             $cleanBase64 = preg_replace('/^data:image\/[a-zA-Z0-9.+-]+;base64,/', '', $imageData);
 
-            $contents = [[
+            $requestPayload = [[
                 'role' => 'user',
                 'parts' => [
                     ['text' => $prompt],
                     ['inlineData' => ['mimeType' => $mimeType, 'data' => $cleanBase64]],
                 ],
             ]];
-            $response = $this->callGeminiApi($contents, $modelName, 8192);
-        } else {
-            $response = $this->callGeminiApi($prompt, $modelName, 8192);
         }
 
-        $result = $this->extractJson($response);
+        // Respons AI kadang terpotong atau menghasilkan soal lebih sedikit dari diminta.
+        // Ulangi seperti pola retry di GeminiService sampai jumlah batch terpenuhi.
+        $batchTotal = (int) array_sum($data['typeCounts'] ?? ['pg' => 10]);
+        $retries = 3;
+        $delay = 1000; // 1 detik, lalu 2 detik
+        $result = [];
+        for ($attempt = 0; $attempt < $retries; $attempt++) {
+            $response = $this->callGeminiApi($requestPayload, $modelName, 8192);
+            $result = $this->extractJson($response);
+
+            $questionCount = is_array($result) && isset($result['questions']) && is_array($result['questions'])
+                ? count($result['questions'])
+                : 0;
+
+            if ($questionCount >= $batchTotal) {
+                break;
+            }
+            if ($attempt < $retries - 1) {
+                Log::warning("Quiz batch menghasilkan {$questionCount}/{$batchTotal} soal, retry " . ($attempt + 1) . '/' . $retries);
+                usleep($delay * 1000);
+                $delay *= 2;
+            }
+        }
 
         return is_array($result) ? $this->normalizeQuizImageHints($result) : $result;
     }
@@ -2046,7 +2066,7 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
         3. **REFERENSI MATERI (STRICT)**: Gunakan isi dari \"Konteks\" atau \"RINGKASAN MATERI\" sebagai sumber utama soal. Abaikan instruksi teknis guru jika ada; fokuslah pada konsep, fakta, dan data materi.
         {$stimulusRule}
         5. **TRUE/FALSE MULTI-STATEMENT (MANDATORY)**: Khusus tipe \"true_false\", Anda WAJIB membuat minimal 3-5 pernyataan dalam satu nomor soal untuk dianalisis siswa.
-        6. **VISUALIZATION (WAJIB - MINIMAL 1 SOAL PER BATCH)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, WAJIB isi field \"visualization\" dengan config sesuai tipe visual (chart/mermaid/image/diagram). Minimal 1 soal batch ini punya visualization bermakna. Jika tidak ada visual, set \"visualization\": null.
+        6. **VISUALIZATION (HANYA JIKA DIPERLUKAN)**: Isi field \"visualization\" dengan config sesuai tipe visual (chart/mermaid/image/diagram) HANYA jika soal benar-benar membutuhkan grafik, diagram, peta, atau infografis agar dapat dijawab. Jika tidak diperlukan, set \"visualization\": null. JANGAN menambahkan visualisasi pada soal yang hanya menguji fakta, definisi, atau narasi teks biasa. TIDAK ada kewajiban jumlah minimal visual per batch.
         7. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
         8. **PRINSIP DEEP LEARNING (WAJIB)**:
            - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
@@ -2080,6 +2100,7 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
         - Output HANYA JSON yang valid.
         - DILARANG memberikan teks penjelasan sebelum atau sesudah JSON.
         - Pastikan seluruh tanda petik dan koma sesuai standar JSON.
+        - HASILKAN TEPAT {$batchTotal} soal di dalam array \"questions\". DILARANG kurang atau lebih.
         ";
     }
 
