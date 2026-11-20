@@ -15,6 +15,15 @@ import {
 
 const COLORS = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981', '#8b5cf6', '#ec4899'];
 
+// Ikuti teks persis yang dibuat runEarlyWarningAnalysis (analysis.js):
+// "Rata-rata nilai rendah ...", "Nx Alpha/Sakit/Izin", "Skor sikap ...".
+const classifyWarning = (warning) => {
+  const text = String(warning ?? '');
+  if (text.toLowerCase().includes('nilai rendah')) return 'Academic';
+  if (/(?:^|, )\d+x (?:Alpha|Sakit|Izin)/i.test(text)) return 'Attendance';
+  return 'Behavior';
+};
+
 const EarlyWarningPage = () => {
   const navigate = useNavigate();
   const [flaggedStudents, setFlaggedStudents] = useState([]);
@@ -101,8 +110,7 @@ const EarlyWarningPage = () => {
     const warningTypes = {};
     filteredFlaggedStudents.forEach(student => {
       student.warnings.forEach(warning => {
-        const type = warning.includes('Nilai') || warning.includes('akademik') ? 'Academic' :
-          warning.includes('Alpha') || warning.includes('Kehadiran') ? 'Attendance' : 'Behavior';
+        const type = classifyWarning(warning);
         warningTypes[type] = (warningTypes[type] || 0) + 1;
       });
     });
@@ -139,9 +147,8 @@ const EarlyWarningPage = () => {
     const types = { Academic: 0, Attendance: 0, Behavior: 0 };
     filteredFlaggedStudents.forEach(student => {
       student.warnings.forEach(warning => {
-        if (warning.includes('Nilai') || warning.includes('akademik')) types.Academic++;
-        else if (warning.includes('Alpha') || warning.includes('Kehadiran')) types.Attendance++;
-        else types.Behavior++;
+        const type = classifyWarning(warning);
+        types[type] = (types[type] || 0) + 1;
       });
     });
     return [

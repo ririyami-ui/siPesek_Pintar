@@ -37,6 +37,7 @@ const QuizGeneratorPage = () => {
     const [sourceType, setSourceType] = useState('rpp'); // 'rpp', 'promes', 'manual', 'image'
     const [sourceData, setSourceData] = useState([]);
     const [selectedContextId, setSelectedContextId] = useState('');
+    const [selectedContextIds, setSelectedContextIds] = useState([]); // multi-select RPP
     const [contextContent, setContextContent] = useState('');
 
     const [imageFile, setImageFile] = useState(null);
@@ -49,6 +50,7 @@ const QuizGeneratorPage = () => {
     // Configuration State
     const [numQuestions, setNumQuestions] = useState(10);
     const [difficulty, setDifficulty] = useState(50); // 0-100
+    const [stimulusMode, setStimulusMode] = useState('all'); // 'all' | 'none' | 'mixed'
     // Determine HOTS/LOTS ration
     const cognitiveLevel = difficulty > 70
         ? `${BSKAP_DATA.standards.cognitive_levels[2].id}: ${BSKAP_DATA.standards.cognitive_levels[2].level} (${BSKAP_DATA.standards.cognitive_levels[2].description})`
@@ -241,6 +243,7 @@ const QuizGeneratorPage = () => {
         // Only reset selection and specific content when Source Type changes
         // Keep subject, gradeLevel and topic to avoid losing context
         setSelectedContextId('');
+        setSelectedContextIds([]);
         // Keep contextContent if it was manually entered
         if (sourceType !== 'manual') {
             setContextContent('');
@@ -402,52 +405,95 @@ const QuizGeneratorPage = () => {
         return cleaned;
     };
 
-    // Handle Source Selection
+    // AI kadang mengisi image_hint dengan "[]" / array kosong. Anggap itu tidak ada instruksi.
+    const getImageHint = (q) => {
+        const raw = q?.image_hint;
+        if (Array.isArray(raw)) {
+            return raw.filter(v => typeof v === 'string' && v.trim()).map(v => v.trim()).join(', ');
+        }
+        if (raw == null) return '';
+        const text = String(raw).trim();
+        if (!text || ['[]', '[ ]', '-', 'tidak ada', 'none', 'n/a'].includes(text.toLowerCase())) return '';
+        return text;
+    };
+
+    // Dokumen sesuai mapel yang dipilih (dipakai oleh select & multi-select RPP)
+    const filteredSourceData = useMemo(() => sourceData.filter(d =>
+        !subject || (d.subject && d.subject.trim().toLowerCase() === subject.trim().toLowerCase())
+    ), [sourceData, subject]);
+
+    // Ekstrak bagian materi dari satu RPP (pola regex sama seperti implementasi sebelumnya)
+    const extractRppContext = (selected) => {
+        const content = selected.content || '';
+        let extractedText = "";
+
+        // 2. Ambil Materi Ajar Mendetail (Biasanya di Lampiran) - PRIORITAS UTAMA
+        const materialMatch = content.match(/(MATERI AJAR MENDETAIL|URAIAN MATERI|MATERI PEMBELAJARAN)[\s\S]*?(?=(##|###|GLOSARIUM))/i);
+        if (materialMatch) {
+            let cleanMat = materialMatch[0].replace(/(MATERI AJAR MENDETAIL|URAIAN MATERI|MATERI PEMBELAJARAN)/i, "").trim();
+            extractedText += "1. RINGKASAN MATERI (SUMBER UTAMA SOAL):\n" + cleanMat + "\n\n";
+        }
+
+        // 3. Ambil Tujuan Pembelajaran (TP)
+        const tpMatch = content.match(/Tujuan Pembelajaran[\s\S]*?(?=(##|\n\n\n))/i);
+        if (tpMatch) extractedText += "2. TUJUAN PEMBELAJARAN:\n" + tpMatch[0].replace(/Tujuan Pembelajaran.*:/i, "").trim() + "\n\n";
+
+        // 4. Ambil Langkah Pembelajaran HANYA jika Materi Ajar tidak ditemukan (sebagai fallback penunjang)
+        if (!materialMatch) {
+            const stepsMatch = content.match(/(##|###)\s*III\.\s*LANGKAH-LANGKAH PEMBELAJARAN[\s\S]*?(?=(##\s*IV|##\s*V))/i);
+            if (stepsMatch) {
+                extractedText += "3. REFERENSI KEGIATAN (Hanya untuk inspirasi konteks):\n" + stepsMatch[0].replace(/##.*LANGKAH.*/i, "").trim() + "\n\n";
+            }
+        }
+
+        // Fallback jika regex gagal (misal format beda), ambil 2000 karakter tengah
+        if (extractedText.length < 50) {
+            const startIdx = content.search(/##\s*COMPETENCY|##\s*KOMPETENSI|##\s*II/i);
+            if (startIdx !== -1) {
+                extractedText = content.substring(startIdx, startIdx + 2500) + "...";
+            } else {
+                extractedText = content.substring(0, 2000) + "..."; // Last resort
+            }
+        }
+
+        return `(RANGKUMAN MATERI BERSIH)\n\n${cleanAdministrativeBoilerplate(extractedText).substring(0, 3000)}`;
+    };
+
+    // Gabungkan beberapa RPP menjadi satu konteks untuk AI
+    const buildCombinedRppContext = (ids) => ids
+        .map(id => sourceData.find(d => String(d.id) === String(id)))
+        .filter(Boolean)
+        .map((d, idx) => `===== SUMBER ${idx + 1}: ${d.materi || d.topic || 'RPP'} =====\n${extractRppContext(d)}`)
+        .join('\n\n');
+
+    // Pilih/batalkan satu RPP; konteks dan identitas diambil dari kumpulan RPP terpilih
+    const toggleContextSelection = (doc) => {
+        const isSelected = selectedContextIds.some(id => String(id) === String(doc.id));
+        const nextIds = isSelected
+            ? selectedContextIds.filter(id => String(id) !== String(doc.id))
+            : [...selectedContextIds, doc.id];
+        setSelectedContextIds(nextIds);
+
+        const selectedDocs = nextIds
+            .map(id => sourceData.find(d => String(d.id) === String(id)))
+            .filter(Boolean);
+        if (selectedDocs.length > 0) {
+            const first = selectedDocs[0];
+            setSubject(first.subject || '');
+            setGradeLevel(first.grade_level || first.gradeLevel || first.grade || '');
+            setTopic(selectedDocs.map(d => d.materi || d.topic).filter(Boolean).join(', '));
+        }
+        setContextContent(buildCombinedRppContext(nextIds));
+    };
+
+    // Handle Source Selection untuk dokumen tunggal (Promes)
     const handleSourceChange = (id) => {
         setSelectedContextId(id);
         const selected = sourceData.find(d => String(d.id) === String(id));
         if (selected) {
             setSubject(selected.subject || '');
             setGradeLevel(selected.grade_level || selected.gradeLevel || selected.grade || '');
-
-            if (sourceType === 'rpp') {
-                setTopic(selected.materi || selected.topic || '');
-
-                // SMART PARSING: Extract specific "meat" sections based on standard RPP format
-                const content = selected.content || '';
-                let extractedText = "";
-
-                // 2. Ambil Materi Ajar Mendetail (Biasanya di Lampiran) - PRIORITAS UTAMA
-                const materialMatch = content.match(/(MATERI AJAR MENDETAIL|URAIAN MATERI|MATERI PEMBELAJARAN)[\s\S]*?(?=(##|###|GLOSARIUM))/i);
-                if (materialMatch) {
-                    let cleanMat = materialMatch[0].replace(/(MATERI AJAR MENDETAIL|URAIAN MATERI|MATERI PEMBELAJARAN)/i, "").trim();
-                    extractedText += "1. RINGKASAN MATERI (SUMBER UTAMA SOAL):\n" + cleanMat + "\n\n";
-                }
-
-                // 3. Ambil Tujuan Pembelajaran (TP)
-                const tpMatch = content.match(/Tujuan Pembelajaran[\s\S]*?(?=(##|\n\n\n))/i);
-                if (tpMatch) extractedText += "2. TUJUAN PEMBELAJARAN:\n" + tpMatch[0].replace(/Tujuan Pembelajaran.*:/i, "").trim() + "\n\n";
-
-                // 4. Ambil Langkah Pembelajaran HANYA jika Materi Ajar tidak ditemukan (sebagai fallback penunjang)
-                if (!materialMatch) {
-                    const stepsMatch = content.match(/(##|###)\s*III\.\s*LANGKAH-LANGKAH PEMBELAJARAN[\s\S]*?(?=(##\s*IV|##\s*V))/i);
-                    if (stepsMatch) {
-                        extractedText += "3. REFERENSI KEGIATAN (Hanya untuk inspirasi konteks):\n" + stepsMatch[0].replace(/##.*LANGKAH.*/i, "").trim() + "\n\n";
-                    }
-                }
-
-                // Fallback jika regex gagal (misal format beda), ambil 2000 karakter tengah
-                if (extractedText.length < 50) {
-                    const startIdx = content.search(/##\s*COMPETENCY|##\s*KOMPETENSI|##\s*II/i);
-                    if (startIdx !== -1) {
-                        extractedText = content.substring(startIdx, startIdx + 2500) + "...";
-                    } else {
-                        extractedText = content.substring(0, 2000) + "..."; // Last resort
-                    }
-                }
-
-                setContextContent(`(RANGKUMAN MATERI BERSIH)\n\n${cleanAdministrativeBoilerplate(extractedText).substring(0, 3000)}`); // Cleaned and Limited
-            } else if (sourceType === 'promes') {
+            if (sourceType === 'promes') {
                 setContextContent(JSON.stringify(selected.prota || []));
             }
         }
@@ -490,8 +536,12 @@ const QuizGeneratorPage = () => {
         }
 
         const totalRequested = Object.values(typeCounts).reduce((sum, c) => sum + c, 0);
-        if (sourceType !== 'image' && totalRequested === 0) {
+        if (totalRequested === 0) {
             toast.error("Tentukan minimal 1 tipe soal dengan jumlah > 0");
+            return;
+        }
+        if (sourceType === 'image' && !previewUrl) {
+            toast.error("Harap upload gambar referensi terlebih dahulu.");
             return;
         }
 
@@ -540,18 +590,23 @@ const QuizGeneratorPage = () => {
                     percentage: currentPercentage
                 });
 
-                const response = await api.post('/ai/generate-quiz', {
+                const payload = {
                     topic,
                     context: contextContent,
                     gradeLevel,
                     subject,
                     typeCounts: batchTypeCounts,
                     difficulty,
+                    stimulusMode,
                     modelName: geminiModel,
                     batchNum: bIdx + 1,
                     totalBatches: totalBatches,
                     allQuestions: allQuestions.map(q => ({ pedagogical_materi: q.pedagogical_materi })) // Context for AI to avoid duplicates
-                });
+                };
+                if (sourceType === 'image' && previewUrl) {
+                    payload.imageData = previewUrl;
+                }
+                const response = await api.post('/ai/generate-quiz', payload);
 
                 const rawData = response.data;
                 let batchResult;
@@ -616,7 +671,7 @@ const QuizGeneratorPage = () => {
                 topic: topic || 'Kuis Baru',
                 quiz: quizResult,
                 academicYear: academicYear || '',
-                context_semester: activeSemester || ''
+                semester: activeSemester || ''
             });
 
             toast.success("Kuis berhasil disimpan!");
@@ -696,8 +751,8 @@ const QuizGeneratorPage = () => {
             if (q.stimulus) {
                 combinedText += `${latexToOmml(q.stimulus).replace(/\n/g, '<br/>')}<br/><br/>`;
             }
-            if (q.image_hint) {
-                combinedText += `<div style="background-color: #f0f7ff; color: #1e40af; border: 1px dashed #34d399; padding: 10px; margin-bottom: 10px; text-align: center; font-style: italic;">${latexToOmml(q.image_hint)}</div>`;
+            if (getImageHint(q)) {
+                combinedText += `<div style="background-color: #f0f7ff; color: #1e40af; border: 1px dashed #34d399; padding: 10px; margin-bottom: 10px; text-align: center; font-style: italic;">${latexToOmml(getImageHint(q))}</div>`;
             }
             combinedText += latexToOmml(q.question);
 
@@ -876,8 +931,8 @@ const QuizGeneratorPage = () => {
             }
 
             const cleanQuestion = q.question.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-            if (q.image_hint) {
-                questionContent += `\n[INSTRUKSI GAMBAR: ${q.image_hint}]\n\n`;
+            if (getImageHint(q)) {
+                questionContent += `\n[INSTRUKSI GAMBAR: ${getImageHint(q)}]\n\n`;
             }
             questionContent += cleanQuestion;
 
@@ -1047,8 +1102,8 @@ const QuizGeneratorPage = () => {
                     if (q.stimulus && q.stimulus.trim() !== '' && !q.stimulus.includes('Lihat stimulus')) {
                         html += `<div style="margin-bottom:10px; font-style:italic;">${latexToOmml(q.stimulus)}</div>`;
                     }
-                    if (q.image_hint) {
-                        html += `<div style="margin-bottom:10px; text-align:center; border:1px dashed #666; padding:10px; background:#f9f9f9;">${latexToOmml(q.image_hint)}</div>`;
+                    if (getImageHint(q)) {
+                        html += `<div style="margin-bottom:10px; text-align:center; border:1px dashed #666; padding:10px; background:#f9f9f9;">${latexToOmml(getImageHint(q))}</div>`;
                     }
                     html += `<div style="margin-bottom:10px;"><strong>${latexToOmml(q.question)}</strong></div>`;
                     if ((q.type === 'pg' || q.type === 'pg_complex') && q.options && q.options.length > 0) {
@@ -1336,21 +1391,46 @@ const QuizGeneratorPage = () => {
                                         </StyledSelect>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium mb-1">Pilih Dokumen</label>
-                                        <StyledSelect value={selectedContextId} onChange={(e) => handleSourceChange(e.target.value)} disabled={sourceType === 'manual' || sourceType === 'image'}>
-                                            <option value="">{loading ? 'Memuat...' : '-- Pilih --'}</option>
-                                            {sourceData
-                                                .filter(d => !subject || (d.subject && d.subject.trim().toLowerCase() === subject.trim().toLowerCase()))
-                                                .map(d => (
+                                        <label className="block text-sm font-medium mb-1">
+                                            Pilih Dokumen{sourceType === 'rpp' ? ' (Bisa lebih dari satu)' : ''}
+                                        </label>
+                                        {sourceType === 'rpp' ? (
+                                            <div className="border rounded-lg dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 max-h-40 overflow-y-auto">
+                                                {filteredSourceData.length > 0 ? filteredSourceData.map(d => {
+                                                    const checked = selectedContextIds.some(id => String(id) === String(d.id));
+                                                    return (
+                                                        <label key={d.id} className="flex items-start gap-2 p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600/50 border-b last:border-0 dark:border-gray-600 text-sm">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={checked}
+                                                                onChange={() => toggleContextSelection(d)}
+                                                                className="mt-0.5"
+                                                            />
+                                                            <span className="text-gray-700 dark:text-gray-200">
+                                                                {d.gradeLevel || 'Kelas'} - {d.materi || d.topic} ({d.academicYear || ''})
+                                                            </span>
+                                                        </label>
+                                                    );
+                                                }) : (
+                                                    <p className="p-3 text-xs text-gray-400">{loading ? 'Memuat...' : 'Tidak ada RPP untuk mapel ini.'}</p>
+                                                )}
+                                                {selectedContextIds.length > 0 && (
+                                                    <p className="p-2 text-[10px] text-blue-600 dark:text-blue-400 border-t dark:border-gray-600">
+                                                        {selectedContextIds.length} RPP dipilih — materi digabung sebagai konteks soal.
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <StyledSelect value={selectedContextId} onChange={(e) => handleSourceChange(e.target.value)} disabled={sourceType === 'manual' || sourceType === 'image'}>
+                                                <option value="">{loading ? 'Memuat...' : '-- Pilih --'}</option>
+                                                {filteredSourceData.map(d => (
                                                     <option key={d.id} value={d.id}>
-                                                        {sourceType === 'rpp'
-                                                            ? `${d.gradeLevel || 'Kelas'} - ${d.materi || d.topic} (${d.academicYear || ''})`
-                                                            : `${d.subject} - ${d.gradeLevel || d.grade} (${d.semester})`
-                                                        }
+                                                        {`${d.subject} - ${d.gradeLevel || d.grade} (${d.semester})`}
                                                     </option>
                                                 ))}
-                                        </StyledSelect>
-                                        {subject && sourceData.filter(d => d.subject && d.subject.trim().toLowerCase() === subject.trim().toLowerCase()).length === 0 && (
+                                            </StyledSelect>
+                                        )}
+                                        {subject && filteredSourceData.length === 0 && sourceType !== 'rpp' && (
                                             <p className="text-[10px] text-amber-600 mt-1">Tidak ada {sourceType.toUpperCase()} untuk mapel ini.</p>
                                         )}
                                     </div>
@@ -1366,12 +1446,22 @@ const QuizGeneratorPage = () => {
                                                 const newSubjectName = s ? s.name : e.target.value;
                                                 setSubject(newSubjectName);
 
-                                                // Reset selected context if subject changes and it doesn't match
+                                                // Reset selected context(s) if subject changes and they don't match
                                                 if (selectedContextId) {
                                                     const currentContext = sourceData.find(d => String(d.id) === String(selectedContextId));
                                                     if (currentContext && (currentContext.subject || '').trim().toLowerCase() !== newSubjectName.trim().toLowerCase()) {
                                                         setSelectedContextId('');
                                                         setContextContent('');
+                                                    }
+                                                }
+                                                if (selectedContextIds.length > 0) {
+                                                    const validIds = selectedContextIds.filter(id => {
+                                                        const ctx = sourceData.find(d => String(d.id) === String(id));
+                                                        return ctx && (ctx.subject || '').trim().toLowerCase() === newSubjectName.trim().toLowerCase();
+                                                    });
+                                                    if (validIds.length !== selectedContextIds.length) {
+                                                        setSelectedContextIds(validIds);
+                                                        setContextContent(buildCombinedRppContext(validIds));
                                                     }
                                                 }
                                             }}
@@ -1516,6 +1606,15 @@ const QuizGeneratorPage = () => {
                                         <span>Menalar</span>
                                         <span>Kritis</span>
                                     </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Stimulus Soal</label>
+                                    <StyledSelect value={stimulusMode} onChange={(e) => setStimulusMode(e.target.value)}>
+                                        <option value="all">Semua soal dengan stimulus</option>
+                                        <option value="none">Semua soal tanpa stimulus</option>
+                                        <option value="mixed">Campuran (sebagian bersubstimulus)</option>
+                                    </StyledSelect>
                                 </div>
 
                                 <div>
@@ -1666,7 +1765,7 @@ const QuizGeneratorPage = () => {
                                                             remarkPlugins={[remarkGfm, remarkMath]}
                                                             rehypePlugins={[rehypeRaw, rehypeKatex]}
                                                         >
-                                                            {`${q.stimulus ? q.stimulus + '\n\n' : ''}${q.image_hint ? '> 🖼️ **INSTRUKSI GAMBAR:** ' + q.image_hint + '\n\n' : ''}${q.question || 'Petunjuk: Klik "Generate" untuk membuat soal.'}`}
+                                                            {`${q.stimulus ? q.stimulus + '\n\n' : ''}${getImageHint(q) ? '> 🖼️ **INSTRUKSI GAMBAR:** ' + getImageHint(q) + '\n\n' : ''}${q.question || 'Petunjuk: Klik "Generate" untuk membuat soal.'}`}
                                                         </ReactMarkdown>
                                                         {q.visualization && (
                                                             <div className="mt-4">

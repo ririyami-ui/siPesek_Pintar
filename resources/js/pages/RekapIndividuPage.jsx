@@ -48,7 +48,7 @@ import 'katex/dist/katex.min.css';
 import html2canvas from 'html2canvas';
 import { useSettings } from '../utils/SettingsContext';
 import { generateStudentIndividualRecapPDF } from '../utils/pdfGenerator';
-import { generateStudentNarrative, generateParentMessage } from '../utils/gemini';
+import { generateStudentNarrative, generateParentMessage, stripNarrativePreamble } from '../utils/gemini';
 import { runEarlyWarningAnalysis } from '../utils/analysis';
 
 // Set global locale for moment
@@ -171,7 +171,7 @@ const RekapIndividuPage = () => {
         attitudeScore: 0,
         attitudePredicate: '-',
         totalInfractionPoints: 0,
-        attendance: { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0, schoolDays: 0, studentCount: 1 },
+        attendance: { Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0, schoolDays: 0, studentCount: 1 },
         finalScore: 0,
         academicWeight: 0,
         attitudeWeight: 0,
@@ -396,7 +396,8 @@ const RekapIndividuPage = () => {
                 // 6. Narrative Note
                 const noteList = notesRes.data.data || notesRes.data || [];
                 const existingNote = noteList.length > 0 ? noteList[0].note : '';
-                setNarrativeNote(existingNote);
+                // Catatan lama mungkin masih memuat pembukaan AI (SIPINTAR_BRAIN).
+                setNarrativeNote(stripNarrativePreamble(existingNote));
                 setParentMessage(''); // Clear parent message on student change
 
             } catch (err) {
@@ -423,13 +424,6 @@ const RekapIndividuPage = () => {
         return unique.sort();
     }, [gradesData, grades, allSubjects]);
 
-    // Filtered summary data for display (per-subject aggregate)
-    const filteredGrades = useMemo(() => {
-        if (!gradesData || !gradesData.by_subject) return [];
-        if (!selectedSubject) return gradesData.by_subject;
-        return gradesData.by_subject.filter(g => g.subject_name === selectedSubject);
-    }, [gradesData, selectedSubject]);
-
     // Filtered raw individual grade records for detail table
     const filteredRawGrades = useMemo(() => {
         if (!selectedSubject) return grades;
@@ -442,7 +436,9 @@ const RekapIndividuPage = () => {
         attendance.forEach(a => {
             const subj = a.subject?.name || 'Tanpa Mapel';
             if (!map[subj]) map[subj] = { Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0, total: 0 };
-            const status = a.status;
+            // Backend menyimpan 'alpa' → dikapitalisasi jadi 'Alpa'; samakan ke 'Alpha'
+            // agar konsisten dengan stats, PieChart, dan pdfGenerator.
+            const status = a.status === 'Alpa' ? 'Alpha' : a.status;
             if (map[subj][status] !== undefined) map[subj][status]++;
             map[subj].total++;
         });
@@ -477,8 +473,14 @@ const RekapIndividuPage = () => {
     useEffect(() => {
         if (!gradesData) return;
 
+        // Rata-rata akademik mengikuti filter mapel agar nilai kartu, PDF, dan
+        // judul "Rata-rata <mapel>" konsisten. Statistik lain tetap semester-wide.
+        const scopedSubjects = selectedSubject
+            ? (gradesData.by_subject || []).filter(g => g.subject_name === selectedSubject)
+            : (gradesData.by_subject || []);
+
         setStats({
-            academicAvg: gradesData.by_subject?.length > 0 ? (gradesData.by_subject.reduce((sum, g) => sum + g.nilai_akademik, 0) / gradesData.by_subject.length).toFixed(2) : 0,
+            academicAvg: scopedSubjects.length > 0 ? (scopedSubjects.reduce((sum, g) => sum + g.nilai_akademik, 0) / scopedSubjects.length).toFixed(2) : 0,
             attitudeScore: gradesData.by_subject?.length > 0 ? Math.round(gradesData.by_subject.reduce((sum, g) => sum + g.nilai_sikap, 0) / gradesData.by_subject.length) : (100 - (gradesData.infraction_summary?.total_points || 0)),
             attitudePredicate: getAttitudePredicate(gradesData.by_subject?.length > 0 ? Math.round(gradesData.by_subject.reduce((sum, g) => sum + g.nilai_sikap, 0) / gradesData.by_subject.length) : (100 - (gradesData.infraction_summary?.total_points || 0))),
             totalInfractionPoints: gradesData.infraction_summary?.total_points || 0,
@@ -544,13 +546,15 @@ const RekapIndividuPage = () => {
         generateStudentIndividualRecapPDF({
             student: selectedStudent,
             stats: stats,
-            grades: filteredGrades, // Export only filtered grades
+            grades: filteredRawGrades, // Ekspor nilai mentah sesuai filter (pdfGenerator butuh date/subjectName/topic/score)
             attendance: attendance,
             infractions: infractions,
             narrative: narrativeNote,
             userProfile: userProfile,
             teacherName: userProfile?.name || 'Guru',
             selectedSubject: selectedSubject, // Pass context to PDF
+            academicYear: academicYear,
+            activeSemester: activeSemester,
             radarChartImage: radarChartImage,
             narrativeImage: await (async () => {
                 const navElement = document.getElementById('narrative-preview-content');
@@ -908,7 +912,7 @@ const RekapIndividuPage = () => {
                             value={stats.attendance.Hadir}
                             icon={<Calendar className="w-8 h-8 text-amber-500" />}
                             color="yellow"
-                            subtitle={`S: ${stats.attendance.Sakit} | I: ${stats.attendance.Ijin} | A: ${stats.attendance.Alpha}`}
+                            subtitle={`S: ${stats.attendance.Sakit} | I: ${stats.attendance.Izin} | A: ${stats.attendance.Alpha}`}
                         />
                     </div>
 

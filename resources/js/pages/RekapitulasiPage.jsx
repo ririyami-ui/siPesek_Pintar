@@ -30,6 +30,7 @@ const RekapitulasiPage = () => {
   // General State
   const [classes, setClasses] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [assignments, setAssignments] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [schoolName, setSchoolName] = useState('');
   const [teacherName, setTeacherName] = useState('');
@@ -83,16 +84,20 @@ const RekapitulasiPage = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const [profileRes, classesRes, subjectsRes] = await Promise.all([
+        const [profileRes, classesRes, subjectsRes, assignmentsRes] = await Promise.all([
           api.get('/profile'),
           api.get('/classes?all=true'),
-          api.get('/subjects')
+          api.get('/subjects'),
+          api.get('/assignments')
         ]);
 
         const { profile, user } = profileRes.data;
         setUserProfile({ ...profile, ...user });
         setSchoolName(profile.school_name || '');
         setTeacherName(user.name || '');
+
+        const assignmentData = assignmentsRes.data.data || assignmentsRes.data || [];
+        setAssignments(assignmentData);
 
         // Try to set signing location from profile heuristic if not in localStorage
         const savedLoc = localStorage.getItem('QUIZ_SIGNING_LOCATION');
@@ -363,6 +368,12 @@ const RekapitulasiPage = () => {
     const classLabel = classObj?.rombel || selectedClass;
     const finalLabel = selectedSubject && subjectObj ? `${classLabel} - Mapel: ${subjectObj.name}` : classLabel;
 
+    // Cari guru yang mengajar mapel & kelas ini
+    const selectedTeacherAssignment = assignments.find(a => 
+      String(a.subject_id) === String(selectedSubject) && 
+      String(a.class_id) === String(selectedClass)
+    );
+
     const formatIndoDate = (dateStr) => {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
@@ -379,6 +390,10 @@ const RekapitulasiPage = () => {
       academicYear: academicYear,
       className: classObj?.rombel || '',
       period: periodLabel,
+      schoolPrincipalName: userProfile?.principalName || '',
+      schoolPrincipalNip: userProfile?.principalNip || '',
+      teacherName: subjectObj && selectedTeacherAssignment ? selectedTeacherAssignment.teacher?.name : (teacherName || userProfile?.name || ''),
+      teacherNip: subjectObj && selectedTeacherAssignment ? (selectedTeacherAssignment.teacher?.nip || userProfile?.nip || '') : (userProfile?.nip || ''),
       fileName: `Rekapitulasi_Kehadiran_${finalLabel}_${startDate}_${endDate}.pdf`
     });
   };

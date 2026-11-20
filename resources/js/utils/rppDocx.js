@@ -9,6 +9,7 @@ import {
 } from 'docx';
 import { mml2omml } from 'mathml2omml';
 import katex from 'katex';
+import html2canvas from 'html2canvas';
 
 const MATH_NS = 'http://schemas.openxmlformats.org/officeDocument/2006/math';
 const DEFAULT_FONT = 'Arial';
@@ -20,15 +21,15 @@ const HD_BULLET_REF_PREFIX = 'rpp-hd-bullet';
 const buildIndent = (leftTwips, hangingTwips) => ({ left: leftTwips, hanging: hangingTwips });
 
 const orderedLevels = [
-    { level: 0, format: LevelFormat.DECIMAL, text: '%1.', style: { paragraph: { indent: buildIndent(360, 360) } } },
-    { level: 1, format: LevelFormat.LOWER_LETTER, text: '%2)', style: { paragraph: { indent: buildIndent(720, 360) } } },
-    { level: 2, format: LevelFormat.LOWER_ROMAN, text: '%3.', style: { paragraph: { indent: buildIndent(1080, 360) } } },
+    { level: 0, format: LevelFormat.DECIMAL, text: '%1.', style: { run: { bold: true }, paragraph: { indent: buildIndent(360, 360) } } },
+    { level: 1, format: LevelFormat.LOWER_LETTER, text: '%2)', style: { run: { bold: true }, paragraph: { indent: buildIndent(720, 360) } } },
+    { level: 2, format: LevelFormat.LOWER_ROMAN, text: '%3.', style: { run: { bold: true }, paragraph: { indent: buildIndent(1080, 360) } } },
 ];
 
 const bulletLevels = [
-    { level: 0, format: LevelFormat.BULLET, text: '\u2022', style: { paragraph: { indent: buildIndent(360, 360) } } },
-    { level: 1, format: LevelFormat.BULLET, text: '\u25E6', style: { paragraph: { indent: buildIndent(720, 360) } } },
-    { level: 2, format: LevelFormat.BULLET, text: '\u25AA', style: { paragraph: { indent: buildIndent(1080, 360) } } },
+    { level: 0, format: LevelFormat.BULLET, text: '\u2022', style: { run: { bold: true }, paragraph: { indent: buildIndent(360, 360) } } },
+    { level: 1, format: LevelFormat.BULLET, text: '\u25E6', style: { run: { bold: true }, paragraph: { indent: buildIndent(720, 360) } } },
+    { level: 2, format: LevelFormat.BULLET, text: '\u25AA', style: { run: { bold: true }, paragraph: { indent: buildIndent(1080, 360) } } },
 ];
 
 const numberingConfigs = [];
@@ -213,43 +214,51 @@ async function katexSpanToImage(el) {
     if (!latex) throw new Error('no LaTeX annotation available');
 
     const display = !!el.closest('.katex-display');
-    const svg = katex.renderToString(latex, {
-        output: 'svg',
+    const holder = document.createElement('div');
+    holder.style.cssText = 'position:fixed;left:-10000px;top:0;z-index:-1;background:#ffffff;white-space:nowrap;';
+    // KaTeX 0.16 tidak mendukung output:'svg'; render HTML visual lalu ambil gambarnya.
+    holder.innerHTML = katex.renderToString(latex, {
+        output: 'html',
         displayMode: display,
         throwOnError: false
     });
+    document.body.appendChild(holder);
 
-    const holder = document.createElement('div');
-    holder.innerHTML = svg;
-    const svgEl = holder.querySelector('svg');
-    if (!svgEl) throw new Error('katex produced no svg');
-
-    const ptToPx = (pt) => {
-        const px = parseFloat(pt) * 96 / 72;
-        return px > 1 ? globalThis.Math.round(px) : 1;
-    };
-    const width = ptToPx(svgEl.getAttribute('width') || '10');
-    const height = ptToPx(svgEl.getAttribute('height') || '10');
-
-    const buffer = await svgToPng(svg, width, height);
-    return new ImageRun({
-        type: 'png',
-        data: new Uint8Array(buffer),
-        transformation: { width, height }
-    });
+    try {
+        const rect = holder.getBoundingClientRect();
+        const width = globalThis.Math.max(1, globalThis.Math.round(rect.width));
+        const height = globalThis.Math.max(1, globalThis.Math.round(rect.height));
+        const canvas = await html2canvas(holder, { backgroundColor: '#ffffff', scale: 2 });
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
+        if (!blob) throw new Error('canvas.toBlob returned null');
+        const buffer = await blob.arrayBuffer();
+        return new ImageRun({
+            type: 'png',
+            data: new Uint8Array(buffer),
+            transformation: { width, height }
+        });
+    } finally {
+        holder.remove();
+    }
 }
 
+const UNSUPPORTED_OMML = /<m:(acc|m|sPre|bar|groupChr|eqArr|func)\b/;
+
 async function equationToDocx(el) {
+    const annotation = el.querySelector('annotation[encoding="application/x-tex"]');
+    const latex = annotation ? annotation.textContent.trim() : '';
     let cause = null;
     try {
         const mathElement = el.querySelector('.katex-mathml math') || el.querySelector('math');
         if (mathElement) {
             const omml = mml2omml(mathElement.outerHTML, { disableDecode: true });
-            if (omml && omml.includes('oMath')) {
+            if (omml && omml.includes('oMath') && !UNSUPPORTED_OMML.test(omml)) {
                 const math = convertOmmlToMath(omml);
                 if (math) return math;
+                cause = new Error('OMML to docx Math conversion returned empty');
+            } else {
+                cause = new Error('OMML conversion produced unsupported or no oMath');
             }
-            cause = new Error('OMML conversion produced no oMath');
         } else {
             cause = new Error('no <math> element inside .katex');
         }
@@ -261,8 +270,10 @@ async function equationToDocx(el) {
     try {
         return await katexSpanToImage(el);
     } catch (e) {
-        console.warn('Equation PNG fallback failed, keeping plain text:', e);
-        return null;
+        console.warn('Equation PNG fallback failed, keeping LaTeX text:', e);
+        const visual = el.querySelector('.katex-html');
+        const text = latex || (visual ? visual.textContent.trim() : el.textContent.trim());
+        return new TextRun({ text, font: 'Cambria Math' });
     }
 }
 
@@ -281,13 +292,13 @@ async function tryRawLatex(text) {
     } catch { return null; }
 }
 
-async function parseInline(element) {
+async function parseInline(element, inherited = {}) {
     const children = [];
     for (const node of element.childNodes) {
         if (node.nodeType === 3) {
             if (node.textContent) {
                 const eq = await tryRawLatex(node.textContent);
-                children.push(eq || new TextRun(node.textContent));
+                children.push(eq || new TextRun({ text: node.textContent, ...inherited }));
             }
             continue;
         }
@@ -297,61 +308,57 @@ async function parseInline(element) {
         switch (tag) {
             case 'strong':
             case 'b':
-                children.push(new TextRun({ text: node.textContent, bold: true }));
+                children.push(...await parseInline(node, { ...inherited, bold: true }));
                 break;
             case 'em':
             case 'i':
-                children.push(new TextRun({ text: node.textContent, italics: true }));
+                children.push(...await parseInline(node, { ...inherited, italics: true }));
                 break;
             case 'u':
-                children.push(new TextRun({ text: node.textContent, underline: {} }));
+                children.push(...await parseInline(node, { ...inherited, underline: {} }));
                 break;
             case 'code':
-                children.push(new TextRun({ text: node.textContent, font: 'Courier New', size: 20 }));
+                children.push(...await parseInline(node, { ...inherited, font: 'Courier New', size: 20 }));
                 break;
             case 'span':
                 if (node.classList && node.classList.contains('katex')) {
-                    const eq = await equationToDocx(node);
-                    if (eq) {
-                        children.push(eq);
-                    } else {
-                        children.push(new TextRun({ text: node.textContent }));
-                    }
+                    children.push(await equationToDocx(node));
                 } else {
-                    children.push(...await parseInline(node));
+                    children.push(...await parseInline(node, inherited));
                 }
                 break;
             case 'br':
-                children.push(new TextRun(' '));
+                children.push(new TextRun({ text: ' ', ...inherited }));
                 break;
             default:
-                children.push(...await parseInline(node));
+                children.push(...await parseInline(node, inherited));
                 break;
         }
     }
-    return children.length > 0 ? children : [new TextRun(element.textContent)];
+    return children.length > 0 ? children : [new TextRun({ text: element.textContent, ...inherited })];
 }
 
-const headingParagraph = (level, text) => {
+const headingParagraph = (level, text, runs = null) => {
+    const children = runs || [new TextRun({ text: level === 1 || level === 2 ? text.toUpperCase() : text, bold: true, size: level === 1 ? 28 : 22 })];
     switch (level) {
         case 1:
             return new Paragraph({
                 alignment: AlignmentType.CENTER,
                 spacing: { before: 0, after: 480, ...LINE },
                 border: { bottom: { style: BorderStyle.DOUBLE, size: 6, color: '000000' } },
-                children: [new TextRun({ text: text.toUpperCase(), bold: true, size: 28 })],
+                children,
             });
         case 2:
             return new Paragraph({
                 spacing: { before: 480, after: 200, ...LINE },
                 border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: '000000' } },
-                children: [new TextRun({ text: text.toUpperCase(), bold: true, size: 22 })],
+                children,
             });
         default:
             return new Paragraph({
                 spacing: { before: 400, after: 200, ...LINE },
                 border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: 'eeeeee' } },
-                children: [new TextRun({ text: text, bold: true, size: 22 })],
+                children,
             });
     }
 };
@@ -412,7 +419,7 @@ async function parseTable(tableEl) {
         const cells = row.querySelectorAll('th, td');
         const tableCells = [];
         for (const cell of cells) {
-            const runs = await parseInline(cell);
+            const runs = await parseInline(cell, cell.tagName === 'TH' ? { bold: true } : {});
             tableCells.push(new TableCell({
                 children: [new Paragraph({
                     children: runs.length ? runs : [new TextRun('')],
@@ -513,14 +520,13 @@ async function parseBlock(element) {
         const tag = node.tagName.toLowerCase();
         switch (tag) {
             case 'h1':
-                children.push(headingParagraph(1, node.textContent));
-                break;
             case 'h2':
-                children.push(headingParagraph(2, node.textContent));
+            case 'h3': {
+                const level = tag === 'h1' ? 1 : tag === 'h2' ? 2 : 3;
+                const runs = node.querySelector('.katex') ? await parseInline(node, { bold: true }) : null;
+                children.push(headingParagraph(level, node.textContent, runs));
                 break;
-            case 'h3':
-                children.push(headingParagraph(3, node.textContent));
-                break;
+            }
             case 'p':
                 children.push(new Paragraph({
                     children: await parseInline(node),

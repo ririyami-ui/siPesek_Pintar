@@ -174,6 +174,8 @@ class AiFeaturesController extends Controller
             'topic' => 'required|string',
             'gradeLevel' => 'required',
             'subject' => 'required',
+            'stimulusMode' => 'nullable|string|in:all,none,mixed',
+            'imageData' => 'nullable|string',
         ]);
 
         try {

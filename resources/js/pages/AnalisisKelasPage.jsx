@@ -124,7 +124,7 @@ const AnalisisKelasPage = () => {
 
       const stats = {
         academic: { avg: 0, highest: 0, lowest: 0, topPerformers: [], bottomPerformers: [] },
-        attendance: { Hadir: 0, Sakit: 0, Ijin: 0, Alpha: 0, pct: 0 },
+        attendance: { Hadir: 0, Sakit: 0, Izin: 0, Alpha: 0, pct: 0 },
         infractions: { total: infractions.length, totalPoints: infractions.reduce((a, b) => a + (b.points || 0), 0) }
       };
 
@@ -149,7 +149,11 @@ const AnalisisKelasPage = () => {
       }
 
       if (attendance.length > 0) {
-        attendance.forEach(a => { if (stats.attendance.hasOwnProperty(a.status)) stats.attendance[a.status]++; });
+        // getAllAttendance menormalisasi 'izin' → 'Ijin'; PieChart memakai 'Izin'.
+        attendance.forEach(a => {
+            const status = a.status === 'Ijin' ? 'Izin' : a.status;
+            if (stats.attendance.hasOwnProperty(status)) stats.attendance[status]++;
+        });
         stats.attendance.pct = ((stats.attendance.Hadir / attendance.length) * 100).toFixed(1);
       }
 
@@ -229,7 +233,7 @@ const AnalisisKelasPage = () => {
             </h2>
             {analysisData && (
               <button 
-                onClick={() => import('../utils/pdfGenerator').then(m => m.generateClassAnalysisPDF(analysisData, report, userProfile?.name || 'Guru', userProfile || {}))}
+                onClick={() => import('../utils/pdfGenerator').then(m => m.generateClassAnalysisPDF(analysisData, report, userProfile?.name || 'Guru', userProfile || {}, academicYear, activeSemester))}
                 className="px-4 py-2 bg-green-600 text-white rounded-xl flex items-center gap-2 text-sm"
               >
                 <FileText size={18} /> PDF

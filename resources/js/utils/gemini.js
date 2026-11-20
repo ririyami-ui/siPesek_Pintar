@@ -36,19 +36,6 @@ Intinya: **Jadilah teman diskusi yang cerdas, praktis, dan menyenangkan!**
 `;
 // --- END SI PINTAR BRAIN ---
 
-// Helper to shuffle array (Fisher-Yates)
-const shuffleArray = (array) => {
-  if (!array || !Array.isArray(array)) return array;
-  const newArr = [...array];
-  for (let i = newArr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-  }
-  return newArr;
-};
-
-
-
 /**
  * Initializes or re-initializes the proxy model backed by the server-side Gemini proxy.
  * The server resolves the per-user API key and calls Google, so no key is exposed/blocked client-side.
@@ -751,272 +738,6 @@ export async function polishJournalText(rawText, modelName) {
   } catch (error) {
     console.error("Error polishing journal text:", error);
     return rawText; // Fallback to raw text on error
-  }
-}
-
-/**
- * Generates an analysis report for a single student.
- * @param {string} prompt - The fully constructed prompt with student data.
- * @returns {Promise<string>} The generated report in Markdown format.
- */
-/**
- * Generates an advanced quiz based on RPP/Promes context and specific configurations.
- * @param {Object} params - Tool parameters
- * @param {string} params.topic - The main topic or KD.
- * @param {string} params.context - The content of the RPP or Promes for context.
- * @param {string} params.gradeLevel - Class/Grade level.
- * @param {string} params.subject - Subject name.
- * @param {Object} params.typeCounts - Object with question type keys and count values, e.g., { pg: 10, true_false: 5 }
- * @param {number} params.difficulty - 0 to 100 slider value (LOTS to HOTS).
- * @returns {Promise<Object>} - The generated quiz object with stimulus and items.
- */
-const BATCH_SIZE = 3;
-
-/**
- * Generates an advanced quiz based on RPP/Promes context and specific configurations.
- * Multi-stage/Batching implementation to ensure quality and reliability.
- */
-export async function generateAdvancedQuiz({ topic, context, gradeLevel, subject, typeCounts, difficulty, modelName, onProgress = () => { } }) {
-  try {
-    onProgress({ stage: 'preparing', message: 'Mempersiapkan parameter kuis & landasan BSKAP 46/2025...', percentage: 5 });
-
-    // 1. Calculate batches
-    const flattenedRequests = [];
-    Object.entries(typeCounts).forEach(([type, count]) => {
-      for (let i = 0; i < count; i++) {
-        flattenedRequests.push(type);
-      }
-    });
-
-    const totalQuestions = flattenedRequests.length;
-    const batches = [];
-    for (let i = 0; i < totalQuestions; i += BATCH_SIZE) {
-      batches.push(flattenedRequests.slice(i, i + BATCH_SIZE));
-    }
-
-    onProgress({ stage: 'preparing', message: `Membagi ${totalQuestions} soal ke dalam ${batches.length} batch...`, percentage: 10 });
-
-    let allQuestions = [];
-    let quizTitle = "";
-
-    // 2. Generate each batch
-    for (let i = 0; i < batches.length; i++) {
-      const currentBatch = batches[i];
-      const batchNum = i + 1;
-      const progressBase = 10 + (batchNum / batches.length) * 80;
-
-      onProgress({
-        stage: 'generating',
-        message: `Batch ${batchNum}/${batches.length}: Membuat ${currentBatch.length} soal...`,
-        percentage: Math.round(progressBase)
-      });
-
-      const batchSummary = currentBatch.reduce((acc, t) => {
-        acc[t] = (acc[t] || 0) + 1;
-        return acc;
-      }, {});
-      const batchTypeDetails = Object.entries(batchSummary).map(([t, c]) => `${t}: ${c} soal`).join(', ');
-
-      const model = getModel(modelName, true);
-
-      // Determine Option Count based on Grade Level
-      let optionCount = 5;
-      let optionLabel = "A-E";
-      const lowerGrade = String(gradeLevel || '').toLowerCase();
-      if (lowerGrade.includes('sd') || lowerGrade.includes('mi') || lowerGrade.match(/\b(1|2|3|4|5|6|i|ii|iii|iv|v|vi)\b/i)) {
-        optionCount = 3; optionLabel = "A-C";
-      } else if (lowerGrade.includes('smp') || lowerGrade.includes('mts') || lowerGrade.match(/\b(7|8|9|vii|viii|ix)\b/i)) {
-        optionCount = 4; optionLabel = "A-D";
-      }
-
-      const batchInstructions = currentBatch.map((type, idx) => `- Soal No ${allQuestions.length + idx + 1}: WAJIB Tipe **${type}**`).join('\n');
-
-      const prompt = `
-        LANDASAN REGULASI: **BSKAP No. 46 Tahun 2025** (Standar Nasional Kurikulum Merdeka).
-        STANDAR PEDAGOGIS: **Buku Teks Utama Kemendikbudristek** (Mindful, Meaningful, Joyful).
-        
-        TUGAS: Buatlah ${currentBatch.length} butir soal untuk:
-        - Mapel: ${subject} | Kelas: ${gradeLevel} | Topik: ${topic}
-        - Konteks: "${context || 'INPUT MANUAL/MINIM'}" 
-        ${!context ? '(WAJIB: Gunakan Database Internal Kurikulum Merdeka & BSKAP 46/2025 Anda untuk menentukan CP/Kompetensi yang relevan secara mandiri)' : '(WAJIB JADI SUMBER UTAMA)'}
-        - HOTS Meter: ${difficulty}%
-        - Status: Batch ${batchNum} dari ${batches.length}
-        ${allQuestions.length > 0 ? `- TOPIK YANG SUDAH DICAKUP: [${allQuestions.map(q => q.pedagogical_materi).join(', ')}] (HINDARI pengulangan materi yang sama jika konteks masih luas)` : ''}
-
-        TUGAS UTAMA: 
-        1. Analisis SELURUH materi dalam "Konteks".
-        2. Buatlah soal yang **BERIMBANG** dan mencakup berbagai sub-inti materi agar tidak menumpuk di satu bagian saja.
-        ${batchInstructions}
-
-        STRICT RULES:
-        1. Gunakan Bahasa Indonesia akademis formal (PUEBI).
-        2. **REFERENSI MATERI (STRICT)**: Gunakan isi dari "Konteks" atau "RINGKASAN MATERI" sebagai sumber utama soal. Abaikan instruksi teknis guru jika ada; fokuslah pada konsep, fakta, dan data materi.
-        3. Soal harus berbasis data/stimulus (Tabel, Narasi Ilmiah, atau Studi Kasus). Dilarang soal hafalan definisi literal.
-        4. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah dan tidak mengikuti pola tertentu.
-        5. **PRINSIP DEEP LEARNING (WAJIB)**:
-           - **Kontekstual**: Hubungkan soal dengan kehidupan sehari-hari siswa agar bermakna.
-           - **Reflektif**: Ajak siswa melihat kembali apa yang dipelajari dan proses belajarnya.
-           - **Eksploratif**: Berikan ruang untuk berbagai kemungkinan jawaban atau solusi kreatif.
-        5. Pilihan jawaban (untuk PG) wajib ${optionCount} opsi (${optionLabel}).
-            - **indicator**: Indikator soal (Format: Disajikan [konteks/stimulus], siswa dapat [KKO] [materi]). Harus SINGKAT dan PADAT.
-         7. **IMAGE HINT (OPTIONAL)**: Jika soal sangat membutuhkan dukungan visual (seperti diagram, grafik, peta, atau anatomi), sertakan field **"image_hint"** berisi instruksi spesifik untuk guru (Contoh: "[Sertakan gambar struktur sel hewan di sini]"). Jika tidak butuh gambar, kosongkan ("").
-        
-        STRUKTUR JSON PER TIPE (INPUT HARUS SESUAI):
-        - **Wajib Ada di Setiap Soal**: 
-          "pedagogical_materi": "Materi spesifik soal ini (max 5 kata)",
-          "competency": "Intisari CP relevan (Singkat)", 
-          "indicator": "Indikator operasional (Singkat)", 
-          "cognitive_level": "L1/L2/L3",
-          "stimulus": "Teks stimulus/kasus untuk soal ini (jika ada)",
-          "image_hint": "Instruksi gambar (Opsional, gunakan [] jika ada)"
-        - **pg**: {"type": "pg", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "options": ["A...", "B..."], "answer": "A...", "explanation": "..."}
-        - **pg_complex**: {"type": "pg_complex", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "options": ["1...", "2..."], "answer": ["1...", "3..."], "explanation": "..."}
-         - **pg_matrix**: {"type": "pg_matrix", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "rows": ["Pernyataan 1", "Pernyataan 2"], "columns": ["Kategori A", "Kategori B"], "answer": [{"row": "Pernyataan 1", "column": "Kategori A"}], "explanation": "..."}
-         - **matching**: {"type": "matching", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "left_side": ["A", "B"], "right_side": ["1", "2", "3"], "pairs": [{"left": "A", "right": "1"}], "explanation": "..."}
-         - **true_false**: {"type": "true_false", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "statements": [{"text": "S1", "isCorrect": true}], "explanation": "..."}
-         - **short_answer**: {"type": "short_answer", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "answer": "Kunci jawaban (Singkat 1-3 kata)", "explanation": "..."}
-         - **sequencing**: {"type": "sequencing", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "items": ["Langkah A", "Langkah B", "Langkah C"], "correct_order": ["Langkah B", "Langkah A", "Langkah C"], "explanation": "..."}
-         - **essay/uraian**: {"type": "essay", "pedagogical_materi": "...", "competency": "...", "indicator": "...", "cognitive_level": "...", "stimulus": "...", "question": "...", "answer": "Kunci jawaban (WAJIB SINGKAT & PADAT)", "grading_guide": "Pedoman penskoran ringkas", "explanation": "Penjelasan singkat"}
-
-        FORMAT OUTPUT TOTAL (JSON):
-        {
-          "title": "${topic}",
-          "questions": [
-             // Masukkan ${currentBatch.length} soal di sini sesuai tipe di atas
-          ]
-        }
-      `;
-
-      const result = await retryWithBackoff(() => model.generateContent(prompt));
-      const response = await result.response;
-      const parsed = extractJSON(response.text());
-
-      if (parsed.questions && Array.isArray(parsed.questions)) {
-        const processedQuestions = parsed.questions.map(q => {
-          // Shuffling logic for objective types to maximize randomization
-          if (q.type === 'pg' && Array.isArray(q.options)) {
-            return { ...q, options: shuffleArray(q.options) };
-          }
-          if (q.type === 'pg_complex' && Array.isArray(q.options)) {
-            return { ...q, options: shuffleArray(q.options) };
-          }
-          if (q.type === 'matching' && Array.isArray(q.right_side)) {
-            return { ...q, right_side: shuffleArray(q.right_side) };
-          }
-          if (q.type === 'sequencing' && Array.isArray(q.items)) {
-            return { ...q, items: shuffleArray(q.items) };
-          }
-          if (q.type === 'true_false' && Array.isArray(q.statements)) {
-            return { ...q, statements: shuffleArray(q.statements) };
-          }
-          if (q.type === 'pg_matrix' && Array.isArray(q.rows)) {
-            return { ...q, rows: shuffleArray(q.rows) };
-          }
-          return q;
-        });
-        allQuestions = [...allQuestions, ...processedQuestions];
-        if (!quizTitle) quizTitle = parsed.title;
-      }
-    }
-
-    onProgress({ stage: 'complete', message: 'Semua batch berhasil digabungkan!', percentage: 100 });
-
-    return {
-      title: quizTitle || topic,
-      questions: allQuestions
-    };
-
-  } catch (error) {
-    throw new Error(handleGeminiError(error, "generateAdvancedQuiz rebuild"));
-  }
-}
-
-/**
- * Generates quiz questions based on an uploaded image.
-
- * @param {string} imageBase64 - Base64 string of the image.
- * @param {string} topic - Additional topic context.
- * @param {string} gradeLevel - Class level.
- * @param {string} subject - Subject name.
- * @param {number} count - Number of questions.
- * @returns {Promise<Object>} - Quiz object.
- */
-export async function generateQuizFromImage({ imageBase64, topic, gradeLevel, subject, count, modelName, onProgress = () => { } }) {
-  try {
-    onProgress({ stage: 'preparing', message: 'Menganalisis gambar...', percentage: 20 });
-    const model = getModel(modelName, true);
-
-    const prompt = `
-      Anda adalah "Ahli Visual Pendidikan" yang bekerja berdasarkan repositori **BSKAP_DATA**.
-      
-      **OFFICIAL KNOWLEDGE ENGINE (BSKAP_DATA):**
-      - Regulasi Dasar: **${BSKAP_DATA.standards.regulation}**
-      - Filosofi Operasional: **${BSKAP_DATA.standards.philosophy.name}**
-      
-      **TUGAS:**
-      Analisis gambar/dokumen yang diberikan dan buatlah ${count} soal pilihan ganda yang **WAJIB** merujuk pada standar CP resmi dan kosakata resmi **Kemendikdasmen** untuk:
-      - Jenjang/Kelas: ${gradeLevel}
-      - Mata Pelajaran: ${subject}
-      - Fokus Materi: ${topic}
-      
-      **INSTRUKSI PENTING (STRICT):**
-      1. **SOURCE OF TRUTH**: Seluruh isi soal, stimulus, dan penjelasan harus selaras dengan buku teks resmi.
-      2. **TERMINOLOGI**: Gunakan "Peserta Didik".
-      3. **PRINSIP DEEP LEARNING**: Pastikan soal bermakna (Meaningful) dan tidak sekadar hafalan visual murni.
-      
-      INSTRUKSI TEKNIS:
-      1.  Jika gambar adalah **Diagram/Anatomi**: Buat soal yang menunjuk bagian tertentu (misal: "Fungsi bagian yang ditunjuk huruf X adalah...").
-      2.  Jika gambar adalah **Teks/Infografis**: Buat soal literasi informasi.
-      3.  Jika gambar adalah **Pemandangan/Situasi**: Buat soal analisis situasi atau cerita.
-      
-      FORMAT OUTPUT (JSON ONLY):
-      {
-        "questions": [
-           {
-             "id": 1,
-             "type": "pg",
-             "pedagogical_materi": "Sub-materi spesifik dari gambar (max 5 kata)",
-             "competency": "Kompetensi relevan (Singkat)",
-             "indicator": "Indikator (Format: Disajikan gambar..., siswa dapat...)",
-             "stimulus": "Penjelasan singkat tentang bagian gambar yang dirujuk",
-             "question": "Berdasarkan gambar di atas, ...?",
-             "options": ["A...", "B...", "C...", "D...", "E..."],
-             "answer": "A...",
-             "explanation": "..."
-           }
-        ]
-      }
-    `;
-
-    const imagePart = {
-      inlineData: {
-        data: imageBase64.split(',')[1],
-        mimeType: "image/jpeg"
-      },
-    };
-
-    onProgress({ stage: 'generating', message: 'Mengekstrak data kognitif dari gambar...', percentage: 50 });
-    const result = await retryWithBackoff(() => model.generateContent([prompt, imagePart]));
-    const response = await result.response;
-
-    onProgress({ stage: 'parsing', message: 'Memformat hasil analisis...', percentage: 85 });
-    const text = response.text();
-    const parsed = extractJSON(text);
-
-    // Shuffle matching if exists (Question from image usually outputs PG but for future proofing)
-    if (parsed.questions && Array.isArray(parsed.questions)) {
-      parsed.questions = parsed.questions.map(q => {
-        if (q.type === 'matching' && Array.isArray(q.right_side)) {
-          return { ...q, right_side: shuffleArray(q.right_side) };
-        }
-        return q;
-      });
-    }
-
-    onProgress({ stage: 'complete', message: 'Kuis visual berhasil dibuat!', percentage: 100 });
-    return parsed;
-  } catch (error) {
-    throw new Error(handleGeminiError(error, "generateQuizFromImage"));
   }
 }
 
@@ -1974,6 +1695,44 @@ export async function generateDailyBriefing(contextData, modelName) {
     return `Selamat pagi Bpk/Ibu ${teacherName}. Hari ini tanggal ${date}. ${schedules.length > 0 ? `Anda memiliki ${schedules.length} jadwal mengajar.` : 'Anda tidak memiliki jadwal mengajar hari ini.'} Tetap semangat dan selamat beraktivitas!`;
   }
 }
+
+/**
+ * Membersihkan pembukaan AI (sapaan, identitas pencipta, kalimat pengantar)
+ * dari narasi. SIPINTAR_BRAIN meminta gaya akrab & menyebut pencipta, sehingga
+ * model kadang menaruh pembukaan sebelum narasi asli.
+ * @param {string} text - Narasi mentah dari model.
+ * @returns {string} Narasi tanpa pembukaan AI.
+ */
+export function stripNarrativePreamble(text) {
+  if (!text) return text;
+
+  const hasAiFluff = (s) => (
+    /Ririyami|Bondowoso|Si Pintar|asisten AI|saya dirancang|saya dibuat/i.test(s) ||
+    /^(siap|oke|ok|halo|assalamualaikum)\b[^\n]{0,80}(?:pak\s*\/\s*bu|!)/i.test(s) ||
+    /^(ini|berikut)\b[^\n]*?(?:narasi|rapor|catatan|pesan)[^\n]*:/i.test(s)
+  );
+
+  const lines = text.trim().split(/\r?\n/);
+  let start = 0;
+
+  while (start < lines.length) {
+    const s = lines[start].trim();
+    if (!s) { start++; continue; } // baris kosong di antara pembukaan
+    if (!hasAiFluff(s)) break;
+
+    // Narasi bisa menyatu di baris yang sama dengan pembukaan.
+    const boundary = s.search(/(?:Langsung beres!|:\s*)[^\n]*$/);
+    const afterBoundary = boundary === -1 ? '' : s.slice(boundary).replace(/^(?:Langsung beres!\s*|:\s*)/i, '').trim();
+    if (afterBoundary) {
+      lines[start] = afterBoundary;
+      break;
+    }
+    start++;
+  }
+
+  return lines.slice(start).join('\n').trim();
+}
+
 /**
  * Generates an automatic narrative summary for a student's portfolio.
  * @param {Object} data - Student data including grades, attendance, and infractions.
@@ -2006,7 +1765,7 @@ export async function generateStudentNarrative(data, userProfile, modelName) {
     - Nama: ${studentName}
     - Rata-rata Akademik: ${stats.academicAvg} (dari ${grades.length} penilaian)
     - Nilai Sikap: ${stats.attitudeScore} (${stats.attitudePredicate})
-    - Kehadiran: Hadir ${stats.attendance.Hadir} hari, Sakit ${stats.attendance.Sakit}, Ijin ${stats.attendance.Ijin}, Alpha ${stats.attendance.Alpha}
+    - Kehadiran: Hadir ${stats.attendance.Hadir} hari, Sakit ${stats.attendance.Sakit}, Ijin ${stats.attendance.Izin}, Alpha ${stats.attendance.Alpha}
     
     Detail Catatan Pelanggaran (Jika ada):
     ${infractions.length > 0 ? infractions.map(i => `- ${i.date}: ${i.infractionType} (${i.description || 'Tanpa keterangan'})`).join('\n') : 'Tidak ada catatan pelanggaran (Sikap Sangat Baik).'}
@@ -2018,13 +1777,16 @@ export async function generateStudentNarrative(data, userProfile, modelName) {
     - Fokus pada poin paling penting dan berikan pesan motivasi yang kuat.
     - Batasi narasi dalam MAKSIMAL 60-80 KATA.
     - JANGAN gunakan format markdown seperti bold atau bullet points di dalam teks narasi, tulis sebagai teks mengalir biasa.
+    - JANGAN menyertakan sapaan, perkenalan diri/identitas pencipta, penjelasan proses, atau kalimat pengantar (misalnya "Siap, Pak/Bu!" atau "Ini narasi rapor buat ananda ...:").
+
+    TULIS HANYA ISI NARASINYA SAJA.
   `;
 
   try {
     const model = getModel(modelName);
     const result = await retryWithBackoff(() => model.generateContent(prompt));
     const response = await result.response;
-    const text = response.text().trim();
+    const text = stripNarrativePreamble(response.text().trim());
 
     // Update Cache
     lastNarrativeInputString = currentInputString;
@@ -2055,7 +1817,7 @@ export async function generateParentMessage(data, modelName) {
     Data Pendukung:
     - Rata-rata Akademik: ${stats.academicAvg}
     - Nilai Sikap: ${stats.attitudeScore} (${stats.attitudePredicate})
-    - Kehadiran: Hadir ${stats.attendance.Hadir}, Sakit ${stats.attendance.Sakit}, Ijin ${stats.attendance.Ijin}, Alpha ${stats.attendance.Alpha}
+    - Kehadiran: Hadir ${stats.attendance.Hadir}, Sakit ${stats.attendance.Sakit}, Ijin ${stats.attendance.Izin}, Alpha ${stats.attendance.Alpha}
     - Narasi Perkembangan: ${narrativeNote}
     - Nama Guru: ${teacherName}
 

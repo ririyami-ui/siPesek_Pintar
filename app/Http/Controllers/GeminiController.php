@@ -205,13 +205,19 @@ class GeminiController extends Controller
                 $prompt .= "\n";
             }
 
-            $prompt .= "Buat dalam Bahasa Indonesia, singkat tanpa markdown:\n";
-            $prompt .= "1. Materi/Topic (singkat, sesuai ATP)\n";
-            $prompt .= "2. Tujuan Pembelajaran (1-2 kalimat)\n";
-            $prompt .= "3. Kegiatan Pembelajaran (3-4 poin: pendahuluan, inti, penutup)\n";
-            $prompt .= "4. Refleksi (1 kalimat)\n";
-            $prompt .= "5. Tindak Lanjut (1 kalimat singkat)\n\n";
-            $prompt .= "Format JSON:\n";
+            $prompt .= "ATURAN WAJIB:\n";
+            $prompt .= "- Gunakan HANYA materi pada 'Program Mengajar (ATP)' / 'Materi' di atas. Jangan menambah materi, KD, atau topik lain.\n";
+            $prompt .= "- Jika tidak ada materi yang diberikan, kembalikan JSON dengan semua field berisi string kosong.\n";
+            $prompt .= "- 'Jurnal Sebelumnya' hanya acuan gaya penulisan, BUKAN sumber materi.\n";
+            $prompt .= "- Jangan menulis modul, RPP, silabus, atau penjelasan panjang. Ringkas, jelas, siap dipakai guru.\n";
+            $prompt .= "- Tanpa markdown, tanpa tabel, tanpa bullet bertingkat.\n\n";
+            $prompt .= "Isi lima field ini dalam Bahasa Indonesia:\n";
+            $prompt .= "1. topic: nama materi persis seperti yang diberikan (maksimal 10 kata)\n";
+            $prompt .= "2. learningObjectives: 1 kalimat, maksimal 20 kata\n";
+            $prompt .= "3. learningActivities: tepat 3 poin singkat dipisah '; ' berurutan Pendahuluan, Inti, Penutup; tiap poin maksimal 10 kata\n";
+            $prompt .= "4. reflection: 1 kalimat, maksimal 15 kata\n";
+            $prompt .= "5. follow_up: 1 kalimat, maksimal 15 kata\n\n";
+            $prompt .= "Balas HANYA JSON valid tanpa code fence dan tanpa teks tambahan:\n";
             $prompt .= '{
   "topic": "...",
   "learningObjectives": "...",
@@ -220,7 +226,9 @@ class GeminiController extends Controller
   "follow_up": "..."
 }';
 
-            $response = $this->geminiService->chat($prompt, [], []);
+            $response = $this->geminiService->chat($prompt, [], [
+                'system_instruction' => 'Anda adalah asisten guru yang mengisi jurnal mengajar harian. Tulis sangat ringkas, jelas, dan gunakan hanya materi yang diberikan. Jangan menulis modul, RPP, silabus, atau teks penjelas panjang.',
+            ]);
 
             // Try to parse JSON from response
             $json = $response;
@@ -232,9 +240,16 @@ class GeminiController extends Controller
             $parsed = json_decode($json, true);
 
             if (!$parsed || !isset($parsed['topic'])) {
-                // Fallback: return raw response as topic
+                // Some models prepend a short explanation before the JSON object.
+                if (preg_match('/\{[\s\S]*\}/', $json, $matches)) {
+                    $parsed = json_decode($matches[0], true);
+                }
+            }
+
+            if (!$parsed || !isset($parsed['topic'])) {
+                // Keep the fallback short so it cannot become a long module text.
                 return response()->json([
-                    'topic' => $response,
+                    'topic' => mb_substr(trim(strip_tags($response)), 0, 120),
                     'learningObjectives' => '',
                     'learningActivities' => '',
                     'reflection' => '',

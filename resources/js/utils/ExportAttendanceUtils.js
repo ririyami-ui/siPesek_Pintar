@@ -93,8 +93,8 @@ export const exportAttendanceMatrixExcel = (attendanceData, dates, meta) => {
  * Ekspor matriks kehadiran ke format PDF menggunakan jsPDF dan autoTable
  */
 export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
-    // Gunakan orientasi portrait sesuai format unduh PDF kehadiran
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    // Gunakan orientasi landscape sesuai format unduh PDF kehadiran
+    const doc = jsPDF('landscape', 'mm', 'a4');
     
     // 1. Kop Surat
     doc.setFontSize(14);
@@ -103,17 +103,17 @@ export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    let startY = 22;
+    let currentY = 22; // Mulai dari baris kedua kop
     if (meta.subjectName) {
-        doc.text(`Mata Pelajaran : ${meta.subjectName}`, 14, startY);
-        startY += 6;
+        doc.text(`Mata Pelajaran : ${meta.subjectName}`, 14, currentY);
+        currentY += 6;
     }
-    doc.text(`Tahun Ajaran   : ${meta.academicYear || '-'}`, 14, startY);
-    startY += 6;
-    doc.text(`Kelas                : ${meta.className || '-'}`, 14, startY);
+    doc.text(`Tahun Ajaran   : ${meta.academicYear || '-'}` , 14, currentY);
+    currentY += 6;
+    doc.text(`Kelas                : ${meta.className || '-'}`       , 14, currentY);
     if (meta.period) {
-        startY += 6;
-        doc.text(`Periode            : ${meta.period}`, 14, startY);
+        currentY += 6;
+        doc.text(`Periode            : ${meta.period}`, 14, currentY);
     }
     
     // 2. Persiapan Data Tabel
@@ -122,11 +122,11 @@ export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
     // Baris Header Bertingkat untuk jspdf-autotable
     const head = [
         [
-            { content: 'No', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-            { content: 'NISN', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-            { content: 'NAMA SISWA', rowSpan: 2, styles: { halign: 'center', valign: 'middle' } },
-            { content: 'TANGGAL', colSpan: numDates, styles: { halign: 'center' } },
-            { content: 'Absen', colSpan: 4, styles: { halign: 'center' } }
+            { content: 'No', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fontSize: 7, fontStyle: 'bold' } },
+            { content: 'NISN', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fontSize: 7, fontStyle: 'bold' } },
+            { content: 'NAMA SISWA', rowSpan: 2, styles: { halign: 'center', valign: 'middle', fontSize: 7, fontStyle: 'bold' } },
+            { content: 'TANGGAL', colSpan: numDates, styles: { halign: 'center', fontSize: 7, fontStyle: 'bold' } },
+            { content: 'Absen', colSpan: 4, styles: { halign: 'center', fontSize: 7, fontStyle: 'bold' } }
         ],
         [
             // Baris kedua (Tanggal format DD/MM dan H,S,I,A)
@@ -165,29 +165,82 @@ export const exportAttendanceMatrixPDF = (attendanceData, dates, meta) => {
 
     // 3. Render Tabel
     doc.autoTable({
-        startY: startY + 5,
+        startY: currentY + 5, // Mulai tabel sedikit di bawah kop
         head: head,
         body: body,
         theme: 'grid',
-        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 8 },
-        bodyStyles: { fontSize: 8 },
+        headStyles: { fillColor: [41, 128, 185], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+        bodyStyles: { fontSize: 7 },
         columnStyles: {
-            0: { halign: 'center', cellWidth: 10 }, // No
-            1: { cellWidth: 25 }, // NISN
-            2: { cellWidth: 45 }, // Nama
-            // Sisa kolom (tanggal dan absen) dibuat sekecil mungkin
+            0: { halign: 'center', cellWidth: 12 }, // No
+            1: { cellWidth: 28 },                  // NISN
+            // Kolom Nama Siswa akan diatur di didParseCell
         },
         styles: {
             halign: 'center', // Default align center untuk tanggal & absen
-            valign: 'middle'
+            valign: 'middle', // Vertikal tengah
         },
         didParseCell: function(data) {
-            // Ubah alignment khusus untuk kolom Nama (kiri)
+            const pageWidth = doc.internal.pageSize.width; // Deklarasi ulang
+            const margin = 10; // Deklarasi ulang
+            const numDates = Math.max(1, dates.length); // Deklarasi ulang
+
+            // Kolom Nama (index 2) rata kiri
             if (data.section === 'body' && data.column.index === 2) {
                 data.cell.styles.halign = 'left';
             }
-        }
+
+            // Set width for date columns
+            if (data.column.index >= 3 && data.column.index < (numDates + 3)) { // Kolom Tanggal
+                data.cell.styles.cellWidth = 7; // Lebar tetap untuk tanggal (DD/MM)
+            }
+            // Set width for attendance summary columns (H,S,I,A)
+            if (data.column.index >= (numDates + 3)) { // Kolom Absen
+                data.cell.styles.cellWidth = 7; // Lebar tetap untuk H,S,I,A
+            }
+
+            // Kolom NAMA SISWA (index 2) mengisi sisa ruang secara otomatis
+            if (data.column.index === 2) {
+                // Lebar kolom tetap: No(12) + NISN(28) + Tanggal(N*7) + Absen(4*7)
+                const fixedWidths = (12 + 28) + (numDates * 7) + (4 * 7);
+                const availableWidth = pageWidth - (margin * 2) - fixedWidths;
+                data.cell.styles.cellWidth = availableWidth > 0 ? availableWidth : 50; // Minimum 50mm
+            }
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245] // Abu-abu muda
+        },
+        // minCellHeight: 8, // Atur tinggi baris minimum jika perlu
     });
+
+    // Tambahkan Tanda Tangan di bawah tabel
+    const tableEndY = doc.autoTable.previous.finalY || currentY + 5; // Akhir tabel, atau posisi awal jika tabel kosong
+    const signatureSectionY = tableEndY + 15; // Jarak dari akhir tabel
+
+    // Deklarasi ulang margin dan pageWidth untuk scope ini
+    const margin = 10; 
+    const pageWidth = doc.internal.pageSize.width;
+
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+
+    // Kepala Sekolah
+    const kepalaSekolahY = signatureSectionY + 15;
+    doc.text('Kepala Sekolah', margin, kepalaSekolahY);
+    doc.text(meta.schoolPrincipalName || '', margin, kepalaSekolahY + 8);
+    if (meta.schoolPrincipalNip) {
+        doc.text(`NIP. ${meta.schoolPrincipalNip}`, margin, kepalaSekolahY + 13);
+    }
+
+    // Guru Mata Pelajaran
+    const guruMapelX = pageWidth / 2;
+    const guruMapelY = signatureSectionY + 15; // Sejajar dengan Kepala Sekolah
+    doc.text('Guru Mata Pelajaran', guruMapelX, guruMapelY);
+    doc.text(meta.teacherName || '', guruMapelX, guruMapelY + 8);
+    if (meta.teacherNip) {
+        doc.text(`NIP. ${meta.teacherNip}`, guruMapelX, guruMapelY + 13);
+    }
+
 
     doc.save(meta.fileName || 'Rekap_Kehadiran.pdf');
 };

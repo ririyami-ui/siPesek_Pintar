@@ -264,13 +264,18 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
       const wk = (agreement.knowledge_weight ?? 40) / 100;
       const wp = (agreement.practice_weight ?? 60) / 100;
 
-      // Separate knowledge, practice, and attitude scores
+      // Separate knowledge, practice, and attitude scores.
+      // Sama seperti GradeCalculationService.php: praktik & sikap dipisah, semua tipe
+      // lain (termasuk "Ulangan Harian" dan "formatif") dihitung sebagai pengetahuan.
       const subjectGrades = grades.filter(g => normId(g.studentId) === normId(studentId) && g.subjectName === subjectName);
-      const knowledgeTypes = ['Harian', 'Formatif', 'Sumatif', 'Ulangan', 'Tengah Semester', 'PTS', 'Akhir Semester', 'PAS'];
+      const normalizeType = (type) => String(type ?? '').trim().toLowerCase();
+      const isPractice = (g) => normalizeType(g.assessmentType) === 'praktik';
+      const isAttitude = (g) => ['sikap', 'afektif', 'attitude', 'observasi'].includes(normalizeType(g.assessmentType));
+      const validScores = (list) => list.map(g => parseFloat(g.score)).filter(s => !isNaN(s));
 
-      const knowledgeScores = subjectGrades.filter(g => knowledgeTypes.includes(g.assessmentType)).map(g => parseFloat(g.score) || 0);
-      const practiceScores = subjectGrades.filter(g => g.assessmentType === 'Praktik').map(g => parseFloat(g.score) || 0);
-      const attitudeScores = subjectGrades.filter(g => ['Sikap', 'Afektif', 'Attitude', 'Observasi'].includes(g.assessmentType)).map(g => parseFloat(g.score) || 0);
+      const knowledgeScores = validScores(subjectGrades.filter(g => !isPractice(g) && !isAttitude(g)));
+      const practiceScores = validScores(subjectGrades.filter(g => isPractice(g)));
+      const attitudeScores = validScores(subjectGrades.filter(g => isAttitude(g)));
 
       const knowledgeAvg = knowledgeScores.length > 0 ? knowledgeScores.reduce((a, b) => a + b, 0) / knowledgeScores.length : 0;
       const practiceAvg = practiceScores.length > 0 ? practiceScores.reduce((a, b) => a + b, 0) / practiceScores.length : 0;
@@ -296,7 +301,9 @@ export const runEarlyWarningAnalysis = async (userId = null, activeSemester, aca
         average = attitudeAvg;
       }
 
-      if (average < LOW_GRADE_THRESHOLD && average > 0) {
+      // Flag nilai 0 juga; yang dilewati hanya mapel tanpa nilai valid sama sekali.
+      const hasScores = knowledgeScores.length + practiceScores.length + attitudeScores.length > 0;
+      if (hasScores && average < LOW_GRADE_THRESHOLD) {
         const gradeSample = subjectGrades[0];
         addWarning(studentId, `Rata-rata nilai rendah di mapel ${subjectName} (${average.toFixed(1)})`, { id: gradeSample?.subjectId ?? gradeSample?.subject_id ?? '', name: subjectName });
       }

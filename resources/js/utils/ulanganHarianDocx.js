@@ -599,7 +599,7 @@ export async function generateUlanganHarianWord(uhItem, analisisResult, rekomend
     /* ============ 3. HASIL ANALISIS / RINGKASAN ============ */
     const st = analisis.kelas?.statistik || {};
     const targetKlasikal = Number(uh.target_klasikal || 80);
-    const perTuntas = belumTuntasCount(analisis, st);
+    const perTuntas = belumTuntasCount(analisis);
     const kktpVal = Number(uh.kktp_score || rombel.kktp || 70);
 
     const [distChartPng, dsChartPng, ketChartPng] = await Promise.all([

@@ -439,9 +439,32 @@ $bookPrompt .= "- Materi Spesifik (fokus, sesuai topik yang diminta): {$subTopic
             $prompt .= $bookPrompt;
         }
 
-        $response = $this->callGeminiApi($prompt, $modelName, 8192);
+        // Mode image: gambar menjadi sumber utama, dikirim sebagai inlineData seperti pada chat()
+        $imageData = $data['imageData'] ?? null;
+        if ($imageData) {
+            $prompt .= "\n\n**GAMBAR REFERENSI (SUMBER UTAMA SOAL)**\nGunakan gambar yang dilampirkan sebagai sumber utama. Jika gambar berupa diagram/anatomi, soal wajib merujuk bagian tertentu; jika berupa teks/infografis, buat soal literasi informasi; jika berupa situasi, buat soal analisis situasi.";
 
-        return $this->extractJson($response);
+            $mimeType = 'image/jpeg';
+            if (preg_match('/^data:(image\/[a-zA-Z0-9.+-]+);base64,/', $imageData, $matches)) {
+                $mimeType = $matches[1];
+            }
+            $cleanBase64 = preg_replace('/^data:image\/[a-zA-Z0-9.+-]+;base64,/', '', $imageData);
+
+            $contents = [[
+                'role' => 'user',
+                'parts' => [
+                    ['text' => $prompt],
+                    ['inlineData' => ['mimeType' => $mimeType, 'data' => $cleanBase64]],
+                ],
+            ]];
+            $response = $this->callGeminiApi($contents, $modelName, 8192);
+        } else {
+            $response = $this->callGeminiApi($prompt, $modelName, 8192);
+        }
+
+        $result = $this->extractJson($response);
+
+        return is_array($result) ? $this->normalizeQuizImageHints($result) : $result;
     }
 
     public function generateHandout(array $data)
@@ -893,6 +916,42 @@ $className = $data['className'] ?? 'Kelas';
         $distributionText = is_array($distribution) ? implode(', ', $distribution) : (string)$distribution;
         $assessmentModel = $data['assessmentModel'] ?? 'Rubrik';
 
+        // Visual hint dari katalog + auto-detect kata kunci materi (pola buildHandoutPrompt)
+        $visualHint = $this->getVisualHintForSubject($subject, $materi);
+        $visualDesc = $visualHint['description'] ?? 'Buat visualisasi yang sesuai dengan konten materi.';
+        $visualExample = $visualHint['example'] ?? '';
+
+        $autoVisualMap = [
+            'map' => ['peta', 'lokasi', 'wilayah', 'geograf', 'benua', 'pesisir', 'relief'],
+            'scratch' => ['scratch', 'pemrograman', 'algoritma', 'blok kode', 'koding'],
+            'function' => ['fungsi', 'grafik fungsi', 'limit', 'trigonometri', 'parabola'],
+            'geometry' => ['geometri', 'pythagoras', 'segitiga', 'bangun datar', 'bangun ruang', 'lingkaran', 'persegi'],
+            'chart' => ['statistika', 'diagram', 'persentase', 'grafik batang', 'rata-rata', 'modus', 'median'],
+            'chemistry' => ['senyawa', 'reaksi kimia', 'molekul', 'larutan', 'rumus kimia', 'atom'],
+            'music' => ['not balok', 'melodi', 'tangga nada', 'lagu', 'nada'],
+        ];
+        $autoType = null;
+        $materiLower = mb_strtolower($materi);
+        foreach ($autoVisualMap as $type => $keywords) {
+            foreach ($keywords as $kw) {
+                if (mb_strpos($materiLower, mb_strtolower($kw)) !== false) {
+                    $autoType = $type;
+                    break 2;
+                }
+            }
+        }
+
+        $visualType = $autoType ?? ($visualHint['visual_type'] ?? 'graph_td');
+        $mermaidCompatTypes = ['mindmap', 'graph_td', 'graph_lr', 'flowchart_td', 'flowchart_lr', 'venn'];
+        $isMermaidVisual = in_array($visualType, $mermaidCompatTypes);
+        if ($isMermaidVisual) {
+            $mermaidType = $this->getVisualMermaidType($visualType);
+            $visualBlockInstruction = "Tipe Mermaid yang harus digunakan: `{$mermaidType}`";
+        } else {
+            $mermaidType = null;
+            $visualBlockInstruction = "Gunakan type \"{$visualType}\" pada blok visualisasi untuk materi ini. JANGAN pakai Mermaid untuk visualisasi ini.";
+        }
+
         $bskapData = $this->bskapIntel ?? ['standards' => [], 'pedagogis' => [], 'subjects' => [], 'textbooks' => []];
         $regulation = $bskapData['standards']['regulation'] ?? 'Keputusan Kepala BSKAP No. 046/H/KR/2025';
         $philosophy = $bskapData['standards']['philosophy']['name'] ?? 'Deep Learning';
@@ -1107,6 +1166,10 @@ $bookRefPublisher = $bookRefData['publisher'] ?? 'Kemendikbudristek';
       - Bab: " . ($bookRefData['chapter']['title'] ?? 'Semua Bab') . "
       - Sub-topik: " . implode(', ', array_column($bookRefData['chapter']['sub_topics'] ?? [], 'name')) . "
       - Visual Hints: " . ($bookRefData['chapter']['visual_hints'] ?? 'Gunakan tipe visual paling sesuai') . "
+      - Visual Hints Katalog (mapel/topik): {$visualDesc}
+      - Tipe visual terpilih: {$visualType}
+      - {$visualBlockInstruction}
+      - Contoh dari katalog: {$visualExample}
       - Key Terms: " . implode(', ', $bookRefData['chapter']['key_terms'] ?? []) . "
 
       **INSTRUKSI MATERI**:
@@ -1629,6 +1692,43 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         $subject = $data['subject'];
         $materi = $data['materi'];
         $gradeLevel = $data['gradeLevel'];
+        $assessmentModel = $data['assessmentModel'] ?? 'Rubrik';
+
+        // Visual hint dari katalog + auto-detect kata kunci materi (pola buildHandoutPrompt)
+        $visualHint = $this->getVisualHintForSubject($subject, $materi);
+        $visualDesc = $visualHint['description'] ?? 'Buat visualisasi yang sesuai dengan konten materi.';
+        $visualExample = $visualHint['example'] ?? '';
+
+        $autoVisualMap = [
+            'map' => ['peta', 'lokasi', 'wilayah', 'geograf', 'benua', 'pesisir', 'relief'],
+            'scratch' => ['scratch', 'pemrograman', 'algoritma', 'blok kode', 'koding'],
+            'function' => ['fungsi', 'grafik fungsi', 'limit', 'trigonometri', 'parabola'],
+            'geometry' => ['geometri', 'pythagoras', 'segitiga', 'bangun datar', 'bangun ruang', 'lingkaran', 'persegi'],
+            'chart' => ['statistika', 'diagram', 'persentase', 'grafik batang', 'rata-rata', 'modus', 'median'],
+            'chemistry' => ['senyawa', 'reaksi kimia', 'molekul', 'larutan', 'rumus kimia', 'atom'],
+            'music' => ['not balok', 'melodi', 'tangga nada', 'lagu', 'nada'],
+        ];
+        $autoType = null;
+        $materiLower = mb_strtolower($materi);
+        foreach ($autoVisualMap as $type => $keywords) {
+            foreach ($keywords as $kw) {
+                if (mb_strpos($materiLower, mb_strtolower($kw)) !== false) {
+                    $autoType = $type;
+                    break 2;
+                }
+            }
+        }
+
+        $visualType = $autoType ?? ($visualHint['visual_type'] ?? 'graph_td');
+        $mermaidCompatTypes = ['mindmap', 'graph_td', 'graph_lr', 'flowchart_td', 'flowchart_lr', 'venn'];
+        $isMermaidVisual = in_array($visualType, $mermaidCompatTypes);
+        if ($isMermaidVisual) {
+            $mermaidType = $this->getVisualMermaidType($visualType);
+            $visualBlockInstruction = "Tipe Mermaid yang harus digunakan: `{$mermaidType}`";
+        } else {
+            $mermaidType = null;
+            $visualBlockInstruction = "Gunakan type \"{$visualType}\" pada blok visualisasi untuk materi ini. JANGAN pakai Mermaid untuk visualisasi ini.";
+        }
 
         // Load book data
         $bookData = $this->getRelevantBookContent($level, $gradeLevel, $subjectKey, $materi);
@@ -1650,6 +1750,10 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         - Buku: {$bookTitle}
         - Sub-topik: {$bookSubTopics}
         - Visual Hints: {$bookVisualHints}
+        - Visual Hints Katalog (mapel/topik): {$visualDesc}
+        - Tipe visual terpilih: {$visualType}
+        - {$visualBlockInstruction}
+        - Contoh dari katalog: {$visualExample}
 
         **PILIH TIPE BERDASARKAN ISI MATERI & VISUAL HINTS**:
         - **Matematika**: Fungsi/Trigonometri/Limit → 'function'; Geometri/Pythagoras/Segitiga/Persegi → 'geometry'; Statistika/Peluang → 'chart'; Bilangan/Aljabar → 'mermaid'
@@ -1676,24 +1780,162 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         ## IV. LAMPIRAN
 
         ### 1. LKPD (LEMBAR KERJA PESERTA DIDIK)
-        - Buatlah LKPD yang sangat mendalam dan menantang (HOTS).
-        - Wajib mencakup 3 kegiatan utama:
-          1. **Kegiatan 1: Mengamati & Memahami** (Stimulus kaya, 4-5 pertanyaan analitis).
-          2. **Kegiatan 2: Menganalisis & Berdiskusi** (Studi kasus nyata/fenomena).
-          3. **Kegiatan 3: Mencoba & Berkreasi** (Tugas praktik/proyek nyata).
+
+        **LKPD - {$materi} (KONSISTENSI TP)**
+        **PENTING UNTUK AI:** Soal-soal di bawah ini **HARUS** merupakan turunan langsung dari Tujuan Pembelajaran (TP) yang disusun di Bagian I modul ajar ini. Setiap aktivitas LKPD adalah sarana latihan untuk mencapai TP.
+
+        ---
+
+        **Identitas Peserta Didik:**
+        | Komponen | Keterangan |
+        | :--- | :--- |
+        | Nama | : _________________________________ |
+        | Kelas | : _________________________________ |
+        | Tanggal | : _________________________________ |
+
+        **Tujuan Pembelajaran:**
+
+        (Tuliskan maksimal 3 tujuan pembelajaran yang akan dicapai peserta didik melalui LKPD ini, harus konsisten dengan bagian I modul ajar, menggunakan bahasa yang mudah dipahami peserta didik).
+
+        **Petunjuk Penggunaan:**
+        1. Bacalah setiap instruksi dengan cermat sebelum mengerjakan.
+        2. Kerjakan secara mandiri atau berkelompok sesuai arahan guru.
+        3. Tuliskan jawaban dengan jelas dan lengkap.
+        4. Tanyakan kepada guru jika ada yang kurang jelas.
+
+        ---
+
+        **KEGIATAN 1: MENGAMATI & MEMAHAMI**
+        (Berikan stimulus berupa gambar, teks pendek, video, atau fenomena yang relevan dengan materi. Ajukan 3-4 pertanyaan pemantik yang mendorong peserta didik untuk mengamati and memahami konsep dasar).
+
+        **Ruang Jawaban:**
+
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+
+        ---
+
+        **KEGIATAN 2: MENGANALISIS & BERDISKUSI**
+        (Berikan kasus, masalah, atau data yang perlu dianalisis peserta didik. Ajukan pertanyaan yang mendorong berpikir kritis and diskusi kelompok).
+
+        **Ruang Jawaban:**
+
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+
+        ---
+
+        **KEGIATAN 3: MENCOBA & BERKREASI**
+        (Berikan tugas praktik, eksperimen sederhana, atau proyek kreatif yang memungkinkan peserta didik menerapkan pemahaman mereka).
+
+        **Ruang Jawaban/Hasil Karya:**
+
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+        ___________________________________________________________________________
+
+        ---
+
+        **REFLEKSI PEMBELAJARAN & PENILAIAN DIRI**
+
+        1. Apa hal paling menarik yang kamu pelajari hari ini?
+           ___________________________________________________________________________
+        2. Apa yang masih sulit kamu pahami?
+           ___________________________________________________________________________
+
+        **Penilaian Diri:**
+        | Aspek | Sudah Paham | Cukup Paham | Perlu Bimbingan |
+        | :--- | :---: | :---: | :---: |
+        | Saya memahami tujuan pembelajaran | ☐ | ☐ | ☐ |
+        | Saya dapat menjelaskan konsep utama | ☐ | ☐ | ☐ |
+        | Saya aktif dalam kegiatan | ☐ | ☐ | ☐ |
+
+        ---
 
         ### 2. INSTRUMEN PENILAIAN (ASESMEN & KKTP)
-        - **Asesmen Diagnostik**: 5 pertanyaan pemetaan kemampuan awal.
-        - **KKTP (TABEL)**: Wajib menghasilkan TABEL KKTP (Rubrik/Interval) yang sangat detail.
-        - **Asesmen Formatif & Sumatif**: Instrumen lengkap (soal, rubrik, lembar observasi).
+
+        **A. ASESMEN DIAGNOSTIK (ASESMEN AWAL)**
+        (Buatlah minimal 3-5 pertanyaan singkat atau aktivitas sederhana untuk memetakan kemampuan awal peserta didik terkait materi ini. Tujuannya untuk mengetahui kesiapan belajar).
+
+        **B. KRITERIA KETERCAPAIAN TUJUAN PEMBELAJARAN (KKTP)**
+        *Pendekatan yang digunakan: {$assessmentModel}*
+
+        > **Catatan:** Penentuan kriteria ketercapaian tujuan pembelajaran dalam modul ini merujuk pada standar penilaian dalam **Permendikbudristek No. 21 Th 2022** dan kompetensi pada **Keputusan Kepala BSKAP No. 046/H/KR/2025**.
+
+        **ATURAN WAJIB KORELASI:**
+        Indikator/Kriteria di bawah ini **HARUS** merupakan turunan langsung dari **Tujuan Pembelajaran (TP)** yang Anda tulis di Bagian I. Jangan membuat indikator yang tidak ada di TP.
+
+        " . ($assessmentModel === 'Deskripsi Kriteria' ? "
+        **B.1. DESKRIPSI KRITERIA (Checklist)**
+        Guru menetapkan kriteria ketuntasan yang spesifik. Peserta didik dianggap mencapai tujuan pembelajaran jika memenuhi minimal jumlah kriteria tertentu (misal 3 dari 4).
+
+        | Kriteria (Indikator Ketercapaian) | Sudah Muncul (✔) | Belum Muncul (❌) |
+        | :--- | :---: | :---: |
+        | 1. [Indikator 1 - turunan TP] | | |
+        | 2. [Indikator 2 - turunan TP] | | |
+        | 3. [Indikator 3 - turunan TP] | | |
+        | 4. [Indikator 4 - turunan TP] | | |
+        | **Kesimpulan:** | Tuntas (jika ... kriteria muncul) / Belum Tuntas | |
+        " : ($assessmentModel === 'Interval Nilai' ? "
+        **B.1. INTERVAL NILAI**
+        Guru menggunakan rentang nilai untuk menentukan tindak lanjut.
+
+        | Rentang Nilai | Keterangan & Tindak Lanjut |
+        | :--- | :--- |
+
+ | **0 - 40%** | **Belum Mencapai Ketuntasan (Remedial Seluruh Bagian)** <br> Siswa belum memahami konsep dasar and memerlukan bimbingan intensif dari awal. |
+        | **41 - 65%** | **Belum Mencapai Ketuntasan (Remedial Bagian Tertentu)** <br> Siswa sudah memahami sebagian konsep namun masih kesulitan di bagian [Sebutkan bagian sulit]. Perlu remedial pada indikator yang belum tuntas. |
+        | **66 - 85%** | **Sudah Mencapai Ketuntasan (Tidak Perlu Remedial)** <br> Siswa sudah menguasai materi dengan baik. Dapat diberikan latihan pemantapan. |
+        | **86 - 100%** | **Sudah Mencapai Ketuntasan (Pengayaan)** <br> Siswa sangat mahir. Berikan tantangan lebih kompleks atau menjadi tutor sebaya. |
+        " : ($assessmentModel === 'Rubrik' ? "
+        **B.1. RUBRIK PENILAIAN (LEVELING)**
+        Guru menyusun tingkatan pencapaian untuk setiap indikator.
+
+        | Aspek / Indikator | Baru Berkembang (1) | Layak (2) | Cakap (3) | Mahir (4) |
+        | :--- | :--- | :--- | :--- | :--- |
+        | **[Aspek 1 - e.g. Pemahaman]** | Belum mampu menjelaskan [konsep] secara mandiri. | Mampu menjelaskan konsep namun masih kurang tepat/lengkap. | Mampu menjelaskan konsep dengan benar and menggunakan bahasa sendiri. | Mampu menjelaskan konsep dengan sangat detail, logis, and memberikan contoh relevan. |
+        | **[Aspek 2 - e.g. Keterampilan]** | Belum bisa menerapkan [prosedur]. | Bisa menerapkan prosedur tapi butuh bimbingan. | Bisa menerapkan prosedur dengan benar secara mandiri. | Bisa menerapkan prosedur dengan sangat lancar, efisien, and kreatif. |
+        | **[Aspek 3 - e.g. Sikap]** | Kurang aktif dlm diskusi. | Cukup aktif tapi jarang berpendapat. | Aktif berdiskusi and menghargai pendapat teman. | Sangat aktif, menjadi inisiator diskusi, and memimpin kelompok dengan baik. |
+        " : "
+        **B.1. PENDEKATAN KKTP (OTOMATIS PILIHAN AI)**
+        *(Karena Anda memilih mode Otomatis, AI telah menentukan metode penilaian yang paling efektif untuk materi ini)*:
+
+        **Pilihan Metode: [Sebutkan nama metode: Rubrik/Deskripsi/Interval]**
+
+        [TULISKAN ISI PENILAIAN SECARA LENGKAP & SPESIFIK DI SINI. Jika memilih Rubrik, buat tabel rubrik minimal 3 aspek. Jika Deskripsi, buat checklist minimal 4 kriteria. Jika Interval, buat panduan tindak lanjut yang disesuaikan dengan materi ini].
+        "))) . "
+
+        ---
+
+        **C. ASESMEN FORMATIF & SUMATIF (INSTRUMEN)**
+        **C.1. Asesmen Formatif (Selama Proses)**
+        | Komponen | Teknik Penilaian | Instrumen |
+        | :--- | :--- | :--- |
+        | **Observasi 6C** | Pengamatan aktif | Lembar Observasi (Character, Citizenship, Collaboration, Communication, Creativity, Critical Thinking) |
+        | **Refleksi Diri** | Self Assessment | Menilai pemahaman mandiri menggunakan kartu refleksi |
+        | **Feedback** | Peer Feedback | Memberikan masukan konstruktif antar teman |
+
+        **C.2. Asesmen Sumatif (Akhir Materi)**
+        *(Sediakan minimal 2-3 contoh soal objektif atau instruksi tugas akhir yang mengukur Tujuan Pembelajaran secara utuh)*
+
+        | Kriteria Ketuntasan | Perlu Bimbingan (1) | Cukup (2) | Baik (3) | Sangat Baik (4) |
+        | :--- | :--- | :--- | :--- | :--- |
+        | **Pemahaman Konten** | Mengalami miskonsepsi | Paham sebagian | Paham secara utuh | Paham & mampu mengembangkan |
+        | **Aplikasi/Analisis** | Belum bisa menerapkan | Bisa menerapkan dengan bantuan | Bisa menerapkan mandiri | Bisa menganalisis & berinovasi |
 
         ### 3. MATERI AJAR MENDETAIL
         - Sajikan materi akademik yang sangat kompleks dan komprehensif (minimal 800-1000 kata).
         - Harus mencakup: Konsep, Fakta, Prinsip, Prosedur, dan Analisis Kontekstual.
         - Penjelasan harus selevel isi bab buku teks berkualitas tinggi.
 
-        ### 4. GLOSARIUM & 5. DAFTAR PUSTAKA
-        - Daftar istilah penting dan referensi resmi Kemendikdasmen.
+        ### 4. GLOSARIUM
+        **WAJIB DIISI!** Daftar minimal 5-10 istilah penting and definisinya.
+        - **[Istilah]**: Definisi...
+
+        ### 5. DAFTAR PUSTAKA
+        **WAJIB DIISI!** Minimal 3-5 referensi kredibel (Buku, Jurnal, Sumber Digital).
 
         **PRINSIP**: Output harus sangat substantif, tidak boleh ringkas. Gunakan seluruh kapasitas token untuk bagian ini saja.
         ";
@@ -1709,6 +1951,26 @@ c) **Di Bagian \"Materi Ajar Mendetail\":**
         $context = $data['context'] ?? '';
         $difficulty = $data['difficulty'] ?? 50;
         $typeCounts = $data['typeCounts'] ?? ['pg' => 10];
+
+        // Mode stimulus: semua soal bersubstimulus, tanpa stimulus, atau campuran
+        $stimulusMode = $data['stimulusMode'] ?? 'all';
+        if (!in_array($stimulusMode, ['all', 'none', 'mixed'], true)) {
+            $stimulusMode = 'all';
+        }
+        if ($stimulusMode === 'none') {
+            $stimulusLabel = 'Semua soal tanpa stimulus';
+            $stimulusRule = '4. **TANPA STIMULUS (WAJIB)**: Set "stimulus": "" untuk setiap soal. Tulis pertanyaan secara langsung, padat, dan tanpa narasi tambahan.';
+            $stimulusFieldValue = '"stimulus": ""';
+        } elseif ($stimulusMode === 'mixed') {
+            $stimulusLabel = 'Campuran (sebagian dengan stimulus)';
+            $stimulusRule = '4. **STIMULUS CAMPURAN (WAJIB)**: Sekitar setengah soal memakai stimulus narasi kaya (3-5 kalimat), data tabel, atau studi kasus; setengahnya lagi memakai "stimulus": "". Sebarkan kedua jenis ini secara merata di seluruh batch dan tipe soal.';
+            $stimulusFieldValue = '"stimulus": "narasi kaya untuk soal bersubstimulus ATAU string kosong untuk soal tanpa stimulus"';
+        } else {
+            $stimulusLabel = 'Semua soal dengan stimulus';
+            $stimulusRule = "4. **STIMULUS KAYA & DETAIL (CRITICAL - DEEP LEARNING)**: Stimulus **WAJIB** berbentuk narasi kaya (3-5 kalimat), data tabel, studi kasus, atau fenomena nyata. Dilarang soal hafalan definisi literal. Stimulus harus membangun konteks yang:\n           - **Mindful**: Mengajak siswa menyadari fenomena/masalah secara utuh.\n           - **Meaningful**: Menunjukkan relevansi materi dengan kehidupan nyata atau isu global/lokal.";
+            $stimulusFieldValue = '"stimulus": "Narasi kaya, studi kasus, atau data riil (3-5 kalimat, WAJIB DETAIL)"';
+        }
+        $stimulusField = $stimulusFieldValue . ',';
 
         // Batching context
         $batchNum = $data['batchNum'] ?? 1;
@@ -1757,6 +2019,8 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
                 $typeStructures .= "\n" . $allTypeStructures[$type];
             }
         }
+        // Samakan contoh field "stimulus" pada skema tipe dengan mode yang dipilih
+        $typeStructures = str_replace('"stimulus": "..."', $stimulusFieldValue, $typeStructures);
 
         return "
         LANDASAN REGULASI: **{$regulation}** (Standar Nasional Kurikulum Merdeka).
@@ -1767,6 +2031,7 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
         - Konteks: \"{$context}\" 
         " . (!$context ? '(WAJIB: Gunakan Database Internal Kurikulum Merdeka & BSKAP 46/2025 Anda untuk menentukan CP/Kompetensi yang relevan secara mandiri)' : '(WAJIB JADI SUMBER UTAMA)') . "
         - HOTS Meter: {$difficulty}%
+         - Mode Stimulus: {$stimulusLabel}
         {$alreadyCovered}
 
         TUGAS UTAMA:
@@ -1779,9 +2044,7 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
         1. Gunakan Bahasa Indonesia akademis formal (PUEBI).
         2. **EFFICIENCY PRIORITY**: Gunakan kalimat yang PADAT dan SINGKAT. Hindari pengulangan kata. Maksimalkan substansi materi dalam ruang yang terbatas agar tidak terpotong.
         3. **REFERENSI MATERI (STRICT)**: Gunakan isi dari \"Konteks\" atau \"RINGKASAN MATERI\" sebagai sumber utama soal. Abaikan instruksi teknis guru jika ada; fokuslah pada konsep, fakta, dan data materi.
-        4. **STIMULUS KAYA & DETAIL (CRITICAL - DEEP LEARNING)**: Stimulus **WAJIB** berbentuk narasi kaya (3-5 kalimat), data tabel, studi kasus, atau fenomena nyata. Dilarang soal hafalan definisi literal. Stimulus harus membangun konteks yang:
-           - **Mindful**: Mengajak siswa menyadari fenomena/masalah secara utuh.
-           - **Meaningful**: Menunjukkan relevansi materi dengan kehidupan nyata atau isu global/lokal.
+        {$stimulusRule}
         5. **TRUE/FALSE MULTI-STATEMENT (MANDATORY)**: Khusus tipe \"true_false\", Anda WAJIB membuat minimal 3-5 pernyataan dalam satu nomor soal untuk dianalisis siswa.
         6. **VISUALIZATION (WAJIB - MINIMAL 1 SOAL PER BATCH)**: Jika soal membutuhkan grafik (Chart.js), diagram (Mermaid), atau infografis, WAJIB isi field \"visualization\" dengan config sesuai tipe visual (chart/mermaid/image/diagram). Minimal 1 soal batch ini punya visualization bermakna. Jika tidak ada visual, set \"visualization\": null.
         7. **VARIASI POSISI JAWABAN (MANDATORY)**: Pastikan posisi jawaban benar (untuk PG/Complex) selalu berpindah-pindah. Khusus soal \"matching\" (menjodohkan), urutan pada array \"right_side\" WAJIB diacak agar tidak lurus sejajar dengan \"left_side\" (Contoh pasangan variatif, bukan A-1, B-2).
@@ -1799,8 +2062,8 @@ $batchInstructions .= "- Buatlah 1 soal tipe **$type**\n";
            \"competency\": \"Intisari CP (max 5 kata)\", 
            \"indicator\": \"Indikator (max 8 kata)\", 
            \"cognitive_level\": \"L1/L2/L3/L4/L5/L6\",
-           \"stimulus\": \"Narasi kaya, studi kasus, atau data riil (3-5 kalimat, WAJIB DETAIL)\",
-           \"image_hint\": \"Instruksi gambar (Opsional, gunakan [] jika ada)\"
+           {$stimulusField}
+           \"image_hint\": \"Instruksi gambar singkat untuk guru (WAJIB string). Isi hanya bila soal benar-benar butuh gambar; jika tidak, kosongkan (dua tanda petik berdampingan). JANGAN pakai [] atau teks 'tidak ada'.\"
          {$typeStructures}
 
          INSTRUKSI WAJIB: Anda HANYA boleh menghasilkan soal dengan tipe-tipe yang tercantum di atas. DILARANG membuat soal dengan tipe di luar daftar.
@@ -2240,6 +2503,35 @@ Anda adalah \"Mesin Intelijen Kurikulum Nasional\" yang bertugas menyusun **Baha
         - Pastikan urutan mengikuti alur bab di buku agar sistematis.
         - **KETAT**: Setiap nilai 'jp' HARUS kelipatan {$jpPerWeek}. Tidak boleh ada angka 3, 9, 15, dst jika {$jpPerWeek} = 6.
         ";
+    }
+
+    /**
+     * Bersihkan image_hint dari output AI: "[]", array kosong, atau teks
+     * "tidak ada" diubah menjadi string kosong agar tidak tampil sebagai instruksi.
+     */
+    protected function normalizeQuizImageHints(array $result): array
+    {
+        if (empty($result['questions']) || !is_array($result['questions'])) {
+            return $result;
+        }
+
+        foreach ($result['questions'] as &$question) {
+            if (!is_array($question)) {
+                continue;
+            }
+            $hint = $question['image_hint'] ?? '';
+            if (is_array($hint)) {
+                $hint = implode(', ', array_filter($hint, 'is_string'));
+            }
+            $hint = is_string($hint) ? trim($hint) : '';
+            if ($hint === '' || in_array(mb_strtolower($hint), ['[]', '[ ]', '-', 'tidak ada', 'none', 'n/a'], true)) {
+                $hint = '';
+            }
+            $question['image_hint'] = $hint;
+        }
+        unset($question);
+
+        return $result;
     }
 
     protected function extractJson($text)

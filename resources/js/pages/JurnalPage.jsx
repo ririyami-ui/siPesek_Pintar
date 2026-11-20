@@ -284,10 +284,12 @@ export default function JurnalPage() {
         subject: subjData?.name || '',
         className: classData?.rombel || '',
         date: currentDate,
-        programMengajar: program ? {
-          materi: program.materi || '',
-          pekanEfektif: program.pekan_efektif,
-        } : null,
+        // `topic` sudah di-resolve dari PROMES (getTopicForSchedule).
+        // TeachingProgram tidak punya field `materi`; fallback ke `topic` model.
+        programMengajar: {
+          materi: topic || program?.topic || program?.materi || '',
+          pekanEfektif: program?.pekan_efektif,
+        },
         previousJournal: prev ? {
           topic: prev.topic,
           learningObjectives: prev.learning_objectives,
@@ -308,7 +310,10 @@ export default function JurnalPage() {
 
       toast.success('Jurnal berhasil diisi otomatis! Silakan review.');
     } catch (error) {
-      const msg = error?.response?.data?.message || 'Gagal mengisi jurnal otomatis. Coba lagi.';
+      const detail = error?.response?.data?.message;
+      const msg = detail
+        ? `Gagal mengisi jurnal otomatis: ${detail}. Data yang sudah ada tidak diubah.`
+        : 'Gagal mengisi jurnal otomatis. Data yang sudah ada tidak diubah.';
       toast.error(msg);
     } finally {
       setIsGenerating(false);

@@ -46,6 +46,11 @@ class UlanganHarianController extends Controller
             $query->where('academic_year', $request->academic_year);
         }
 
+        // Analisis perlu seluruh assessment pada semester aktif, bukan hanya 20 terbaru.
+        if ($request->boolean('all')) {
+            return response()->json(['data' => $query->get()]);
+        }
+
         return response()->json($query->paginate(20));
     }
 
@@ -208,6 +213,11 @@ class UlanganHarianController extends Controller
                 '/siswa/nilai'
             );
         }
+
+        return response()->json([
+            'message' => 'Nilai ulangan harian berhasil disinkronkan.',
+            'count' => count($scores),
+        ]);
     }
 
     public function show($id)
@@ -269,9 +279,11 @@ class UlanganHarianController extends Controller
                 'academic_year' => $request->academic_year,
             ]);
 
-            // Perbarui relasi ke tabel grades (skor akhir menyesuaikan skor baru)
-            Grade::where('ulangan_harian_item_id', $assessment->id)->delete();
-            $this->syncToGrades($assessment, $request->input('assessment_type', 'Ulangan Harian'));
+            // Perbarui relasi ke tabel grades hanya jika diminta (konsisten dengan store()).
+            if ($request->boolean('sync_to_grades')) {
+                Grade::where('ulangan_harian_item_id', $assessment->id)->delete();
+                $this->syncToGrades($assessment, $request->input('assessment_type', 'Ulangan Harian'));
+            }
 
             DB::commit();
 

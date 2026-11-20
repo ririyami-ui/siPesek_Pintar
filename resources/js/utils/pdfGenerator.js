@@ -1549,7 +1549,7 @@ const drawHorizontalBarChart = (doc, x, y, width, data) => {
 
 // --- MAIN GENERATOR ---
 
-export const generateClassAnalysisPDF = (classData, reportText, teacherName, userProfile) => {
+export const generateClassAnalysisPDF = (classData, reportText, teacherName, userProfile, academicYear, activeSemester) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
@@ -1573,7 +1573,7 @@ export const generateClassAnalysisPDF = (classData, reportText, teacherName, use
 
   // Header Info Line
   doc.setFontSize(9);
-  doc.text(`Tahun Pelajaran: ${userProfile?.academicYear || '-'} | Semester: ${userProfile?.activeSemester || '-'}`, pageWidth / 2, 38, { align: "center" });
+  doc.text(`Tahun Pelajaran: ${academicYear || userProfile?.academicYear || '-'} | Semester: ${activeSemester || userProfile?.activeSemester || '-'}`, pageWidth / 2, 38, { align: "center" });
 
   // White Card for Header Info
   doc.setFillColor(255, 255, 255);
@@ -1664,7 +1664,7 @@ export const generateClassAnalysisPDF = (classData, reportText, teacherName, use
   const attendanceData = [
     { label: 'Hadir', value: classData.stats?.attendance.Hadir || 0, color: [34, 197, 94] },
     { label: 'Sakit', value: classData.stats?.attendance.Sakit || 0, color: [234, 179, 8] },
-    { label: 'Izin', value: classData.stats?.attendance.Ijin || 0, color: [59, 130, 246] },
+    { label: 'Izin', value: classData.stats?.attendance.Izin || 0, color: [59, 130, 246] },
     { label: 'Alpa', value: classData.stats?.attendance.Alpha || 0, color: [239, 68, 68] }
   ];
   drawPieChart(doc, midPage + 5, chartY + 15, 45, attendanceData);
@@ -1824,7 +1824,7 @@ export const generateStudentAnalysisPDF = (studentName, className, reportText, s
   doc.save(`Laporan_Siswa_${studentName}_${new Date().toISOString().slice(0, 10)}.pdf`);
 };
 
-export const generateStudentIndividualRecapPDF = ({ student, stats, grades, attendance, infractions, narrative, userProfile, teacherName, selectedSubject, radarChartImage, narrativeImage }) => {
+export const generateStudentIndividualRecapPDF = ({ student, stats, grades, attendance, infractions, narrative, userProfile, teacherName, selectedSubject, radarChartImage, narrativeImage, academicYear, activeSemester }) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.width;
   const pageHeight = doc.internal.pageSize.height;
@@ -1880,7 +1880,7 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
   }
 
   doc.setFontSize(9);
-  doc.text(`Semester: ${userProfile?.activeSemester || '-'} | Tahun Pelajaran: ${userProfile?.academicYear || '-'} `, pageWidth / 2, yPos, { align: 'center' });
+  doc.text(`Semester: ${activeSemester || userProfile?.activeSemester || '-'} | Tahun Pelajaran: ${academicYear || userProfile?.academicYear || '-'} `, pageWidth / 2, yPos, { align: 'center' });
 
   // Divider
   doc.setLineWidth(0.5);
@@ -1893,10 +1893,15 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
   doc.setFont('helvetica', 'normal');
   yPos += 7;
 
+  // API /students mengembalikan kelas lewat relasi `class`, bukan field `rombel` pada siswa.
+  const studentClass = (typeof student?.class === 'object' && student?.class !== null)
+    ? (student.class.rombel || student.class.name || '-')
+    : (student?.class || student?.class_name || student?.rombel || '-');
+
   doc.text(`Nama Lengkap: ${student.name} `, 14, yPos);
   doc.text(`NIS: ${student.nis || '-'} `, pageWidth / 2, yPos);
   yPos += 6;
-  doc.text(`Kelas: ${student.rombel} `, 14, yPos);
+  doc.text(`Kelas: ${studentClass} `, 14, yPos);
   doc.text(`Kelamin: ${student.gender || '-'} `, pageWidth / 2, yPos);
 
   // Stats Block
@@ -1911,7 +1916,7 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
   const statsTable = [
     [selectedSubject ? `Rata - rata ${selectedSubject} ` : "Rata-rata Akademik", "Nilai Sikap (Predikat)", `Nilai Akhir(${academicWeight} / ${attitudeWeight})`, "Persentase Kehadiran"],
     [stats.academicAvg, `${stats.attitudeScore} (${stats.attitudePredicate})`, stats.finalScore,
-    `${((stats.attendance.Hadir / (Object.values(stats.attendance).reduce((a, b) => a + b, 0) || 1)) * 100).toFixed(1)}% `]
+    `${(((stats.attendance.Hadir || 0) / (((stats.attendance.Hadir || 0) + (stats.attendance.Sakit || 0) + (stats.attendance.Izin || 0) + (stats.attendance.Alpha || 0)) || 1)) * 100).toFixed(1)}% `]
   ];
 
   doc.autoTable({
@@ -1939,7 +1944,7 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
   const gradeRows = grades.map(g => [
     moment(g.date).format('DD/MM/YY'),
     g.subjectName,
-    g.material,
+    g.material || g.topic,
     g.assessmentType,
     g.score
   ]);
@@ -1980,12 +1985,41 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
   yPos = doc.autoTable.previous.finalY + 15;
   if (yPos > pageHeight - 60) { doc.addPage(); yPos = 20; }
 
+  // Rincian kehadiran harian untuk transparansi laporan, langsung di bawah
+  // tabel CATATAN KEDISIPLINAN & KEHADIRAN.
+  const hariIndonesia = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+  doc.setFont('helvetica', 'bold');
+  doc.text("RINCIAN KEHADIRAN HARIAN", 14, yPos);
+
+  const attendanceRows = (attendance || []).map(a => {
+    const status = a.status === 'Alpa' ? 'Alpha' : (a.status || '-');
+    return [
+      moment(a.date).format('DD/MM/YY'),
+      hariIndonesia[moment(a.date).day()] || '-',
+      a.subject?.name || '-',
+      String(status).toUpperCase(),
+      a.note || '-'
+    ];
+  });
+
+  doc.autoTable({
+    head: [["Tanggal", "Hari", "Mata Pelajaran", "Status", "Keterangan"]],
+    body: attendanceRows.length > 0 ? attendanceRows : [["-", "Tidak ada data kehadiran", "-", "-", "-"]],
+    startY: yPos + 5,
+    theme: 'striped',
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [71, 85, 105] }
+  });
+
+  yPos = doc.autoTable.previous.finalY + 15;
+  if (yPos > pageHeight - 60) { doc.addPage(); yPos = 20; }
+
   // Attendance & Narrative Row
   const attTable = [
     ["Kehadiran", "Hari"],
     ["Hadir", stats.attendance.Hadir || 0],
     ["Sakit", stats.attendance.Sakit || 0],
-    ["Ijin", stats.attendance.Ijin || 0],
+    ["Izin", stats.attendance.Izin || 0],
     ["Alpha", stats.attendance.Alpha || 0]
   ];
 
@@ -2010,7 +2044,10 @@ export const generateStudentIndividualRecapPDF = ({ student, stats, grades, atte
 
   // Clean up AI intro fluff from narrative if present
   const cleanedNarrative = (narrative || "Belum ada catatan narasi untuk periode ini.")
-    .replace(/^Halo,.*?(Saya Si Pintar|asisten AI).*?analisis.*?:[\s\n]*/is, '');
+    .replace(/^Halo,.*?(Saya Si Pintar|asisten AI).*?analisis.*?:[\s\n]*/is, '')
+    // Pembukaan gaya Si Pintar (nama pencipta / sapaan) pada narasi lama.
+    .replace(/^(?:Siap|Oke|Halo)[^\n]*(?:Ririyami|Bondowoso|Si Pintar|asisten AI|dirancang sama)[^\n]*\s*/i, '')
+    .replace(/^(?:ini|berikut)\b[^\n]*?(?:narasi|rapor|catatan)[^\n]*:\s*/i, '');
 
   if (narrativeImage) {
     try {

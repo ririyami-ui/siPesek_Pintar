@@ -25,6 +25,7 @@ const AnalisisUlanganHarianPage = () => {
   const [analisisResult, setAnalisisResult] = useState(null);
   const [rekomendasiAI, setRekomendasiAI] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false); // Ekspor tidak boleh menyembunyikan blok hasil analisis
   const [loadingUlanganHarian, setLoadingUlanganHarian] = useState(true);
   const [loadingClassesSubjects, setLoadingClassesSubjects] = useState(true);
   const [error, setError] = useState('');
@@ -156,7 +157,7 @@ const AnalisisUlanganHarianPage = () => {
       setEditItemMetaSource(null);
       setFormRemidi({});
 
-      const listRes = await api.get('/ulangan-harian', { params: { semester: activeSemester, academic_year: academicYear } });
+      const listRes = await api.get('/ulangan-harian', { params: { semester: activeSemester, academic_year: academicYear, all: true } });
       setUlanganHarianList(listRes.data.data || listRes.data || []);
       if (res.data.data && res.data.data.id) {
         setSelectedUlanganHarian(res.data.data.id);
@@ -206,6 +207,7 @@ const AnalisisUlanganHarianPage = () => {
         const params = {
           semester: activeSemester,
           academic_year: academicYear,
+          all: true, // ambil semua assessment, bukan hanya 20 terbaru dari paginate
           // class_id: selectedClassId, // Add filters if needed
           // subject_id: selectedSubjectId,
         };
@@ -244,7 +246,6 @@ const AnalisisUlanganHarianPage = () => {
 
       // 1. Lakukan analisis butir & siswa lokal (statistik murni)
       const hasilAnalisis = analisisUlanganHarian(uhItem);
-      setAnalisisResult(hasilAnalisis);
 
       // 2. Buat rekomendasi ketuntasan lokal
       const rombelData = { kktp: uhItem.kktp_score || 70, students: [] };
@@ -270,7 +271,8 @@ const AnalisisUlanganHarianPage = () => {
           no_absen: st && st.absen != null && st.absen !== '' ? st.absen : s.student_id,
         };
       });
-      hasilAnalisis.rekomendasi = rekomendasiLokalArr;
+      // Simpan salinan baru agar objek hasil tidak dimutasi setelah masuk state.
+      setAnalisisResult({ ...hasilAnalisis, rekomendasi: rekomendasiLokalArr });
 
       // 3. Rekomendasi per siswa — MURNI STATISTIK (tanpa Gemini, tanpa halusinasi)
       const rekomendasiMurni = rekomendasiLokal(rekomendasiLokalArr);
@@ -305,7 +307,7 @@ const AnalisisUlanganHarianPage = () => {
       setError("Analisis belum lengkap untuk diekspor.");
       return;
     }
-    setLoading(true);
+    setIsExporting(true);
     try {
       const { generateUlanganHarianPDF } = await import('../utils/pdfGenerator');
       const uhItem = ulanganHarianList.find(uh => String(uh.id) === String(selectedUlanganHarian));
@@ -314,7 +316,7 @@ const AnalisisUlanganHarianPage = () => {
       console.error("Error generating PDF:", err);
       setError("Gagal membuat laporan PDF.");
     } finally {
-      setLoading(false);
+      setIsExporting(false);
     }
   };
 
@@ -324,7 +326,7 @@ const AnalisisUlanganHarianPage = () => {
       setError("Analisis belum lengkap untuk diekspor ke Word.");
       return;
     }
-    setLoading(true);
+    setIsExporting(true);
     try {
       const [{ generateUlanganHarianWord }, { saveAs }] = await Promise.all([
         import('../utils/ulanganHarianDocx'),
@@ -349,16 +351,17 @@ const AnalisisUlanganHarianPage = () => {
           console.warn("Gagal memuat data absensi untuk laporan:", e);
         }
       }
-      uhItem.attendanceMap = attendanceMap;
+      // Salin item agar state ulanganHarianList tidak ikut berubah.
+      const uhItemForExport = { ...uhItem, attendanceMap };
 
-      const blob = await generateUlanganHarianWord(uhItem, analisisResult, rekomendasiAI, userProfile || {}, academicYear, activeSemester);
-      const topic = (uhItem?.rpp_topic || uhItem?.subject_name || 'Ulangan_Harian').replace(/\s+/g, '_');
+      const blob = await generateUlanganHarianWord(uhItemForExport, analisisResult, rekomendasiAI, userProfile || {}, academicYear, activeSemester);
+      const topic = (uhItemForExport?.rpp_topic || uhItemForExport?.subject_name || 'Ulangan_Harian').replace(/\s+/g, '_');
       saveAs(blob, `Analisis_Ulangan_Harian_${topic}.docx`);
     } catch (err) {
       console.error("Error generating Word:", err);
       setError("Gagal membuat laporan Word.");
     } finally {
-      setLoading(false);
+      setIsExporting(false);
     }
   };
 
@@ -422,7 +425,7 @@ const AnalisisUlanganHarianPage = () => {
   const butirLemahKelas = analisisResult?.kelas?.butirLemah || [];
   // Ketuntasan klasikal: minimal X% siswa mencapai KKTP (target_klasikal, default 80)
   const uhTerpilih = ulanganHarianList.find(uh => String(uh.id) === String(selectedUlanganHarian));
-  const kktpKelas = Number(uhTerpilih?.kktp_score || analisisResult?.kelas?.kktp || 70);
+  const kktpKelas = Number(uhTerpilih?.kktp_score || analisisResult?.kelas?.kktpKelas || 70);
   const targetKlasikal = Number(uhTerpilih?.target_klasikal || 80);
   const tuntasKlasikal = persenKetuntasan >= targetKlasikal;
   // Ketuntasan setelah remidi: skor terakhir siswa = nilai remidi (bila ada & ≥ 0), selain itu skor akhir
@@ -493,14 +496,14 @@ const AnalisisUlanganHarianPage = () => {
               <button
                 onClick={handleExportPDF}
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl flex items-center gap-2 text-sm transition"
-                disabled={!analisisResult}
+                disabled={!analisisResult || isExporting}
               >
                 <FileText size={18} /> PDF
               </button>
               <button
                 onClick={handleExportWord}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-2 text-sm transition"
-                disabled={!analisisResult}
+                disabled={!analisisResult || isExporting}
               >
                 <FileText size={18} /> Word
               </button>
