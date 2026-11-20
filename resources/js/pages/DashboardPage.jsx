@@ -256,7 +256,7 @@ export default function DashboardPage() {
         if (s.type === 'non-teaching') return false;
         
         // If backend provided status, trust it
-        if (s.status === 'berlangsung' || s.status === 'menunggu_absen' || s.status === 'alfa' || s.status === 'assignment') {
+        if (s.status === 'berlangsung' || s.status === 'menunggu_absen' || s.status === 'alfa' || s.status === 'assignment' || s.status === 'ditunda') {
             const start = moment(s.startTime || s.start_time, 'HH:mm');
             const end = moment(s.endTime || s.end_time, 'HH:mm');
             if (end.isBefore(start)) end.add(1, 'day');

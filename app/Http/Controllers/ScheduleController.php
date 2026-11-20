@@ -62,6 +62,11 @@ class ScheduleController extends Controller
                   });
         })->first();
 
+        // [FIX] Agenda kegiatan (is_holiday=false) hanya menunda jadwal pada rentang jam yang ditentukan.
+        $agendaStart = $agenda && $agenda->start_time ? Carbon::parse($agenda->start_time)->format('H:i') : null;
+        $agendaEnd = $agenda && $agenda->end_time ? Carbon::parse($agenda->end_time)->format('H:i') : null;
+        $agendaWindowActive = $agendaStart && $agendaEnd && $currentTime >= $agendaStart && $currentTime < $agendaEnd;
+
         // Fetch journals and attendance for today to determine status
         $journals = Journal::where('date', $todayDate)->get()->groupBy('schedule_id');
         $attendance = Attendance::where('date', $todayDate)->get()->groupBy(function($a) {
@@ -92,8 +97,28 @@ class ScheduleController extends Controller
             ->orderBy('start_period')
             ->orderBy('start_time')
             ->get();
+
+        // [FIX] Jadwal Non-KBM yang sedang aktif hari ini.
+        $activeNonTeaching = Schedule::where('type', 'non-teaching')
+            ->where('day', $todayDay)
+            ->where(function($q) use ($todayDate) {
+                $q->where(function($sub) {
+                    $sub->whereNull('start_date')->whereNull('end_date');
+                })->orWhere(function($sub) use ($todayDate) {
+                    $sub->where('start_date', '<=', $todayDate)
+                        ->where(function($range) use ($todayDate) {
+                            $range->where('end_date', '>=', $todayDate)->orWhereNull('end_date');
+                        });
+                });
+            })
+            ->get()
+            ->first(function($sch) use ($currentTime) {
+                $start = Carbon::parse($sch->start_time)->format('H:i');
+                $end = Carbon::parse($sch->end_time)->format('H:i');
+                return $currentTime >= $start && $currentTime < $end;
+            });
         
-        $schedules->transform(function($s) use ($todayDate, $currentTime, $journals, $attendance, $now, $agenda) {
+        $schedules->transform(function($s) use ($todayDate, $currentTime, $journals, $attendance, $now, $agenda, $agendaStart, $agendaEnd, $agendaWindowActive, $activeNonTeaching) {
             $journal = $journals->get($s->id)?->first();
             $s->journal_id = $journal ? $journal->id : null;
             $s->is_assignment = $journal ? (bool)$journal->is_assignment : false;
@@ -131,21 +156,27 @@ class ScheduleController extends Controller
                 $status = 'assignment';
             }
 
-            // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
-            if ($agenda) {
-                // [DARURAT PARSIAL] Emergency time-bounded block:
-                // suspend ONLY schedules overlapping the emergency window (start_time - end_time)
-                if ($agenda->is_emergency && $agenda->start_time && $agenda->end_time) {
-                    $emergencyStart = Carbon::parse($agenda->start_time)->format('H:i');
-                    $emergencyEnd = Carbon::parse($agenda->end_time)->format('H:i');
-
+            // [OVERRIDE] Agenda/Holiday: libur seharian, emergency/kegiatan dibatasi jamnya.
+            $isTeaching = ($s->type ?? 'teaching') === 'teaching';
+            if ($agenda && $isTeaching) {
+                if ($agenda->is_emergency && $agendaStart && $agendaEnd) {
                     // Overlap exists if: schedule start < emergency end AND schedule end > emergency start
-                    if ($startTime < $emergencyEnd && $endTime > $emergencyStart) {
+                    if ($startTime < $agendaEnd && $endTime > $agendaStart) {
                         $status = 'agenda';
                     }
+                } elseif (!$agenda->is_holiday && $agendaStart && $agendaEnd) {
+                    // Kegiatan (kokurikuler dll.) hanya menunda mapel yang overlap dengan jam kegiatan.
+                    if ($agendaWindowActive && $startTime < $agendaEnd && $endTime > $agendaStart) {
+                        $status = 'ditunda';
+                    }
                 } else {
-                    $status = 'agenda';
+                    $status = $agenda->is_holiday ? 'libur' : 'agenda';
                 }
+            }
+
+            // [FIX] Jadwal Non-KBM aktif menunda mapel yang sedang berlangsung.
+            if ($isTeaching && $activeNonTeaching && $startTime < Carbon::parse($activeNonTeaching->end_time)->format('H:i') && $endTime > Carbon::parse($activeNonTeaching->start_time)->format('H:i')) {
+                $status = 'ditunda';
             }
 
             $s->status = $status;

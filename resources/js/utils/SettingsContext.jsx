@@ -149,6 +149,24 @@ export const SettingsProvider = ({ children }) => {
         return t;
     };
 
+    // Batas awal setiap sesi (jam ke) diambil dari profil waktu aktif, bukan dari pergantian mapel.
+    const getTodaySessionSlots = (dayName) => {
+        let raw = settings.userProfile?.teaching_time_slots;
+        try {
+            if (typeof raw === 'string') raw = JSON.parse(raw);
+        } catch (e) {
+            return [];
+        }
+        const profiles = raw?.profiles;
+        if (!Array.isArray(profiles) || profiles.length === 0) return [];
+        const activeProfile = profiles.find(p => p.is_active) || profiles[0];
+        const slots = activeProfile?.slots?.[dayName];
+        if (!Array.isArray(slots)) return [];
+        return slots
+            .filter(s => s && s.jam_ke != null && typeof s.mulai === 'string' && s.mulai.length >= 5)
+            .map(s => ({ jamKe: s.jam_ke, mulai: s.mulai }));
+    };
+
     const playChime = () => new Promise(res => {
         try {
             if (!audioContextRef.current) {
@@ -181,7 +199,14 @@ export const SettingsProvider = ({ children }) => {
         const next = audioQueueRef.current.shift();
         try {
             await playChime();
-            
+
+            // Bel sesi murni: tidak ada pengumuman yang dibacakan.
+            if (next.chimeOnly) {
+                isAnnouncingRef.current = false;
+                setTimeout(processQueue, 300);
+                return;
+            }
+
             // Cancel any current speech to prevent queuing overlap or "stuck" speech
             window.speechSynthesis.cancel();
             
@@ -332,6 +357,9 @@ export const SettingsProvider = ({ children }) => {
                 lastDateRef.current = date;
             }
 
+            // Waktu yang sudah memicu pengumuman pada tick ini; chime-nya sudah ikut pengumuman.
+            const timesWithAnnouncement = new Set();
+
             // [PRIORITY 1] Logic for Teaching Activities (KBM) - Moved up to prioritize teacher calls
             // Use full_data if available (contains all schedules), fallback to data.data (grouped by rombel)
             const kbmSource = data.full_data || data.data;
@@ -373,6 +401,7 @@ export const SettingsProvider = ({ children }) => {
                             'en-US': `Attention please. The lesson for ${normalizeForSpeech(trigger.subject)} for Class ${normalizeForSpeech(classList)} will begin shortly. Teacher ${trigger.teacher} is requested to proceed to the class.`
                         };
                         audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
+                        timesWithAnnouncement.add(trigger.startFull);
                         processQueue();
                     }
                 });
@@ -451,6 +480,7 @@ export const SettingsProvider = ({ children }) => {
                                             : `Attention please. The time for ${normalizeForSpeech(act.activity_name)} has ended. All students are expected to return to their respective classes to continue learning activities.`)
                                 };
                                 audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
+                                timesWithAnnouncement.add(targetTime);
                                 processQueue();
                             }
                         }
@@ -489,11 +519,32 @@ export const SettingsProvider = ({ children }) => {
                                 'en-US': `Attention please. All teaching and learning activities for today have concluded. All students are requested to tidy up their belongings and leave the classrooms in an orderly manner. See you tomorrow.`
                             };
                             audioQueueRef.current.push({ text: texts[settings.audioLanguage] || texts['id-ID'], lang: settings.audioLanguage });
+                            timesWithAnnouncement.add(targetTime);
                             processQueue();
                         }
                     }
                 }
             }
+
+            // [BELL] Bel berbunyi di awal setiap sesi (jam ke), bukan hanya saat pergantian mapel.
+            // Sesi yang bertepatan dengan pengumuman lain tidak diberi chime ganda.
+            getTodaySessionSlots(data.day).forEach(slot => {
+                const startFull = slot.mulai.length === 5 ? `${slot.mulai}:00` : slot.mulai;
+                const startMoment = moment(startFull, 'HH:mm:ss');
+                const currentMoment = moment(time, 'HH:mm:ss');
+                const diffSeconds = currentMoment.diff(startMoment, 'seconds');
+
+                if (diffSeconds >= 0 && diffSeconds <= 15) {
+                    const id = `bel-sesi-${slot.jamKe}-${startFull}-${date}`;
+                    if (!announcedIdsRef.current.has(id)) {
+                        announcedIdsRef.current.add(id);
+                        if (!timesWithAnnouncement.has(startFull)) {
+                            audioQueueRef.current.push({ chimeOnly: true, lang: settings.audioLanguage });
+                            processQueue();
+                        }
+                    }
+                }
+            });
         };
 
         return () => {

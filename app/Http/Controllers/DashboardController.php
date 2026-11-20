@@ -10,6 +10,7 @@ use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\Attendance;
 use App\Models\User;
+use App\Models\UserProfile;
 use App\Models\TeacherAssignment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -71,25 +72,10 @@ class DashboardController extends Controller
                   });
         })->first();
 
-        // [HOTFIX] If today is a holiday, return empty monitoring data — no schedule cards should appear
-        if ($agenda) {
-            $isBlocking = true;
-            $name = strtolower($agenda->name ?? $agenda->title ?? '');
-            if (str_contains($name, 'upacara') || str_contains($name, 'senam') || str_contains($name, 'kokurikuler')) {
-                $isBlocking = false;
-            }
-
-            // [DARURAT PARSIAL] Emergency block is time-bounded — never empty the whole day's monitoring
-            if ($agenda->is_emergency === true) {
-                $isBlocking = false;
-            }
-
-            if ($isBlocking) {
-                // Return empty data for schedules but keep stats
-                $monitoringData = collect(); 
-                $groupedMonitoringData = collect();
-            }
-        }
+        // [FIX] Agenda kegiatan (is_holiday=false) hanya menunda jadwal pada rentang jam yang ditentukan.
+        $agendaStart = $agenda && $agenda->start_time ? Carbon::parse($agenda->start_time)->format('H:i') : null;
+        $agendaEnd = $agenda && $agenda->end_time ? Carbon::parse($agenda->end_time)->format('H:i') : null;
+        $agendaWindowActive = $agendaStart && $agendaEnd && $currentTime >= $agendaStart && $currentTime < $agendaEnd;
 
         // [FIX] Pre-fetch teacher names based on auth_user_id to ensure consistency with Schedule table
         $teacherUserIds = $schedules->pluck('teacher_id')->filter()->unique();
@@ -195,7 +181,7 @@ class DashboardController extends Controller
                 return $p->class_id . '-' . $p->subject_id;
             });
 
-        $monitoringData = $schedules->map(function ($schedule) use ($now, $todayDate, $currentTime, $assignments, $journalsBySchedule, $journalsByClassSubject, $attendanceData, $studentCounts, $programs, $monthIndex, $currentDay, $teachingPlans, $activeNonTeaching, $teacherUsers, $agenda) {
+        $monitoringData = $schedules->map(function ($schedule) use ($now, $todayDate, $currentTime, $assignments, $journalsBySchedule, $journalsByClassSubject, $attendanceData, $studentCounts, $programs, $monthIndex, $currentDay, $teachingPlans, $activeNonTeaching, $teacherUsers, $agenda, $agendaStart, $agendaEnd, $agendaWindowActive) {
             // Priority 1: Search by schedule_id (most accurate)
             $journal = $journalsBySchedule->has($schedule->id) ? $journalsBySchedule->get($schedule->id)->first() : null;
             
@@ -205,13 +191,8 @@ class DashboardController extends Controller
             $isActiveTime = $currentTime >= $startTime && $currentTime < $endTime;
             $isActive = $isActiveTime;
 
-            // If a non-teaching activity (break/ceremony) is currently active,
-            // teaching sessions are technically paused. We still mark them as isActiveTime
-            // for the purposes of selection, but we can flag them if needed.
-            if ($activeNonTeaching) {
-                // Keep isActive true if it IS the scheduled time, so it stays as the "active" card
-                // but its priority might be handled in the status below.
-            }
+            // Jadwal Non-KBM yang aktif ditandai lewat status 'ditunda' di bawah;
+            // kartu mapel tetap ditampilkan sebagai "Ditunda / Non-KBM".
 
             $key = $schedule->class_id . '-' . $schedule->subject_id;
             
@@ -260,26 +241,35 @@ class DashboardController extends Controller
             // BUT: We exclude 'belum_mulai' and 'selesai'
             $needsAttention = ($status === 'alfa' || $status === 'terlambat' || $status === 'menunggu_absen' || ($status === 'berlangsung' && !$hasTakenAttendance)) && !$isAssignment && $status !== 'belum_mulai';
 
-            // [OVERRIDE] If there is a School Agenda / Holiday, suspend normal activity logic
+            // [OVERRIDE] Agenda/Holiday: libur seharian, emergency/kegiatan dibatasi jamnya.
             if ($agenda) {
-                // [DARURAT PARSIAL] Emergency time-bounded block:
-                // suspend ONLY schedules overlapping the emergency window (start_time - end_time)
-                if ($agenda->is_emergency && $agenda->start_time && $agenda->end_time) {
-                    $emergencyStart = Carbon::parse($agenda->start_time)->format('H:i');
-                    $emergencyEnd = Carbon::parse($agenda->end_time)->format('H:i');
-
+                if ($agenda->is_emergency && $agendaStart && $agendaEnd) {
                     // Overlap exists if: schedule start < emergency end AND schedule end > emergency start
-                    if ($startTime < $emergencyEnd && $endTime > $emergencyStart) {
+                    if ($startTime < $agendaEnd && $endTime > $agendaStart) {
                         $status = 'libur';
                         $needsAttention = false;
                         $hasTakenAttendance = false;
                     }
+                } elseif (!$agenda->is_holiday && $agendaStart && $agendaEnd) {
+                    // Kegiatan (kokurikuler dll.) hanya menunda mapel yang overlap dengan jam kegiatan.
+                    if ($agendaWindowActive && $startTime < $agendaEnd && $endTime > $agendaStart) {
+                        $status = 'ditunda';
+                        $needsAttention = false;
+                        $hasTakenAttendance = false;
+                    }
                 } else {
-                    // Libur/Kegiatan seharian: suspend everything
+                    // Agenda tanpa jam tetap memperlakukan seluruh hari seperti perilaku lama.
                     $status = $agenda->is_holiday ? 'libur' : 'agenda';
                     $needsAttention = false; // Never flag as 'alfa'/'belum absen' on holidays
                     $hasTakenAttendance = false; // Keep UI state un-colored
                 }
+            }
+
+            // [FIX] Jadwal Non-KBM aktif menunda mapel yang sedang berlangsung.
+            if ($activeNonTeaching && $startTime < Carbon::parse($activeNonTeaching->end_time)->format('H:i') && $endTime > Carbon::parse($activeNonTeaching->start_time)->format('H:i')) {
+                $status = 'ditunda';
+                $needsAttention = false;
+                $hasTakenAttendance = false;
             }
 
             // [NEW] Get Suggested Topic from PROMES
@@ -349,7 +339,7 @@ class DashboardController extends Controller
         // [FIX] Group by class_id to ensure data isolation (previously grouped by rombel which might collide)
         $groupedMonitoringData = $monitoringData->groupBy('class_id')->map(function ($group) {
             // Priority 1: Currently active (berlangsung), waiting for attendance, OR assignment
-            $active = $group->first(fn($item) => in_array($item['status'], ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment']));
+            $active = $group->first(fn($item) => in_array($item['status'], ['berlangsung', 'menunggu_absen', 'terlambat', 'assignment', 'ditunda']));
             if ($active) return $active;
 
             // Priority 2: Upcoming schedule (belum_mulai)
@@ -369,12 +359,19 @@ class DashboardController extends Controller
             return $item['rombel'];
         }, SORT_NATURAL)->values();
 
-        // Determine if today is the end of the school week (assuming 5 or 6 day week)
-        // Usually, 5 days = Friday(5), 6 days = Saturday(6)
-        // If not set in env, defaults to 5 it seems standard
-        $schoolDaysCount = env('SCHOOL_DAYS_COUNT', 5);
-        $w = (int)date('w'); // 0 (Sun) to 6 (Sat)
-        $isWeekend = ($schoolDaysCount == 5 && $w == 5) || ($schoolDaysCount == 6 && $w == 6);
+        // Hari libur sekolah diambil dari school_days pada profil admin.
+        // 5 hari = Senin-Jumat (Sabtu & Minggu libur), 6 hari = Senin-Sabtu (Minggu libur).
+        // Sebelumnya SCHOOL_DAYS_COUNT (tidak diset) membuat Jumat salah ditandai weekend
+        // sehingga seluruh audio/bel dimatikan pada hari dengan 4 sesi tersebut.
+        $adminUserId = User::whereIn('role', ['admin', 'adminer'])
+            ->orderBy('id', 'asc')
+            ->value('id') ?? 1;
+        $adminProfile = UserProfile::where('user_id', $adminUserId)->first();
+        $schoolDaysCount = (int)($adminProfile?->school_days ?? env('SCHOOL_DAYS_COUNT', 6));
+        $w = (int)$now->format('w'); // 0 (Minggu) s/d 6 (Sabtu)
+        $isWeekend = ($schoolDaysCount === 6)
+            ? $w === 0
+            : in_array($w, [0, 6], true);
 
         // Find the absolute maximum end time for any schedule (teaching or non-teaching) today
         $maxEndTimeRaw = $schedules->max('end_time');

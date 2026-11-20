@@ -226,7 +226,8 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
         'selesai': { status: 'finished', message: 'Selesai', icon: <CheckCircle className="mr-2" /> },
         'alfa': { status: 'ongoing', message: 'Belum Ada Jurnal', icon: <AlertCircle className="mr-2 text-rose-500" /> }, // Treat alpha as ongoing if it's currently time
         'belum_mulai': { status: 'upcoming', message: null, icon: null },
-        'assignment': { status: 'ongoing', message: 'Penugasan', icon: <BookOpen className="mr-2" /> }
+        'assignment': { status: 'ongoing', message: 'Penugasan', icon: <BookOpen className="mr-2" /> },
+        'ditunda': { status: 'paused', message: 'Ditunda / Non-KBM', icon: <Clock className="mr-2" /> }
       };
 
       if (statusMap[schedule.status]) {
@@ -601,7 +602,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
 
                       {/* Compact specific label for mobile status */}
                       {status === 'paused' && (
-                        <span className="text-[10px] font-bold sm:hidden text-gray-400 uppercase tracking-tighter">Istirahat</span>
+                        <span className="text-[10px] font-bold sm:hidden text-gray-400 uppercase tracking-tighter">{message === 'Ditunda / Non-KBM' ? 'Ditunda' : 'Istirahat'}</span>
                       )}
                     </div>
                   </div>
@@ -615,7 +616,7 @@ const TeachingScheduleCard = ({ schedules, currentTime, holiday, programs, class
                         {status === 'paused' ? <Clock size={12} /> : icon || <Zap size={12} />}
                       </div>
                       <span className={`text-[11px] font-bold ${currentVariant.text}`}>
-                        {status === 'paused' ? 'Sedang Istirahat' : message}
+                        {message}
                       </span>
                     </div>
 

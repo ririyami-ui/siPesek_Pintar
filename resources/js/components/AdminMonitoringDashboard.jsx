@@ -94,7 +94,7 @@ const AdminMonitoringDashboard = ({ holiday }) => {
         
         const sorted = [...schedules].sort((a, b) => {
             const getPriority = (status) => {
-                if (['berlangsung', 'terlambat', 'menunggu_absen', 'assignment', 'agenda', 'libur'].includes(status)) return 1;
+                if (['berlangsung', 'terlambat', 'menunggu_absen', 'assignment', 'agenda', 'libur', 'ditunda'].includes(status)) return 1;
                 if (status === 'belum_mulai') return 2;
                 return 3;
             };
@@ -158,6 +158,7 @@ const AdminMonitoringDashboard = ({ holiday }) => {
             case 'assignment': return { label: 'Penugasan', icon: <BookOpen className="animate-pulse" size={16} /> };
             case 'libur': return { label: 'Libur Sekolah', icon: <Zap size={16} /> };
             case 'agenda': return { label: 'Agenda Sekolah', icon: <BellRing size={16} /> };
+            case 'ditunda': return { label: 'Ditunda / Non-KBM', icon: <Clock size={16} /> };
             default: return { label: 'Belum Mulai', icon: <Clock size={16} /> };
         }
     };
@@ -449,6 +450,12 @@ const AdminMonitoringDashboard = ({ holiday }) => {
                                         {!isLive && item.status === 'selesai' && (
                                             <div className="mt-auto flex items-center justify-center gap-2 text-emerald-500 font-bold text-xs py-2 bg-emerald-50 dark:bg-emerald-500/10 rounded-2xl">
                                                 <CheckCircle2 size={14} /> Jurnal Selesai
+                                            </div>
+                                        )}
+
+                                        {item.status === 'ditunda' && (
+                                            <div className="mt-auto flex items-center justify-center gap-2 text-slate-500 font-bold text-xs py-2 bg-slate-100 dark:bg-slate-800 rounded-2xl">
+                                                <Clock size={14} /> Ditunda / Non-KBM
                                             </div>
                                         )}
 
